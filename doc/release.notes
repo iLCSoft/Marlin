@@ -2,6 +2,11 @@
   Marlin release notes
  ======================
 
+v00-07
+  read chain of LCIO input files in Marlin.cc
+   
+  fixed problems with registered vector parameters
+
  v00-06 
 
   added examples directory that can serve as a template for user projects

@@ -18,13 +18,21 @@ namespace marlin {
       procParam->_parameter = params->getStringVal( procParam->_name ) ; 
   }
   template<>
+  void setProcessorParameter<IntVec>( ProcessorParameter_t<IntVec>* procParam ,  StringParameters* params ) {
+    if( params->isParameterSet( procParam->name() ) ) 
+      procParam->_parameter.clear() ;
+      params->getIntVals( procParam->_name,  procParam->_parameter ) ; 
+  }
+  template<>
   void setProcessorParameter<FloatVec>( ProcessorParameter_t<FloatVec>* procParam ,  StringParameters* params ) {
     if( params->isParameterSet( procParam->name() ) ) 
+      procParam->_parameter.clear() ;
       params->getFloatVals( procParam->_name,  procParam->_parameter ) ; 
   }
   template<>
   void setProcessorParameter<StringVec>( ProcessorParameter_t<StringVec>* procParam ,  StringParameters* params ) {
     if( params->isParameterSet( procParam->name() ) ) 
+      procParam->_parameter.clear() ;
       params->getStringVals( procParam->_name,  procParam->_parameter ) ; 
   }
 }

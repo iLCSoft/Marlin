@@ -1,4 +1,10 @@
 
+   TO DO for Marlin  (from v00-06)
+   ===============================
+
+ * read chain of files in Marlin.cc
+   done 20041223
+
    TO DO for Marlin  (from v00-03)
    ===============================
 

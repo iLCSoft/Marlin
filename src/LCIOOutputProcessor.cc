@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "IMPL/LCRunHeaderImpl.h"
+#include "UTIL/LCTOOLS.h"
 
 namespace marlin{
  
@@ -68,6 +69,9 @@ void LCIOOutputProcessor::processEvent( LCEvent * evt ) {
 //   std::cout << "LCIOOutputProcessor::processEvent()  " << name() 
 // 	    << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "
 // 	    << std::endl ;
+
+//   std::cout << " writing event : " << std::endl ;
+//   LCTOOLS::dumpEvent( evt ) ;
 
   _lcWrt->writeEvent( evt ) ;
 

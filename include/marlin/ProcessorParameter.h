@@ -52,6 +52,18 @@ namespace marlin{
   std::ostream& operator<< (  std::ostream& s, ProcessorParameter& p ) ;
   
   
+  /**Helper function for printing parameter vectors.
+   */
+  template< class T>
+  std::ostream& operator<< (  std::ostream& s, const std::vector<T>& v ) {
+    
+    typename std::vector<T>::const_iterator it ;
+    
+    for( it = v.begin() ; it != v.end() ; it++) {
+      s <<  (*it) << " " ; 
+    }
+    return s ;
+  }
   
   template< class T>
   class ProcessorParameter_t ;

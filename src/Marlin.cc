@@ -82,9 +82,9 @@ int main(int argc, char** argv ){
 
 
   // process the data
-  lcReader->open( lcioInputFiles[0]  ) ; 
+  // lcReader->open( lcioInputFiles[0]  ) ; 
   // FIXME - read list of files
-  //  lcReader->open( lcioInputFiles  ) ; 
+  lcReader->open( lcioInputFiles  ) ; 
 
   ProcessorMgr::instance()->init() ; 
 
@@ -104,6 +104,7 @@ int main(int argc, char** argv ){
 
   ProcessorMgr::instance()->end() ; 
   lcReader->close() ;
+  delete lcReader ;
 
   return 0 ;
 }

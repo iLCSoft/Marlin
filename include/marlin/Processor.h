@@ -112,16 +112,31 @@ namespace marlin{
 
   protected:
 
-    /** Register a steering variable for this processor - call in constructor.
+    /** Register a steering variable for this processor - call in constructor of processor.
+     *  The default value has to be of the _same_ type as the parameter, e.g.<br>
+     *  float _cut ;<br>
+     *  ...<br>
+     *   registerProcessorParameter( "Cut", "cut...", _cut , float( 3.141592 ) ) ;<br>
+     *  as implicit conversions don't work for templates. 
      */
-    template<class T>
-    void registerProcessorParameter(const std::string& name, 
-				    const std::string&description,
-				    T& parameter,
-				    const T& defaultVal) {
+     template<class T>
+     void registerProcessorParameter(const std::string& name, 
+ 				    const std::string&description,
+ 				    T& parameter,
+ 				    const T& defaultVal) {
+    
+       _map[ name ] = new ProcessorParameter_t<T>( name , description, parameter , defaultVal ) ;
+     }
+    
+// the implicit type conversion causes problems, e.g. with std::string("bla") 
+//     template<class T, class U>
+//     void registerProcessorParameter(const std::string& name, 
+// 				    const std::string&description,
+// 				    T& parameter,
+// 				    const U& defaultVal) {
       
-      _map[ name ] = new ProcessorParameter_t<T>( name , description, parameter , defaultVal ) ;
-    }
+//       _map[ name ] = new ProcessorParameter_t<T>( name , description, parameter , T(defaultVal) ) ;
+//     }
     
 
     virtual void setName( const std::string & name) { _processorName = name ; }
