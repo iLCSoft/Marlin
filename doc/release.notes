@@ -10,8 +10,13 @@
    * improved handling/documentation of steering parameters / modules
 
      - Marlin -l : lists all kown modules and their steering parameters
+		   with description and default values
+                   in a format that can be copied to a  steering file 
 
-     - leading whitespace allowed in steering file
+       -> use Processor::registerProcessorParameter(name, description, parameter, defaultVal ) ;
+          to declare your parameters
+
+     - leading whitespace allowed in steering file to improve readability
 
 
    * new AIDAProcessor for producing AIDA/root histograms:

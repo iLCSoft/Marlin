@@ -17,6 +17,7 @@
       done20041115 
 
      - create default steering file from registered modules  ....
+       done 2004123 -> in -l
 
      - allow leading whitespace in steering file
        done20041115
