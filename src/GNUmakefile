@@ -54,7 +54,7 @@ bin:  lib $(patsubst %.cc,$(BINDIR)/%,$(BINS))
 
 
 $(BINDIR)/$(PROGNAME): $(PROGNAME).cc $(INSTALL)/lib$(PROGNAME).a
-        mkdir -p $(BINDIR)
+	mkdir -p $(BINDIR)
 	$(CXX) -o $(BINDIR)/$(PROGNAME) $(CPPFLAGS) $(PROGNAME).cc  $(LIBS) 
 
 
@@ -62,7 +62,7 @@ objects = $(patsubst %.cc,%.o,$(filter-out $(BINS), $(wildcard *.cc))  )
 
 
 $(INSTALL)/lib$(PROGNAME).a: $(objects)
-        mkdir -p $(INSTALL)/lib
+	mkdir -p $(INSTALL)/lib
 	$(AR) cr $(INSTALL)/lib$(PROGNAME).a  $?
 
 lib: $(INSTALL)/lib$(PROGNAME).a
