@@ -85,7 +85,7 @@ objects = $(patsubst %.cc,%.o, $(wildcard *.cc)  )
 
 
 $(INSTALL)/lib$(PROGNAME).a: $(objects)
-	mkdir -p $(INSTALL)/lib
+	mkdir -p $(INSTALL)
 	$(AR) cr $(INSTALL)/lib$(PROGNAME).a  $?
 
 
