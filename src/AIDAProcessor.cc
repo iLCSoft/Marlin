@@ -33,7 +33,7 @@ namespace marlin {
     registerProcessorParameter( "FileName" , 
 				" filename without extension"  ,
 				_fileName ,
-				std::string("AIDAProcessor") ) ;
+				std::string("aida_file") ) ;
     
     registerProcessorParameter( "Compress" , 
 				" compression of output file -1: false >-1: true (default) "  ,
