@@ -9,13 +9,13 @@
   #include "MarlinLCIOSTLTypes.h"
 #endif
 
-#include "ProcessorMgr.h"
-#include "Processor.h"
+#include "marlin/ProcessorMgr.h"
+#include "marlin/Processor.h"
 #include "IO/LCReader.h"
 
-#include "Parser.h"
+#include "marlin/Parser.h"
 
-#include "Global.h"
+#include "marlin/Global.h"
 
 #include <sstream>
 #include <fstream>

@@ -1,5 +1,5 @@
-#include "Processor.h"
-#include "ProcessorMgr.h" 
+#include "marlin/Processor.h"
+#include "marlin/ProcessorMgr.h" 
 
 using namespace lcio ;
 

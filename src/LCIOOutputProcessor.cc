@@ -1,4 +1,4 @@
-#include "LCIOOutputProcessor.h"
+#include "marlin/LCIOOutputProcessor.h"
 #include <iostream>
 
 #include "IMPL/LCRunHeaderImpl.h"
