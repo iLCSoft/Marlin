@@ -123,6 +123,7 @@ namespace marlin{
       _parameter = defaultValue ;
       _description = description ;
       _optional = optional ;
+      _valueSet = false ;
       _setSize = setSize ;
     }
 
