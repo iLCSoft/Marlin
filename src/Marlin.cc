@@ -51,8 +51,7 @@ int main(int argc, char** argv ){
     steeringFileName = argv[1] ;
 
   } else {
-    std::cout << " usage: Marlin lcioframe.steer" << std::endl 
-	 << " steering file name "
+    std::cout << " usage: MyMarlinApp mypersonal.steer" << std::endl 
 	 << std::endl ;
     exit(1) ;
   }
