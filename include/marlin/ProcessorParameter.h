@@ -35,7 +35,9 @@ namespace marlin{
 
     
     virtual const std::string  type()=0 ;
+    virtual const std::string  value()=0 ;
     virtual const std::string  defaultValue()=0 ;
+    
     
     
     virtual void setValue(  StringParameters* params )=0 ;
@@ -74,6 +76,7 @@ namespace marlin{
       _defaultValue( defaultValue ) 
     {
       _name = name ;
+      _parameter = defaultValue ;
       _description = description ;
     }
     
@@ -81,6 +84,8 @@ namespace marlin{
     
     
     
+    //    virtual const std::string  name() { return _name ; } 
+
     virtual const std::string  type() { return typeid( _parameter ).name() ; } 
     
     virtual const std::string  defaultValue() {
@@ -88,6 +93,15 @@ namespace marlin{
      std::stringstream def ;
 
      def << _defaultValue << std::ends ;
+
+     return def.str() ;
+    }
+
+    virtual const std::string  value() {
+
+     std::stringstream def ;
+
+     def << _parameter << std::ends ;
 
      return def.str() ;
     }

@@ -95,13 +95,18 @@ namespace marlin{
     virtual StringParameters* parameters() { return _parameters ; } 
 
 
-    /** Dump information about this processor.
+    /** Print information about this processor.
      */
-    virtual void dump() ;
+    virtual void printDescription() ;
 
+    /** Print the parameters and its values.
+     */
+    virtual void printParameters() ;
+
+
+    
     /** Description of processor.
      */
-    
     const std::string& description() { return _description ; }
 
 

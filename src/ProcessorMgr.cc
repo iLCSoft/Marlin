@@ -47,7 +47,7 @@ namespace marlin{
 	       <<  std::endl ;
 
     for(MI i=_map.begin() ; i!= _map.end() ; i++) {
-      i->second->dump() ;
+      i->second->printDescription() ;
     }
   }
 

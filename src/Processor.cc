@@ -41,45 +41,62 @@ void Processor::setParameters( StringParameters* parameters) {
 }
 
 
-
 //   template<class T>
 //   export void Processor::registerProcessorParameter(const std::string& name, 
 // 					     const std::string&description,
 // 					     T& parameter ) {
-    
-    
 //     _map[ name ] = new ProcessorParameter_t<T>( name , description, parameter ) ;
-
-
 //   }
 
-  void Processor::dump() {
 
+  void Processor::printParameters(){
+    
+    typedef ProcParamMap::iterator PMI ;
+    
+    std::cout << std::endl  
+     	      << "---- " << name()  <<" -  parameters: " << std::endl ;
+    
+    
+    for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
+      
+      std::cout << "\t"   << i->second->name()   
+		<< ":  "  << i->second->value() 
+		<< std::endl ;
+      
+    }
+
+    std::cout << "-------------------------------------------------" 
+	      << std::endl ;
+  }
+
+
+  void Processor::printDescription() {
+    
     std::cout << ".begin My"        <<  type()  << std::endl 
 	      << "ProcessorType "   <<  type() << std::endl ;
     
     std::cout << "#---" << description() << std::endl ;
-
+    
     typedef ProcParamMap::iterator PMI ;
     
-//     std::cout << std::endl  
-// 	      << "# processor parameters:" << std::endl ;
+    //     std::cout << std::endl  
+    // 	      << "# processor parameters:" << std::endl ;
     
     for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
       
-
+      
       std::cout << std::endl 
 		<< "#\t"  << i->second->description() << std::endl ;
-
+      
       std::cout << "#\t default: " << i->second->defaultValue() 
 		<< " [" <<  i->second->type() << "]" << std::endl ;
-
+      
       std::cout << "\t"   << i->second->name()   
 		<< "   "  << i->second->defaultValue() 
 		<< std::endl 
 		<< std::endl ;
       
-
+      
     }
 
     std::cout << ".end -------------------------------------------------" 
@@ -87,27 +104,11 @@ void Processor::setParameters( StringParameters* parameters) {
 	      << std::endl ;
 
 
-//     std::cout << "\tProcessor : " << type() << std::endl ;
-    
-//     typedef ProcParamMap::iterator PMI ;
-
-//     std::cout << "\t\tprocessor parameters:" << std::endl ;
-
-//     for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
-
-//       std::cout << "\t\t  name: " << i->second->name()   
-// 		<< "  description: " << i->second->description() 
-// 		<< "  type: " << i->second->type() 
-// 		<< "  default: " << i->second->defaultValue() 
-// 		<< std::endl ;
-//     }
-
   }
   
   void Processor::baseInit() {
 
     typedef ProcParamMap::iterator PMI ;
-
 
     for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
 

@@ -61,7 +61,7 @@ int main(int argc, char** argv ){
   Parser  parser( steeringFileName ) ;
   assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
 
-  std::cout <<  "Global parameters : " << std::endl 
+  std::cout <<  "---- Global parameters : " << std::endl 
 	    << *Global::parameters  <<  std::endl ;
 
   createProcessors( parser ) ;

@@ -36,7 +36,7 @@ namespace marlin {
 				std::string("aida_file") ) ;
     
     registerProcessorParameter( "Compress" , 
-				" compression of output file -1: false >-1: true (default) "  ,
+				" compression of output file 0: false >0: true (default) "  ,
 				_compress ,
 				1 ) ;
     
@@ -54,20 +54,15 @@ namespace marlin {
   
   void AIDAProcessor::init() { 
     
-    std::cout << "AIDAProcessor::init()  " << name() 
-	      << std::endl 
-	      << "  parameters: " << std::endl 
-	      << *parameters()  ;
     
+    printParameters() ;
+
     //--- steering parameters ---------
     
-    if( _fileType.size() == 0 )
-      _fileType = "xml" ;
-    
-    bool compress = true ;
-    if( _compress < 0 )
-      compress = false ;
-    
+    bool compress = false ;
+    if( _compress !=  0 )
+      compress = true ;
+
     //-------------------------------------------------
     
     _analysisFactory = AIDA_createAnalysisFactory() ;  

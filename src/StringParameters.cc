@@ -29,6 +29,10 @@ void StringParameters::add( const std::vector<std::string> & tokens ) {
   }
 }
 
+  bool StringParameters::isParameterSet(  const std::string& key ) {
+
+    return _map[ key ].size() > 0 ;
+  }
 
 int StringParameters::getIntVal( const std::string& key ) {
   

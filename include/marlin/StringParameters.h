@@ -40,6 +40,7 @@ public:
   void add( const std::string& key , const std::vector<std::string> & values ) ;
   void add( const std::vector<std::string> & tokens ) ;
 
+  bool isParameterSet(  const std::string& key ) ;
 
   int   getIntVal( const std::string& key ) ;
   float getFloatVal( const std::string& key ) ;

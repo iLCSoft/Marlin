@@ -41,7 +41,7 @@ class TestProcessor : public Processor {
 
 
 protected:
-  LCWriter* _lcWrt ;
+
   int _nRun ;
   int _nEvt ;
 } ;

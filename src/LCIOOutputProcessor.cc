@@ -27,11 +27,7 @@ LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
 
 void LCIOOutputProcessor::init() { 
 
-  std::cout << "LCIOOutputProcessor::init()  " << name() 
-	    << std::endl 
-	    << "  parameters: " << std::endl 
-	    << *parameters()  ;
-  
+  printParameters() ;
 
   _nRun = 0 ;
   _nEvt = 0 ;
@@ -80,10 +76,12 @@ void LCIOOutputProcessor::processEvent( LCEvent * evt ) {
 
 void LCIOOutputProcessor::end(){ 
 
-  std::cout << "LCIOOutputProcessor::end()  " << name() 
-	    << _nEvt << " events in " << _nRun << " runs written to file  " 
-	    <<  _lcioOutputFile  
-	    << std::endl ;
+  std::cout  << std::endl 
+	     << "LCIOOutputProcessor::end()  " << name() 
+	     << _nEvt << " events in " << _nRun << " runs written to file  " 
+	     <<  _lcioOutputFile  
+	     << std::endl
+	     << std::endl ;
   
   _lcWrt->close() ;
 
