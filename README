@@ -6,7 +6,7 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.9 2005-02-23 16:54:23 gaede Exp $
+* $Id: README,v 1.10 2005-03-08 15:03:54 gaede Exp $
 ************************************************************************
 
 
@@ -44,6 +44,9 @@ To develop your own processors and create applications:
 
      TestProcessor aTestProcessor ;
      TestProcessor::TestProcessor() : Processor("TestProcessor") {}
+
+     this makes your processor known to Marlin.
+
 
   - Edit the steering file:   
     * Add your processor(s) to the variable ActiveProcessors with a unique name.

@@ -1,0 +1,72 @@
+/** 
+
+\mainpage <a href="http://www.desy.de/~gaede/marlin">Marlin</a> (v00-08) 
+ 
+<b>Marlin [Modular Analysis and Reconstruction for the LINear collider]</b>
+is a simple modular application framework for analysis and reconstruction code based
+on LCIO.
+
+<h2>Overview</h2>
+
+The main purpose of Marlin is to facilitate the modular development of reconstruction 
+and analysis code based on LCIO. As a lot of different groups are involved it should 
+be simple and straight forward to have distributed development of modules and combine 
+existing modules as needed in a larger application. <br>
+The base class for a Marlin module is called marlin::Processor. It defines a set of
+callbacks that the user can implement in their subclasses. A steering file mechanism
+allows to activate the needed processors. These are then called for every event using 
+the LCEvent as container for input and output data in terms of LCCollections:
+
+<img src="../marlin_overview.gif" alt="marlin schema">
+
+
+<h2>Installation</h2>
+
+The installation of Marlin is described in the <a href="../../README">README</a>.
+
+<h2>Running Marlin</h2>
+After having installed Marlin you have to write your own marlin::Processor(s) subclass 
+that performs the computation. This is fairly straight forward and Marlin provides 
+an example in <a href="../../examples/mymarlin/">./examples/mymarlin</a> that can serve as a 
+template for your own projects.
+<p>
+Note: there is no need to write a main program as this is provided by Marlin. Existing 
+Processors are automatically registered with Marlin provided one instance exists in the
+library as described in the <a href="../../README">README</a>.
+
+
+<h3>Steering files</h3>
+A Marlin application is controlled via a steering file that defines the active processors
+and the order in which they are called as well as global and processor specific 
+parameters, see <a href="../../test.steer">./test.steer</a> as an example.
+<p>
+For an existing marlin application you can get an overview over all available processors
+by typing:
+<ul>
+<li>
+  <b>./bin/MyMarlinApplication -l </b>
+</li>
+</ul> 
+This will print example steering file sections for all processors with some brief 
+documentation. After editing your steering file you can run the application simply by:
+<ul>
+<li>
+  <b>./bin/MyMarlinApplication my.steer </b>
+</li>
+</ul> 
+<h3>Release Notes</h3>
+Marlin is under development and there are frequent releases. Please check the 
+<a href="../release.notes">./release.notes</a>
+
+<hr>
+<p>
+If you have any questions or proposals for new features please contact the author:
+
+<a href="mailto:Frank Gaede &lt;frank.gaede@desy.de&gt;">frank.gaede@desy.de</a>
+
+*/
+
+
+/** The only namespace in Marlin. */
+ namespace marlin{}
+

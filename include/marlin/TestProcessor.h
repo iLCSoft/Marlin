@@ -9,6 +9,10 @@ using namespace lcio ;
 
 namespace marlin {
 
+
+  /** Simple processor for testing - writes something to stdout for every callback
+   *  method.
+   */
 class TestProcessor : public Processor {
   
  public:

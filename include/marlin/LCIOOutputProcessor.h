@@ -11,10 +11,11 @@ using namespace lcio ;
 namespace marlin{
 /** Default output processor. If active every event is writen to the 
  *  specified LCIO file.  
- *  Make sure that the processor is the last one called.
+ *  Make sure that the processor is the last one in your list
+ *  of active processors.
  *
- * @parameter LCIOOutputFile  name of outputfile incl. path
- * @parameter LCIOWriteMode   WRITE_NEW, WRITE_APPEND  [optional]
+ * @param LCIOOutputFile  name of outputfile incl. path
+ * @param LCIOWriteMode   WRITE_NEW, WRITE_APPEND  [optional]
  */
 class LCIOOutputProcessor : public Processor {
   

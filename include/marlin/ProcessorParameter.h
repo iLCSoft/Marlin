@@ -17,7 +17,8 @@ using namespace lcio ;
 
 namespace marlin{
   
-  /** Class that holds a steering variable for a marlin processor.
+  /** Class that holds a steering variable for a marlin processor - automatically created by
+   *  Processor::registerProcessorParameter() 
    */
   
   class ProcessorParameter {
@@ -102,6 +103,8 @@ namespace marlin{
   
   
   
+  /** Templated implementation of ProcessorParameter - automatically created by
+      Processor::registerProcessorParameter() */
   template< class T>
   class ProcessorParameter_t : public ProcessorParameter {
     

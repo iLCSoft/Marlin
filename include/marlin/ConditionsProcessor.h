@@ -12,7 +12,8 @@
 
 
 using namespace lcio ;
-using namespace marlin ;
+
+namespace marlin{
 
 
 
@@ -82,6 +83,8 @@ class ConditionsProcessor : public Processor {
   int _nEvt ;
 
 } ;
+
+} // end namespace 
 
 #endif
 

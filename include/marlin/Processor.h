@@ -44,9 +44,12 @@ namespace marlin{
 
   public:
   
-
+    /** Default constructor - subclasses need to call this in their
+     * default constructor.
+     */
     Processor(const std::string& typeName) ; 
 
+    /** Destructor */
     virtual ~Processor() ; 
   
   
