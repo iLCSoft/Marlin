@@ -32,7 +32,9 @@ namespace marlin{
     
     virtual const std::string&  name() { return _name ; } 
     virtual const std::string&  description()  { return _description ; } 
-
+    virtual int setSize() { return _setSize ; } ;
+    virtual bool isOptional() { return _optional ; }
+    virtual bool valueSet() { return _valueSet ; }
     
     virtual const std::string  type()=0 ;
     virtual const std::string  value()=0 ;
@@ -46,6 +48,9 @@ namespace marlin{
     
     std::string _description ;
     std::string _name ;
+    int _setSize ;
+    bool _optional ;
+    bool _valueSet ;
   };
   
   
@@ -54,17 +59,41 @@ namespace marlin{
   
   /**Helper function for printing parameter vectors.
    */
+//   template< class T>
+//   std::ostream& operator<< (  std::ostream& s, const std::vector<T>& v ) {
+    
+//     typename std::vector<T>::const_iterator it ;
+    
+//     for( it = v.begin() ; it != v.end() ; it++) {
+//       s <<  (*it) << " " ;
+//     }
+//     return s ;
+//   }
+
+  void toStream(  std::ostream& s, int i , int N) ; 
+  void toStream(  std::ostream& s, float f , int N) ;
+  void toStream(  std::ostream& s, const std::string& str , int N) ; 
+  
   template< class T>
-  std::ostream& operator<< (  std::ostream& s, const std::vector<T>& v ) {
+  std::ostream& toStream(  std::ostream& s, const std::vector<T>& v , int N) {
     
     typename std::vector<T>::const_iterator it ;
     
+    unsigned count = 0 ;
     for( it = v.begin() ; it != v.end() ; it++) {
-      s <<  (*it) << " " ; 
+
+      if( count && N  && ! (count % N)  )   // start a new line after N parameters
+	s << "\n\t\t"  ; 
+
+      s <<  (*it) << " " ;
+      count ++ ;
+
+
     }
     return s ;
   }
-  
+
+
   template< class T>
   class ProcessorParameter_t ;
   
@@ -83,28 +112,48 @@ namespace marlin{
     ProcessorParameter_t( const std::string& name,
 			  const std::string& description, 
 			  T& parameter ,    
- 			  const T& defaultValue ) :     
+ 			  const T& defaultValue,
+			  bool optional,
+			  int setSize=0) :     
+
       _parameter( parameter ),
       _defaultValue( defaultValue ) 
     {
       _name = name ;
       _parameter = defaultValue ;
       _description = description ;
+      _optional = optional ;
+      _setSize = setSize ;
     }
-    
+
     virtual ~ProcessorParameter_t() {}
     
     
     
     //    virtual const std::string  name() { return _name ; } 
 
-    virtual const std::string  type() { return typeid( _parameter ).name() ; } 
+    virtual const std::string  type() {  
+
+      // return typeid( _parameter ).name() ; } 
+
+      // make this human readable
+      if     ( typeid( _parameter ) == typeid( IntVec    )) return "IntVec" ;
+      else if( typeid( _parameter ) == typeid( FloatVec  )) return "FloatVec" ;
+      else if( typeid( _parameter ) == typeid( StringVec )) return "StringVec" ;
+      else if( typeid( _parameter ) == typeid( int   )) return "int" ;
+      else if( typeid( _parameter ) == typeid( float )) return "float" ;
+      else if( typeid( _parameter ) == typeid(std::string) ) return "string" ;
+      
+      else
+	return typeid( _parameter ).name() ; 
+    }
     
     virtual const std::string  defaultValue() {
 
      std::stringstream def ;
 
-     def << _defaultValue << std::ends ;
+     //def << _defaultValue  ;
+     toStream( def,  _parameter , setSize() )  ;
 
      return def.str() ;
     }
@@ -113,19 +162,17 @@ namespace marlin{
 
      std::stringstream def ;
 
-     def << _parameter << std::ends ;
+     //     def << _parameter  ;
+     toStream( def,  _parameter , setSize() )  ;
 
      return def.str() ;
     }
 
-    
     void setValue(  StringParameters* params ) {
       
       setProcessorParameter< T >( this , params ) ;
       
     }
-    
-    
     
   protected:
     T& _parameter ;

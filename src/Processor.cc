@@ -59,10 +59,11 @@ void Processor::setParameters( StringParameters* parameters) {
     
     for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
       
-      std::cout << "\t"   << i->second->name()   
-		<< ":  "  << i->second->value() 
-		<< std::endl ;
-      
+      if( ! i->second->isOptional() || i->second->valueSet() ){
+	std::cout << "\t"   << i->second->name()   
+		  << ":  "  << i->second->value() 
+		  << std::endl ;
+      }
     }
 
     std::cout << "-------------------------------------------------" 
@@ -84,18 +85,32 @@ void Processor::setParameters( StringParameters* parameters) {
     
     for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
       
-      
+      ProcessorParameter* p = i->second ;
+
       std::cout << std::endl 
-		<< "#\t"  << i->second->description() << std::endl ;
-      
-      std::cout << "#\t default: " << i->second->defaultValue() 
-		<< " [" <<  i->second->type() << "]" << std::endl ;
-      
-      std::cout << "\t"   << i->second->name()   
-		<< "   "  << i->second->defaultValue() 
-		<< std::endl 
+		<< "#\t"  << p->description() << std::endl 
+		<< "#\t type: " << " [" <<  p->type() << "]" 
 		<< std::endl ;
-      
+
+      if( p->isOptional() ) {
+	
+	std::cout << "#\t example: " << std::endl ;
+	
+	std::cout << "#\t"   << p->name()   
+		  << "   "  << p->defaultValue() 
+		  << std::endl 
+		  << std::endl ;
+	
+      }else{
+
+	std::cout << "#\t default: " << p->defaultValue() 
+		  << std::endl ;
+	
+	std::cout << "\t"   << p->name()   
+		  << "   "  << p->defaultValue() 
+		  << std::endl 
+		  << std::endl ;
+      }
       
     }
 
@@ -104,6 +119,15 @@ void Processor::setParameters( StringParameters* parameters) {
 	      << std::endl ;
 
 
+  }
+
+  bool Processor::parameterSet( const std::string& name ) {
+
+    ProcParamMap::iterator it = _map.find(name) ;
+    if( it != _map.end() )
+      return it->second->valueSet() ;
+    else
+      return false ;
   }
   
   void Processor::baseInit() {

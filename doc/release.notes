@@ -2,7 +2,10 @@
   Marlin release notes
  ======================
 
-v00-07
+ v00-07
+
+  added optional parameters to Processor
+ 
   read chain of LCIO input files in Marlin.cc
    
   fixed problems with registered vector parameters

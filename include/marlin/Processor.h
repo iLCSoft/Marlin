@@ -117,17 +117,45 @@ namespace marlin{
      *  float _cut ;<br>
      *  ...<br>
      *   registerProcessorParameter( "Cut", "cut...", _cut , float( 3.141592 ) ) ;<br>
-     *  as implicit conversions don't work for templates. 
+     *  as implicit conversions don't work for templates.<br>
+     *  The optional parameter setSize is used for formating the printout of parameters.
+     *  This can be used if the parameter values are expected to come in sets of fixed size. 
      */
      template<class T>
      void registerProcessorParameter(const std::string& name, 
  				    const std::string&description,
  				    T& parameter,
- 				    const T& defaultVal) {
+ 				    const T& defaultVal,
+				    int setSize=0 ) {
     
-       _map[ name ] = new ProcessorParameter_t<T>( name , description, parameter , defaultVal ) ;
+       _map[ name ] = new ProcessorParameter_t<T>( name , description, 
+						   parameter, defaultVal, 
+						   false , setSize) ;
      }
     
+    /** Same as  registerProcessorParameter except that the parameter is optional.
+     *  The value of the parameter will still be set to the default value, which
+     *  is used to print an example steering line.
+     *  Use parameterSet() to check whether it actually has been set in the steering 
+     *  file.
+     */
+     template<class T>
+     void registerOptionalParameter(const std::string& name, 
+ 				    const std::string&description,
+ 				    T& parameter,
+ 				    const T& defaultVal,
+				    int setSize=0 ) {
+    
+       _map[ name ] = new ProcessorParameter_t<T>( name , description, 
+						   parameter, defaultVal, 
+						   true , setSize) ;
+     }
+    
+
+    /** Tests whether the parameter has been set in the steering file
+     */
+    bool parameterSet( const std::string& name ) ;
+
 // the implicit type conversion causes problems, e.g. with std::string("bla") 
 //     template<class T, class U>
 //     void registerProcessorParameter(const std::string& name, 
