@@ -4,6 +4,7 @@
 #
 # @author Frank Gaede
 # @date   Jun,07 2004
+# 20050223 fg: added MARLINDEBUG, LCCD, CondDBMySQL
 ######################################################
 
 # name of the program
@@ -21,6 +22,15 @@ else
   CXX = g++
 endif
 
+# debug/optimization level
+ifdef MARLINDEBUG
+ CPPFLAGS = -g -Wall -ansi
+else
+ CPPFLAGS = -O3 -Wall -ansi
+endif
+
+
+
 AR = ar
 
 INSTALL = $(BASEDIR)/lib
@@ -30,17 +40,27 @@ INCLUDE =  -I $(LCIO)/src/cpp/include
 INCLUDE +=  -I $(BASEDIR)/include
 
 
+ifdef LCCD
+ INCLUDE += -D USE_LCCD -I $(LCCD)/source/include
+ ifdef CondDBMySQL
+   INCLUDE += -D USE_CONDDB
+ endif
+endif
+
+
 CPPFLAGS += $(INCLUDE)
-CPPFLAGS += -g -Wall -ansi
 
 
-
-#LIBS =    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 LIBS =
 LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
+ifdef LCCD
+ LIBS += -L $(LCCD)/lib -llccd
+ ifdef CondDBMySQL
+   LIBS += -L $(CondDBMySQL)/lib -lconddb    
+ endif
+endif
 LIBS +=    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 LIBS +=  -Wl,--demangle
-
 
 ifdef MARLIN_USE_AIDA
 CPPFLAGS += -D MARLIN_USE_AIDA `aida-config --include`

@@ -1,4 +1,10 @@
 
+   TO DO for Marlin  (from v00-07)
+   ===============================
+
+ * support global parameters registered in processor
+
+
    TO DO for Marlin  (from v00-06)
    ===============================
 

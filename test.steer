@@ -14,8 +14,9 @@
 	# the active processors that are called in the given order
 
 	ActiveProcessors AIDAFile
+	ActiveProcessors MyConditionsProcessor
 	ActiveProcessors FranksTestProcessor
-	ActiveProcessors AnotherTestProcessor
+#	ActiveProcessors AnotherTestProcessor
 	ActiveProcessors OutputFile
 
 	# limit the number of processed records (run+evt):
@@ -26,7 +27,41 @@
 .end   -----------------------------------------------
 
 
+.begin MyConditionsProcessor
+ProcessorType ConditionsProcessor
+#---ConditionsProcessor provides access to conditions data  transparently from LCIO files or a databases, using
+LCCD
 
+#       Initialization of a conditions database handler
+#        type:  [StringVec]
+#        example:
+#       DBCondHandler   conditionsName /lccd/myfolder HEAD
+
+
+#       Initialization of a conditions db file handler
+#        type:  [StringVec]
+#        example:
+#       DBFileHandler   conditionsName conditions.slcio collectionName
+
+
+#       Initialization string for conditions database
+#        type:  [string]
+#        default: localhost:lccd_test:calvin:hobbes
+        DBInit   localhost:lccd_test:calvin:hobbes
+
+
+#       Initialization of a data file handler
+#        type:  [StringVec]
+#        example:
+#       DataFileHandler   conditionsName
+
+
+#       Initialization of a simple conditions file handler
+#        type:  [StringVec]
+#        example:
+#       SimpleFileHandler   conditionsName conditions.slcio collectionName
+
+.end -------------------------------------------------
 
 # the default output processor
 .begin OutputFile  
