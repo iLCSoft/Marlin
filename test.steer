@@ -18,7 +18,7 @@ ActiveProcessors EvenOneMoreTestProcessor
 ActiveProcessors OutputProcessor
 
 # limit the number of processed records (run+evt):
-MaxRecordNumber 51
+MaxRecordNumber 5001
 .end   -----------------------------------------------
 
 #define the processor parameters after '.begin ProcessorName' :

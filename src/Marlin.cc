@@ -79,21 +79,25 @@ int main(int argc, char** argv ){
 
   ProcessorMgr::instance()->init() ; 
 
-  if( maxRecord > 0 )
-    lcReader->readStream( maxRecord ) ;
-  else
+  if( maxRecord > 0 ){
+
+    try{
+      lcReader->readStream( maxRecord ) ;
+    }
+    catch( lcio::EndOfDataException& e){
+
+      std::cout << "Warning: " << e.what() << std::endl ;
+    }
+
+  } else {
     lcReader->readStream() ;
+  }
 
   ProcessorMgr::instance()->end() ; 
   lcReader->close() ;
 
   return 0 ;
 }
-
-
-
-
-
 
 
 void  createProcessors(Parser&  parser) {
