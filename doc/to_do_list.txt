@@ -1,0 +1,33 @@
+
+   TO DO for Marlin  (from v00-03) 
+   ===============================
+
+ * generate warning instead of error message if less than MaxRecordNumber records read
+   done 20041110
+
+
+ * implement verbosity level for output
+
+
+ * implement error handling/messages
+
+
+ * improve handling/documentation of steering parameters / modules
+     - Marlin -lm : list all nkown modules and their steering parameters
+     - provide default steering file
+
+
+ * develop AIDAProcessor for producing AIDA/root histograms 
+
+
+ * make AIDAProcessor optional part of kernel marlin
+   e.g. via  
+
+
+ * provide default AIDA/JNI implementation on DL5
+
+
+ * develop makefiles to build applications from several libraries/packages
+
+
+
