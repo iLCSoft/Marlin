@@ -4,6 +4,9 @@
 * for the FLC software that deals with LCIO files, e.g. reconstruction
 * and analysis code.
 *
+*
+* F. Gaede, DESY-IT
+* $Id: README,v 1.4 2004-11-23 15:32:27 gaede Exp $
 ************************************************************************
 
 
@@ -52,4 +55,12 @@ To develop your own processors and create applications:
     * Don't forget the parameter ProcessorType (typically the class name)
  
   - run: 'myexecutablename myparameters.steer'
+
+
+
+
+If you are updating from an older version please read ./doc/release.notes.
+
+
+
 
