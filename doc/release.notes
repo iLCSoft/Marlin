@@ -2,6 +2,14 @@
   Marlin release notes
  ======================
 
+ v00-08
+
+  improved API doc
+  
+  bug fixes in ConditionsProcessor
+
+  improved example/mymarlin/src/GNUmakefile
+
  v00-07
     
   added ConditionsProcessor for LCCD
