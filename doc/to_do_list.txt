@@ -3,6 +3,11 @@
    ===============================
 
  * support global parameters registered in processor
+ 
+ * users want mechanism to define limits on file size and/or number
+   of events in output file
+   -> maybe also some parsing feature to allow to specify file sets
+      for input and output a la fpack:  run00001-run01000.slcio ?
 
 
    TO DO for Marlin  (from v00-06)

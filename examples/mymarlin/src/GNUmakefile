@@ -12,7 +12,7 @@
 #---------- user variables ---------------------------------------------------
 
 # name of the program
-PROGNAME = calomaptest
+PROGNAME = MyMarlin
 
 
 # the base directory of your application
@@ -90,21 +90,21 @@ CPPFLAGS += -g -Wall -ansi
 LIBS += $(USERLIBS)
 
 
-bin:  lib $(BINDIR)/$(PROGNAME) $(BINDIR)/createmaps
+bin:  lib $(BINDIR)/$(PROGNAME)
 
 
-BINS = createmaps.cc
+#BINS = createmaps.cc
 
 $(BINDIR)/$(PROGNAME): $(INSTALL)/lib$(PROGNAME).a
 	mkdir -p $(BINDIR)
 	$(CXX) -o $(BINDIR)/$(PROGNAME) $(CPPFLAGS) $(MARLIN)/src/Marlin.cc $(LIBS) 
 
-$(BINDIR)/createmaps: $(INSTALL)/lib$(PROGNAME).a createmaps.cc
-	$(CXX) -o $(BINDIR)/createmaps $(CPPFLAGS) createmaps.cc $(LIBS) 
+# $(BINDIR)/createmaps: $(INSTALL)/lib$(PROGNAME).a createmaps.cc
+# 	$(CXX) -o $(BINDIR)/createmaps $(CPPFLAGS) createmaps.cc $(LIBS) 
 
 
-#objects = $(patsubst %.cc,%.o, $(wildcard *.cc)  )
-objects = $(patsubst %.cc,%.o,$(filter-out $(BINS), $(wildcard *.cc))  )
+objects = $(patsubst %.cc,%.o, $(wildcard *.cc)  )
+#objects = $(patsubst %.cc,%.o,$(filter-out $(BINS), $(wildcard *.cc))  )
 
 
 
