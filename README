@@ -6,9 +6,8 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.4 2004-11-23 15:32:27 gaede Exp $
+* $Id: README,v 1.5 2004-12-02 22:10:40 gaede Exp $
 ************************************************************************
-
 
 The idea is that every computing task is implemented as a processor (module) that analyzes 
 data in an LCEvent and creates additional output collections that are added to the event.
@@ -44,11 +43,6 @@ To develop your own processors and create applications:
      TestProcessor aTestProcessor ;
      TestProcessor::TestProcessor() : Processor("TestProcessor") {}
 
-
-  - Edit the GNUmakefile.example and copy it to the location of your .cc files
-
-  - 'gmake' will build your executable
-
   - Edit the steering file:   
     * Add your processor(s) to the variable ActiveProcessors with a unique name.
     * Add a section with the processor parameters to the steering file (identified by the unique name)
@@ -57,8 +51,18 @@ To develop your own processors and create applications:
   - run: 'myexecutablename myparameters.steer'
 
 
+ -> examples/mymarlin can serve as a template for a new project using marlin !
 
+    simply copy the whole directory and edit (after renaming) the files
+     src/MyProcessor.cc
+     src/GNUmakefile
+     include/MyProcessor.h 
 
+   modify and source  env.sh to set the proper environment
+     gmake -C ./src
+   builds the example 
+       
+  
 If you are updating from an older version please read ./doc/release.notes.
 
 

@@ -1,5 +1,5 @@
 
-   TO DO for Marlin  (from v00-03) 
+   TO DO for Marlin  (from v00-03)
    ===============================
 
  * generate warning instead of error message if less than MaxRecordNumber records read
@@ -33,6 +33,6 @@
    done 20041123
 
  * develop makefiles to build applications from several libraries/packages
-
+   done 20041202 -> examples/mymarlin/src/GNUmakefile
 
 

@@ -2,7 +2,20 @@
   Marlin release notes
  ======================
 
+ v00-06 
 
+  added examples directory that can serve as a template for user projects
+
+  added Processr::printParameters()
+ 
+  fixed Problem with default values of parameters 
+
+  renamed Processr::dump() to Processr::printDescription()
+
+ v00-05
+
+  added Processr::check()  to be used for checkplots in reco processors
+ 
  v00-04    (changes wrt. to v00-03):
   
    * generates warning instead of error message if less than MaxRecordNumber records read
