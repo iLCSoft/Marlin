@@ -13,15 +13,16 @@
 
 
  * improve handling/documentation of steering parameters / modules
-     - Marlin -lm : list all nkown modules and their steering parameters
-     - provide default steering file
-
+     - Marlin -l : list all kown modules and their steering parameters
+      done20041115 
+     - create default steering file from registered modules  ....
+     - allow leading whitespace in steering file
+       done20041115
 
  * develop AIDAProcessor for producing AIDA/root histograms 
-
+   done 20041115
 
  * make AIDAProcessor optional part of kernel marlin
-   e.g. via  
 
 
  * provide default AIDA/JNI implementation on DL5
