@@ -1,4 +1,5 @@
 #include "marlin/ProcessorMgr.h"
+#include "marlin/Global.h"
 #include <iostream>
 #include <algorithm>
 
@@ -117,6 +118,12 @@ namespace marlin{
   void ProcessorMgr::processEvent( LCEvent* evt ){ 
 
     for_each( _list.begin() , _list.end() ,   std::bind2nd(  std::mem_fun( &Processor::processEvent ) , evt ) ) ;
+
+    if( Global::parameters->getStringVal("SupressCheck") != "true" )
+
+      for_each( _list.begin() , _list.end(), 
+		std::bind2nd( std::mem_fun( &Processor::check ) , evt ) ) ;
+
   }
 
   void ProcessorMgr::end(){ 

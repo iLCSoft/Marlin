@@ -43,9 +43,13 @@ class AIDAProcessor : public marlin::Processor {
    */
   virtual void processRunHeader( LCRunHeader* run ) ;
 
-  /** Called for every event - the working horse.
+  /** nothing processed here
    */
-  virtual void processEvent( LCEvent * evt ) ; 
+   virtual void processEvent( LCEvent * evt ) ; 
+
+   /** Fills plot with processing time
+    */
+   virtual void check( LCEvent * evt ) ; 
 
 
   /** Called after data processing for clean up.

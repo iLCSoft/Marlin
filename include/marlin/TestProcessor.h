@@ -32,6 +32,9 @@ class TestProcessor : public Processor {
   virtual void processEvent( LCEvent * evt ) ; 
 
 
+  virtual void check( LCEvent * evt ) ; 
+
+
   /** Called after data processing for clean up.
    */
   virtual void end() ;

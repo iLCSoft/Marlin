@@ -114,7 +114,12 @@ namespace marlin {
   void AIDAProcessor::processRunHeader( LCRunHeader* run) { 
   } 
   
+
   void AIDAProcessor::processEvent( LCEvent * evt ) { 
+    // no processing
+  }
+
+  void AIDAProcessor::check( LCEvent * evt ) { 
     
     static bool firstEvent = true ;
     

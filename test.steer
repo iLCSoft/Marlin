@@ -20,6 +20,9 @@
 
 	# limit the number of processed records (run+evt):
 	MaxRecordNumber 5001
+
+	# don't call the check method of the processors if "true"
+      #	SupressCheck true
 .end   -----------------------------------------------
 
 

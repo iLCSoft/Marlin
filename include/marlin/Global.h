@@ -4,18 +4,19 @@
 
 namespace marlin{
 
-/** Simple global class for Marlin.
- *  Holds global parameters.
- */
-class Global{
+  class StringParameters ;
+
+  /** Simple global class for Marlin.
+   *  Holds global parameters.
+   */
+  class Global{
+    
+  public:
+    
+    static StringParameters* parameters ;
+    
+  };
   
-public:
   
-  static StringParameters* parameters ;
-
-};
-
-StringParameters* Global::parameters = 0 ;
-
 } // end namespace marlin 
 #endif

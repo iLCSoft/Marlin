@@ -70,6 +70,13 @@ namespace marlin{
      */
     virtual void processEvent( LCEvent * evt ) { }
 
+    /** Called for every event - right after processEvent()
+     *  has been called for all processors.
+     *  Use to check processing and/or produce check plots.
+     */
+    virtual void check( LCEvent * evt ) { }
+
+
     /** Called after data processing for clean up.
      */
     virtual void end(){ }
