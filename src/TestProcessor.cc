@@ -8,6 +8,7 @@ TestProcessor aTestProcessor ;
 
 TestProcessor::TestProcessor() : Processor("TestProcessor") {
 
+  _description = "Simple processor to test the marlin application. Prints run and event number." ;
 }
 
 

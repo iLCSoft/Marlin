@@ -92,6 +92,12 @@ namespace marlin{
      */
     virtual void dump() ;
 
+    /** Description of processor.
+     */
+    
+    const std::string& description() { return _description ; }
+
+
   protected:
 
     /** Register a steering variable for this processor - call in constructor.
@@ -115,6 +121,11 @@ namespace marlin{
     virtual void baseInit() ;
 
 
+
+
+    /**Describes what the processor does. Set in constructor.
+     */
+    std::string _description ;
     std::string _typeName  ;
     std::string _processorName ;
     StringParameters* _parameters ;

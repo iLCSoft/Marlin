@@ -22,7 +22,7 @@ namespace marlin {
 
 
 /** Module that creates an AIDA file and histogram and tuple factories that 
- * can be used in all processors of a Marlin application.
+ *  can be used in all processors of a Marlin application.
  */
 
 class AIDAProcessor : public marlin::Processor {

@@ -9,6 +9,7 @@ namespace marlin{
 
 
 Processor::Processor(const std::string& typeName) :
+  _description(" description not set by author ") ,
   _typeName( typeName ) ,
   _parameters(0) 
 {
@@ -57,6 +58,8 @@ void Processor::setParameters( StringParameters* parameters) {
     std::cout << ".begin My"        <<  type()  << std::endl 
 	      << "ProcessorType "   <<  type() << std::endl ;
     
+    std::cout << "#---" << description() << std::endl ;
+
     typedef ProcParamMap::iterator PMI ;
     
 //     std::cout << std::endl  

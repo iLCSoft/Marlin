@@ -9,11 +9,15 @@ LCIOOutputProcessor anLCIOOutputProcessor ;
 
 LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
 
+  _description = "Writes the current event to the specified LCIO outputfile."
+    " Needs to be the last ActiveProcessor." ;
+  
+  
   registerProcessorParameter( "LCIOOutputFile" , 
 			      " name of output file "  ,
 			      _lcioOutputFile ,
 			      std::string("outputfile.slcio") ) ;
-
+  
   registerProcessorParameter( "LCIOWriteMode" , 
 			      "write mode for output file:  WRITE_APPEND or WRITE_NEW"  ,
 			      _lcioWriteMode ,
