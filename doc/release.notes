@@ -1,0 +1,23 @@
+
+  Marlin release notes
+ ======================
+
+
+ v00-04    (changes wrt. to v00-03):
+  
+   * generates warning instead of error message if less than MaxRecordNumber records read
+
+   * improved handling/documentation of steering parameters / modules
+
+     - Marlin -l : lists all kown modules and their steering parameters
+
+     - leading whitespace allowed in steering file
+
+
+   * new AIDAProcessor for producing AIDA/root histograms:
+
+    - handles AIDA file for all modules 
+    - modules simply create and fill their histograms
+    - uses JAIDA/AIDAJNI AIDA-implementation 
+    - not mandatory - could still use root but preferred  for 'official' processors/modules
+
