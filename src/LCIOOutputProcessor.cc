@@ -9,6 +9,16 @@ LCIOOutputProcessor anLCIOOutputProcessor ;
 
 LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
 
+  registerProcessorParameter( "LCIOOutputFile" , 
+			      " name of output file "  ,
+			      _lcioOutputFile ,
+			      std::string("LCIOOutputFile") ) ;
+
+  registerProcessorParameter( "LCIOWriteMode" , 
+			      "write mode for output file:  WRITE_APPEND or WRITE_NEW"  ,
+			      _lcioWriteMode ,
+			      std::string("None") ) ;
+  
 }
 
 void LCIOOutputProcessor::init() { 
@@ -24,26 +34,21 @@ void LCIOOutputProcessor::init() {
 
   _lcWrt = LCFactory::getInstance()->createLCWriter() ;
 
-
-  std::string fName = parameters()->getStringVal( LCIOOUTPUTFILE ) ;
-
-  std::string mode =  parameters()->getStringVal( LCIOWRITEMODE )  ;
-  
-  if( mode == "WRITE_APPEND" ) {
+  if( _lcioWriteMode == "WRITE_APPEND" ) {
     
-    _lcWrt->open( fName , LCIO::WRITE_APPEND ) ;
+    _lcWrt->open( _lcioOutputFile , LCIO::WRITE_APPEND ) ;
   }
-  else if( mode == "WRITE_NEW" ) {
+  else if( _lcioWriteMode == "WRITE_NEW" ) {
     
-    _lcWrt->open( fName , LCIO::WRITE_NEW ) ;
+    _lcWrt->open( _lcioOutputFile , LCIO::WRITE_NEW ) ;
   }
   else {
-    _lcWrt->open( fName ) ;
+    _lcWrt->open( _lcioOutputFile ) ;
   }
 
 //   _lcWrt->writeRunHeader( new LCRunHeaderImpl ) ;
 //   _lcWrt->close() ;
-//   _lcWrt->open( fName , LCIO::WRITE_APPEND ) ;
+//   _lcWrt->open( _lcioOutputFile , LCIO::WRITE_APPEND ) ;
 }
 
 
@@ -73,7 +78,7 @@ void LCIOOutputProcessor::end(){
 
   std::cout << "LCIOOutputProcessor::end()  " << name() 
 	    << _nEvt << " events in " << _nRun << " runs written to file  " 
-	    <<  parameters()->getStringVal( LCIOOUTPUTFILE ) 
+	    <<  _lcioOutputFile  
 	    << std::endl ;
   
   _lcWrt->close() ;

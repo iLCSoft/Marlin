@@ -57,6 +57,10 @@ public:
    */
   Processor* getProcessor( const std::string& type ) ;
   
+
+  /** Dump information of all registered  processors to stdout.
+   */
+  void dumpRegisteredProcessors() ;
   
  
   virtual void init() ;

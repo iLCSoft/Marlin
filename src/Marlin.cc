@@ -28,6 +28,8 @@ using namespace marlin ;
 
 
 void createProcessors( Parser&  parser ) ;
+void listAvailableProcessors() ;
+
 
 /** LCIO framework that can be used to analyse LCIO data files
  *  in a modular way. All tasks have to be implemented in Subclasses
@@ -40,7 +42,14 @@ int main(int argc, char** argv ){
   
   // read file name from command line
   if( argc > 1 ){
+
+    if( std::string(argv[1]) == "-l" ){
+      listAvailableProcessors() ;
+      exit(0) ;
+    }
+
     steeringFileName = argv[1] ;
+
   } else {
     std::cout << " usage: Marlin lcioframe.steer" << std::endl 
 	 << " steering file name "
@@ -127,3 +136,7 @@ void  createProcessors(Parser&  parser) {
   }
 }
 
+void listAvailableProcessors() {
+
+  ProcessorMgr::instance()->dumpRegisteredProcessors() ;
+}

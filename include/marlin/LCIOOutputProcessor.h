@@ -6,10 +6,6 @@
 #include "IO/LCWriter.h"
 
 
-#define LCIOOUTPUTFILE "LCIOOutputFile"
-#define LCIOWRITEMODE  "LCIOWriteMode"
-
-
 using namespace lcio ;
 
 namespace marlin{
@@ -48,6 +44,9 @@ public:
 
 
 protected:
+
+  std::string _lcioOutputFile ;
+  std::string _lcioWriteMode ; 
 
   LCWriter* _lcWrt ;
   int _nRun ;

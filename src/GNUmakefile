@@ -34,9 +34,12 @@ CPPFLAGS += -g -Wall -ansi
 
 LIBS =    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
+LIBS +=  -Wl,--demangle
 
 
 BINS = $(PROGNAME).cc
+
+LDFLAGS += --demangle
 
 
 bin:  lib $(patsubst %.cc,$(BINDIR)/%,$(BINS))
