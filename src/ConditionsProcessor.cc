@@ -25,6 +25,18 @@ namespace marlin{
   ConditionsProcessor aConditionsProcessor ;
   
   
+  bool ConditionsProcessor::registerChangeListener( lccd::IConditionsChangeListener* cl, const std::string&  name) {
+
+    try{ 
+      lccd::LCConditionsMgr::instance()->registerChangeListener( cl , name ) ;
+      return true ;
+    }
+    catch(Exception){}
+    
+    return false ;
+  }
+
+
   ConditionsProcessor::ConditionsProcessor() : Processor("ConditionsProcessor") {
     
     // modify processor description
@@ -146,7 +158,7 @@ namespace marlin{
 	std::string colName ( _dbfileHandlerInit[ index++ ] ) ; 
 	
 	lccd::LCConditionsMgr::instance()->
-	  registerHandler( condName ,  new lccd::SimpleFileHandler( fileName, condName, colName ) ) ;
+	  registerHandler( condName ,  new lccd::DBFileHandler( fileName, condName, colName ) ) ;
       }
     }
     
@@ -166,10 +178,9 @@ namespace marlin{
   }
 
 
-  void ConditionsProcessor::processRunHeader( LCRunHeader* run) { 
-    
-    _nRun++ ;
-  } 
+//   void ConditionsProcessor::processRunHeader( LCRunHeader* run) { 
+//     _nRun++ ;
+//   } 
   
   void ConditionsProcessor::processEvent( LCEvent * evt ) { 
     
@@ -185,16 +196,14 @@ namespace marlin{
     
   }
   
-  void ConditionsProcessor::check( LCEvent * evt ) { 
-    // nothing to check here - could be used to fill checkplots in reconstruction processor
-  }
-  
-  
-  void ConditionsProcessor::end(){ 
-    //   std::cout << "ConditionsProcessor::end()  " << name() 
-    // 	    << " processed " << _nEvt << " events in " << _nRun << " runs "
-    // 	    << std::endl ;
-  }
+//   void ConditionsProcessor::check( LCEvent * evt ) { 
+//     // nothing to check here - could be used to fill checkplots in reconstruction processor
+//   }
+//   void ConditionsProcessor::end(){ 
+//     //   std::cout << "ConditionsProcessor::end()  " << name() 
+//     // 	    << " processed " << _nEvt << " events in " << _nRun << " runs "
+//     // 	    << std::endl ;
+//   }
   
 }
   
