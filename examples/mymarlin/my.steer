@@ -8,45 +8,66 @@
 
 # specify one ore more input files (in one ore more lines)
 
-	LCIOInputFiles simjob.slcio  
-	#LCIOInputFiles ../simjob.slcio ../simjob1.slcio
+	LCIOInputFiles run0000_rawcalo.slcio
+	LCIOInputFiles run0001_rawcalo.slcio
+	LCIOInputFiles run0002_rawcalo.slcio
+	LCIOInputFiles run0003_rawcalo.slcio
+	LCIOInputFiles run0004_rawcalo.slcio
+	LCIOInputFiles run0005_rawcalo.slcio
+	LCIOInputFiles run0006_rawcalo.slcio
+	LCIOInputFiles run0007_rawcalo.slcio
+	LCIOInputFiles run0008_rawcalo.slcio
+	LCIOInputFiles run0009_rawcalo.slcio
 
 	# the active processors that are called in the given order
 
-	ActiveProcessors MyAIDAProcessor
-	ActiveProcessors MyProcessor
+	ActiveProcessors MyConditionsProcessor
+	ActiveProcessors MyCaloMapProcessor
 	ActiveProcessors MyLCIOOutputProcessor
 
 	# limit the number of processed records (run+evt):
-	MaxRecordNumber 5001
+	# MaxRecordNumber 5001
 
 	# don't call the check method of the processors if "true"
       #	SupressCheck true
 .end   -----------------------------------------------
 
 
+.begin MyCaloMapProcessor
+ProcessorType CaloMapProcessor
+#---CaloMapProcessor tests channel to cell ID mapping
 
-.begin MyAIDAProcessor
-
-ProcessorType AIDAProcessor
-
-#---Processor that handles AIDA files. Creates on directory per processor.  
-# Processors only need to create and fill the histograms, clouds and tuples. 
-# Needs to be the first ActiveProcessor
-
-#	 compression of output file -1: false >-1: true (default) 
-#	 default: 1 [i]
-	Compress   1
-
-#	 filename without extension
-#	 default: aida_file [Ss]
-	FileName   MyMarlin
-
-
-#	 type of output file xml (default) or root ( only OpenScientist)
-#	 default: xml [Ss]
-	FileType   xml
+#       Name of the conditions collection
+#        type:  [string]
+#        default: channelmap
+      ConditionsName   chmap
 .end -------------------------------------------------
+
+.begin MyConditionsProcessor
+ProcessorType ConditionsProcessor
+
+#---ConditionsProcessor provides access to conditions data  transparently 
+#   from LCIO files or a databases, using LCCD
+
+   DBInit   localhost:lccd_test:calvin:hobbes
+  DBCondHandler   chmap /calo/channelmap HEAD
+#   DBFileHandler  chmap condDB_channelmap_HEAD_20050225_142435.slcio channelmap
+#   DataFileHandler channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109116800000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109120400000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109124000000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109127600000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109131200000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109134800000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109138400000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109142000000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109145600000000000.slcio channelmap
+#   SimpleFileHandler chmap  condDB_channelmap_HEAD_1109149200000000000.slcio channelmap
+
+
+.end -------------------------------------------------
+
+
 
 .begin MyLCIOOutputProcessor
 
@@ -63,20 +84,5 @@ ProcessorType LCIOOutputProcessor
 #	 default: None [Ss]
 	LCIOWriteMode WRITE_NEW
 
-.end -------------------------------------------------
-
-.begin MyProcessor
-ProcessorType MyProcessor
-#---MyProcessor does whatever it does .
-#       Name of the MCParticle collection
-#        default: MCParticles [Ss]
-        #CollectionName   MCParticle
-
-.end -------------------------------------------------
-
-
-.begin MyTestProcessor
-ProcessorType TestProcessor
-#---Simple processor to test the marlin application. Prints run and event number.
 .end -------------------------------------------------
 

@@ -1,9 +1,13 @@
-#ifndef MyProcessor_h
-#define MyProcessor_h 1
+#ifndef CaloMapProcessor_h
+#define CaloMapProcessor_h 1
 
 #include "marlin/Processor.h"
 #include "lcio.h"
 #include <string>
+
+#include "ChannelToCellID.h"
+
+#include "lccd/ConditionsMap.hh"
 
 
 using namespace lcio ;
@@ -11,17 +15,19 @@ using namespace marlin ;
 
 
 
-/** Example processor for marlin. If compiled with MARLIN_USE_AIDA 
- *  it creates a histogram (cloud) of the MCParticle energies.
+  typedef lccd::ConditionsMap<int,ChannelToCellID> ChMap ;
+
+
+/** Test processor for conditions data with channel to cell ID mapping.
  */
-class MyProcessor : public Processor {
+class CaloMapProcessor : public Processor {
   
  public:
   
-  virtual Processor*  newProcessor() { return new MyProcessor ; }
+  virtual Processor*  newProcessor() { return new CaloMapProcessor ; }
   
   
-  MyProcessor() ;
+  CaloMapProcessor() ;
   
   /** Called at the begin of the job before anything is read.
    * Use to initialize the processor, e.g. book histograms.
@@ -47,9 +53,11 @@ class MyProcessor : public Processor {
   
  protected:
 
-  /** Input collection name.
-   */
+  /** Input collection name. */
   std::string _colName ;
+
+  /** the map */
+  ChMap* _chMap ;
 
   int _nRun ;
   int _nEvt ;
