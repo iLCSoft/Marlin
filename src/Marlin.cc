@@ -62,6 +62,8 @@ int main(int argc, char** argv ){
 
   assert( (Global::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() > 0 ) ;
 
+  int maxRecord = Global::parameters->getIntVal("MaxRecordNumber") ;
+
   // create lcio reader 
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
   
@@ -76,7 +78,12 @@ int main(int argc, char** argv ){
   //  lcReader->open( lcioInputFiles  ) ; 
 
   ProcessorMgr::instance()->init() ; 
-  lcReader->readStream() ;
+
+  if( maxRecord > 0 )
+    lcReader->readStream( maxRecord ) ;
+  else
+    lcReader->readStream() ;
+
   ProcessorMgr::instance()->end() ; 
   lcReader->close() ;
 
