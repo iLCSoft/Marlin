@@ -6,7 +6,7 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.8 2005-02-18 19:18:53 hvogt Exp $
+* $Id: README,v 1.9 2005-02-23 16:54:23 gaede Exp $
 ************************************************************************
 
 
@@ -20,17 +20,18 @@ By using the framework users don't have to write any code that deals with the IO
 write processors with defined callbacks, i.e. init(), processRunHeader(), processEvent(), end().
 
 To build marlin:
-   export LCIO=$MY_PATH_TO_LCIO
-  
-   #modify aid_env.sh according to your system    
 
-   . aida_env.sh
+   #-- modify env.sh according to your system  and requirements
+
+   #-- if you want to use aida, also modify aid_env.sh accordingly
+
+   . env.sh
 
    gmake -C ./src
 
+
 To build the API documentation with doxygen
    gmake -C ./src doc
-
 
 
 To develop your own processors and create applications:
