@@ -12,7 +12,7 @@ LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
   registerProcessorParameter( "LCIOOutputFile" , 
 			      " name of output file "  ,
 			      _lcioOutputFile ,
-			      std::string("LCIOOutputFile") ) ;
+			      std::string("outputfile.slcio") ) ;
 
   registerProcessorParameter( "LCIOWriteMode" , 
 			      "write mode for output file:  WRITE_APPEND or WRITE_NEW"  ,

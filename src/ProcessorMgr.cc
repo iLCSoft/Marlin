@@ -37,11 +37,15 @@ namespace marlin{
   }
   
   void  ProcessorMgr::dumpRegisteredProcessors() {
-    typedef ProcessorMap::iterator MI ;
 
-    std::cout << " Available processors : " <<  std::endl ;
+    typedef ProcessorMap::iterator MI ;
+    
+    std::cout  <<  std::endl 
+	       << "   Available processors : " 
+	       <<  std::endl 
+	       <<  std::endl ;
+
     for(MI i=_map.begin() ; i!= _map.end() ; i++) {
-      
       i->second->dump() ;
     }
   }
