@@ -58,7 +58,7 @@ void Processor::setParameters( StringParameters* parameters) {
     
     typedef ProcParamMap::iterator PMI ;
 
-    std::cout << "\t\tprocessor prameters:" << std::endl ;
+    std::cout << "\t\tprocessor parameters:" << std::endl ;
 
     for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
 
