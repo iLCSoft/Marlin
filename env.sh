@@ -8,7 +8,7 @@
 # modify the following pathes as needed
 
 # path to LCIO is required
-export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/lccdv00-01
+export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-04
 
 
 #-- comment out for production 
@@ -21,7 +21,7 @@ export MARLINDEBUG=1
 #---- LCCD -----------
 
 # use LCCD for conditions data (ConditionsProcessor) 
-export LCCD=/afs/desy.de/group/it/ilcsoft/lccd/v00-01
+export LCCD=/afs/desy.de/group/it/ilcsoft/lccd/v00-02
 
 # to make full use of LCCD also use the conditions data base
 # Note: if you don't want to use CondDBMySQL you also need a LCCD library that
