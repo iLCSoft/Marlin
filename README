@@ -1,0 +1,40 @@
+************************************************************************ 
+*
+* Marlin is a simple framework that should serve as the basis 
+* for the FLC software that deals with LCIO files, e.g. reconstruction
+* and analysis code.
+*
+************************************************************************
+
+
+The idea is that every computing task is implemented as a processor that analyzes 
+data in an LCEvent and creates additional output collections that are added to the event.
+The framework allows to define the processors (and their order) that are executed at runtime in a 
+simple steering file.
+Via the steering file you can also define named parameters (string, float, int - single and arrays)
+for every processor as well as for the global scope.
+By using the framework users don't have to write any code that deals with the IO they simply 
+write processors with defined callbacks, i.e. init(), processRunHeader(), processEvent(), end().
+
+USAGE:
+  - Inherit from Processor and overwrite the needed methods (init(), processRunHeader(), 
+  processEvent(), end()).
+
+  - provide default constructor that initializes the Processor with a type name (typically the class name)
+    and one globale instance of your class, e.g. 
+
+     TestProcessor aTestProcessor ;
+     TestProcessor::TestProcessor() : Processor("TestProcessor") {}
+
+
+  - Edit the GNUmakefile.example and copy it to the location of your .cc files
+
+  - 'gmake' will build your executable
+
+  - Edit the steering file:   
+    * Add your processor(s) to the variable ActiveProcessors with a unique name.
+    * Add a section with the processor parameters to the steering file (identified by the unique name)
+    * Don't forget the parameter ProcessorType (typically the class name)
+ 
+  - run: 'myexecutablename myparameters.steer'
+

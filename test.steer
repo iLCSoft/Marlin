@@ -1,0 +1,75 @@
+############################################
+#
+#  Example steering file for Marlin
+#    
+############################################
+
+.begin Global  ---------------------------------------
+
+# specify one ore more input files (in one ore more lines)
+
+LCIOInputFiles simjob.slcio  
+#LCIOInputFiles ../simjob.slcio ../simjob.slcio
+
+# the active processors that are called in the given order
+ActiveProcessors FranksTestProcessor
+ActiveProcessors AnotherTestProcessor
+ActiveProcessors EvenOneMoreTestProcessor
+ActiveProcessors OutputProcessor
+
+.end   -----------------------------------------------
+
+#define the processor parameters after '.begin ProcessorName' :
+
+# the default output processor d
+.begin OutputProcessor  
+
+# mandatory processor type (the name of the class)
+ProcessorType LCIOOutputProcessor
+
+# the outputfile
+LCIOOutputFile marlin.slcio
+
+# lcio write mode, new overwrites existing files 
+# append appends to existing files 
+# if nothing specified create new file only if it doesn't exist
+LCIOWriteMode WRITE_NEW
+#LCIOWriteMode WRITE_APPEND
+
+.end -------------------------------------------------
+
+
+# a few testprocessors - no functionality realy
+.begin FranksTestProcessor 
+
+ProcessorType TestProcessor
+
+parameter0   1  
+parameter1   4.30325e-34
+parameter2   2.0
+parameter3   3.3 
+.end -------------------------------------------------
+
+
+
+.begin AnotherTestProcessor
+
+ProcessorType TestProcessor
+
+parameter0   12
+parameter1   24
+parameter2   36
+parameter3   blabla bla bla
+.end -------------------------------------------------
+
+
+.begin EvenOneMoreTestProcessor
+
+ProcessorType TestProcessor
+
+parameter0   12.12 34 56 78 90 
+parameter1   24.24
+parameter2   36.45
+parameter3   48.56
+.end -------------------------------------------------
+
