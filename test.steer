@@ -9,7 +9,7 @@
 # specify one ore more input files (in one ore more lines)
 
 	LCIOInputFiles simjob.slcio  
-	#LCIOInputFiles ../simjob.slcio ../simjob.slcio
+	#LCIOInputFiles ../simjob.slcio ../simjob1.slcio
 
 	# the active processors that are called in the given order
 
