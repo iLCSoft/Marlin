@@ -29,13 +29,21 @@ BINDIR = $(BASEDIR)/bin
 INCLUDE =  -I $(LCIO)/src/cpp/include
 INCLUDE +=  -I $(BASEDIR)/include
 
+
 CPPFLAGS += $(INCLUDE)
 CPPFLAGS += -g -Wall -ansi
+
+
 
 LIBS =    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
 LIBS +=  -Wl,--demangle
 
+
+ifdef MARLIN_USE_AIDA
+CPPFLAGS += -D MARLIN_USE_AIDA `aida-config --include`
+LIBS += `aida-config --lib`
+endif
 
 BINS = $(PROGNAME).cc
 
@@ -48,10 +56,6 @@ bin:  lib $(patsubst %.cc,$(BINDIR)/%,$(BINS))
 $(BINDIR)/$(PROGNAME): $(PROGNAME).cc $(INSTALL)/lib$(PROGNAME).a
 	$(CXX) -o $(BINDIR)/$(PROGNAME) $(CPPFLAGS) $(PROGNAME).cc  $(LIBS) 
 
-
-#objects = $(patsubst %.cc,%.o,$(wildcard *.cc))
-
-#objects = $(filter-out $(BINS), $(patsubst %.cc,%.o,$(wildcard *.cc))  )
 
 objects = $(patsubst %.cc,%.o,$(filter-out $(BINS), $(wildcard *.cc))  )
 

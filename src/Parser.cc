@@ -99,9 +99,26 @@ int Parser::readNextValidLine( std::string& str , std::istream& stream){
     
     getline( stream , str ) ;
     
-    if( str.length() != 0  && str[0] != '#' )
+
+    char firstChar = ' ' ;
+    bool haveFirst = false ;
+
+    for(unsigned int i=0; i < str.length() ; i ++){
+
+      // replace tabs with whitespace
+      if( str[i] == '\t' )  str[i] = ' ' ; 
+     
+      // get first non whitespace character
+      if( ! haveFirst &&  str[i] != ' ' ){
+	firstChar = str[i] ;
+	haveFirst = true ;
+      }
+    } 
+    //    if( str.length() != 0  && str[0] != '#' )
+    if( str.length() != 0  && firstChar != '#' )
       return  str.length() ;
   }
+
   return 0 ;
 }
 
