@@ -15,7 +15,7 @@
 
 #include "Parser.h"
 
-#include "LCGlobal.h"
+#include "Global.h"
 
 #include <sstream>
 #include <fstream>
@@ -29,7 +29,7 @@ using namespace marlin ;
 
 void createProcessors( Parser&  parser ) ;
 
-/** LCIO framework that can be used to ananlyse LCIO data files
+/** LCIO framework that can be used to analyse LCIO data files
  *  in a modular way. All tasks have to be implemented in Subclasses
  *  of Processor. They will be called in the order specified in the steering file.
  *
@@ -50,17 +50,17 @@ int main(int argc, char** argv ){
   
   
   Parser  parser( steeringFileName ) ;
-  assert( ( LCGlobal::parameters = parser.getParameters("Global") ) != 0 ) ;
+  assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
 
   std::cout <<  "Global parameters : " << std::endl 
-	    << *LCGlobal::parameters  <<  std::endl ;
+	    << *Global::parameters  <<  std::endl ;
 
   createProcessors( parser ) ;
   
 
   StringVec lcioInputFiles ; 
 
-  assert( (LCGlobal::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() > 0 ) ;
+  assert( (Global::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() > 0 ) ;
 
   // create lcio reader 
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
@@ -92,7 +92,7 @@ int main(int argc, char** argv ){
 void  createProcessors(Parser&  parser) {
   
   StringVec activeProcessors ;
-  LCGlobal::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
+  Global::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
 
   for( StringVec::iterator m = activeProcessors.begin() ; m != activeProcessors.end() ; m++){
 

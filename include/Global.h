@@ -1,5 +1,5 @@
-#ifndef LCGlobal_h
-#define LCGlobal_h 1
+#ifndef Global_h
+#define Global_h 1
 
 
 namespace marlin{
@@ -7,7 +7,7 @@ namespace marlin{
 /** Simple global class for Marlin.
  *  Holds global parameters.
  */
-class LCGlobal{
+class Global{
   
 public:
   
@@ -15,7 +15,7 @@ public:
 
 };
 
-StringParameters* LCGlobal::parameters = 0 ;
+StringParameters* Global::parameters = 0 ;
 
 } // end namespace marlin 
 #endif
