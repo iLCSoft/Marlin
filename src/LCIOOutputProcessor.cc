@@ -3,7 +3,8 @@
 
 #include "IMPL/LCRunHeaderImpl.h"
 
-
+namespace marlin{
+ 
 LCIOOutputProcessor anLCIOOutputProcessor ;
 
 LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
@@ -79,3 +80,4 @@ void LCIOOutputProcessor::end(){
 
 }
 
+} // namespace marlin{

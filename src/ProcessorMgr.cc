@@ -4,6 +4,8 @@
 
 
 
+namespace marlin{
+
  ProcessorMgr* ProcessorMgr::_me = 0 ;
 
 
@@ -50,7 +52,9 @@ void ProcessorMgr::removeActiveProcessor(  const std::string& name ) {
 
 }
   
-bool ProcessorMgr::addActiveProcessor( const std::string& processorType , const std::string& processorName ) {
+bool ProcessorMgr::addActiveProcessor( const std::string& processorType , 
+				       const std::string& processorName , 
+				       StringParameters* parameters ) {
 
   Processor* processor = getProcessor( processorType ) ;
 
@@ -74,6 +78,10 @@ bool ProcessorMgr::addActiveProcessor( const std::string& processorType , const 
      newProcessor->setName( processorName ) ;
     _activeMap[ processorName ] = newProcessor ;
     _list.push_back( newProcessor ) ;
+
+    if( parameters != 0 ){
+      newProcessor->setParameters( parameters  ) ;
+    }
   }
 
   return true ;
@@ -101,3 +109,4 @@ void ProcessorMgr::end(){
 }
 
  
+} // namespace marlin

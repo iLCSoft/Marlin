@@ -63,3 +63,6 @@ clean:
 	rm -f *.o $(INSTALL)/lib$(PROGNAME).a $(BINDIR)/$(PROGNAME)
 
 
+
+doc:	
+	cd ../doc/ ; doxygen ;

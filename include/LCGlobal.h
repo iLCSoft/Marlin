@@ -2,11 +2,11 @@
 #define LCGlobal_h 1
 
 
+namespace marlin{
 
 /** Simple global class for Marlin.
  *  Holds global parameters.
  */
-
 class LCGlobal{
   
 public:
@@ -17,4 +17,5 @@ public:
 
 StringParameters* LCGlobal::parameters = 0 ;
 
+} // end namespace marlin 
 #endif

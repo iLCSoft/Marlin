@@ -3,7 +3,7 @@
 #include <strstream>
 #include <algorithm>
 
-
+namespace marlin{
 
 StringParameters::StringParameters(){
 
@@ -103,4 +103,4 @@ std::ostream& operator<< (  std::ostream& s,  StringParameters& p ) {
   return s ;
 }
 
-
+} //namsepace marlin

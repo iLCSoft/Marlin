@@ -4,6 +4,7 @@
 using namespace lcio ;
 
 
+namespace marlin{
 
 
 Processor::Processor(const std::string& typeName) :
@@ -36,3 +37,6 @@ void Processor::setParameters( StringParameters* parameters) {
   _parameters = parameters ;
   
 }
+
+
+} // namespace marlin

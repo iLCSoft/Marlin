@@ -15,6 +15,8 @@
 using namespace lcio ;
 
 
+namespace marlin{
+
  class ProcessorMgr ;
 
 
@@ -71,20 +73,17 @@ public:
    */
   virtual const std::string & name() const { return _processorName ; } 
 
-  virtual void setName( const std::string & name) { _processorName = name ; }
-  
-
   /** Return parameters defined for this Processor.
    */
   virtual StringParameters* parameters() { return _parameters ; } 
 
-  virtual void setParameters( StringParameters* parameters) ; 
-
-
-//   virtual void modifyRunHeader( LCRunHeader* run) { /*no_op*/; }   
-//   virtual void modifyEvent( LCEvent * evt ) { /*no_op*/ ;}
 
 protected:
+
+  virtual void setName( const std::string & name) { _processorName = name ; }
+  
+  virtual void setParameters( StringParameters* parameters) ; 
+
 
   std::string _typeName  ;
   std::string _processorName ;
@@ -94,5 +93,7 @@ private:
   Processor() ; 
 
 };
+
+} // end namespace marlin 
 
 #endif

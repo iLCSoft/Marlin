@@ -1,6 +1,8 @@
 #include "TestProcessor.h"
 #include <iostream>
 
+namespace marlin{
+
 TestProcessor aTestProcessor ;
 
 
@@ -42,3 +44,5 @@ void TestProcessor::end(){
 	    << std::endl ;
   
 }
+
+}// namespace marlin

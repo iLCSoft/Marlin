@@ -10,13 +10,7 @@
 #include <string>
 #include <vector>
 
-// namespace DATA
-// {
-// typedef std::vector< std::string > StringVec ;
-// typedef std::vector< float  > FloatVec ;
-// typedef std::vector< int > IntVec ;
 
-// };
 namespace EVENT
 {
 typedef std::vector< std::string > StringVec ;

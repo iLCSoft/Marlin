@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+namespace marlin{
 
 // open steering file with processor names 
 Parser::Parser( const std::string&  fileName) :
@@ -103,3 +104,7 @@ int Parser::readNextValidLine( std::string& str , std::istream& stream){
   }
   return 0 ;
 }
+
+
+
+}  // namespace marlin

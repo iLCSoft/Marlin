@@ -15,6 +15,9 @@
 
 using namespace lcio ;
 
+namespace marlin{
+
+
 typedef std::map< const std::string , Processor* > ProcessorMap ;
 typedef std::list< Processor* > ProcessorList ;
 
@@ -34,9 +37,10 @@ public:
   static ProcessorMgr* instance() ;
   
   /** Add a processor of type processorType with name processorName to the list
-   *  of active processors.
+   *  of active processors. Initializes the parameters (if != 0).
    */
-  bool addActiveProcessor( const std::string& processorType , const std::string& processorName ) ;
+  bool addActiveProcessor( const std::string& processorType , const std::string& processorName ,
+			   StringParameters* parameters=0 ) ;
   
   /** Remove processor with name from list of active processors.
    */
@@ -78,4 +82,5 @@ private:
   ProcessorList _list ;
 };
   
+} // end namespace marlin 
 #endif

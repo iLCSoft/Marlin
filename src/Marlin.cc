@@ -1,5 +1,13 @@
 #include "lcio.h"
-#include "LCIOSTLTypes.h"
+
+
+#ifdef LCIO_MAJOR_VERSION 
+ #if LCIO_VERSION_GE( 1,2)  
+  #include "LCIOSTLTypes.h"
+ #endif
+#else
+  #include "MarlinLCIOSTLTypes.h"
+#endif
 
 #include "ProcessorMgr.h"
 #include "Processor.h"
@@ -14,9 +22,9 @@
 #include <string>
 #include <assert.h>
 
-using namespace std ;
-using namespace lcio ;
 
+using namespace lcio ;
+using namespace marlin ;
 
 
 void createProcessors( Parser&  parser ) ;
@@ -34,9 +42,9 @@ int main(int argc, char** argv ){
   if( argc > 1 ){
     steeringFileName = argv[1] ;
   } else {
-    cout << " usage: Marlin lcioframe.steer" << endl 
+    std::cout << " usage: Marlin lcioframe.steer" << std::endl 
 	 << " steering file name "
-	 << endl ;
+	 << std::endl ;
     exit(1) ;
   }
   
@@ -98,17 +106,13 @@ void  createProcessors(Parser&  parser) {
     if( p!=0 ){
       std::string type = p->getStringVal("ProcessorType") ;
       
-      if( ProcessorMgr::instance()->addActiveProcessor( type , *m )  ){
+      if( ProcessorMgr::instance()->addActiveProcessor( type , *m , p )  ){
 
-	Processor* processor =  ProcessorMgr::instance()->getActiveProcessor( *m ) ;
-
-	processor->setParameters( p ) ;
+// 	Processor* processor =  ProcessorMgr::instance()->getActiveProcessor( *m ) ;
+//	processor->setParameters( p ) ;
       }
     }
 
   }
 }
-
-
-
 

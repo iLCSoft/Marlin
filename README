@@ -1,13 +1,13 @@
 ************************************************************************ 
 *
-* Marlin is a simple framework that should serve as the basis 
+* Marlin is a simple framework that could serve as the basis 
 * for the FLC software that deals with LCIO files, e.g. reconstruction
 * and analysis code.
 *
 ************************************************************************
 
 
-The idea is that every computing task is implemented as a processor that analyzes 
+The idea is that every computing task is implemented as a processor (module) that analyzes 
 data in an LCEvent and creates additional output collections that are added to the event.
 The framework allows to define the processors (and their order) that are executed at runtime in a 
 simple steering file.
@@ -21,7 +21,7 @@ USAGE:
   processEvent(), end()).
 
   - provide default constructor that initializes the Processor with a type name (typically the class name)
-    and one globale instance of your class, e.g. 
+    and one globale instance of your class, e.g. 7
 
      TestProcessor aTestProcessor ;
      TestProcessor::TestProcessor() : Processor("TestProcessor") {}

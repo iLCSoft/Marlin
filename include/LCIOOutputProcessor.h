@@ -12,6 +12,7 @@
 
 using namespace lcio ;
 
+namespace marlin{
 /** Default output processor. If active every event is writen to the 
  *  specified LCIO file.  
  *  Make sure that the processor is the last one called.
@@ -53,6 +54,7 @@ protected:
   int _nEvt ;
 } ;
 
+} // end namespace marlin 
 #endif
 
 

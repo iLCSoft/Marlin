@@ -7,10 +7,16 @@
 #include <iostream>
 #include "StringParameters.h"
 
+namespace marlin{
+
 class LCTokenizer ;
 
+
+typedef std::map< std::string ,  StringParameters* > StringParametersMap ;
+
+
 /** Simple parser class for Marlin.
- *  Creates LCParameter objects for all sections in a steering file
+ *  Creates Parameter objects for all sections in a steering file
  *  defined by enclosing <br>
  *  .begin SectionName <br>  
  *  .end  <br>
@@ -20,9 +26,6 @@ class LCTokenizer ;
  *  Values from multiple lines starting with the same name/key are appended
  *  to the corresponding list.
  */
-
-
-typedef std::map< std::string ,  StringParameters* > StringParametersMap ;
 
 class Parser {
   
@@ -101,4 +104,5 @@ class LCTokenizer{
 };
 
 
+} // end namespace marlin 
 #endif

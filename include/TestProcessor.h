@@ -6,6 +6,9 @@
 
 using namespace lcio ;
 
+
+namespace marlin {
+
 class TestProcessor : public Processor {
   
  public:
@@ -39,6 +42,8 @@ protected:
   int _nRun ;
   int _nEvt ;
 } ;
+
+} // end namespace marlin 
 #endif
 
 
