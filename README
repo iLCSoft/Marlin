@@ -6,7 +6,7 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.7 2005-02-18 19:12:22 hvogt Exp $
+* $Id: README,v 1.8 2005-02-18 19:18:53 hvogt Exp $
 ************************************************************************
 
 
@@ -65,6 +65,7 @@ To develop your own processors and create applications:
        
   
 If you are updating from an older version please read ./doc/release.notes.
+
 
 
 
