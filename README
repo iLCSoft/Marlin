@@ -6,8 +6,9 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.5 2004-12-02 22:10:40 gaede Exp $
+* $Id: README,v 1.6 2004-12-23 13:10:07 gaede Exp $
 ************************************************************************
+
 
 The idea is that every computing task is implemented as a processor (module) that analyzes 
 data in an LCEvent and creates additional output collections that are added to the event.
