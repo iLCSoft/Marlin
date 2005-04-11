@@ -13,6 +13,7 @@
 
 	# the active processors that are called in the given order
 
+#	ActiveProcessors MyStdHepReader
 	ActiveProcessors AIDAFile
 	ActiveProcessors MyConditionsProcessor
 	ActiveProcessors FranksTestProcessor
@@ -81,6 +82,18 @@ LCCD
 
 .end -------------------------------------------------
 
+
+.begin MyStdHepReader
+ProcessorType StdHepReader
+#---Reads StdHep files as input and creates LCIO events with MCParticle collections. 
+#---Make sure to not specify any LCIOInputFiles in the steering in order to read StdHep files.
+
+#       input file
+#        type:  [string]
+#        default: input.stdhep
+        StdHepFileName   input.stdhep
+
+.end -------------------------------------------------
 
 # a few testprocessors - no functionality realy
 .begin FranksTestProcessor 

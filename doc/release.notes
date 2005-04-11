@@ -2,6 +2,10 @@
   Marlin release notes
  ======================
 
+  new DataSourceProcessor class that allows reading of non-LCIO data streams
+ 
+  StdHepReader processor that creates an LCIO data stream from an stdhep file
+
  v00-08
 
   improved API doc

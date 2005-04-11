@@ -72,6 +72,9 @@ public:
   virtual void modifyRunHeader( LCRunHeader* run) { /*no_op*/; }   
   virtual void modifyEvent( LCEvent * evt ) { /*no_op*/ ;}
 
+  /** Calls readDataSource() for all Processors of type DataSourceProcessor.
+   */
+  virtual void readDataSource() ;
 
 protected:
   /** Register a processor with the given name.

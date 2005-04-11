@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "marlin/DataSourceProcessor.h"
 
 
 namespace marlin{
@@ -37,6 +38,20 @@ namespace marlin{
 
   }
   
+  void ProcessorMgr::readDataSource() {
+
+    for(  ProcessorList::iterator it = _list.begin() ;
+	  it != _list.end() ; it++ ){
+
+      DataSourceProcessor* dSP = dynamic_cast<DataSourceProcessor*>( *it ) ; 
+      
+      if( dSP != 0 )
+	dSP->readDataSource() ;
+
+    }
+  }
+
+
   void  ProcessorMgr::dumpRegisteredProcessors() {
 
     typedef ProcessorMap::iterator MI ;

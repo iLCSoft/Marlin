@@ -68,49 +68,57 @@ int main(int argc, char** argv ){
 
   StringVec lcioInputFiles ; 
 
-  assert( (Global::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() > 0 ) ;
+//   assert( (Global::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() > 0 ) ;
 
-  int maxRecord = Global::parameters->getIntVal("MaxRecordNumber") ;
+  if ( (Global::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() == 0 ){
 
-  // create lcio reader 
-  LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
-  
-
-  lcReader->registerLCRunListener( ProcessorMgr::instance() ) ; 
-  lcReader->registerLCEventListener( ProcessorMgr::instance() ) ; 
-
-
-  // process the data
-  // lcReader->open( lcioInputFiles[0]  ) ; 
-  // FIXME - read list of files
-  lcReader->open( lcioInputFiles  ) ; 
-
-  ProcessorMgr::instance()->init() ; 
-
-  if( maxRecord > 0 ){
-
-    try{
-      lcReader->readStream( maxRecord ) ;
+    ProcessorMgr::instance()->init() ; 
+    ProcessorMgr::instance()->readDataSource() ; 
+    ProcessorMgr::instance()->end() ; 
+    
+  } else { 
+    
+    int maxRecord = Global::parameters->getIntVal("MaxRecordNumber") ;
+    
+    // create lcio reader 
+    LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
+    
+    
+    lcReader->registerLCRunListener( ProcessorMgr::instance() ) ; 
+    lcReader->registerLCEventListener( ProcessorMgr::instance() ) ; 
+    
+    
+    // process the data
+    lcReader->open( lcioInputFiles  ) ; 
+    
+    ProcessorMgr::instance()->init() ; 
+    
+    if( maxRecord > 0 ){
+      
+      try{
+	lcReader->readStream( maxRecord ) ;
+      }
+      catch( lcio::EndOfDataException& e){
+	
+	std::cout << "Warning: " << e.what() << std::endl ;
+      }
+      
+    } else {
+      lcReader->readStream() ;
     }
-    catch( lcio::EndOfDataException& e){
-
-      std::cout << "Warning: " << e.what() << std::endl ;
-    }
-
-  } else {
-    lcReader->readStream() ;
+    
+    ProcessorMgr::instance()->end() ; 
+    lcReader->close() ;
+    delete lcReader ;
+    
   }
-
-  ProcessorMgr::instance()->end() ; 
-  lcReader->close() ;
-  delete lcReader ;
-
+  
   return 0 ;
 }
 
-
-void  createProcessors(Parser&  parser) {
   
+  void  createProcessors(Parser&  parser) {
+    
   StringVec activeProcessors ;
   Global::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
 
