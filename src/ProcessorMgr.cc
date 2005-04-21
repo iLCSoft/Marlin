@@ -132,6 +132,13 @@ namespace marlin{
 
   void ProcessorMgr::processEvent( LCEvent* evt ){ 
 
+    static bool isFirstEvent = true ;
+
+    for_each( _list.begin(), _list.end() , 
+	      std::bind2nd( std::mem_fun( &Processor::setFirstEvent ),isFirstEvent )) ;
+
+    isFirstEvent = false ;
+
     for_each( _list.begin() , _list.end() ,   std::bind2nd(  std::mem_fun( &Processor::processEvent ) , evt ) ) ;
 
     if( Global::parameters->getStringVal("SupressCheck") != "true" )

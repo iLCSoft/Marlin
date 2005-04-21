@@ -2,6 +2,10 @@
   Marlin release notes
  ======================
 
+  new method Processor::isFirstEvent() - use instead of static bool isFirstEvent
+
+  added SimpleFastMCProcessor - simple smearing Monte Carlo - see fastMC.steer for an example
+
   new DataSourceProcessor class that allows reading of non-LCIO data streams
  
   StdHepReader processor that creates an LCIO data stream from an stdhep file

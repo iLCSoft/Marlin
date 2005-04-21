@@ -51,7 +51,6 @@ void MyProcessor::processRunHeader( LCRunHeader* run) {
 
 void MyProcessor::processEvent( LCEvent * evt ) { 
 
-  static bool firstEvent = true ;
     
   // this gets called for every event 
   // usually the working horse ...
@@ -61,7 +60,7 @@ void MyProcessor::processEvent( LCEvent * evt ) {
   // define a histogram pointer
   static AIDA::ICloud1D* hMCPEnergy ;    
   
-  if( firstEvent ) { 
+  if( isFirstEvent() ) { 
     
     hMCPEnergy = 
       AIDAProcessor::histogramFactory(this)->
@@ -89,8 +88,6 @@ void MyProcessor::processEvent( LCEvent * evt ) {
 #endif
 
 
-  firstEvent = false ;
-  
   _nEvt ++ ;
 }
 

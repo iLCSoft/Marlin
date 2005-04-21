@@ -169,7 +169,6 @@ namespace marlin{
 
   void SimpleFastMCProcessor::check( LCEvent * evt ) { 
     
-    static bool firstEvent = true ;
     
 #ifdef MARLIN_USE_AIDA
     
@@ -188,7 +187,7 @@ namespace marlin{
     static AIDA::IProfile1D* hHadHelperP1 ;    
     
     
-    if( firstEvent ) { 
+    if( isFirstEvent() ) { 
       
       hChargedRes = AIDAProcessor::histogramFactory(this)->
 	createCloud1D( "hChargedRes", "dP/P for charged tracks", 100 ) ; 
@@ -215,10 +214,10 @@ namespace marlin{
       
       
       hGamHelperP1 = AIDAProcessor::histogramFactory(this)->
-       	createProfile1D( "hGamHelperP1", " helper profile - ignore", 20, 1.,21. ) ; 
+       	createProfile1D( "hGamHelperP1", " helper profile of energy spread", 20, 1.,21. ) ; 
       
       hHadHelperP1 = AIDAProcessor::histogramFactory(this)->
-       	createProfile1D( "hHadHelperP1", " helper profile - ignore",  20, 1.,21. ) ; 
+       	createProfile1D( "hHadHelperP1", " helper profile of energy spread",  20, 1.,21. ) ; 
     }
     
     
@@ -295,8 +294,6 @@ namespace marlin{
 #endif
       
 
-    firstEvent = false ;
-    
   }
   
   

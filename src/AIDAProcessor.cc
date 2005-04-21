@@ -121,14 +121,12 @@ namespace marlin {
 
   void AIDAProcessor::check( LCEvent * evt ) { 
     
-    static bool firstEvent = true ;
-    
     static AIDA::ICloud1D* hEvtTime ;    
     static clock_t eventTime =  clock () ; 
     
     
     // create directory for this processor
-    if( firstEvent ) { 
+    if( isFirstEvent() ) { 
       _tree->cd( "/" ) ;
       assert( _tree->mkdir( name()  ) ) ; 
       
@@ -138,7 +136,6 @@ namespace marlin {
       
       _tree->cd("..") ;
       
-      firstEvent = false ;
       
     } else { 
       

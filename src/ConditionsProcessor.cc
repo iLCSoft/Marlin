@@ -187,13 +187,6 @@ namespace marlin{
     // update all condition handlers
     lccd::LCConditionsMgr::instance()->updateEvent(  evt ) ;
     
-    //   static bool firstEvent = true ;
-    //   if( firstEvent ) { 
-    //     LCTOOLS::dumpEvent( evt ) ;
-    //   }
-    //   firstEvent = false ;
-    //   _nEvt ++ ;
-    
   }
   
 //   void ConditionsProcessor::check( LCEvent * evt ) { 

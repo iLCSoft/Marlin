@@ -106,12 +106,14 @@ namespace marlin{
      */
     virtual void printParameters() ;
 
-
-    
     /** Description of processor.
      */
     const std::string& description() { return _description ; }
 
+
+    /** True if first event in processEvent(evt) - use this e.g. to initialize histograms etc.
+     */
+    bool isFirstEvent() { return _isFirstEvent ; } ;
 
   protected:
 
@@ -179,7 +181,8 @@ namespace marlin{
     virtual void baseInit() ;
 
 
-
+    /** Called by ProcessorMgr */
+    void setFirstEvent( bool isFirstEvent ) { _isFirstEvent =  isFirstEvent ; }
 
     /**Describes what the processor does. Set in constructor.
      */
@@ -189,6 +192,7 @@ namespace marlin{
     StringParameters* _parameters ;
 
     ProcParamMap _map ;  
+    bool _isFirstEvent ;
 
   private:
     Processor() ; 

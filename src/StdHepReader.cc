@@ -47,11 +47,10 @@ namespace marlin{
 
     int evtNum = 0 ;
     int runNum = 0 ;
-    static bool firstEvent = true ;
 
     while( ( col = rdr->readEvent() ) != 0 ) {
       
-      if( firstEvent ) {   // create run header
+      if( isFirstEvent() ) {   // create run header
 	
 	LCRunHeaderImpl* rHdr = new LCRunHeaderImpl ;
 
@@ -60,7 +59,6 @@ namespace marlin{
 
 	ProcessorMgr::instance()->processRunHeader( rHdr ) ;
 	
-	firstEvent = false ; 
       }
       
       evt = new LCEventImpl ;
