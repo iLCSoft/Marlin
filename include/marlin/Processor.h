@@ -29,7 +29,7 @@ namespace marlin{
    *   init, processRun, processEvent and end.<br>
    * Use registerProcessorParameter to define all parameters that the module uses.
    * Registered parameters are filled automatically before init() is called.
-   * With MyAPplication -l you can print a list of available processors including
+   * With MyAplication -l you can print a list of available processors including
    * the steering parameters they use/need.
    *
    * @see init 

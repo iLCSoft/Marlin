@@ -11,6 +11,7 @@
 #include <AIDA/ITree.h>
 #include <AIDA/IHistogramFactory.h>
 #include <AIDA/ITupleFactory.h>
+#include <AIDA/IDataPointSetFactory.h>
 
 #include <AIDA/ICloud1D.h>
 
@@ -102,6 +103,10 @@ namespace marlin {
     _tupleFactory = _analysisFactory->createTupleFactory( *_tree ) ;
     
     assert(  _tupleFactory != 0 ) ; 
+
+    _dataPointSetFactory = _analysisFactory->createDataPointSetFactory( *_tree ) ;
+    
+    assert(  _dataPointSetFactory != 0 ) ; 
     
   } 
   
@@ -154,6 +159,7 @@ namespace marlin {
     delete _analysisFactory ; 
     delete _histoFactory ;
     delete _tupleFactory ;
+    delete _dataPointSetFactory ;
     
   }
   
@@ -170,6 +176,11 @@ namespace marlin {
   AIDA::ITupleFactory* AIDAProcessor::tupleFactory( const Processor* proc ) {
     tree( proc );
     return  _me->_tupleFactory ;
+  }
+
+  AIDA::IDataPointSetFactory* AIDAProcessor::dataPointSetFactory( const Processor* proc ) {
+    tree( proc );
+    return  _me->_dataPointSetFactory ;
   }
   
   AIDA::ITree* AIDAProcessor::tree( const Processor* proc ) {

@@ -12,6 +12,7 @@ namespace AIDA{
   class ITree ;
   class IHistogramFactory ;
   class ITupleFactory ;
+  class IDataPointSetFactory ;
 } ;
 
 class HistoManager ;
@@ -75,6 +76,14 @@ class AIDAProcessor : public marlin::Processor {
    */
   static AIDA::ITree* tree( const Processor* proc ) ;
   
+  /** Returns an AIDA dataPointSet factory for the given processor with
+   *  the current directory set to the processor's name.
+   *  Call right before using the factory to create dataPointSets.
+   */
+  static AIDA::IDataPointSetFactory* dataPointSetFactory( const Processor* proc ) ;
+
+
+
 protected:
 
   AIDA::IAnalysisFactory* _analysisFactory ; 
@@ -82,6 +91,7 @@ protected:
   AIDA::ITree*  _tree ;
   AIDA::IHistogramFactory* _histoFactory ; 
   AIDA::ITupleFactory* _tupleFactory ; 
+  AIDA::IDataPointSetFactory* _dataPointSetFactory ; 
 
   std::string _fileType ;
   std::string _fileName ;

@@ -39,6 +39,9 @@ BINDIR = $(BASEDIR)/bin
 INCLUDE =  -I $(LCIO)/src/cpp/include
 INCLUDE +=  -I $(BASEDIR)/include
 
+ifdef CLHEP
+ INCLUDE += -D USE_CLHEP -I $(CLHEP)/include
+endif
 
 ifdef LCCD
  INCLUDE += -D USE_LCCD -I $(LCCD)/source/include
@@ -59,6 +62,12 @@ ifdef LCCD
    LIBS += -L $(CondDBMySQL)/lib -lconddb    
  endif
 endif
+
+ifdef CLHEP
+   LIBS += -L $(CLHEP)/lib -lCLHEP
+endif
+
+
 LIBS +=    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 LIBS +=  -Wl,--demangle
 
