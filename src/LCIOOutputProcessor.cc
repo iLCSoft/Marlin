@@ -3,28 +3,52 @@
 
 #include "IMPL/LCRunHeaderImpl.h"
 #include "UTIL/LCTOOLS.h"
+#include "EVENT/LCCollection.h"
+
+#include <algorithm>
 
 namespace marlin{
- 
-LCIOOutputProcessor anLCIOOutputProcessor ;
+  
+  LCIOOutputProcessor anLCIOOutputProcessor ;
+  
+  LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
+    
+    _description = "Writes the current event to the specified LCIO outputfile."
+      " Needs to be the last ActiveProcessor." ;
+    
+    
+    registerProcessorParameter( "LCIOOutputFile" , 
+				" name of output file "  ,
+				_lcioOutputFile ,
+				std::string("outputfile.slcio") ) ;
+    
+    registerProcessorParameter( "LCIOWriteMode" , 
+				"write mode for output file:  WRITE_APPEND or WRITE_NEW"  ,
+				_lcioWriteMode ,
+				std::string("None") ) ;
 
-LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
 
-  _description = "Writes the current event to the specified LCIO outputfile."
-    " Needs to be the last ActiveProcessor." ;
-  
-  
-  registerProcessorParameter( "LCIOOutputFile" , 
-			      " name of output file "  ,
-			      _lcioOutputFile ,
-			      std::string("outputfile.slcio") ) ;
-  
-  registerProcessorParameter( "LCIOWriteMode" , 
-			      "write mode for output file:  WRITE_APPEND or WRITE_NEW"  ,
-			      _lcioWriteMode ,
-			      std::string("None") ) ;
-  
-}
+    StringVec dropNamesExamples ;
+    dropNamesExamples.push_back("TPCHits");
+    dropNamesExamples.push_back("HCalHits");
+    
+
+    registerOptionalParameter( "DropCollectionNames" , 
+ 			       "drops the named collections from the event"  ,
+ 			       _dropCollectionNames ,
+ 			       dropNamesExamples ) ;
+    
+    
+    StringVec dropTypesExample ;
+    dropTypesExample.push_back("SimTrackerHit");
+    dropTypesExample.push_back("SimCalorimeterHit");
+    
+    registerOptionalParameter( "DropCollectionTypes" , 
+			       "drops all collections of the given type from the event"  ,
+			       _dropCollectionTypes ,
+			       dropTypesExample ) ;
+    
+  }
 
 void LCIOOutputProcessor::init() { 
 
@@ -64,6 +88,49 @@ void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) {
 
   _nRun++ ;
 } 
+
+  void LCIOOutputProcessor::dropCollections( LCEvent * evt ) { 
+
+    bool isLCIO_v01_04_01 = false ; 
+
+#ifdef LCIO_PATCHVERSION_GE
+    isLCIO_v01_04_01 = LCIO_PATCHVERSION_GE( 1, 4, 1) ;
+#endif
+
+    if( ! isLCIO_v01_04_01 ) {
+      static bool firstCall = true ;
+
+      if( firstCall ) {
+	std::cout << " *** WARNING: LCIOOutputProcessor::dropCollections requires LCIO v01-04-01 or higher "
+		  << std:: endl
+		  << "      -> no collections droped from the event !! " 
+		  << std:: endl ;
+      }
+      firstCall = false ;
+
+      return ;
+    }
+
+    const StringVec*  colNames = evt->getCollectionNames() ;
+
+    for( StringVec::const_iterator it = colNames->begin();
+	 it != colNames->end() ; it++ ){
+      
+      LCCollection*  col =  evt->getCollection( *it ) ;
+      
+      std::string type  = col->getTypeName() ;
+      
+      if( std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end(), type ) 
+	  != _dropCollectionTypes.end()   || 
+	  std::find( _dropCollectionNames.begin(), _dropCollectionNames.end(), *it ) 
+	  != _dropCollectionNames.end() ) {
+	
+	evt->removeCollection( *it ) ;
+      }
+    }
+
+
+  }
 
 void LCIOOutputProcessor::processEvent( LCEvent * evt ) { 
 //   std::cout << "LCIOOutputProcessor::processEvent()  " << name() 

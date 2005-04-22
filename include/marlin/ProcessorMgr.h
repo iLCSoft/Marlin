@@ -3,6 +3,7 @@
 
 #include "lcio.h"
 #include "Processor.h"
+#include "LCIOOutputProcessor.h"
 
 #include "IO/LCRunListener.h"
 #include "IO/LCEventListener.h"
@@ -70,7 +71,7 @@ public:
   
   
   virtual void modifyRunHeader( LCRunHeader* run) { /*no_op*/; }   
-  virtual void modifyEvent( LCEvent * evt ) { /*no_op*/ ;}
+  virtual void modifyEvent( LCEvent * evt ) ; 
 
   /** Calls readDataSource() for all Processors of type DataSourceProcessor.
    */
@@ -82,11 +83,15 @@ protected:
   void registerProcessor( Processor* processor ) ;
 
 
+  ProcessorMgr() : _outputProcessor(0) {}
+
 private:
   static ProcessorMgr*  _me ;
   ProcessorMap _map ;
   ProcessorMap _activeMap ;
   ProcessorList _list ;
+  LCIOOutputProcessor* _outputProcessor ;
+
 };
   
 } // end namespace marlin 

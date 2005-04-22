@@ -15,8 +15,8 @@
 
 #	ActiveProcessors MyStdHepReader
 	ActiveProcessors AIDAFile
-	ActiveProcessors MyConditionsProcessor
-	ActiveProcessors FranksTestProcessor
+#	ActiveProcessors MyConditionsProcessor
+#	ActiveProcessors FranksTestProcessor
 #	ActiveProcessors AnotherTestProcessor
 	ActiveProcessors OutputFile
 
@@ -68,10 +68,22 @@ LCCD
 .begin OutputFile  
 
 	# mandatory processor type (the name of the class)
-		ProcessorType LCIOOutputProcessor
+        ProcessorType LCIOOutputProcessor
+
+#       drops the named collections from the event
+#        type:  [StringVec]
+#        example:
+#       DropCollectionNames   TPCHits HCalHits
+       DropCollectionNames ECAL007 MCParticle
+
+#       drops all collections of the given type from the event
+#        type:  [StringVec]
+#        example:
+       DropCollectionTypes   SimTrackerHits SimCalorimeterHits
+#       DropCollectionTypes MCParticle
 
 	# the outputfile
-		LCIOOutputFile marlin.slcio
+        LCIOOutputFile simjob_droped.slcio
 
 	# lcio write mode, new overwrites existing files 
 	# append appends to existing files 

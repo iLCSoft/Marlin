@@ -124,8 +124,9 @@ void Processor::setParameters( StringParameters* parameters) {
   bool Processor::parameterSet( const std::string& name ) {
 
     ProcParamMap::iterator it = _map.find(name) ;
+
     if( it != _map.end() )
-      return it->second->valueSet() ;
+      return it->second->valueSet() ;    
     else
       return false ;
   }
@@ -137,7 +138,6 @@ void Processor::setParameters( StringParameters* parameters) {
     for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
 
       i->second->setValue( _parameters ) ;
-
     }
 
     init() ;

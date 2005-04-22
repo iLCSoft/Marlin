@@ -81,7 +81,15 @@ namespace marlin{
     
     // this is where we do the fast Monte Carlo ....
     
+
+#ifdef LCIO_PATCHVERSION_GE  // has been defined in 1.4.1 which has a bug fix in  LCFourVector<T>
     LCFourVector<MCParticle>  mc4V( mcp ) ;
+#else
+    HepLorentzVector mc4V( mcp->getMomentum()[0], mcp->getMomentum()[1],
+			   mcp->getMomentum()[2], mcp->getEnergy() )  ;
+#endif
+
+
     
     FastMCParticleType type = getParticleType(mcp ) ;
     

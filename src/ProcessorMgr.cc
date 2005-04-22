@@ -96,7 +96,8 @@ namespace marlin{
 		<< std::endl   ;
       return false ;
     }
-  
+
+    
     if( _activeMap.find( processorName ) != _activeMap.end() ){
     
       std::cerr << " ProcessorMgr::addActiveProcessor: processor " <<  processorName 
@@ -114,6 +115,10 @@ namespace marlin{
       if( parameters != 0 ){
 	newProcessor->setParameters( parameters  ) ;
       }
+      // keep a copy of the output processor
+      if( processorType == "LCIOOutputProcessor" ){
+	_outputProcessor = dynamic_cast<LCIOOutputProcessor*>( newProcessor ) ;
+      }
     }
 
     return true ;
@@ -129,6 +134,15 @@ namespace marlin{
 
     for_each( _list.begin() , _list.end() ,  std::bind2nd(  std::mem_fun( &Processor::processRunHeader ) , run ) ) ;
   }   
+
+
+  void ProcessorMgr::modifyEvent( LCEvent * evt ) { 
+    
+    if( _outputProcessor != 0 )
+      _outputProcessor->dropCollections( evt ) ;
+    
+  }
+  
 
   void ProcessorMgr::processEvent( LCEvent* evt ){ 
 
