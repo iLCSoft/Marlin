@@ -72,8 +72,10 @@ LIBS +=    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 LIBS +=  -Wl,--demangle
 
 ifdef MARLIN_USE_AIDA
+#------ifneq ($(MARLIN_USE_AIDA),"0") -- FIXME: this doesn't work ...
 CPPFLAGS += -D MARLIN_USE_AIDA `aida-config --include`
 LIBS += `aida-config --lib`
+#endif
 endif
 
 BINS = $(PROGNAME).cc

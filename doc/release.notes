@@ -2,6 +2,8 @@
   Marlin release notes
  ======================
 
+  LCIOOutputProcessor allows to drop collections - needs LCIO v01-04-01
+
   new method Processor::isFirstEvent() - use instead of static bool isFirstEvent
 
   added SimpleFastMCProcessor - simple smearing Monte Carlo - see fastMC.steer for an example
