@@ -21,7 +21,7 @@ namespace marlin{
    *  <li>charged: e+-,mu+-,pi+-,K+-,p+-,....</li>
    *  <li>neutral hadron: K0L, n, Lambda0,...</li>
    *  </ul>
-   *  The resolutions for charged particles are given as delta_P/P for a certain polar angle 
+   *  The resolutions for charged particles are given as delta(1/P) for a certain polar angle 
    *  range (mapped to [0.,pi/2.]), e.g. <br>
    *  <b>ChargedResolution  &nbsp; .7e-5   &nbsp; 0.   &nbsp; 3.141593/2. </b><br>
    *  sets the resolution for all charged particles to 0.7*10^-5.<br> 

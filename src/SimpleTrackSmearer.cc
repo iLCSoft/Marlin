@@ -56,7 +56,7 @@ namespace marlin{
 
       double P = v.vect().mag() ;
 
-      double deltaP = RandGauss::shoot( 0.0 , P*resolution ) ;
+      double deltaP = RandGauss::shoot( 0.0 , P*P*resolution ) ;
       
       Hep3Vector n3v( v.vect() )  ;
       
