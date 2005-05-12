@@ -24,7 +24,7 @@ namespace marlin{
     /** Creates events with MCParticle collections from the StdHep input file and
      *  calls all active processors' processEvent() and processRunHeader Method.
      */
-    virtual void readDataSource() ;
+    virtual void readDataSource( int numEvents ) ;
     
     
     virtual void init() ;

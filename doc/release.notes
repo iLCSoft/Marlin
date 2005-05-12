@@ -2,6 +2,7 @@
   Marlin release notes
  ======================
 
+ 
   LCIOOutputProcessor allows to drop collections - needs LCIO v01-04-01
 
   new method Processor::isFirstEvent() - use instead of static bool isFirstEvent
@@ -11,6 +12,7 @@
   new DataSourceProcessor class that allows reading of non-LCIO data streams
  
   StdHepReader processor that creates an LCIO data stream from an stdhep file
+  (patch by J.Samson for limiting the number of events (MaxRecordNumber))
 
  v00-08
 

@@ -75,7 +75,7 @@ public:
 
   /** Calls readDataSource() for all Processors of type DataSourceProcessor.
    */
-  virtual void readDataSource() ;
+  virtual void readDataSource( int numEvents ) ;
 
 protected:
   /** Register a processor with the given name.

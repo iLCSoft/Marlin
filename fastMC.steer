@@ -21,7 +21,7 @@
 	ActiveProcessors OutputFile
 
 	# limit the number of processed records (run+evt):
-#	MaxRecordNumber 5001
+	MaxRecordNumber 101
 
 	# don't call the check method of the processors if "true"
       #	SupressCheck true

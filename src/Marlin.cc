@@ -72,8 +72,10 @@ int main(int argc, char** argv ){
 
   if ( (Global::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() == 0 ){
 
+    int maxRecord = Global::parameters->getIntVal("MaxRecordNumber");
     ProcessorMgr::instance()->init() ; 
-    ProcessorMgr::instance()->readDataSource() ; 
+    // fixme: pass maxRecord-1 (because of the runheader, which is generated)?
+    ProcessorMgr::instance()->readDataSource(maxRecord) ; 
     ProcessorMgr::instance()->end() ; 
     
   } else { 

@@ -38,7 +38,7 @@ namespace marlin{
 
   }
   
-  void ProcessorMgr::readDataSource() {
+  void ProcessorMgr::readDataSource( int numEvents ) {
 
     for(  ProcessorList::iterator it = _list.begin() ;
 	  it != _list.end() ; it++ ){
@@ -46,7 +46,7 @@ namespace marlin{
       DataSourceProcessor* dSP = dynamic_cast<DataSourceProcessor*>( *it ) ; 
       
       if( dSP != 0 )
-	dSP->readDataSource() ;
+	dSP->readDataSource( numEvents ) ;
 
     }
   }
@@ -148,11 +148,6 @@ namespace marlin{
 
     static bool isFirstEvent = true ;
 
-    for_each( _list.begin(), _list.end() , 
-	      std::bind2nd( std::mem_fun( &Processor::setFirstEvent ),isFirstEvent )) ;
-
-    isFirstEvent = false ;
-
     for_each( _list.begin() , _list.end() ,   std::bind2nd(  std::mem_fun( &Processor::processEvent ) , evt ) ) ;
 
     if( Global::parameters->getStringVal("SupressCheck") != "true" )
@@ -160,6 +155,13 @@ namespace marlin{
       for_each( _list.begin() , _list.end(), 
 		std::bind2nd( std::mem_fun( &Processor::check ) , evt ) ) ;
 
+    if ( isFirstEvent )
+      {
+	isFirstEvent = false;
+	for_each( _list.begin(), _list.end() , 
+		  std::bind2nd( std::mem_fun( &Processor::setFirstEvent ),isFirstEvent )) ;
+      }
+   
   }
 
   void ProcessorMgr::end(){ 

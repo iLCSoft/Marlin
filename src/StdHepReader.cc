@@ -38,7 +38,7 @@ namespace marlin{
   }
 
 
-  void StdHepReader::readDataSource() {
+  void StdHepReader::readDataSource( int numEvents ) {
     
     LCStdHepRdr* rdr = new  LCStdHepRdr( _fileName.c_str()  ) ;
     
@@ -50,6 +50,12 @@ namespace marlin{
 
     while( ( col = rdr->readEvent() ) != 0 ) {
       
+      if ( numEvents > 0 && evtNum+1 > numEvents )
+	{
+	  delete col;
+	  break;
+	}
+      
       if( isFirstEvent() ) {   // create run header
 	
 	LCRunHeaderImpl* rHdr = new LCRunHeaderImpl ;
@@ -58,7 +64,7 @@ namespace marlin{
 	rHdr->setRunNumber( runNum ) ;
 
 	ProcessorMgr::instance()->processRunHeader( rHdr ) ;
-	
+	setFirstEvent( false );	
       }
       
       evt = new LCEventImpl ;

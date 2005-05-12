@@ -11,7 +11,8 @@ namespace marlin{
 Processor::Processor(const std::string& typeName) :
   _description(" description not set by author ") ,
   _typeName( typeName ) ,
-  _parameters(0) 
+  _parameters(0) ,
+  _isFirstEvent( true )
 {
   
   //register processor in map

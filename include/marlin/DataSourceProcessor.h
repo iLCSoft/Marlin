@@ -26,8 +26,9 @@ namespace marlin{
      *  The user needs to call ProcessMgr::processRunHeader(LCRunHeader* rhdr) and 
      *  ProcessMgr::processEvent(LCEvent* evt) in order to call the relevant Processor methods in 
      *  readDataSource().<br>
+     *  \param numEvents The number of events the DataSourceProcessor should generate.
      */
-    virtual void readDataSource() = 0 ;
+    virtual void readDataSource( int numEvents ) = 0 ;
 
   };
  
