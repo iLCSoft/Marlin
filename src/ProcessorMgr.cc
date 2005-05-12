@@ -115,10 +115,10 @@ namespace marlin{
       if( parameters != 0 ){
 	newProcessor->setParameters( parameters  ) ;
       }
-      // keep a copy of the output processor
-      if( processorType == "LCIOOutputProcessor" ){
-	_outputProcessor = dynamic_cast<LCIOOutputProcessor*>( newProcessor ) ;
-      }
+//       // keep a copy of the output processor
+//       if( processorType == "LCIOOutputProcessor" ){
+// 	_outputProcessor = dynamic_cast<LCIOOutputProcessor*>( newProcessor ) ;
+//       }
     }
 
     return true ;
@@ -136,12 +136,10 @@ namespace marlin{
   }   
 
 
-  void ProcessorMgr::modifyEvent( LCEvent * evt ) { 
-    
-    if( _outputProcessor != 0 )
-      _outputProcessor->dropCollections( evt ) ;
-    
-  }
+//   void ProcessorMgr::modifyEvent( LCEvent * evt ) { 
+//     if( _outputProcessor != 0 )
+//       _outputProcessor->dropCollections( evt ) ;
+//   }
   
 
   void ProcessorMgr::processEvent( LCEvent* evt ){ 
@@ -150,20 +148,20 @@ namespace marlin{
 
     for_each( _list.begin() , _list.end() ,   std::bind2nd(  std::mem_fun( &Processor::processEvent ) , evt ) ) ;
 
-    if( Global::parameters->getStringVal("SupressCheck") != "true" )
-
+    if( Global::parameters->getStringVal("SupressCheck") != "true" ) {
+      
       for_each( _list.begin() , _list.end(), 
 		std::bind2nd( std::mem_fun( &Processor::check ) , evt ) ) ;
-
-    if ( isFirstEvent )
-      {
-	isFirstEvent = false;
-	for_each( _list.begin(), _list.end() , 
-		  std::bind2nd( std::mem_fun( &Processor::setFirstEvent ),isFirstEvent )) ;
-      }
-   
+    }
+    
+    if ( isFirstEvent ) {
+      isFirstEvent = false;
+      for_each( _list.begin(), _list.end() , 
+		std::bind2nd( std::mem_fun( &Processor::setFirstEvent ),isFirstEvent )) ;
+    }
+    
   }
-
+  
   void ProcessorMgr::end(){ 
 
     for_each( _list.begin() , _list.end() ,  std::mem_fun( &Processor::end ) ) ;

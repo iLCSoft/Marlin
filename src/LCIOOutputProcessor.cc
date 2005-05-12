@@ -4,6 +4,7 @@
 #include "IMPL/LCRunHeaderImpl.h"
 #include "UTIL/LCTOOLS.h"
 #include "EVENT/LCCollection.h"
+#include "IMPL/LCCollectionVec.h"
 
 #include <algorithm>
 
@@ -91,44 +92,43 @@ void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) {
 
   void LCIOOutputProcessor::dropCollections( LCEvent * evt ) { 
 
-    bool isLCIO_v01_04_01 = false ; 
+//     bool isLCIO_v01_04_01 = false ; 
+// #ifdef LCIO_PATCHVERSION_GE
+//     isLCIO_v01_04_01 = LCIO_PATCHVERSION_GE( 1, 4, 1) ;
+// #endif
+//     if( ! isLCIO_v01_04_01 ) {
+//       static bool firstCall = true ;
+//       if( firstCall ) {
+// 	std::cout << " *** WARNING: LCIOOutputProcessor::dropCollections requires LCIO v01-04-01 or higher "
+// 		  << std:: endl
+// 		  << "      -> no collections droped from the event !! " 
+// 		  << std:: endl ;
+//       }
+//       firstCall = false ;
 
-#ifdef LCIO_PATCHVERSION_GE
-    isLCIO_v01_04_01 = LCIO_PATCHVERSION_GE( 1, 4, 1) ;
-#endif
-
-    if( ! isLCIO_v01_04_01 ) {
-      static bool firstCall = true ;
-
-      if( firstCall ) {
-	std::cout << " *** WARNING: LCIOOutputProcessor::dropCollections requires LCIO v01-04-01 or higher "
-		  << std:: endl
-		  << "      -> no collections droped from the event !! " 
-		  << std:: endl ;
-      }
-      firstCall = false ;
-
-      return ;
-    }
+//       return ;
+//     }
 
     const StringVec*  colNames = evt->getCollectionNames() ;
 
     for( StringVec::const_iterator it = colNames->begin();
 	 it != colNames->end() ; it++ ){
       
-      LCCollection*  col =  evt->getCollection( *it ) ;
+      LCCollectionVec*  col =  dynamic_cast<LCCollectionVec*> (evt->getCollection( *it ) ) ;
       
       std::string type  = col->getTypeName() ;
       
-      if( std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end(), type ) 
-	  != _dropCollectionTypes.end()   || 
-	  std::find( _dropCollectionNames.begin(), _dropCollectionNames.end(), *it ) 
+      if( parameterSet("DropCollectionTypes") && std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end(), type ) 
+	  != _dropCollectionTypes.end()  ) {
+
+	col->setTransient( true ) ;
+      }
+      if( parameterSet("DropCollectionTypes") && std::find( _dropCollectionNames.begin(), _dropCollectionNames.end(), *it ) 
 	  != _dropCollectionNames.end() ) {
-	
-	evt->removeCollection( *it ) ;
+
+	col->setTransient( true ) ;
       }
     }
-
 
   }
 
@@ -139,6 +139,9 @@ void LCIOOutputProcessor::processEvent( LCEvent * evt ) {
 
 //   std::cout << " writing event : " << std::endl ;
 //   LCTOOLS::dumpEvent( evt ) ;
+
+
+  dropCollections( evt ) ;
 
   _lcWrt->writeEvent( evt ) ;
 

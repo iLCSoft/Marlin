@@ -71,7 +71,7 @@ public:
   
   
   virtual void modifyRunHeader( LCRunHeader* run) { /*no_op*/; }   
-  virtual void modifyEvent( LCEvent * evt ) ; 
+  virtual void modifyEvent( LCEvent * evt ) { /*no_op*/; }  
 
   /** Calls readDataSource() for all Processors of type DataSourceProcessor.
    */
@@ -83,14 +83,15 @@ protected:
   void registerProcessor( Processor* processor ) ;
 
 
-  ProcessorMgr() : _outputProcessor(0) {}
+//   ProcessorMgr() : _outputProcessor(0) {}
+  ProcessorMgr() {}
 
 private:
   static ProcessorMgr*  _me ;
   ProcessorMap _map ;
   ProcessorMap _activeMap ;
   ProcessorList _list ;
-  LCIOOutputProcessor* _outputProcessor ;
+//   LCIOOutputProcessor* _outputProcessor ;
 
 };
   
