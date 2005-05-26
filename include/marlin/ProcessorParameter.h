@@ -73,6 +73,7 @@ namespace marlin{
 
   void toStream(  std::ostream& s, int i , int N) ; 
   void toStream(  std::ostream& s, float f , int N) ;
+  void toStream(  std::ostream& s, double d , int N) ;
   void toStream(  std::ostream& s, const std::string& str , int N) ; 
   
   template< class T>

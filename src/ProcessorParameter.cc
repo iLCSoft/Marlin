@@ -15,6 +15,7 @@ namespace marlin {
 
   void toStream(  std::ostream& s, int i , int N) { s << i ; }
   void toStream(  std::ostream& s, float f , int N) { s << f ; }
+  void toStream(  std::ostream& s, double d , int N) { s << d ; }
   void toStream(  std::ostream& s, const std::string& str , int N) { s << str ; }
 
   template<>
@@ -26,6 +27,13 @@ namespace marlin {
   }
   template<>
   void setProcessorParameter<float>( ProcessorParameter_t<float>* procParam ,  StringParameters* params ) {
+    if( params->isParameterSet( procParam->name() ) ) {
+      procParam->_parameter = params->getFloatVal( procParam->_name ) ; 
+      procParam->_valueSet = true ;
+    }
+  }
+  template<>
+  void setProcessorParameter<double>( ProcessorParameter_t<double>* procParam ,  StringParameters* params ) {
     if( params->isParameterSet( procParam->name() ) ) {
       procParam->_parameter = params->getFloatVal( procParam->_name ) ; 
       procParam->_valueSet = true ;
