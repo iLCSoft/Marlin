@@ -13,6 +13,7 @@ Parser::Parser( const std::string&  fileName) :
 
   if( ! inFile ){
     std::cerr << "Parser::Parser:  couldn't open file: " << fileName  << std::endl ;
+    return ;
   }
 
   parse(  inFile ) ;
@@ -44,7 +45,8 @@ void Parser::parse(std::ifstream & inFile ){
 //     }
 //     std::cout << std::endl ;
 
-
+    // ignore empty lines (containing whitespace and tabs only )
+    if( tokens.size() < 1 ) continue ;
 
     // check whether a new section starts:
     if(  tokens[0] == ".begin"   ) {
