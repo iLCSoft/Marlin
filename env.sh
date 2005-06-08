@@ -35,5 +35,8 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CondDBMySQL/lib
 
 #---- AIDA setup ---------
 
+#--- fixes a bug in aida_env.sh with zsh (provided by J.Samson) :
+setopt shwordsplit > /dev/null 2>&1
+
 . aida_env.sh
 #------------------------------------------
