@@ -122,6 +122,43 @@ void Processor::setParameters( StringParameters* parameters) {
 
   }
 
+  void Processor::printDescriptionXML() {
+    
+    std::cout << " <processor name=\"My" <<  type()  << "\"" 
+	      << " type=\"" <<  type() << "\">" 
+	      << std::endl ;
+    
+    std::cout << " <!--" << description() << "-->" << std::endl ;
+    
+    typedef ProcParamMap::iterator PMI ;
+    
+    for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
+      
+      ProcessorParameter* p = i->second ;
+
+      std::cout << "  <!--" << p->description() << "-->" << std::endl ;
+
+      if( p->isOptional() ) {
+	std::cout << "  <!--parameter name=\"" << p->name() << "\" " 
+		  << "type=\"" << p->type() << "\">"
+		  << p->defaultValue() 
+		  << " </parameter-->"
+		  << std::endl ;
+      } else {
+	std::cout << "  <parameter name=\"" << p->name() << "\" " 
+		  << "type=\"" << p->type() << "\">"
+		  << p->defaultValue() 
+		  << " </parameter>"
+		  << std::endl ;
+      }
+    }
+    
+    std::cout << "</processor>" 
+	      << std::endl 
+	      << std::endl ;
+    
+  }
+
   bool Processor::parameterSet( const std::string& name ) {
 
     ProcParamMap::iterator it = _map.find(name) ;
@@ -145,6 +182,10 @@ void Processor::setParameters( StringParameters* parameters) {
 
   }
 
+
+  void Processor::setReturnValue( bool val) {
+    ProcessorMgr::instance()->setProcessorReturnValue(  this , val ) ;
+  }
 
 
 } // namespace marlin

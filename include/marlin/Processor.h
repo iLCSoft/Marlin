@@ -101,6 +101,7 @@ namespace marlin{
     /** Print information about this processor.
      */
     virtual void printDescription() ;
+    virtual void printDescriptionXML() ;
 
     /** Print the parameters and its values.
      */
@@ -116,6 +117,9 @@ namespace marlin{
     bool isFirstEvent() { return _isFirstEvent ; } ;
 
   protected:
+
+    /** Set the return value for this processor - typically at end of processEvent() */
+    void setReturnValue( bool val) ;
 
     /** Register a steering variable for this processor - call in constructor of processor.
      *  The default value has to be of the _same_ type as the parameter, e.g.<br>

@@ -37,6 +37,9 @@ void TestProcessor::processEvent( LCEvent * evt ) {
 	    << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "
 	    << std::endl ;
   _nEvt ++ ;
+
+   if( _nEvt % 2 )  
+    setReturnValue( true ) ;
 }
 void TestProcessor::check( LCEvent * evt ) { 
   std::cout << "TestProcessor::check()  " << name() 

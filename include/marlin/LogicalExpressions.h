@@ -1,0 +1,219 @@
+#ifndef LogicalExpressions_h
+#define LogicalExpressions_h 1
+
+#include <map>
+#include <string>
+#include <list>
+#include <vector>
+#include <ostream>
+
+typedef std::map< const std::string, std::string > ConditionsMap ;
+typedef std::map< const std::string, bool > ResultMap ;
+
+
+namespace marlin{
+
+
+  struct Expression{
+
+    Expression() : Operation( AND ), isNot( false ), Value("") {
+    }
+    enum Operator{ OR, AND } ;
+
+    Operator Operation ;
+    bool isNot ;
+    std::string Value ;
+  };
+  
+  std::ostream& operator<< (  std::ostream& s,  Expression& e ) ;
+
+  /** Helper class for LogicalExpressions
+   */
+  class Tokenizer{
+
+    enum state{
+      newtoken,
+      parenthesis,
+      operation 
+    } ;
+
+    std::vector< Expression >& _tokens ;
+    char _last ;
+    bool needToken ;
+    int openPar ;
+    int closedPar ;
+    state _state ;
+
+  public:
+    
+    Tokenizer( std::vector< Expression >& tokens ) : _tokens(tokens) , needToken(true) 
+						   , openPar(0), closedPar(0) ,
+						     _state( newtoken ) {
+    }
+    
+    
+    void operator()(const char& c) { 
+
+      if( c != ' ' && c != '\t'  ) {  // ignore whitespaces and tabs
+
+ 	if( c == '(' ) ++openPar ;
+
+ 	if( c == ')' ) ++closedPar ;
+
+	switch( _state ){
+	  
+	case( newtoken ):
+	  
+	  if( needToken ){
+	    _tokens.push_back( Expression() ) ; // create a new object
+	    needToken = false ;
+	  }
+	  if( c == '!' )
+ 	    _tokens.back().isNot = true ;
+	  
+	  else if( c == '(' )
+	    _state =  parenthesis ;
+
+	  else {
+	    _tokens.back().Value += c ;
+	    _state = operation ;
+	  }
+	  break ;
+
+	case( parenthesis ):
+	  
+	  if( closedPar == openPar ) {
+
+	    _state = operation ;
+
+	  } else {
+
+	    _tokens.back().Value += c ;
+	  }
+	  break ;
+
+	case( operation ): // need to accumulate values until && or || 
+
+	  if( c == '&' || c=='|' ){ 
+
+	    if ( c == '&' && _last == '&' ) {
+	      _tokens.push_back( Expression() ) ; // create a new object
+	      _tokens.back().Operation = Expression::AND ;
+	      _state = newtoken ;
+	    }
+	    if ( c == '|' && _last == '|' ) {
+	      _tokens.push_back( Expression() ) ; // create a new object
+	      _tokens.back().Operation = Expression::OR ;
+	      _state = newtoken ;
+ 	    }
+
+	  }  else { 
+
+	    _tokens.back().Value += c ;
+	  }
+
+	  break ;
+	}
+
+      }
+      _last = c ;
+    }
+
+//     void operator()(const char& c) { 
+      
+//       if( c != ' ' && c != '\t'  ) {  // ignore whitespaces and tabs
+	
+// 	if( c == '(' ) ++openPar ;
+
+// 	if( c == ')' ) ++closedPar ;
+
+// 	if( newToken ){
+	  
+// 	  _tokens.push_back( Expression() ) ; // create a new object
+	  
+// 	  newToken = false ;
+	  
+// 	  if( c == '!' )
+// 	    _tokens.back().isNot = true ;
+	  
+// // 	  else if( c != '(' ) {  // && c !=  ')'  ??
+// // 	    _tokens.back().Value += c ;
+// // 	  }
+// 	} 
+	
+// 	if( c == '&' && _last == '&'  && openPar - closedPar==0 ) {
+// 	  _tokens.back().Operation = Expression::AND ;
+// 	  newToken = true ;
+// 	}
+	
+// 	if( c == '|' && _last == '|' && openPar - closedPar==0 ) {
+// 	  _tokens.back().Operation = Expression::OR ;
+// 	  newToken = true ;
+// 	}
+	
+// 	if( ! newToken  ) { //&&  c != '&' &&  c != '|'
+
+// 	  if ( ! ( c == ')' && openPar > 0 && openPar - closedPar==0 )  &&   // not closing parenthesis
+// 	       ! ( c == '(' && openPar == 1 &&  closedPar == 0 ) )           // not opening parenthesis
+
+// 	    _tokens.back().Value += c ;
+// 	}
+
+//       }
+//       _last = c ;
+//     } 
+    
+    ~Tokenizer(){
+    }
+    
+    std::vector<Expression> & result()  { 
+      
+      return _tokens ; 
+      
+    }
+  };
+
+  /** Helper class that holds named boolean values and named conditions that are expressions
+   * of these values and computes the corresponding truth values.
+   */
+  class LogicalExpressions {
+    
+  public:
+    
+    /** C'tor.
+     */
+    LogicalExpressions() ;
+    
+    /** Virtual d'tor.*/
+    virtual ~LogicalExpressions() {} 
+    
+    /** Add a new named logical expression. Currently only simple expressions of
+     *  the form:  [!]Key1 [&& [!]Key2 [ && [!]Key3 ...]] are allowed.
+     */
+    void addCondition( const std::string& name, const std::string& expression ) ;
+
+    /** Clear all boolean values */
+    void clear() ;
+
+    /** True if the named condition (stored with addCondition) is true with the current values */
+    bool conditionIsTrue( const std::string& name ) ;
+
+    /** True if the given expression  is true with the current values */
+    bool expressionIsTrue( const std::string& expression ) ;
+
+    /** Set the the boolean value for the given key*/
+    void setValue( const std::string& key, bool val ) ;
+
+
+  protected:
+
+    ConditionsMap _condMap ;
+    ResultMap _resultMap ;
+
+  } ;
+} // end namespace 
+
+#endif
+
+
+

@@ -38,6 +38,7 @@ BINDIR = $(BASEDIR)/bin
 
 INCLUDE =  -I $(LCIO)/src/cpp/include
 INCLUDE +=  -I $(BASEDIR)/include
+INCLUDE +=  -D TIXML_USE_STL=1 -I $(BASEDIR)/tinyxml
 
 ifdef CLHEP
  INCLUDE += -D USE_CLHEP -I $(CLHEP)/include
@@ -77,6 +78,8 @@ ifdef MARLIN_USE_AIDA
    LIBS += `aida-config --lib`
  endif
 endif
+
+LIBS += -L $(BASEDIR)/tinyxml/lib -ltinyxml
 
 BINS = $(PROGNAME).cc
 

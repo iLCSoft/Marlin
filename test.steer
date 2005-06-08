@@ -16,10 +16,9 @@
 #	ActiveProcessors MyStdHepReader
 	ActiveProcessors AIDAFile
 #	ActiveProcessors MyConditionsProcessor
-#	ActiveProcessors FranksTestProcessor
+	ActiveProcessors FranksTestProcessor
 #	ActiveProcessors AnotherTestProcessor
 	ActiveProcessors OutputFile
-
 	# limit the number of processed records (run+evt):
 	MaxRecordNumber 5001
 

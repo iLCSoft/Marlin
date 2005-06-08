@@ -14,6 +14,7 @@
 #include "IO/LCReader.h"
 
 #include "marlin/Parser.h"
+#include "marlin/XMLParser.h"
 
 #include "marlin/Global.h"
 
@@ -28,7 +29,10 @@ using namespace marlin ;
 
 
 void createProcessors( Parser&  parser ) ;
+void createProcessors( XMLParser&  parser ) ;
+
 void listAvailableProcessors() ;
+void listAvailableProcessorsXML() ;
 
 
 /** LCIO framework that can be used to analyse LCIO data files
@@ -47,6 +51,10 @@ int main(int argc, char** argv ){
       listAvailableProcessors() ;
       exit(0) ;
     }
+    if( std::string(argv[1]) == "-x" ){
+      listAvailableProcessorsXML() ;
+      exit(0) ;
+    }
 
     steeringFileName = argv[1] ;
 
@@ -56,15 +64,31 @@ int main(int argc, char** argv ){
     exit(1) ;
   }
   
-  
-  Parser  parser( steeringFileName ) ;
-  assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
 
-  std::cout <<  "---- Global parameters : " << std::endl 
-	    << *Global::parameters  <<  std::endl ;
 
-  createProcessors( parser ) ;
-  
+  // for now allow xml and old steering
+  std::string filen(  steeringFileName ) ;
+  if( filen.rfind(".xml") == std::string::npos ||  // .xml not found at all
+      !(  filen.rfind(".xml")
+	  + strlen(".xml") == filen.length() ) ) {  
+    
+    Parser  parser( steeringFileName ) ;
+    assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
+
+    createProcessors( parser ) ;
+
+//     std::cout <<  "---- Global parameters : " << std::endl 
+// 	      << *Global::parameters  <<  std::endl ;
+
+  } else {
+
+    XMLParser  parser( steeringFileName ) ;
+    assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
+
+    createProcessors( parser ) ;
+    
+  }
+
 
   StringVec lcioInputFiles ; 
 
@@ -119,6 +143,36 @@ int main(int argc, char** argv ){
 }
 
   
+  void  createProcessors(XMLParser&  parser) {
+
+    StringVec activeProcessors ;
+    Global::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
+
+    StringVec procConds ;
+    Global::parameters->getStringVals("ProcessorConditions" , procConds ) ;
+    
+    bool useConditions = ( activeProcessors.size() == procConds.size() ) ;
+
+//     for( StringVec::iterator m = activeProcessors.begin() ; m != activeProcessors.end() ; m++){
+    for(unsigned int i=0 ; i<  activeProcessors.size() ; i++ ) {
+      
+      StringParameters* p = parser.getParameters( activeProcessors[i] )  ;
+
+      if( p!=0 ){
+	std::string type = p->getStringVal("ProcessorType") ;
+	
+	if( useConditions ) 
+	  ProcessorMgr::instance()->addActiveProcessor( type , activeProcessors[i] , p , procConds[i] )  ;
+	else
+	  ProcessorMgr::instance()->addActiveProcessor( type , activeProcessors[i] , p )  ;
+
+      } else{
+
+	std::cout << " Undefined processor : " << activeProcessors[i] << std::endl ;	
+      }
+    }
+  }
+
   void  createProcessors(Parser&  parser) {
     
   StringVec activeProcessors ;
@@ -129,17 +183,17 @@ int main(int argc, char** argv ){
     StringParameters* p = parser.getParameters( *m )  ;
     
 
-//     std::cout << " Parameters for processor " << *m 
-// 	      << std::endl 
-// 	      << *p ; ;
+     std::cout << " Parameters for processor " << *m 
+ 	      << std::endl 
+ 	      << *p ; ;
 
     if( p!=0 ){
       std::string type = p->getStringVal("ProcessorType") ;
       
       if( ProcessorMgr::instance()->addActiveProcessor( type , *m , p )  ){
 
-// 	Processor* processor =  ProcessorMgr::instance()->getActiveProcessor( *m ) ;
-//	processor->setParameters( p ) ;
+	// 	Processor* processor =  ProcessorMgr::instance()->getActiveProcessor( *m ) ;
+	//	processor->setParameters( p ) ;
       }
     }
 
@@ -149,5 +203,9 @@ int main(int argc, char** argv ){
 void listAvailableProcessors() {
 
   ProcessorMgr::instance()->dumpRegisteredProcessors() ;
+}
 
+void listAvailableProcessorsXML() {
+
+  ProcessorMgr::instance()->dumpRegisteredProcessorsXML() ;
 }

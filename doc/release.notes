@@ -2,8 +2,13 @@
   Marlin release notes
  ======================
 
- 
-  LCIOOutputProcessor allows to drop collections - needs LCIO v01-04-01
+  new (optional) XML steering files that provide new features:
+     - conditions: Processor::processEvent will be called only if a condition
+       expressed in terms of ProcessorNames as specified in the steering file is true
+     - groups: processors can be grouped together so that they can share common variables
+       and can be referred to in the <execute/> by the group name
+
+  LCIOOutputProcessor allows to drop collections - needs LCIO v01-05
 
   new method Processor::isFirstEvent() - use instead of static bool isFirstEvent
 
@@ -13,6 +18,9 @@
  
   StdHepReader processor that creates an LCIO data stream from an stdhep file
   (patch by J.Samson for limiting the number of events (MaxRecordNumber))
+
+  bug fixes:
+   empty lines containing whitspaces or tabs are ignored now (no seg.fault)
 
  v00-08
 

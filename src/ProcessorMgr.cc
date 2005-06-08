@@ -65,6 +65,38 @@ namespace marlin{
       i->second->printDescription() ;
     }
   }
+  void  ProcessorMgr::dumpRegisteredProcessorsXML() {
+
+    typedef ProcessorMap::iterator MI ;
+    
+    std::cout  <<  std::endl 
+	       << "<marlin>" 
+	       <<  std::endl ;
+
+    std::cout  <<  " <execute>" << std::endl 
+	       <<  "  <processor name=\"MyAIDAProcessor\"/>" << std::endl
+	       <<  "  <processor name=\"MyTestProcessor\"/>  " << std::endl
+	       <<  "  <processor name=\"MyLCIOOutputProcessor\"/>  " << std::endl
+	       <<  " </execute>" << std::endl
+	       << std::endl ;
+
+    std::cout  <<  " <global>" << std::endl 
+	       <<  "  <parameter name=\"LCIOInputFiles\"> simjob.slcio </parameter>" << std::endl
+	       <<  "  <parameter name=\"MaxRecordNumber\" value=\"5001\" />  " << std::endl
+	       <<  "  <parameter name=\"SupressCheck\" value=\"false\" />  " << std::endl
+	       <<  " </global>" << std::endl
+	       << std::endl ;
+
+
+    for(MI i=_map.begin() ; i!= _map.end() ; i++) {
+      i->second->printDescriptionXML() ;
+    }
+
+    std::cout  <<  std::endl 
+	       << "</marlin>" 
+	       <<  std::endl ;
+
+  }
 
   
 
@@ -84,9 +116,32 @@ namespace marlin{
 
   }
   
+//   bool ProcessorMgr::addActiveProcessor( const std::string& processorType , const std::string& processorName ,
+// 					 StringParameters* parameters , const std::string condition ) {
+    
+//     if( addActiveProcessor( processorType, processorName, parameters ) ) {
+      
+//       _conditions.addCondition( processorName, condition ) ;
+
+// //       //FIXME: debug 
+// //       _conditions.setValue("A" , true ); 
+// //       _conditions.setValue("B" , false ); 
+// //       _conditions.setValue("C" , false ); 
+// //       _conditions.expressionIsTrue( "!( A && ( B || C ) )" ) ;
+// //       _conditions.expressionIsTrue( "A && !( B || C )" ) ;
+// //       _conditions.expressionIsTrue( "!A && B || !C  " ) ;
+// //       _conditions.expressionIsTrue( "!((A && (B) || !C))  " ) ;
+      
+//       return true ;
+//     }
+
+//     return false ;
+//   }
+
   bool ProcessorMgr::addActiveProcessor( const std::string& processorType , 
 					 const std::string& processorName , 
-					 StringParameters* parameters ) {
+					 StringParameters* parameters ,
+					 const std::string condition) {
 
     Processor* processor = getProcessor( processorType ) ;
 
@@ -111,6 +166,7 @@ namespace marlin{
       newProcessor->setName( processorName ) ;
       _activeMap[ processorName ] = newProcessor ;
       _list.push_back( newProcessor ) ;
+      _conditions.addCondition( processorName, condition ) ;
 
       if( parameters != 0 ){
 	newProcessor->setParameters( parameters  ) ;
@@ -144,24 +200,48 @@ namespace marlin{
 
   void ProcessorMgr::processEvent( LCEvent* evt ){ 
 
-    static bool isFirstEvent = true ;
+//     static bool isFirstEvent = true ;
 
-    for_each( _list.begin() , _list.end() ,   std::bind2nd(  std::mem_fun( &Processor::processEvent ) , evt ) ) ;
+//     for_each( _list.begin() , _list.end() ,   std::bind2nd(  std::mem_fun( &Processor::processEvent ) , evt ) ) ;
 
-    if( Global::parameters->getStringVal("SupressCheck") != "true" ) {
+//     if( Global::parameters->getStringVal("SupressCheck") != "true" ) {
       
-      for_each( _list.begin() , _list.end(), 
-		std::bind2nd( std::mem_fun( &Processor::check ) , evt ) ) ;
-    }
+//       for_each( _list.begin() , _list.end(), 
+// 		std::bind2nd( std::mem_fun( &Processor::check ) , evt ) ) ;
+//     }
     
-    if ( isFirstEvent ) {
-      isFirstEvent = false;
-      for_each( _list.begin(), _list.end() , 
-		std::bind2nd( std::mem_fun( &Processor::setFirstEvent ),isFirstEvent )) ;
-    }
-    
+//     if ( isFirstEvent ) {
+//       isFirstEvent = false;
+//       for_each( _list.begin(), _list.end() , 
+// 		std::bind2nd( std::mem_fun( &Processor::setFirstEvent ),isFirstEvent )) ;
+//     }
+
+    _conditions.clear() ;
+
+    bool check = ( Global::parameters->getStringVal("SupressCheck") != "true" ) ;
+
+    for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
+      
+      if( _conditions.conditionIsTrue( (*it)->name() ) ) {
+
+	(*it)->processEvent( evt ) ; 
+
+	if( check )  (*it)->check( evt ) ;
+
+	(*it)->setFirstEvent( false ) ;
+      }       
+
+    }    
+
   }
   
+
+  void ProcessorMgr::setProcessorReturnValue( Processor* proc, bool val ) {
+
+    _conditions.setValue( proc->name() , val ) ;
+
+  }
+
   void ProcessorMgr::end(){ 
 
     for_each( _list.begin() , _list.end() ,  std::mem_fun( &Processor::end ) ) ;

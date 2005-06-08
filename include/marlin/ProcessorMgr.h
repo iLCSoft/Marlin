@@ -10,6 +10,7 @@
 
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCRunHeader.h"
+#include "LogicalExpressions.h"
 
 #include <map>
 #include <list>
@@ -21,8 +22,6 @@ namespace marlin{
 
 typedef std::map< const std::string , Processor* > ProcessorMap ;
 typedef std::list< Processor* > ProcessorList ;
-
-
 
 
 /** Processor manager singleton class. Holds references to all registered Processors. 
@@ -40,8 +39,14 @@ public:
   /** Add a processor of type processorType with name processorName to the list
    *  of active processors. Initializes the parameters (if != 0).
    */
+//   bool addActiveProcessor( const std::string& processorType , const std::string& processorName ,
+// 			   StringParameters* parameters=0 ) ;
+
+  /** Add a processor of type processorType with name processorName to the list
+   *  of active processors including a condition for the execution of the processEvent() method.
+   */
   bool addActiveProcessor( const std::string& processorType , const std::string& processorName ,
-			   StringParameters* parameters=0 ) ;
+			   StringParameters* parameters , const std::string condition="true" ) ;
   
   /** Remove processor with name from list of active processors.
    */
@@ -58,10 +63,13 @@ public:
    */
   Processor* getProcessor( const std::string& type ) ;
   
-
   /** Dump information of all registered  processors to stdout.
    */
   void dumpRegisteredProcessors() ;
+
+  /** Dump information of all registered  processors in XML format to stdout.
+   */
+  void dumpRegisteredProcessorsXML() ;
   
  
   virtual void init() ;
@@ -77,6 +85,10 @@ public:
    */
   virtual void readDataSource( int numEvents ) ;
 
+
+  /** Set the return value for the given processor */
+  virtual void setProcessorReturnValue( Processor* proc, bool val ) ;
+
 protected:
   /** Register a processor with the given name.
    */
@@ -91,6 +103,8 @@ private:
   ProcessorMap _map ;
   ProcessorMap _activeMap ;
   ProcessorList _list ;
+
+  LogicalExpressions _conditions ;
 //   LCIOOutputProcessor* _outputProcessor ;
 
 };

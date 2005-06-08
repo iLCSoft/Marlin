@@ -62,7 +62,7 @@ namespace marlin{
     chResDefault.push_back( 3.141593/2. ) ;
     
     registerProcessorParameter( "ChargedResolution" , 
-				"Resolution of charged particles in polar angle range:  dP/P  th_min  th_max"  ,
+				"Resolution of charged particles in polar angle range:  d(1/P)  th_min  th_max"  ,
 				_initChargedRes ,
 				chResDefault ,
 				chResDefault.size() ) ;
