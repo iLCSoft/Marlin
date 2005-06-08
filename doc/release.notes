@@ -7,6 +7,8 @@
        expressed in terms of ProcessorNames as specified in the steering file is true
      - groups: processors can be grouped together so that they can share common variables
        and can be referred to in the <execute/> by the group name
+     - TinyXml parser ( http://sourceforge.net/projects/tinyxml ) 
+       that can be used to read other xml files
 
   LCIOOutputProcessor allows to drop collections - needs LCIO v01-05
 
