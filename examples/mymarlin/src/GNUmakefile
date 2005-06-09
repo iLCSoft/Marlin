@@ -46,28 +46,28 @@ AR = ar
 
 
 #----- add libraries needed --------
-ifdef MARLIN_USE_AIDA
-USERINCLUDES += -D MARLIN_USE_AIDA `aida-config --include`
-USERLIBS += `aida-config --lib`
-endif
+#ifdef MARLIN_USE_AIDA
+#USERINCLUDES += -D MARLIN_USE_AIDA `aida-config --include`
+#USERLIBS += `aida-config --lib`
+#endif
 
-ifdef LCCD
+#ifdef LCCD
 
- USERINCLUDES += -D USE_LCCD -I $(LCCD)/source/include
- USERLIBS += -L $(LCCD)/lib -llccd
+# USERINCLUDES += -D USE_LCCD -I $(LCCD)/source/include
+# USERLIBS += -L $(LCCD)/lib -llccd
 
- ifdef CondDBMySQL
-   USERINCLUDES += -D USE_CONDDB
-   USERLIBS += -L $(CondDBMySQL)/lib -lconddb    
- endif
+# ifdef CondDBMySQL
+#   USERINCLUDES += -D USE_CONDDB
+#   USERLIBS += -L $(CondDBMySQL)/lib -lconddb    
+# endif
 
-endif
+#endif
 
 
 
 #--------------------------------------------------------------------------------------
 
-LIBS +=   -Wl,-whole-archive  -L $(MARLIN)/lib  -lMarlin -Wl,-no-whole-archive
+#LIBS +=   -Wl,-whole-archive  -L $(MARLIN)/lib  -lMarlin -Wl,-no-whole-archive
 LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
 
 #------ add additional libraries with marlin processors here, e.g.
@@ -76,18 +76,24 @@ LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
 
 
 
-USERLIBS +=    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
+#USERLIBS +=    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 #--------------------------------------------------------------------------------------
 
-INCLUDE =  -I $(LCIO)/src/cpp/include
-INCLUDE +=  -I $(MARLIN)/include
+#INCLUDE =  -I $(LCIO)/src/cpp/include
+#INCLUDE +=  -I $(MARLIN)/include
 INCLUDE +=  -I $(BASEDIR)/include
 
 CPPFLAGS += $(INCLUDE)
-CPPFLAGS += $(USERINCLUDES)
-CPPFLAGS += -g -Wall -ansi
+#CPPFLAGS += $(USERINCLUDES)
 
-LIBS += $(USERLIBS)
+
+CPPFLAGS += `. $(MARLIN)/bin/marlin_includes.sh`
+
+#CPPFLAGS += -g -Wall -ansi
+
+#LIBS += $(USERLIBS)
+LIBS += `. $(MARLIN)/bin/marlin_libs.sh`
+
 
 
 bin:  lib $(BINDIR)/$(PROGNAME)

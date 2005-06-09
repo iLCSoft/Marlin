@@ -6,34 +6,9 @@
 #######################################################
 
 
+export MARLIN=~/marlin/devel/v00-08
 
-# modify the following pathes as needed
+# use the same env.sh that has been used to build the Marlin library
 
-export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-04
+. $MARLIN/env.sh 
 
-export MARLIN=/afs/desy.de/group/it/ilcsoft/marlin/v00-08
-
-export LCCD=/afs/desy.de/group/it/ilcsoft/lccd/v00-02
-
-
-# to make full use of LCCD also use the conditions data base
-# Note: if you don't want to use CondDBMySQL you also need a LCCD library that
-# has been build without CondDBMySQL !
-export CondDBMySQL=/afs/desy.de/group/it/ilcsoft/CondDBMySQL
-
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CondDBMySQL/lib
-
-
-#---- AIDA setup ---------
-#export MARLIN_USE_AIDA=1
-
-export JDK_HOME=/opt/products/java/1.4.2
-
-export JAIDA_HOME=/opt/products/JAIDA/3.2.3
-
-export AIDAJNI_HOME=/opt/products/AIDAJNI/3.2.3
-
-. $JAIDA_HOME/bin/aida-setup.sh
-. $AIDAJNI_HOME/bin/Linux-g++/aidajni-setup.sh
-
-#------------------------------------------
