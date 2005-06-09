@@ -118,8 +118,18 @@ namespace marlin{
 
   protected:
 
-    /** Set the return value for this processor - typically at end of processEvent() */
+    /** Set the return value for this processor - typically at end of processEvent(). 
+     *  The value can be used in a condition in the steering file referred to by the name
+     *  of the processor. 
+     */
     void setReturnValue( bool val) ;
+
+    /** Set a named return value for this processor - typically at end of processEvent() 
+     *  The value can be used in a condition in the steering file referred to by 
+     *  ProcessorName.name of the processor. 
+     */
+    void setReturnValue( const std::string& name, bool val ) ;
+
 
     /** Register a steering variable for this processor - call in constructor of processor.
      *  The default value has to be of the _same_ type as the parameter, e.g.<br>

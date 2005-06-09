@@ -152,7 +152,7 @@ void LCIOOutputProcessor::end(){
 
   std::cout  << std::endl 
 	     << "LCIOOutputProcessor::end()  " << name() 
-	     << _nEvt << " events in " << _nRun << " runs written to file  " 
+	     << ": " << _nEvt << " events in " << _nRun << " runs written to file  " 
 	     <<  _lcioOutputFile  
 	     << std::endl
 	     << std::endl ;

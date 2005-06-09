@@ -241,7 +241,13 @@ namespace marlin{
     _conditions.setValue( proc->name() , val ) ;
 
   }
-
+  void ProcessorMgr::setProcessorReturnValue( Processor* proc, bool val, 
+					      const std::string& name){
+    
+    std::string valName = proc->name() + "." + name ;
+    _conditions.setValue( valName , val ) ;
+  }
+  
   void ProcessorMgr::end(){ 
 
     for_each( _list.begin() , _list.end() ,  std::mem_fun( &Processor::end ) ) ;

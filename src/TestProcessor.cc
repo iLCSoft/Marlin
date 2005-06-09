@@ -38,9 +38,15 @@ void TestProcessor::processEvent( LCEvent * evt ) {
 	    << std::endl ;
   _nEvt ++ ;
 
-   if( _nEvt % 2 )  
-    setReturnValue( true ) ;
+  // always return true  for ProcessorName
+  setReturnValue( true ) ;
+  
+  // set ProcessorName.EvenNumberOfEvents == true if this processor has been called 2n (n=0,1,2,...) times 
+  if( !( _nEvt % 2 )  )  
+    setReturnValue("EvenNumberOfEvents", true ) ;
+  
 }
+
 void TestProcessor::check( LCEvent * evt ) { 
   std::cout << "TestProcessor::check()  " << name() 
 	    << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "

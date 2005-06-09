@@ -89,6 +89,9 @@ public:
   /** Set the return value for the given processor */
   virtual void setProcessorReturnValue( Processor* proc, bool val ) ;
 
+  /** Set the named return value for the given processor */
+  virtual void setProcessorReturnValue( Processor* proc, bool val , const std::string& name) ;
+
 protected:
   /** Register a processor with the given name.
    */

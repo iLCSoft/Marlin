@@ -184,8 +184,14 @@ void Processor::setParameters( StringParameters* parameters) {
 
 
   void Processor::setReturnValue( bool val) {
+    
     ProcessorMgr::instance()->setProcessorReturnValue(  this , val ) ;
   }
+  
+  void Processor::setReturnValue( const std::string& name, bool val ){
+  
+  ProcessorMgr::instance()->setProcessorReturnValue(  this , val , name ) ;
+}
 
 
 } // namespace marlin
