@@ -11,7 +11,8 @@
 
 PROGNAME = Marlin
 
-BASEDIR = ..
+BASEDIR = `pwd`"/.."
+
 
 
 
@@ -101,7 +102,7 @@ $(INSTALL)/lib$(PROGNAME).a: $(objects)
 	mkdir -p $(INSTALL)
 	$(AR) cr $(INSTALL)/lib$(PROGNAME).a  $?
 
-lib: $(INSTALL)/lib$(PROGNAME).a
+lib: $(INSTALL)/lib$(PROGNAME).a conf
 
 
 clean:
@@ -110,3 +111,9 @@ clean:
 
 doc:	
 	cd ../doc/ ; doxygen ;
+
+
+conf:
+	echo "echo \""$(CPPFLAGS)"\"" > $(BINDIR)/marlin_includes.sh
+	echo "echo \""$(LIBS)"\"" > $(BINDIR)/marlin_libs.sh
+
