@@ -1,4 +1,5 @@
 #include "marlin/TestProcessor.h"
+#include "marlin/Exceptions.h"
 #include <iostream>
 
 namespace marlin{
@@ -37,6 +38,17 @@ void TestProcessor::processEvent( LCEvent * evt ) {
 	    << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "
 	    << std::endl ;
   _nEvt ++ ;
+
+  // FIXME: Testing:
+//     if( !(  _nEvt % 7 )  )
+//     //if( !(  evt->getEventNumber() % 7 )  )
+//      throw SkipEventException( this ) ;
+
+//     if( !(  _nEvt % 80 )  )
+//     //if( !(  evt->getEventNumber() % 7 )  )
+//      throw StopProcessingException( this ) ;
+    
+    
 
   // always return true  for ProcessorName
   setReturnValue( true ) ;

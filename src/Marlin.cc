@@ -12,6 +12,7 @@
 
 #include "marlin/ProcessorMgr.h"
 #include "marlin/Processor.h"
+#include "marlin/Exceptions.h"
 #include "IO/LCReader.h"
 
 #include "marlin/Parser.h"
@@ -137,24 +138,38 @@ int main(int argc, char** argv ){
     
     ProcessorMgr::instance()->init() ; 
     
-    if( maxRecord > 0 ){
-      
-      try{
-	lcReader->readStream( maxRecord ) ;
-      }
-      catch( lcio::EndOfDataException& e){
+    try{ 
+      if( maxRecord > 0 ){
 	
-	std::cout << "Warning: " << e.what() << std::endl ;
+	try{
+	  lcReader->readStream( maxRecord ) ;
+	}
+	catch( lcio::EndOfDataException& e){
+	  
+	  std::cout << "Warning: " << e.what() << std::endl ;
+	}
+	
+      } else {
+	
+	lcReader->readStream() ;
       }
+    } catch( StopProcessingException &e) {
       
-    } else {
-      lcReader->readStream() ;
+      std::cout << std::endl
+		<< " **********************************************************" << std::endl
+		<< " *                                                        *" << std::endl
+		<< " *   Stop of EventProcessiong requested by processor :    *" << std::endl
+		<< " *                  "  << e.what()                           << std::endl
+		<< " *     will call end() method of all processors !         *" << std::endl
+		<< " *                                                        *" << std::endl
+		<< " **********************************************************" << std::endl
+		<< std::endl ;
     }
-    
+
+
     ProcessorMgr::instance()->end() ; 
     lcReader->close() ;
     delete lcReader ;
-    
   }
   
   return 0 ;

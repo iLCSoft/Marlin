@@ -1,5 +1,7 @@
 #include "marlin/ProcessorMgr.h"
 #include "marlin/Global.h"
+#include "marlin/Exceptions.h"
+
 #include <iostream>
 #include <algorithm>
 
@@ -220,19 +222,24 @@ namespace marlin{
 
     bool check = ( Global::parameters->getStringVal("SupressCheck") != "true" ) ;
 
-    for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
-      
-      if( _conditions.conditionIsTrue( (*it)->name() ) ) {
 
-	(*it)->processEvent( evt ) ; 
+    try{ 
 
-	if( check )  (*it)->check( evt ) ;
+      for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
+	
+	if( _conditions.conditionIsTrue( (*it)->name() ) ) {
+	  
+	  (*it)->processEvent( evt ) ; 
+	  
+	  if( check )  (*it)->check( evt ) ;
+	  
+	  (*it)->setFirstEvent( false ) ;
+	}       
+      }    
+    } catch( SkipEventException& e){
 
-	(*it)->setFirstEvent( false ) ;
-      }       
-
-    }    
-
+      ++ _skipMap[ e.what() ] ;
+    }  
   }
   
 
@@ -251,6 +258,24 @@ namespace marlin{
   void ProcessorMgr::end(){ 
 
     for_each( _list.begin() , _list.end() ,  std::mem_fun( &Processor::end ) ) ;
+
+//     if( _skipMap.size() > 0 ) {
+      std::cout  << " --------------------------------------------------------- " << std::endl
+		 << "  Events skipped by processors : " << std::endl ;
+
+      unsigned nSkipped = 0 ;
+      for( SkippedEventMap::iterator it = _skipMap.begin() ; it != _skipMap.end() ; it++) {
+
+	std::cout << "       " << it->first << ": \t" <<  it->second << std::endl ;
+
+	nSkipped += it->second ;	
+      }
+      std::cout  << "  Total: " << nSkipped  << std::endl ;
+      std::cout  << " --------------------------------------------------------- "  
+		 << std::endl
+		 << std::endl ;
+//     }
+
   }
 
  
