@@ -9,7 +9,7 @@
 # modify the following pathes as needed
 
 # path to LCIO is required
-export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-04
+export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-05
 
 
 #-- comment out for production 

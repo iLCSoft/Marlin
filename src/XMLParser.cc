@@ -1,4 +1,7 @@
+
 #include "marlin/XMLParser.h"
+
+#include "marlin/Exceptions.h"
 
 #include <algorithm>
 
@@ -9,35 +12,36 @@ namespace marlin{
 
   // open steering file with processor names 
   XMLParser::XMLParser( const std::string&  fileName) :
-    _current(0) 
-  {
-    
-    parse(  fileName ) ;
-    
+    _current(0) , _fileName( fileName ) {
   }
   
   XMLParser::~XMLParser(){
   }
   
-  void XMLParser::parse( const std::string&  fileName ){
+  void XMLParser::parse(){
     
     
-//     TiXmlDocument _doc( fileName );
     _doc = new TiXmlDocument ;
-    bool loadOkay = _doc->LoadFile(fileName  ) ;
+    bool loadOkay = _doc->LoadFile(_fileName  ) ;
     
     if( !loadOkay ) {
-      std::cout << "XMLParser::parse : Could not open file: " << fileName << std::endl ;
-      return ;
+
+      std::stringstream str ;
+      
+      str  << "XMLParser::parse error in file [" << _fileName 
+	   << ", row: " << _doc->ErrorRow() << ", col: " << _doc->ErrorCol() << "] : "
+	   << _doc->ErrorDesc() ;
+      
+      throw ParseException( str.str() ) ;
     }
     
     TiXmlHandle docHandle( _doc );
     
-//     TiXmlElement* root = _doc->FirstChildElement("marlin");
     TiXmlElement* root = _doc->RootElement();
     if( root==0 ){
-      std::cout << "XMLParser::parse : no root tag <marlin>...</marlin> found in  " << fileName << std::endl ;
-      return ;
+
+      throw ParseException(std::string( "XMLParser::parse : no root tag <marlin>...</marlin> found in  ") 
+			   + _fileName  ) ;
     }
     
     TiXmlNode* section = 0 ;
@@ -46,15 +50,17 @@ namespace marlin{
     _map[ "Global" ] = new StringParameters() ;
 
     section = root->FirstChild("global")  ;
+
     if( section != 0  ){
-      
-//       section->InsertEndChild( activeProcessorItem );
-//       std::cout << " global: \n" << *section << std::endl ;
       _current =  _map[ "Global" ] ;
-//       _current = new StringParameters() ;
-//       _map[ "Global" ] = _current ;
       parametersFromNode( section ) ;
-    } 
+
+    }  else {
+
+      throw ParseException(std::string( "XMLParser::parse : no <global/> section found in  ") 
+			   + _fileName  ) ;
+    }
+    
 
 // create global parameter ActiveProcessors from <execute> section
 //     TiXmlElement activeProcessorItem( "parameter" );
@@ -80,9 +86,9 @@ namespace marlin{
       TiXmlNode* proc = 0 ;
       while( ( proc = section->IterateChildren( "processor", proc ) )  != 0  ){
 
-	activeProcs.push_back( proc->ToElement()->Attribute("name") ) ;
+	activeProcs.push_back( getAttribute( proc, "name") ) ;
 
-	std::string condition(  proc->ToElement()->Attribute("condition")  ) ;
+	std::string condition(  getAttribute( proc,"condition")  ) ;
 
 	if( condition.size() == 0 ) 
 	  condition += "true" ;
@@ -93,7 +99,8 @@ namespace marlin{
 
     } else {
 
-      std::cout << "XMLParser::parse : couldn't find section <execute> in file " << fileName << std::endl ;
+      throw ParseException(std::string( "XMLParser::parse : no <execute/> section found in  ") 
+			   + _fileName  ) ;
     }
 
     _current->add( activeProcs ) ;
@@ -138,33 +145,45 @@ namespace marlin{
       
       _current = new StringParameters() ;
       
-      _map[ section->ToElement()->Attribute("name") ] =  _current ;
+      _map[ getAttribute( section, "name") ] =  _current ;
       
-
-//       TiXmlElement item( "parameter" );
-//       item.SetAttribute( "name", "ProcessorType" );
-//       TiXmlText text(  section->ToElement()->Attribute("type") );
-//       item.InsertEndChild( text );
-//       section->InsertEndChild( item );
 
       // add ProcessorType to processor parameters
       std::vector<std::string> procType(2)  ;
       procType[0] = "ProcessorType" ;
-      procType[1] =  section->ToElement()->Attribute("type")  ;
+      procType[1] =   getAttribute( section, "type")  ;
       _current->add( procType ) ;
 
       parametersFromNode( section ) ;
     }
 
 
-
-
     // DEBUG:
-
     _doc->SaveFile( "debug.xml" ) ;
 
-  }
+   }
   
+  const char* XMLParser::getAttribute( TiXmlNode* node , const std::string& name ){
+ 
+    TiXmlElement* el = node->ToElement() ;
+    if( el == 0 ) 
+      throw ParseException("XMLParser::getAttribute not an XMLElement " ) ;
+
+    const char* at = el->Attribute( name ) ;
+
+    if( at == 0 ){
+
+      std::stringstream str ;
+      str  << "XMLParser::getAttribute missing attribute \"" << name 
+	   << "\" in element <" << el->Value() << "/> in file " << _fileName  ;
+      throw ParseException( str.str() ) ;
+    }
+
+    return at ;
+
+  }  
+
+
   void XMLParser::parametersFromNode(TiXmlNode* section) { 
     
     TiXmlNode* par = 0 ;
@@ -174,17 +193,24 @@ namespace marlin{
 //        std::cout << " parameter found : " << par->ToElement()->Attribute("name") << std::endl ;
       
       std::vector<std::string> tokens ;
-      tokens.push_back( std::string(par->ToElement()->Attribute("name"))  ) ; // first token is parameter name 
+      tokens.push_back( std::string( getAttribute( par, "name" )  )  ) ; // first token is parameter name 
       LCTokenizer t( tokens ,' ') ;
       
       std::string inputLine("") ;
       
-      if( par->ToElement()->Attribute("value") != 0 ) {
-	inputLine = par->ToElement()->Attribute("value") ;
+      try{  inputLine = getAttribute( par , "value" )  ; 
+      }      
+      catch( ParseException ) {
+
+	if( par->FirstChild() )
+	  inputLine =  par->FirstChild()->Value() ;
       }
-      else if( par->FirstChild() ) {
-	inputLine =  par->FirstChild()->Value() ;
-      }
+//       if( par->ToElement()->Attribute("value") != 0 ) {
+// 	inputLine = par->ToElement()->Attribute("value") ;
+//       }
+//       else if( par->FirstChild() ) {
+// 	inputLine =  par->FirstChild()->Value() ;
+//       }
       
 //        std::cout << " values : " << inputLine << std::endl ;
     
@@ -203,7 +229,7 @@ namespace marlin{
   //   TiXmlElement* child2 = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).Child( "Child", 1 ).Element();
   //   if ( child2 ){}
 
-  StringParameters* XMLParser::getParameters( const std::string& sectionName ) {
+  StringParameters* XMLParser::getParameters( const std::string& sectionName ) const {
     
 //     for( StringParametersMap::iterator iter = _map.begin() ; iter != _map.end() ; iter++){
 //       //     std::cout << " parameter section " << iter->first 
@@ -228,7 +254,7 @@ namespace marlin{
     TiXmlNode* child = 0 ;
     while( ( child = current->IterateChildren( "if" , child )  )  != 0  ){
       
-      processconditions( child , child->ToElement()->Attribute("condition") ) ;  
+      processconditions( child , getAttribute( child, "condition") ) ;  
     }
 
     while( ( child = current->IterateChildren( "processor" , child )  )  != 0  ) {
@@ -289,7 +315,7 @@ namespace marlin{
       if( std::string( child->Value() )  == "group" ) {
 	
 	// find group definition in root node 
-	TiXmlNode* group = findElement( root, "group", "name" , child->ToElement()->Attribute("name") ) ;
+	TiXmlNode* group = findElement( root, "group", "name" , getAttribute( child, "name") ) ;
 	
 	if( group != 0 ) {
 	  
@@ -298,7 +324,7 @@ namespace marlin{
 	    
 	    // insert <processor/> tag
 	    TiXmlElement item( "processor" );
-	    item.SetAttribute( "name",  sub->ToElement()->Attribute("name") ) ;
+	    item.SetAttribute( "name",  getAttribute( sub, "name") ) ;
 
 	    section->InsertBeforeChild( child , item ) ;
 	      

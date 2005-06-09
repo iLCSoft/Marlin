@@ -2,10 +2,12 @@
 #define Parser_h 1
 
 //#include "lcio.h"
+#include "IParser.h"
+#include "StringParameters.h"
+
 #include <fstream>
 #include <string>
 #include <iostream>
-#include "StringParameters.h"
 
 namespace marlin{
 
@@ -27,7 +29,7 @@ typedef std::map< std::string ,  StringParameters* > StringParametersMap ;
  *  to the corresponding list.
  */
 
-class Parser {
+class Parser : public IParser {
   
 
 public:
@@ -39,8 +41,12 @@ public:
   Parser( const std::string& fileName ) ;
   virtual ~Parser() ; 
 
-  StringParameters* getParameters( const std::string& sectionName ) ;
+  StringParameters* getParameters( const std::string& sectionName ) const ;
   
+  /** Parse the input file
+   */
+  void parse() ;
+
 
 protected:
 
@@ -49,13 +55,11 @@ protected:
    */
   int readNextValidLine( std::string& str , std::istream& stream) ;
 
-  /**Parse the input file
-   */
-  void parse(std::ifstream & inFile ) ;
 
-
-  StringParametersMap _map ;
+  mutable StringParametersMap _map ;
   StringParameters* _current ;
+
+  std::string _fileName ;
 
 private:
   Parser() ;

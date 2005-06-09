@@ -1,6 +1,7 @@
 #include "lcio.h"
 
 
+
 #ifdef LCIO_MAJOR_VERSION 
  #if LCIO_VERSION_GE( 1,2)  
   #include "LCIOSTLTypes.h"
@@ -29,7 +30,8 @@ using namespace marlin ;
 
 
 void createProcessors( Parser&  parser ) ;
-void createProcessors( XMLParser&  parser ) ;
+// void createProcessors( XMLParser&  parser ) ;
+void  createProcessors( const IParser&  parser) ;
 
 void listAvailableProcessors() ;
 void listAvailableProcessorsXML() ;
@@ -41,6 +43,9 @@ void listAvailableProcessorsXML() ;
  *
  */
 int main(int argc, char** argv ){
+
+  // this macro enables printout of uncaught exceptions
+  HANDLE_LCIO_EXCEPTIONS
   
   const char* steeringFileName ;
   
@@ -65,34 +70,47 @@ int main(int argc, char** argv ){
   }
   
 
+  IParser* parser ;
 
   // for now allow xml and old steering
   std::string filen(  steeringFileName ) ;
+
   if( filen.rfind(".xml") == std::string::npos ||  // .xml not found at all
       !(  filen.rfind(".xml")
-	  + strlen(".xml") == filen.length() ) ) {  
+ 	  + strlen(".xml") == filen.length() ) ) {  
+    parser = new Parser( steeringFileName ) ;
     
-    Parser  parser( steeringFileName ) ;
-    assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
-
-    createProcessors( parser ) ;
-
-//     std::cout <<  "---- Global parameters : " << std::endl 
-// 	      << *Global::parameters  <<  std::endl ;
-
   } else {
-
-    XMLParser  parser( steeringFileName ) ;
-    assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
-
-    createProcessors( parser ) ;
     
+    parser = new XMLParser( steeringFileName ) ;
   }
+  
+  
+  //     Parser  parser( steeringFileName ) ;
+  //     assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
+  
+  //     createProcessors( parser ) ;
+  
+  // //     std::cout <<  "---- Global parameters : " << std::endl 
+  // // 	      << *Global::parameters  <<  std::endl ;
+  
+  //   } else {
+  
+  //     XMLParser  parser( steeringFileName ) ;
+  //     assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
+  
+  //     createProcessors( parser ) ;
+  //   }
+
+  parser->parse() ;
+
+  assert( ( Global::parameters = parser->getParameters("Global") ) != 0 ) ;
+
+  createProcessors( *parser ) ;
+
 
 
   StringVec lcioInputFiles ; 
-
-//   assert( (Global::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() > 0 ) ;
 
   if ( (Global::parameters->getStringVals("LCIOInputFiles" , lcioInputFiles ) ).size() == 0 ){
 
@@ -143,7 +161,8 @@ int main(int argc, char** argv ){
 }
 
   
-  void  createProcessors(XMLParser&  parser) {
+//   void  createProcessors(XMLParser&  parser) {
+  void  createProcessors( const IParser&  parser) {
 
     StringVec activeProcessors ;
     Global::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
