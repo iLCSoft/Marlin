@@ -57,7 +57,7 @@ lib:
 	echo "Building library for $$i..."; \
 	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) lib); fi ; done
 
-bin: ./bin/Marlin
+bin: lib ./bin/Marlin
 
 ./bin/Marlin: $(packagelibs)
 	$(MAKE) -C src rebuild
