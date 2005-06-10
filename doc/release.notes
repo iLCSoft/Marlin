@@ -2,8 +2,19 @@
   Marlin release notes
  ======================
 
-  improved makefiles for Marlin that create marlin_includes.sh and marlin_libs.sh
-  in order to build with the same libraries as have been used for core Marlin
+
+  added Exceptions and Exception handler that prints error message when an
+  uncaught exception is thrown
+
+  added SkipEventException and StopProcessingException to skip the current 
+  event or all following events 
+
+  improved makefiles for Marlin:
+     -	src/GNUmakefile creates marlin_includes.sh and marlin_libs.sh
+        in order to build with the same libraries as have been used for 
+        core Marlin
+     -  new top level GNUmakefile that builds marlin together with 
+        user packages containing processors in $MARLIN/packages
 
   new (optional) XML steering files that provide new features:
 

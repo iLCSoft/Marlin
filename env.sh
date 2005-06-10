@@ -20,6 +20,10 @@ export MARLINDEBUG=1
 # the following is optional (but recommended) comment 
 # out before compiling what you don't need/want
 
+#---- CLHEP ---------
+export CLHEP=/opt/products/CLHEP/1.8.2
+
+
 #---- LCCD -----------
 
 # use LCCD for conditions data (ConditionsProcessor) 
@@ -31,7 +35,6 @@ export LCCD=/afs/desy.de/group/it/ilcsoft/lccd/v00-02
 export CondDBMySQL=/afs/desy.de/group/it/ilcsoft/CondDBMySQL
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CondDBMySQL/lib
-#-------------------------
 
 
 #---- AIDA setup ---------
@@ -50,6 +53,5 @@ export AIDAJNI_HOME=/opt/products/AIDAJNI/3.2.3
 
 . $JAIDA_HOME/bin/aida-setup.sh
 . $AIDAJNI_HOME/bin/Linux-g++/aidajni-setup.sh
-
 
 #------------------------------------------

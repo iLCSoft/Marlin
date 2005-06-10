@@ -58,6 +58,8 @@ CPPFLAGS += $(INCLUDE)
 
 LIBS =
 LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
+LIBS += $(packagelibs)
+
 ifdef LCCD
  LIBS += -L $(LCCD)/lib -llccd
  ifdef CondDBMySQL
@@ -70,6 +72,7 @@ ifdef CLHEP
 endif
 
 
+LIBS += $(USERLIBS)
 LIBS +=    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 LIBS +=  -Wl,--demangle
 
