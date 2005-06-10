@@ -1,11 +1,10 @@
 
 #include "marlin/XMLParser.h"
-
 #include "marlin/Exceptions.h"
+#include "marlin/tinyxml.h"
 
 #include <algorithm>
 
-#include "tinyxml.h"
 #include <sstream>
 
 namespace marlin{

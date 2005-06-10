@@ -23,10 +23,11 @@ distribution.
 
 
  F.Gaede, DESY : changed extension to .cc  for use with marlin
+                 and include from "marlin/tinyxml.h"
 */
 
 #include <ctype.h>
-#include "tinyxml.h"
+#include "marlin/tinyxml.h"
 
 #ifdef TIXML_USE_STL
 #include <sstream>

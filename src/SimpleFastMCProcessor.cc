@@ -3,6 +3,7 @@
 #include "marlin/SimpleParticleFactory.h"
 #include "marlin/SimpleTrackSmearer.h"
 #include "marlin/SimpleClusterSmearer.h"
+#include "marlin/FastMCParticleType.h"
 #include "marlin/ErrorOfSigma.h"
 
 //--- LCIO headers 

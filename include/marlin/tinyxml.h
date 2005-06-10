@@ -20,8 +20,13 @@ must not be misrepresented as being the original software.
 
 3. This notice may not be removed or altered from any source
 distribution.
+
+ F.Gaede, DESY : added #define TIXML_USE_STL  for use with marlin
 */
 
+#ifndef TIXML_USE_STL
+#define TIXML_USE_STL
+#endif
 
 #ifndef TINYXML_INCLUDED
 #define TINYXML_INCLUDED

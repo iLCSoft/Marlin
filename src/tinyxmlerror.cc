@@ -22,9 +22,10 @@ must not be misrepresented as being the original software.
 distribution.
 
  F.Gaede, DESY : changed extension to .cc  for use with marlin
+                 and include from "marlin/tinyxml.h"
 */
 
-#include "tinyxml.h"
+#include "marlin/tinyxml.h"
 
 // The goal of the seperate error file is to make the first
 // step towards localization. tinyxml (currently) only supports

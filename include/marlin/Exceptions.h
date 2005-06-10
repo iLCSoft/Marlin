@@ -2,6 +2,7 @@
 #define Exceptions_h 1
 
 #include "lcio.h"
+#include "Processor.h" 
 
 // define some exceptions for Marlin
 
@@ -9,7 +10,7 @@ namespace marlin{
 
   /**ParseException used for parse errors, e.g. when reading the steering file.
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.2 2005-06-09 16:09:14 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.3 2005-06-10 07:34:20 gaede Exp $
    */
   class ParseException : public lcio::Exception{
     
@@ -23,11 +24,11 @@ namespace marlin{
     }
   }; 
 
-   class Processor ;
+//    class Processor ;
 
   /**SkipEventException used to skip the current event in Processor::processEvent.
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.2 2005-06-09 16:09:14 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.3 2005-06-10 07:34:20 gaede Exp $
    */
   class SkipEventException : public lcio::Exception{
 
@@ -45,7 +46,7 @@ namespace marlin{
   /** StopProcessingException used to stop the current proccessing of events and 
    *  call Processor::end().
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.2 2005-06-09 16:09:14 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.3 2005-06-10 07:34:20 gaede Exp $
    */
   class StopProcessingException : public lcio::Exception{
 

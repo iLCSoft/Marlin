@@ -5,6 +5,7 @@
 #  F. Gaede 2005-02-23
 #######################################################
 
+export MARLIN=$PWD
 
 # modify the following pathes as needed
 
