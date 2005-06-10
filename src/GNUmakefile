@@ -11,10 +11,7 @@
 
 PROGNAME = Marlin
 
-BASEDIR = `pwd`"/.."
-
-
-
+BASEDIR := $(MARLIN)
 
 # check for private compiler definition
 ifdef MY_CXX
