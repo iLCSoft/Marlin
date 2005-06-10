@@ -30,43 +30,56 @@ USERLIBS=
 export USERLIBS
 
 
-subdirs := $(MARLIN) $(wildcard packages/*)  
+#subdirs := $(MARLIN) $(wildcard packages/*)  
+subdirs := $(patsubst packages/%/src/GNUmakefile,packages/%, $(wildcard packages/*/src/GNUmakefile) )
 
-packages := $(patsubst packages/%,%, $(wildcard packages/*) )
+#packages := $(patsubst packages/%,%, $(wildcard packages/*/src/GNUmakefile) )
 
-packagelibs := -Wl,-whole-archive $(foreach package,$(packages),  -L $(MARLIN)/packages/$(package)/lib -l$(package) ) -Wl,-no-whole-archive
+packages := $(patsubst packages/%,%,$(subdirs)) 
 
+MARLINLIB := -Wl,-whole-archive $(foreach package,$(packages),  -L $(MARLIN)/packages/$(package)/lib -l$(package) ) -Wl,-no-whole-archive
+export MARLINLIB
+
+packagelibs := $(foreach package,$(packages), packages/$(package)/lib/lib$(package).a )
 export packagelibs
-
 
 .PHONY: lib clean bin doc $(subdirs) test
 
-
-test:
-	@echo $(packages)
-	@echo $(packagelibs)
-	@for i in $(subdirs); do \
-	echo "ls -l $$i" ; \
-	ls -l $$i/lib ; done
 
 
 all: lib bin 
 
 
 lib:
+	$(MAKE) -C src lib
 	@for i in $(subdirs); do \
+	if [ -f "$$i/src/GNUmakefile" ] ; then \
 	echo "Building library for $$i..."; \
-	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) lib); done
+	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) lib); fi ; done
 
+bin: ./bin/Marlin
+
+./bin/Marlin: $(packagelibs)
+	$(MAKE) -C src rebuild
+
+
+doc:
+	$(MAKE) -C src doc
 
 
 clean:
 	@for i in $(subdirs); do \
+	if [ -f "$$i/src/GNUmakefile" ] ; then \
 	echo "Clearing in $$i..."; \
-	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) clean); done
+	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) clean); fi ; done
 
-bin:
-	$(MAKE) -C src bin
 
-doc:
-	$(MAKE) -C src doc
+test:
+	@echo $(subdirs)
+	@echo $(packages)
+	@echo $(packagelibs)
+	@ls -l $(MARLIN)/bin/Marlin
+	@for i in $(subdirs); do \
+	echo "ls -l $$i" ; \
+	ls -l $$i/lib ; done
+

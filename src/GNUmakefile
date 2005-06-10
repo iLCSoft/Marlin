@@ -55,7 +55,7 @@ CPPFLAGS += $(INCLUDE)
 
 LIBS =
 LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
-LIBS += $(packagelibs)
+LIBS += $(MARLINLIB)
 
 ifdef LCCD
  LIBS += -L $(LCCD)/lib -llccd
@@ -87,8 +87,14 @@ BINS = $(PROGNAME).cc
 LDFLAGS += --demangle
 
 
+.PHONY: bin rebuild lib clean 
+
 bin:  lib $(patsubst %.cc,$(BINDIR)/%,$(BINS))
 
+
+rebuild:
+	mkdir -p $(BINDIR)
+	$(CXX) -o $(BINDIR)/$(PROGNAME) $(CPPFLAGS) $(PROGNAME).cc  $(LIBS) 
 
 $(BINDIR)/$(PROGNAME): $(PROGNAME).cc $(INSTALL)/lib$(PROGNAME).a
 	mkdir -p $(BINDIR)
@@ -114,6 +120,6 @@ doc:
 
 
 conf:
-	echo "echo \""$(CPPFLAGS)"\"" > $(BINDIR)/marlin_includes.sh
-	echo "echo \""$(LIBS)"\"" > $(BINDIR)/marlin_libs.sh
+	@echo "echo \""$(CPPFLAGS)"\"" > $(BINDIR)/marlin_includes.sh
+	@echo "echo \""$(LIBS)"\"" > $(BINDIR)/marlin_libs.sh
 
