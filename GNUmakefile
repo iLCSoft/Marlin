@@ -68,6 +68,7 @@ doc:
 
 
 clean:
+	$(MAKE) -C src clean
 	@for i in $(subdirs); do \
 	if [ -f "$$i/src/GNUmakefile" ] ; then \
 	echo "Clearing in $$i..."; \
