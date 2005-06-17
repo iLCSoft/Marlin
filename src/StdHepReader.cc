@@ -64,7 +64,7 @@ namespace marlin{
 	rHdr->setRunNumber( runNum ) ;
 
 	ProcessorMgr::instance()->processRunHeader( rHdr ) ;
-	setFirstEvent( false );	
+	_isFirstEvent = false ;	
       }
       
       evt = new LCEventImpl ;

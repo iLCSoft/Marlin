@@ -15,24 +15,27 @@
 #  see e.g.:  $MARLIN/examples/mymarlin
 #  
 #
-# @author Frank Gaede
-# @date   Jun,10 2005
+# @author Frank Gaede, DESY
+# @version $Id: GNUmakefile,v 1.6 2005-06-17 15:18:36 gaede Exp $
 #
 #########################################################
 
 
 #
-# additional user libs go here 
+# ---------------- additional user libs go here ------------------- 
 #
-# USERLIBS= -L path_to_lib -lmylib
 
-#USERINCLUDES = -I/opt/products/gsl/1.6/include
+#USERINCLUDES += -I/opt/products/gsl/1.6/include
 #USERINCLUDES += -I /afs/desy.de/user/g/gaede/marlin/devel/MarlinCommon/include
 export USERINCLUDES
 
-#USERLIBS = -L /opt/products/gsl/1.6/lib -lgsl -lgslcblas
+#USERLIBS += -L /opt/products/gsl/1.6/lib -lgsl -lgslcblas
 #USERLIBS += -L  /afs/desy.de/user/g/gaede/marlin/devel/MarlinCommon/lib -lMarlinCommon
 export USERLIBS
+
+#
+#-------------------------------------------------------------------
+#
 
 
 subdirs := $(patsubst packages/%/src/GNUmakefile,packages/%, $(wildcard packages/*/src/GNUmakefile) )
@@ -62,7 +65,7 @@ lib:
 
 bin: lib ./bin/Marlin
 
-./bin/Marlin: $(packagelibs)
+./bin/Marlin: ./lib/libMarlin.a $(packagelibs)
 	$(MAKE) -C src rebuild
 
 

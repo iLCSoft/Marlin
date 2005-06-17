@@ -1,6 +1,6 @@
 /** 
 
-\mainpage <a href="http://ilcsoft.desy.de/marlin">Marlin</a> (v00-08) 
+\mainpage <a href="http://ilcsoft.desy.de/marlin">Marlin</a> (v00-09) 
  
 <b>Marlin [Modular Analysis and Reconstruction for the LINear collider]</b>
 is a simple modular application framework for analysis and reconstruction code based
@@ -38,22 +38,51 @@ library as described in the <a href="../../README">README</a>.
 <h3>Steering files</h3>
 A Marlin application is controlled via a steering file that defines the active processors
 and the order in which they are called as well as global and processor specific 
-parameters, see <a href="../../test.steer">./test.steer</a> as an example.
-<p>
-For an existing marlin application you can get an overview over all available processors
-by typing:
+parameters. Since v00-09 two formats for the steering file exist: ascii and xml:
+
+<h4>Ascii steering files</h4>
+
+For an existing marlin application you can get an example steering file including sections
+for  all available processors by typing:
 <ul>
 <li>
-  <b>./bin/MyMarlinApplication -l </b>
+  <b>./bin/MyMarlinApplication -l > example.steer</b>
 </li>
 </ul> 
-This will print example steering file sections for all processors with some brief 
-documentation. After editing your steering file you can run the application simply by:
+This creates a file similar to <a href="../../test.steer">./test.steer</a>.
+After editing your steering file you can run the application simply by:
 <ul>
 <li>
-  <b>./bin/MyMarlinApplication my.steer </b>
+  <b>./bin/MyMarlinApplication example.steer </b>
 </li>
 </ul> 
+
+<h4>XML steering files</h4>
+
+You can get an example XML steering file with:
+<ul>
+<li>
+  <b>./bin/MyMarlinApplication -x > example.xml</b>
+</li>
+</ul> 
+While XML steering files provide all the functionality of ascii files they also allow to make 
+use of two new features:
+<ul>
+<li> conditional execution of processors (depending on flags set by other processors)</li>
+<li> grouping of processors with sharing common parameters</li>
+</ul> 
+
+See marlin::XMLParser for a detailed description of the xml steering files.
+
+The application is again run by:
+<ul>
+<li>
+  <b>./bin/MyMarlinApplication example.xml</b>
+</li>
+</ul> 
+
+
+
 <h3>Release Notes</h3>
 Marlin is under development and there are frequent releases. Please check the 
 <a href="../release.notes">./release.notes</a>

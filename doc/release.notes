@@ -2,6 +2,9 @@
   Marlin release notes
  ======================
 
+ --------
+| v00-09 |
+ --------
 
   added Exceptions and Exception handler that prints error message when an
   uncaught exception is thrown
@@ -15,6 +18,8 @@
         core Marlin
      -  new top level GNUmakefile that builds marlin together with 
         user packages containing processors in $MARLIN/packages
+     -  modified example makefile for user packages
+        $MARLIN/examples/mymarlin/src/GNUmakefile
 
   new (optional) XML steering files that provide new features:
 
@@ -22,10 +27,14 @@
        expressed in terms of ProcessorNames as specified in the steering file is true
 
      - groups: processors can be grouped together so that they can share common variables
-       and can be referred to in the <execute/> by the group name
+       and can be referred to in the <execute/> tag by the group name
 
      - TinyXml parser ( http://sourceforge.net/projects/tinyxml ) 
        that can be used to read arbitrary xml files
+
+  create example steering files:  
+    ./bin/Marlin -l > example.steer 
+    ./bin/Marlin -x > example.xml 
 
   LCIOOutputProcessor allows to drop collections - needs LCIO v01-05
 
@@ -41,7 +50,9 @@
   bug fixes:
    empty lines containing whitspaces or tabs are ignored now (no seg.fault)
 
- v00-08
+ --------
+| v00-08 |
+ --------
 
   improved API doc
   

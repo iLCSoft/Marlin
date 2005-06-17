@@ -2,10 +2,18 @@
 #
 # Example environment script to build Marlin
 #  
-#  F. Gaede 2005-02-23
+#  F. Gaede, DESY
 #######################################################
 
-export MARLIN=$PWD
+
+if [ $MARLIN ] ; then
+ export MARLIN
+else
+ export MARLIN=$PWD
+fi
+
+echo "  MARLIN set to:" $MARLIN
+
 
 # modify the following pathes as needed
 

@@ -6,7 +6,7 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.10 2005-03-08 15:03:54 gaede Exp $
+* $Id: README,v 1.11 2005-06-17 15:18:36 gaede Exp $
 ************************************************************************
 
 
@@ -19,19 +19,36 @@ for every processor as well as for the global scope.
 By using the framework users don't have to write any code that deals with the IO they simply 
 write processors with defined callbacks, i.e. init(), processRunHeader(), processEvent(), end().
 
-To build marlin:
+To build the marlin library without any existing packages:
 
    #-- modify env.sh according to your system  and requirements
-
-   #-- if you want to use aida, also modify aid_env.sh accordingly
-
    . env.sh
-
    gmake -C ./src
-
 
 To build the API documentation with doxygen
    gmake -C ./src doc
+
+
+  +++ (NEW since v00-09) +++
+You can also build Marlin together with existing packages that contain Marlin processors. Simply 
+copy the corresponding packages to the ./packages subdirectory (or use a symbolic link to reference
+an existing package directory)  and use the top level makefile:
+   . env.sh
+   gmake 
+   
+This works if the packages in the ./packages subdirectories fulfill the following requiremets:
+
+   a) they have the following structure
+         ./MyPackage/include
+         ./src/
+         ./src/GNUmakefile
+         ./lib
+   b) a call to gmake lib creates:
+         ./MyPackage/lib/libMyPackage.a
+
+   c) all package dependencies have been added to the user section of the top level makefile !!
+
+  +++++++++++++++++++++++++++
 
 
 To develop your own processors and create applications:
@@ -48,28 +65,77 @@ To develop your own processors and create applications:
      this makes your processor known to Marlin.
 
 
-  - Edit the steering file:   
+  - Create the steering file - either old ascii format or new xml format:  
+
+    old ascii format:
+    -----------------
+    * start from test.steer and add sections for every needed processor (use ./bin/MyMarlinApp -l 
+      to get example sections for all known processors)
     * Add your processor(s) to the variable ActiveProcessors with a unique name.
     * Add a section with the processor parameters to the steering file (identified by the unique name)
     * Don't forget the parameter ProcessorType (typically the class name)
  
-  - run: 'myexecutablename myparameters.steer'
+    -> run: './bin/MyMarlinApp test.steer'
+
+
+  +++ (NEW since v00-09) +++
+
+    new XML format:
+    ---------------
+    * create an example steering file with ./bin/MyMarlinApp -x > test.xml
+    * edit the <execute/> section by adding processors as needed (use the names 
+      defined in the corresponding <processor/> tag.  
+
+    -> run: './bin/MyMarlinApp test.xml'
+
+    * XML files provide a mechanism to group processors and to define conditions for the 
+      execution of the processors (see API doc of class XMLParser for details)     
+
+  ++++++++++++++++++++++++++
 
 
  -> examples/mymarlin can serve as a template for a new project using marlin !
 
-    simply copy the whole directory and edit (after renaming) the files
-     src/MyProcessor.cc
-     src/GNUmakefile
-     include/MyProcessor.h 
+    simply copy the whole directory 
 
-   modify and source  env.sh to set the proper environment
+       cp -r $MARLIN/examples/mymarlin MyMarlinPackage   (please choose another name !)
+ 
+    renaming the files source files, e.g.
+
+      mv include/MyProcessor.h include/ChooseAReasonableNameForThisClass.h
+      mv src/MyProcessor.cc src/ChooseAReasonableNameForThisClass.h
+
+    edit the makefile src/GNUmakefile:
+
+       PROGNAME = MyMarlinPackage (please choose another name but the same as above for the package ! )
+
+    add external libraries as needed to the user section:
+
+    ifndef USERINCLUDES
+      USERINCLUDES = -I ../../MarlinCommon/include  
+    endif
+
+    ifndef USERLIBS
+      USERLIBS =  -L ../../MarlinCommon/lib -lMarlinCommon
+    endif
+   
+   ------------------------------------------------------------------------------------------------------
+     Note: the structure of this makefile has been changed in  v00-09 to make it easier to integrate 
+     the various marlin based packages. The ifndef/endif construct allows to build this package locally
+     as well as from the top level makefile !
+     So please consider to upgrade your existing marlin packages' makefiles.
+   ------------------------------------------------------------------------------------------------------
+
+
+  set the proper environment - edit env.sh and then
+     . env.sh 
+  build the example 
      gmake -C ./src
-   builds the example 
-       
   
-If you are updating from an older version please read ./doc/release.notes.
+  Or copy the (link) directory and build together with Marlin and other packages  using the top level 
+  makefile as described above.
+     
 
-
-
+If you are updating from an older version please also read the ./doc/release.notes and the latest version
+of the API doc !
 
