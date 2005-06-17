@@ -58,11 +58,31 @@ namespace marlin{
 
     typedef ProcessorMap::iterator MI ;
     
-    std::cout  <<  std::endl 
-	       << "   Available processors : " 
+    std::cout  << "  ##########################################" << std::endl
+	       << "  #                                        #" << std::endl
+	       << "  #     Example steering file for marlin   #" << std::endl
+	       << "  #                                        #" << std::endl
+	       << "  ##########################################" << std::endl
+	       <<  std::endl ;
+    
+    std::cout  << ".begin Global  ---------------------------------------" << std::endl
+	       << "   LCIOInputFiles simjob.slcio " << std::endl 
+	       << std::endl
+	       << "  # the active processors that are called in the given order" << std::endl
+	       << "   ActiveProcessors MyAIDAProcessor" << std::endl
+	       << "   ActiveProcessors MyTestProcessor" << std::endl
+	       << "   ActiveProcessors MyLCIOOutputProcessor" << std::endl
+	       << std::endl
+	       << "  # limit the number of processed records (run+evt):" << std::endl
+	       << "   MaxRecordNumber 5001" << std::endl
+	       << std::endl
+	       << "  # don't call the check method of the processors if \"true\"" << std::endl
+	       << "   SupressCheck false" << std::endl
+	       << ".end   -----------------------------------------------" << std::endl
 	       <<  std::endl 
 	       <<  std::endl ;
-
+    
+    
     for(MI i=_map.begin() ; i!= _map.end() ; i++) {
       i->second->printDescription() ;
     }
@@ -71,6 +91,13 @@ namespace marlin{
 
     typedef ProcessorMap::iterator MI ;
     
+    std::cout  << "<!--##########################################" << std::endl
+	       << "    #                                        #" << std::endl
+	       << "    #     Example steering file for marlin   #" << std::endl
+	       << "    #                                        #" << std::endl
+	       << "    ##########################################-->" << std::endl
+	       <<  std::endl ;
+
     std::cout  <<  std::endl 
 	       << "<marlin>" 
 	       <<  std::endl ;
