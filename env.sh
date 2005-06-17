@@ -18,7 +18,7 @@ echo "  MARLIN set to:" $MARLIN
 # modify the following pathes as needed
 
 # path to LCIO is required
-export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-05
+export LCIO=/opt/products/lcio/1.5
 
 
 #-- comment out for production 
@@ -35,14 +35,15 @@ export CLHEP=/opt/products/CLHEP/1.8.2
 #---- LCCD -----------
 
 # use LCCD for conditions data (ConditionsProcessor) 
-export LCCD=/afs/desy.de/group/it/ilcsoft/lccd/v00-02
+#export LCCD=/afs/desy.de/group/it/ilcsoft/lccd/v00-02
 
 # to make full use of LCCD also use the conditions data base
 # Note: if you don't want to use CondDBMySQL you also need a LCCD library that
 # has been build without CondDBMySQL !
-export CondDBMySQL=/afs/desy.de/group/it/ilcsoft/CondDBMySQL
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CondDBMySQL/lib
+#export CondDBMySQL=/afs/desy.de/group/it/ilcsoft/CondDBMySQL
+
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CondDBMySQL/lib
 
 
 #---- AIDA setup ---------
