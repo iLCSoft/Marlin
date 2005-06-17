@@ -26,14 +26,17 @@
 #
 # USERLIBS= -L path_to_lib -lmylib
 
-USERLIBS=
+#USERINCLUDES = -I/opt/products/gsl/1.6/include
+#USERINCLUDES += -I /afs/desy.de/user/g/gaede/marlin/devel/MarlinCommon/include
+export USERINCLUDES
+
+#USERLIBS = -L /opt/products/gsl/1.6/lib -lgsl -lgslcblas
+#USERLIBS += -L  /afs/desy.de/user/g/gaede/marlin/devel/MarlinCommon/lib -lMarlinCommon
 export USERLIBS
 
 
-#subdirs := $(MARLIN) $(wildcard packages/*)  
 subdirs := $(patsubst packages/%/src/GNUmakefile,packages/%, $(wildcard packages/*/src/GNUmakefile) )
 
-#packages := $(patsubst packages/%,%, $(wildcard packages/*/src/GNUmakefile) )
 
 packages := $(patsubst packages/%,%,$(subdirs)) 
 

@@ -14,6 +14,8 @@ typedef std::map< const std::string, bool > ResultMap ;
 namespace marlin{
 
 
+  /** Helper struct for LogicalExpression.
+   */
   struct Expression{
 
     Expression() : Operation( AND ), isNot( false ), Value("") {
@@ -27,7 +29,9 @@ namespace marlin{
   
   std::ostream& operator<< (  std::ostream& s,  Expression& e ) ;
 
-  /** Helper class for LogicalExpressions
+  /** Helper class for LogicalExpressions that splits the expression into
+   *  subexpressions - needs to be apllied iteratively.
+   *  
    */
   class Tokenizer{
 
@@ -52,6 +56,7 @@ namespace marlin{
     }
     
     
+    /** Save the current character and change state if necessary */
     void operator()(const char& c) { 
 
       if( c != ' ' && c != '\t'  ) {  // ignore whitespaces and tabs
@@ -119,50 +124,6 @@ namespace marlin{
       _last = c ;
     }
 
-//     void operator()(const char& c) { 
-      
-//       if( c != ' ' && c != '\t'  ) {  // ignore whitespaces and tabs
-	
-// 	if( c == '(' ) ++openPar ;
-
-// 	if( c == ')' ) ++closedPar ;
-
-// 	if( newToken ){
-	  
-// 	  _tokens.push_back( Expression() ) ; // create a new object
-	  
-// 	  newToken = false ;
-	  
-// 	  if( c == '!' )
-// 	    _tokens.back().isNot = true ;
-	  
-// // 	  else if( c != '(' ) {  // && c !=  ')'  ??
-// // 	    _tokens.back().Value += c ;
-// // 	  }
-// 	} 
-	
-// 	if( c == '&' && _last == '&'  && openPar - closedPar==0 ) {
-// 	  _tokens.back().Operation = Expression::AND ;
-// 	  newToken = true ;
-// 	}
-	
-// 	if( c == '|' && _last == '|' && openPar - closedPar==0 ) {
-// 	  _tokens.back().Operation = Expression::OR ;
-// 	  newToken = true ;
-// 	}
-	
-// 	if( ! newToken  ) { //&&  c != '&' &&  c != '|'
-
-// 	  if ( ! ( c == ')' && openPar > 0 && openPar - closedPar==0 )  &&   // not closing parenthesis
-// 	       ! ( c == '(' && openPar == 1 &&  closedPar == 0 ) )           // not opening parenthesis
-
-// 	    _tokens.back().Value += c ;
-// 	}
-
-//       }
-//       _last = c ;
-//     } 
-    
     ~Tokenizer(){
     }
     
@@ -187,8 +148,8 @@ namespace marlin{
     /** Virtual d'tor.*/
     virtual ~LogicalExpressions() {} 
     
-    /** Add a new named logical expression. Currently only simple expressions of
-     *  the form:  [!]Key1 [&& [!]Key2 [ && [!]Key3 ...]] are allowed.
+    /** Add a new named logical expression formed out of [!,(,&&,||,),value], e.g.<br>
+     *  ( A && ( B || !C ) ) || ( !B && D ) 
      */
     void addCondition( const std::string& name, const std::string& expression ) ;
 

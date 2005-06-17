@@ -30,7 +30,9 @@ namespace marlin{
    * Use registerProcessorParameter to define all parameters that the module uses.
    * Registered parameters are filled automatically before init() is called.
    * With MyAplication -l you can print a list of available processors including
-   * the steering parameters they use/need.
+   * the steering parameters they use/need.<br>
+   * With MyAplication -x you can print an example XML steering file for all known
+   * processors.
    *
    * @see init 
    * @see processRun
@@ -98,9 +100,12 @@ namespace marlin{
     virtual StringParameters* parameters() { return _parameters ; } 
 
 
-    /** Print information about this processor.
+    /** Print information about this processor in ASCII steering file format.
      */
     virtual void printDescription() ;
+
+    /** Print information about this processor in XML steering file format.
+     */
     virtual void printDescriptionXML() ;
 
     /** Print the parameters and its values.
@@ -170,33 +175,28 @@ namespace marlin{
 						   true , setSize) ;
      }
     
-
     /** Tests whether the parameter has been set in the steering file
      */
     bool parameterSet( const std::string& name ) ;
 
-// the implicit type conversion causes problems, e.g. with std::string("bla") 
-//     template<class T, class U>
-//     void registerProcessorParameter(const std::string& name, 
-// 				    const std::string&description,
-// 				    T& parameter,
-// 				    const U& defaultVal) {
-      
-//       _map[ name ] = new ProcessorParameter_t<T>( name , description, parameter , T(defaultVal) ) ;
-//     }
-    
 
+  private: // called by ProcessorMgr
+    
+    /** Set processor name */
     virtual void setName( const std::string & name) { _processorName = name ; }
-  
+    
+    /** Initialize the parameters */
     virtual void setParameters( StringParameters* parameters) ; 
-  
+    
     /** Sets the registered steering parameters before calling init() 
      */
     virtual void baseInit() ;
-
-
+    
     /** Called by ProcessorMgr */
     void setFirstEvent( bool isFirstEvent ) { _isFirstEvent =  isFirstEvent ; }
+
+
+  protected:
 
     /**Describes what the processor does. Set in constructor.
      */

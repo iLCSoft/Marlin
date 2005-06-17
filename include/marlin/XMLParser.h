@@ -13,14 +13,90 @@ class TiXmlDocument ;
 
 namespace marlin{
 
-  // class LCTokenizer ;
-
-
   typedef std::map< std::string ,  StringParameters* > StringParametersMap ;
 
-
   /** XML parser for Marlin steering files.
-   *  See Marlin main page documentation for details.
+   *  Marlin XML steering files have the following form (use <b>Marlin -x > example.xml</b> to 
+   *  generate a template steering file):<br>
+   * 
+   *  <pre>
+   *  &lt;marlin&gt;
+   *   &lt;execute&gt;   [1]
+   *      ...  // the processors and processor groups to be executed
+   *   &lt;/execute&gt;
+   *   &lt;global&gt;    [1]
+   *      ...  // global parameter section
+   *   &lt;/global&gt;
+   *   &lt;processor&gt; [n]
+   *      ...  // definition of the processor and its parameters
+   *   &lt;/processor&gt;
+   *   &lt;group&gt; [m]   
+   *      ...    // a group of processors
+   *     &lt;processor&gt; [k]
+   *      ...  // definition of the processor and its parameters
+   *     &lt;/processor&gt;
+   *   &lt;/group&gt; 
+   *  &lt;/marlin&gt;
+   * </pre>
+   * where the numbers enclosed in "[]" denote how many elements of the given type are allowed 
+   * or required, n,m,k = [0,1,2,...]. 
+   * <p>
+   * The &lt;execute/&gt; section defines the processors that are to be called in the order specified. 
+   * The Processor::processEvent() method is only called if the relevant condition (&lt;if condition="A"/&gt;)
+   * is fullfilled. Conditions can be arbitrary logical expressions formed of [!,(,&&,||,),value], e.g.<br>
+   *  ( A && ( B || !C ) ) || ( !B && D ), where the keys A,B,C,D can be either procesor names 
+   * (Processor::setReturnValue(bool val) ) or processor names followed by a string 
+   * ( Processor::setReturnValue(const std::string &name, bool val) ). <br>
+   * In the following example the Pflow processor is only called for events where the EventSelection processor
+   * has returnd true and the TwoJetAnalysis is is then in turn only called for events identified as 
+   * having tow jets by the Pflow processor
+   * 
+   * <pre>
+   *  &lt;execute&gt;
+   *   &lt;processor name="MyAIDAProcessor"/&gt;
+   *   &lt;processor name="EventSelection"/&gt;  
+   *   &lt;if condition="EventSelection"&gt;
+   *     &lt;processor name="Pflow"/&gt;  
+   *     &lt;if condition="Pflow.TwoJet"&gt;
+   *       &lt;group name="TwoJetAnalysis"/&gt;
+   *     &lt;/if&gt;
+   *   &lt;/if&gt;
+   *   &lt;processor name="MyLCIOOutputProcessor"/&gt;  
+   *  &lt;/execute&gt;   
+   *  </pre>
+   * The &lt;global&gt; section defines the global paramters:
+   * <pre>
+   *  &lt;global&gt;
+   *    &lt;parameter name="LCIOInputFiles"&gt;dd_rec.slcio &lt;/parameter&gt;
+   *    &lt;parameter name="LCIOInputFiles"&gt;../tt500_all_set1_12.slcio &lt;/parameter&gt;
+   *    &lt;parameter name="MaxRecordNumber" value="5001" /&gt;  
+   *    &lt;parameter name="SupressCheck" value="false" /&gt;  
+   *  &lt;/global&gt;
+   * </pre>
+   * <b>Parameters can be either specified as the content of the &lt;parameter/&gt; tag or in the 
+   * value-attribute of the tag !</b>
+   * <p>
+   * The &lt;processor name="..." type="..." &gt; section defines the processor and its parameters,
+   * where name and type are required attibutes, e.g.
+   * <pre>
+   *  &lt;processor name="EventSelection" type="SelectionProcessor"&gt;
+   *    &lt;parameter name="EnergyCut" type="float"&gt;50.0&lt;/parameter&gt;
+   *  &lt;/processor&gt;
+   * </pre>
+   * Note: the parameter's type-attribute is optional.
+   * <p>
+   * Processor sections can be enclosed in a  &lt;group/&gt; tag, where parameters defined outside any
+   * &lt;processor/&gt; tag are group parameters valid for all processors in the group, .e.g.
+   * <pre>
+   *  &lt;group&gt;
+   *    &lt;parameter name="PtCut" value="0.03"&gt;
+   *    &lt;processor name="TrackFinding" type="TrackFinder"/&gt;
+   *    &lt;processor name="TrackFitting" type="KalmanProcessor"&gt;
+   *      &lt;parameter name="UseDAF" value="true"&gt;
+   *    &lt;processor&gt;
+   *  &lt;/group&gt;
+   * </pre>
+   * 
    */
 
   class XMLParser : public IParser {
@@ -115,3 +191,10 @@ namespace marlin{
 
 } // end namespace marlin 
 #endif
+/**
+ * <p>
+ * The &lt;processor name="..." type="..." &gt; section defines the processor and its parameters,
+ * where name and type are required attibutes.
+ * 
+ */
+ 

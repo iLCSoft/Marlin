@@ -49,6 +49,7 @@ ifdef LCCD
  endif
 endif
 
+INCLUDE += $(USERINCLUDES)
 
 CPPFLAGS += $(INCLUDE)
 

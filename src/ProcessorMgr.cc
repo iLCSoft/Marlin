@@ -118,27 +118,6 @@ namespace marlin{
 
   }
   
-//   bool ProcessorMgr::addActiveProcessor( const std::string& processorType , const std::string& processorName ,
-// 					 StringParameters* parameters , const std::string condition ) {
-    
-//     if( addActiveProcessor( processorType, processorName, parameters ) ) {
-      
-//       _conditions.addCondition( processorName, condition ) ;
-
-// //       //FIXME: debug 
-// //       _conditions.setValue("A" , true ); 
-// //       _conditions.setValue("B" , false ); 
-// //       _conditions.setValue("C" , false ); 
-// //       _conditions.expressionIsTrue( "!( A && ( B || C ) )" ) ;
-// //       _conditions.expressionIsTrue( "A && !( B || C )" ) ;
-// //       _conditions.expressionIsTrue( "!A && B || !C  " ) ;
-// //       _conditions.expressionIsTrue( "!((A && (B) || !C))  " ) ;
-      
-//       return true ;
-//     }
-
-//     return false ;
-//   }
 
   bool ProcessorMgr::addActiveProcessor( const std::string& processorType , 
 					 const std::string& processorName , 
