@@ -121,6 +121,7 @@ doc:
 
 
 conf:
+	mkdir -p $(BINDIR)
 	@echo "echo \""$(CPPFLAGS)"\"" > $(BINDIR)/marlin_includes.sh
 	@echo "echo \""$(LIBS)"\"" > $(BINDIR)/marlin_libs.sh
 
