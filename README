@@ -6,7 +6,7 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.11 2005-06-17 15:18:36 gaede Exp $
+* $Id: README,v 1.12 2005-06-18 10:47:20 gaede Exp $
 ************************************************************************
 
 
@@ -31,6 +31,7 @@ To build the API documentation with doxygen
 
   +++ (NEW since v00-09) +++
 You can also build Marlin together with existing packages that contain Marlin processors. Simply 
+create a subdirectory packages in your Marlin directory and
 copy the corresponding packages to the ./packages subdirectory (or use a symbolic link to reference
 an existing package directory)  and use the top level makefile:
    . env.sh
