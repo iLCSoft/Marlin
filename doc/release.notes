@@ -49,7 +49,7 @@
 
   bug fixes:
    empty lines containing whitspaces or tabs are ignored now (no seg.fault)
-
+   processors end() method now called in reverse order of initialization !
  --------
 | v00-08 |
  --------

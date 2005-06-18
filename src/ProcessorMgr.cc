@@ -263,7 +263,9 @@ namespace marlin{
   
   void ProcessorMgr::end(){ 
 
-    for_each( _list.begin() , _list.end() ,  std::mem_fun( &Processor::end ) ) ;
+//     for_each( _list.begin() , _list.end() ,  std::mem_fun( &Processor::end ) ) ;
+
+    for_each( _list.rbegin() , _list.rend() ,  std::mem_fun( &Processor::end ) ) ;
 
 //     if( _skipMap.size() > 0 ) {
       std::cout  << " --------------------------------------------------------- " << std::endl

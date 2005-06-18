@@ -82,7 +82,9 @@ namespace marlin{
     virtual void check( LCEvent * evt ) { }
 
 
-    /** Called after data processing for clean up.
+    /** Called after data processing for clean up in the inverse order of the init()
+     *  method so that resources allocated in the first processor also will be available
+     *  for all following processors.
      */
     virtual void end(){ }
   
