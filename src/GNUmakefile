@@ -49,6 +49,11 @@ ifdef LCCD
  endif
 endif
 
+ifdef GEAR
+ INCLUDE += -D USE_GEAR -I $(GEAR)/src/cpp/include
+endif
+
+
 INCLUDE += $(USERINCLUDES)
 
 CPPFLAGS += $(INCLUDE)
@@ -58,12 +63,17 @@ LIBS =
 LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
 LIBS += $(MARLINLIB)
 
+ifdef GEAR
+ LIBS += -L $(GEAR)/lib -lgearxml -lgear
+endif
+
 ifdef LCCD
  LIBS += -L $(LCCD)/lib -llccd
  ifdef CondDBMySQL
    LIBS += -L $(CondDBMySQL)/lib -lconddb    
  endif
 endif
+
 
 ifdef CLHEP
    LIBS += -L $(CLHEP)/lib -lCLHEP

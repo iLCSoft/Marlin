@@ -25,6 +25,11 @@
 #include <string>
 #include <assert.h>
 
+#ifdef USE_GEAR
+#include "gearimpl/Util.h"
+#include "gearxml/GearXML.h"
+#include "gearimpl/GearMgrImpl.h"
+#endif
 
 using namespace lcio ;
 using namespace marlin ;
@@ -109,7 +114,26 @@ int main(int argc, char** argv ){
 
   createProcessors( *parser ) ;
 
+#ifdef USE_GEAR
 
+  std::string gearFile = Global::parameters->getStringVal("GearXMLFile" ) ;
+  
+  if( gearFile.size() > 0 ) {
+
+    gear::GearXML gearXML( gearFile ) ;
+    
+    Global::GEAR = gearXML.createGearMgr() ;
+
+    std::cout << " ---- instantiated  GEAR from file  " << gearFile  << std::endl ;
+    std::cout << *Global::GEAR << std::endl ;
+
+  } else {
+
+    std::cout << " ---- no GEAR XML file given  --------- " << std::endl ;
+    Global::GEAR = new gear::GearMgrImpl ;
+  }
+
+#endif
 
   StringVec lcioInputFiles ; 
 

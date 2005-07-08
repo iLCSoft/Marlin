@@ -46,6 +46,10 @@ export CLHEP=/opt/products/CLHEP/1.8.2
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CondDBMySQL/lib
 
 
+#---- GEAR ---------------
+export GEAR=/afs/desy.de/user/g/gaede/ilcsoft/gear/v00-00
+
+
 #---- AIDA setup ---------
 
 #--- fixes a bug in aida_env.sh with zsh (provided by J.Samson) :

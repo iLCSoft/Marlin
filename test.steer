@@ -19,6 +19,10 @@
 	ActiveProcessors FranksTestProcessor
 #	ActiveProcessors AnotherTestProcessor
 	ActiveProcessors OutputFile
+
+        # the GEAR XML file 
+	GearXMLFile gear_ldc.xml
+
 	# limit the number of processed records (run+evt):
 	MaxRecordNumber 5001
 
