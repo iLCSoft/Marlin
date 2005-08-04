@@ -16,21 +16,20 @@
 #  
 #
 # @author Frank Gaede, DESY
-# @version $Id: GNUmakefile,v 1.6 2005-06-17 15:18:36 gaede Exp $
+# @version $Id: GNUmakefile,v 1.7 2005-08-04 20:38:05 gaede Exp $
 #
 #########################################################
 
 
 #
-# ---------------- additional user libs go here ------------------- 
+# ---------------- additional user libs are defined in userlibs.gmk  ------------------- 
 #
+USERINCLUDES =  
+USERLIBS = 
 
-#USERINCLUDES += -I/opt/products/gsl/1.6/include
-#USERINCLUDES += -I /afs/desy.de/user/g/gaede/marlin/devel/MarlinCommon/include
+include ./userlib.gmk
+
 export USERINCLUDES
-
-#USERLIBS += -L /opt/products/gsl/1.6/lib -lgsl -lgslcblas
-#USERLIBS += -L  /afs/desy.de/user/g/gaede/marlin/devel/MarlinCommon/lib -lMarlinCommon
 export USERLIBS
 
 #

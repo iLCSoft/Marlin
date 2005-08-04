@@ -2,6 +2,14 @@
   Marlin release notes
  ======================
 
+ -----------
+| v00-09-01 |
+ -----------
+ 
+  first usage of GEAR
+  
+  introduced userlib.gmk for USERINCLUDES and USERLIBS
+
  --------
 | v00-09 |
  --------

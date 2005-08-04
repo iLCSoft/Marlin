@@ -1,0 +1,23 @@
+##############################################################################
+# 
+#  User includes and libraries for building Marlin  with additional packages
+#
+#  F. Gaede, DESY
+# 
+#
+# Add as many of the following alines as needed :
+#
+# USERINCLUDES += -I include_path 
+# USERLIBS += -L path_to_lib -lmylib
+#
+##############################################################################
+
+
+#USERINCLUDES += -I $(MARLIN)/packages/MarlinUtil/include
+#USERINCLUDES += -Df2cFortran
+#USERINCLUDES += -I /afs/desy.de/group/it/ilcsoft/gsl/1.6/include
+
+#USERLIBS += -lg2c
+#USERLIBS += -L /opt/products/cernlib/pro/lib/ -lmathlib -lkernlib
+#USERLIBS += -L /afs/desy.de/group/it/ilcsoft/gsl/1.6/lib -lgsl -lgslcblas
+
