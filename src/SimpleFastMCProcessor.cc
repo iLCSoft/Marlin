@@ -28,6 +28,7 @@
 #endif
 
 #include <iostream>
+#include <cmath>
 
 using namespace lcio ;
 

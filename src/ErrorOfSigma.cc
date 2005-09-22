@@ -1,5 +1,6 @@
 #include "marlin/ErrorOfSigma.h"
 #include <iostream>
+#include <cmath>
 
 namespace marlin{
   
