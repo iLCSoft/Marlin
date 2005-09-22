@@ -1,6 +1,6 @@
 #include "marlin/StringParameters.h"
 
-#include <strstream>
+#include <sstream>
 #include <algorithm>
 
 namespace marlin{
