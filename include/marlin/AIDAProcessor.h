@@ -22,8 +22,23 @@ using namespace lcio ;
 namespace marlin {
 
 
-/** Module that creates an AIDA file and histogram and tuple factories that 
+/** Provides access to AIDA histograms, ntuples, etc.
+ *  This module  creates an AIDA file and histogram and tuple factories that 
  *  can be used in all processors of a Marlin application.
+ * 
+ *  <h4>Input - Prerequisites</h4>
+ *  No input needed for this processor. Make sure it is included in the list of active processors 
+ *  before any processor that books/fills histograms.
+ *
+ *  <h4>Output</h4> 
+ *  none
+ * 
+ * @param Compress  compression of output file 0: false >0: true (default) 
+ * @param FileName  filename without extension
+ * @param FileType  type of output file xml (default) or root ( only OpenScientist)
+ *
+ *  @author F. Gaede, DESY
+ *  @version $Id: AIDAProcessor.h,v 1.5 2005-10-11 12:56:28 gaede Exp $ 
  */
 
 class AIDAProcessor : public marlin::Processor {

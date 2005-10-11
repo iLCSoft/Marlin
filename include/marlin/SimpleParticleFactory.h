@@ -13,6 +13,9 @@ namespace marlin {
 /** Implementation of IRecoParticleFactory that implements the default behaviour 
  *  as described in SimpleFastMCProcessor, i.e. have polar angle ranges with different resolutions
  *  for charged tracks, photons and neutral hadrons.
+ *
+ *  @author F. Gaede, DESY
+ *  @version $Id: SimpleParticleFactory.h,v 1.2 2005-10-11 12:56:28 gaede Exp $ 
  */ 
 
   class SimpleParticleFactory : public IRecoParticleFactory {

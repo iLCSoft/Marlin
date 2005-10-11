@@ -25,8 +25,24 @@ namespace marlin{
  *  Optionally IConditionsChangeListener subclasses, e.g. ConditionsMaps can be  
  *  registered for conditions data 'name', these are updated whenever the 
  *  data changes.
+ * 
+ *  <h4>Input - Prerequisites</h4>
+ *  none
+ *
+ *  <h4>Output</h4> 
+ *  Collections of conditions data are added to the event.
+ * 
+ * 
+ * @param DBCondHandler	    Initialization of a conditions database handler
+ * @param DBFileHandler     Initialization of a conditions db file handler
+ * @param DBInit            Initialization string for conditions database
+ * @param DataFileHandler   Initialization of a data file handler
+ * @param SimpleFileHandler Initialization of a simple conditions file handler
+ *
+ *  @author F. Gaede, DESY
+ *  @version $Id: ConditionsProcessor.h,v 1.4 2005-10-11 12:56:28 gaede Exp $ 
  */
-
+ 
 class ConditionsProcessor : public Processor {
   
  public:

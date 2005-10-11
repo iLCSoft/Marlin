@@ -19,6 +19,9 @@ namespace marlin{
   
   /** Class that holds a steering variable for a marlin processor - automatically created by
    *  Processor::registerProcessorParameter() 
+   *
+   *  @author F. Gaede, DESY
+   *  @version $Id: ProcessorParameter.h,v 1.8 2005-10-11 12:56:28 gaede Exp $ 
    */
   
   class ProcessorParameter {

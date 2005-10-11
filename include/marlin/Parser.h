@@ -27,6 +27,9 @@ typedef std::map< std::string ,  StringParameters* > StringParametersMap ;
  *  is interpreted as the list of values separated by whitespace.
  *  Values from multiple lines starting with the same name/key are appended
  *  to the corresponding list.
+ *
+ *  @author F. Gaede, DESY
+ *  @version $Id: Parser.h,v 1.3 2005-10-11 12:56:28 gaede Exp $ 
  */
 
 class Parser : public IParser {

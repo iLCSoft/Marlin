@@ -10,6 +10,9 @@ namespace marlin{
 
 
   /** Interface for smearing of four vectors - based on CLHEP::HepLorentzVector
+   *
+   *  @author F. Gaede, DESY
+   *  @version $Id: IFourVectorSmearer.h,v 1.2 2005-10-11 12:56:28 gaede Exp $ 
    */ 
   
   class IFourVectorSmearer {

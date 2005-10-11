@@ -14,7 +14,8 @@ using namespace lcio ;
 namespace marlin{
  
 
-  /** A simple smearing "Monte Carlo" that creates ReconstructedParticles from MCParticles according to
+  /** A simple smearing "Monte Carlo" processor.
+   *  It creates ReconstructedParticles from MCParticles according to
    *  the resolution that is specified for the particle type, one of:
    *  <ul>
    *  <li>photon</li>
@@ -38,16 +39,29 @@ namespace marlin{
    *  No ReconstructedParticles are created if there is no resolution defined at that polar angle, e.g.<br>
    *  <b>PhotonResolution  &nbsp; .7e-5   &nbsp; 0.083   &nbsp; 3.141593/2. </b><br>
    *  effectively limits the acceptance region for photons to theta > 83mrad.<br>
-   *  Output collections:
-   *  <ul>
-   *  <li><b>ReconstructedParticles</b>: the list of reconstrcuted particles</li>
-   *  <li><b>MCTruthMapping</b>:  holds LCRelations  that map the  ReconstructedParticles to their
-   *       proper MCParticles </li>
-   *  <li><b>TrueJets</b>: a list of perfect parton (quark, gluon) jets <b>NOT YET !!!</b></li>
-   *  </ul>
    *  
    *  A collection of LCRelations, called "MCTruthMapping" holds the relation between the 
    *  ReconstructedParticles and their proper MCParticles.
+   *
+   * 
+   *  <h4>Input - Prerequisites</h4>
+   *  A collection of MCParticles (the MCPArticle collection).
+   *
+   *  <h4>Output</h4> 
+   *  <ul>
+   *  <li><b>ReconstructedParticles</b>: the collection of reconstructed particles</li>
+   *  <li><b>MCTruthMapping</b>:  holds LCRelations  that map the  ReconstructedParticles to their
+   *       proper MCParticles </li>
+   *  </ul>
+   * 
+   * @param ChargedResolution    Resolution of charged particles in polar angle range:  d(1/P)  th_min  th_max
+   * @param InputCollectionName  Name of the MCParticle input collection
+   * @param MomentumCut          No reconstructed particles are produced for smaller momenta (in [GeV])
+   * @param NeutralHadronResolution Resolution dE/E=A+B/sqrt(E/GeV) of neutral hadrons in polar angle range: A  B th_min  th_max
+   * @param PhotonResolution   Resolution dE/E=A+B/sqrt(E/GeV) of photons in polar angle range: A  B th_min  th_max
+   *
+   *  @author F. Gaede, DESY
+   *  @version $Id: SimpleFastMCProcessor.h,v 1.3 2005-10-11 12:56:28 gaede Exp $ 
    */
   
   class SimpleFastMCProcessor : public Processor {

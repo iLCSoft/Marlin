@@ -9,8 +9,9 @@
 namespace marlin{
 
   /**ParseException used for parse errors, e.g. when reading the steering file.
+   * 
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.3 2005-06-10 07:34:20 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.4 2005-10-11 12:56:28 gaede Exp $
    */
   class ParseException : public lcio::Exception{
     
@@ -28,7 +29,7 @@ namespace marlin{
 
   /**SkipEventException used to skip the current event in Processor::processEvent.
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.3 2005-06-10 07:34:20 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.4 2005-10-11 12:56:28 gaede Exp $
    */
   class SkipEventException : public lcio::Exception{
 
@@ -46,7 +47,7 @@ namespace marlin{
   /** StopProcessingException used to stop the current proccessing of events and 
    *  call Processor::end().
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.3 2005-06-10 07:34:20 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.4 2005-10-11 12:56:28 gaede Exp $
    */
   class StopProcessingException : public lcio::Exception{
 

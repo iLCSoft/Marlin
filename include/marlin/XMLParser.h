@@ -97,6 +97,8 @@ namespace marlin{
    *  &lt;/group&gt;
    * </pre>
    * 
+   * @author F. Gaede, DESY
+   * @version $Id: XMLParser.h,v 1.4 2005-10-11 12:56:28 gaede Exp $ 
    */
 
   class XMLParser : public IParser {

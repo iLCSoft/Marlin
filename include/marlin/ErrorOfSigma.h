@@ -6,6 +6,9 @@ namespace marlin{
   /** Small helper class that computes the lower and upper error of
    *  sigma assuming a normal distribution, i.e. sigma has been computed
    *  as sigma =  1. / (n-1) * SUM_i_n( x_i - a_i )**2.
+   *
+   *  @author F. Gaede, DESY
+   *  @version $Id: ErrorOfSigma.h,v 1.2 2005-10-11 12:56:28 gaede Exp $ 
    */
   class ErrorOfSigma {
     

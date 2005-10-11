@@ -38,6 +38,9 @@ namespace marlin{
    * @see processRun
    * @see processEvent
    * @see end
+   *
+   *  @author F. Gaede, DESY
+   *  @version $Id: Processor.h,v 1.15 2005-10-11 12:56:28 gaede Exp $ 
    */
   
   class Processor {

@@ -9,6 +9,7 @@
 using namespace lcio ;
 
 namespace marlin{
+
 /** Default output processor. If active every event is writen to the 
  *  specified LCIO file.  
  *  Make sure that the processor is the last one in your list
@@ -18,11 +19,26 @@ namespace marlin{
  *  responsibility to check whether the droped objects are still referenced by other 
  *  objects (e.g. LCRelations) and drop those collections as well - if needed.
  *  Otherwise NULL pointers are returned by the corresponding access methods.
- *  
+ * 
+ *  <h4>Input - Prerequisites</h4>
+ *  Uses the whole event, i.e. all collections. 
+ *
+ *  <h4>Output</h4> 
+ *  none
+ * 
  * @param LCIOOutputFile  name of outputfile incl. path
  * @param LCIOWriteMode   WRITE_NEW, WRITE_APPEND  [optional]
  * @param DropCollectionNames   name of collections to be droped  [optional]
  * @param DropCollectionTypes   type of collections to be droped  [optional]
+ * 
+ * 
+ * @param DropCollectionNames  drops the named collections from the event
+ * @param DropCollectionTypes  drops all collections of the given type from the event
+ * @param LCIOOutputFile       name of output file
+ * @param LCIOWriteMode        write mode for output file:  WRITE_APPEND or WRITE_NEW
+ *
+ * @author F. Gaede, DESY
+ * @version $Id: LCIOOutputProcessor.h,v 1.5 2005-10-11 12:56:28 gaede Exp $ 
  */
 class LCIOOutputProcessor : public Processor {
   

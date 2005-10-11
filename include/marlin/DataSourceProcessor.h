@@ -13,6 +13,8 @@ namespace marlin{
    *  processor in the steering file _and_ there are no LCIO input files defined than this 
    *  class is called to generate the LCIO data stream.
    *
+   *  @author F. Gaede, DESY
+   *  @version $Id: DataSourceProcessor.h,v 1.3 2005-10-11 12:56:28 gaede Exp $ 
    */
   
   class DataSourceProcessor : public Processor {
