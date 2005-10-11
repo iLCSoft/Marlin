@@ -10,10 +10,23 @@ using namespace lcio ;
 using namespace marlin ;
 
 
-
-/** Example processor for marlin. If compiled with MARLIN_USE_AIDA 
+/**  Example processor for marlin.
+ * 
+ *  If compiled with MARLIN_USE_AIDA 
  *  it creates a histogram (cloud) of the MCParticle energies.
+ * 
+ *  <h4>Input - Prerequisites</h4>
+ *  Needs the collection of MCParticles.
+ *
+ *  <h4>Output</h4> 
+ *  A histogram.
+ * 
+ * @param CollectionName Name of the MCParticle collection
+ * 
+ * @author F. Gaede, DESY
+ * @version $Id: MyProcessor.h,v 1.4 2005-10-11 12:57:39 gaede Exp $ 
  */
+
 class MyProcessor : public Processor {
   
  public:
