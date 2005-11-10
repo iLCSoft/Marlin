@@ -47,7 +47,7 @@ export CLHEP=/opt/products/CLHEP/1.8.2
 
 
 #---- GEAR ---------------
-export GEAR=/afs/desy.de/group/it/ilcsoft/gear/v00-01
+export GEAR=/afs/desy.de/group/it/ilcsoft/gear/v00-02
 
 
 #---- AIDA setup ---------
