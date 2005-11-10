@@ -6,7 +6,7 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.12 2005-06-18 10:47:20 gaede Exp $
+* $Id: README,v 1.13 2005-11-10 13:25:50 gaede Exp $
 ************************************************************************
 
 
@@ -47,7 +47,9 @@ This works if the packages in the ./packages subdirectories fulfill the followin
    b) a call to gmake lib creates:
          ./MyPackage/lib/libMyPackage.a
 
-   c) all package dependencies have been added to the user section of the top level makefile !!
+   c) all package dependencies have been added to the file usrlib.gmk which is included by the
+      top level makefile - use the file usrlib_example.gmk as an example
+ 
 
   +++++++++++++++++++++++++++
 
