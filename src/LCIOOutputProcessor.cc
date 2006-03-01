@@ -7,6 +7,7 @@
 #include "IMPL/LCCollectionVec.h"
 
 #include <algorithm>
+#include <bitset>
 
 namespace marlin{
   
@@ -111,6 +112,26 @@ void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) {
 
     const StringVec*  colNames = evt->getCollectionNames() ;
 
+
+    // if all tracker hits are droped we don't store the hit pointers with the tracks below ...
+    bool trackerHitsDroped = false ;
+    bool calorimeterHitsDroped = false ;
+
+    if( parameterSet("DropCollectionTypes") ){
+      
+      if( std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end()
+		     , LCIO::TRACKERHIT )   != _dropCollectionTypes.end()  ) {
+	
+	trackerHitsDroped =  true ;
+      }
+      
+      if( std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end()
+		     , LCIO::CALORIMETERHIT )   != _dropCollectionTypes.end()  ) {
+	
+	calorimeterHitsDroped =  true ;
+      }
+    }      
+    
     for( StringVec::const_iterator it = colNames->begin();
 	 it != colNames->end() ; it++ ){
       
@@ -120,16 +141,30 @@ void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) {
       
       if( parameterSet("DropCollectionTypes") && std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end(), type ) 
 	  != _dropCollectionTypes.end()  ) {
-
+	
 	col->setTransient( true ) ;
       }
-      if( parameterSet("DropCollectionTypes") && std::find( _dropCollectionNames.begin(), _dropCollectionNames.end(), *it ) 
+      if( parameterSet("DropCollectionNames") && std::find( _dropCollectionNames.begin(), _dropCollectionNames.end(), *it ) 
 	  != _dropCollectionNames.end() ) {
-
+	
 	col->setTransient( true ) ;
       }
-    }
 
+      // don't store hit pointers if hits are droped
+      if(  type == LCIO::TRACK && trackerHitsDroped ){
+	
+	std::bitset<32> flag( col->getFlag() ) ;
+	flag[ LCIO::TRBIT_HITS ] = 0 ;
+ 	col->setFlag( flag.to_ulong() ) ;
+      }
+      if(  type == LCIO::CLUSTER && calorimeterHitsDroped ){
+	
+	std::bitset<32> flag( col->getFlag() ) ;
+	flag[ LCIO::CLBIT_HITS ] = 0 ;
+ 	col->setFlag( flag.to_ulong() ) ;
+      }
+
+    }
   }
 
 void LCIOOutputProcessor::processEvent( LCEvent * evt ) { 
