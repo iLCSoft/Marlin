@@ -6,6 +6,8 @@
 #include "EVENT/LCCollection.h"
 #include "IMPL/LCCollectionVec.h"
 
+#include "marlin/LCSplitWriter.h"
+
 #include <algorithm>
 #include <bitset>
 
@@ -50,6 +52,12 @@ namespace marlin{
 			       _dropCollectionTypes ,
 			       dropTypesExample ) ;
     
+
+    registerOptionalParameter( "SplitFileSizekB" , 
+			       "will split output file if size in kB exceeds given value - doesn't work with APPEND and NEW"  ,
+			       _splitFileSizekB, 
+			       1992294 ) ;  // 1.9 GB in kB
+
   }
 
 void LCIOOutputProcessor::init() { 
@@ -59,10 +67,18 @@ void LCIOOutputProcessor::init() {
   _nRun = 0 ;
   _nEvt = 0 ;
 
-  _lcWrt = LCFactory::getInstance()->createLCWriter() ;
+  if(  parameterSet("SplitFileSizekB") ){
+    
+    _lcWrt = new LCSplitWriter( LCFactory::getInstance()->createLCWriter(), _splitFileSizekB  ) ;
+    
+  } else {
+    
+    _lcWrt = LCFactory::getInstance()->createLCWriter() ;
+  }
+
 
   if( _lcioWriteMode == "WRITE_APPEND" ) {
-    
+	 
     _lcWrt->open( _lcioOutputFile , LCIO::WRITE_APPEND ) ;
   }
   else if( _lcioWriteMode == "WRITE_NEW" ) {

@@ -38,7 +38,7 @@ namespace marlin{
  * @param LCIOWriteMode        write mode for output file:  WRITE_APPEND or WRITE_NEW
  *
  * @author F. Gaede, DESY
- * @version $Id: LCIOOutputProcessor.h,v 1.5 2005-10-11 12:56:28 gaede Exp $ 
+ * @version $Id: LCIOOutputProcessor.h,v 1.6 2006-03-06 15:25:04 gaede Exp $ 
  */
 class LCIOOutputProcessor : public Processor {
   
@@ -78,6 +78,8 @@ protected:
 
   StringVec _dropCollectionNames ; 
   StringVec _dropCollectionTypes ; 
+
+  int _splitFileSizekB ;
 
   LCWriter* _lcWrt ;
   int _nRun ;
