@@ -1,6 +1,14 @@
 
   Marlin release notes
  ======================
+  
+ -----------
+| v00-09-03 |
+ -----------
+
+ - beta code for split files if given size exceeded in LCIOOutputprocessor
+
+ - bug fix in LCIOOutputprocessor for DropCollectionNames
 
  -----------
 | v00-09-02 |
