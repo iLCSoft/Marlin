@@ -69,7 +69,7 @@ void LCIOOutputProcessor::init() {
 
   if(  parameterSet("SplitFileSizekB") ){
     
-    _lcWrt = new LCSplitWriter( LCFactory::getInstance()->createLCWriter(), _splitFileSizekB  ) ;
+    _lcWrt = new LCSplitWriter( LCFactory::getInstance()->createLCWriter(), _splitFileSizekB*1024  ) ;
     
   } else {
     
