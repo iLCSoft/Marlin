@@ -6,7 +6,12 @@
 #include "EVENT/LCCollection.h"
 #include "IMPL/LCCollectionVec.h"
 
-#include "marlin/LCSplitWriter.h"
+
+#if LCIO_VERSION_GE(1,7)
+#include "UTIL/LCSplitWriter.h"
+#else
+#include "marlin/LCSplitWriter.h"   // provided for compatibility with older LCIO versions
+#endif
 
 #include <algorithm>
 #include <bitset>

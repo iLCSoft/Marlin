@@ -18,7 +18,8 @@ echo "  MARLIN set to:" $MARLIN
 # modify the following pathes as needed
 
 # path to LCIO is required
-export LCIO=/opt/products/lcio/1.5
+#export LCIO=/opt/products/lcio/1.5
+export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-06
 
 
 #-- comment out for production 
