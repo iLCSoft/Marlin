@@ -7,10 +7,7 @@
 
 #include "CLHEP/HepPDT/ParticleID.hh"
 
-
-#define CLHEP
 #include "UTIL/LCFourVector.h"
-#undef CLHEP
 
 using namespace lcio ;
 
