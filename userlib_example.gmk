@@ -20,5 +20,6 @@ USERINCLUDES += -I /afs/desy.de/group/it/ilcsoft/gsl/1.6/include
 USERLIBS += -lg2c
 USERLIBS += -L /opt/products/cernlib/pro/lib/ -lmathlib -lkernlib
 USERLIBS += -L /afs/desy.de/group/it/ilcsoft/gsl/1.6/lib -lgsl -lgslcblas
+#USERLIBS += `root-config --libs`
 
 

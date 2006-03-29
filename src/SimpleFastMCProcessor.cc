@@ -1,3 +1,5 @@
+#undef MARLIN_USE_AIDA    // fix problem wit RAIDA for now: don't make any plots
+
 #include "marlin/SimpleFastMCProcessor.h"
 
 #include "marlin/SimpleParticleFactory.h"
@@ -391,3 +393,4 @@ namespace marlin{
   
   
 
+#define MARLIN_USE_AIDA 1 

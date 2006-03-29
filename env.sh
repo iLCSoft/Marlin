@@ -19,7 +19,7 @@ echo "  MARLIN set to:" $MARLIN
 
 # path to LCIO is required
 #export LCIO=/opt/products/lcio/1.5
-export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-06
+export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-07
 
 
 #-- comment out for production 
@@ -58,14 +58,22 @@ setopt shwordsplit > /dev/null 2>&1
 
 export MARLIN_USE_AIDA=1
 
+#----------- use RAIDA  -------------------------
+
+export ROOTSYS=/opt/products/root/5.08.00
+export RAIDA_HOME=/afs/desy.de/user/g/gaede/ilcsoft/RAIDA/v00-00
+
+export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
+export PATH=$ROOTSYS/bin:$PATH
+
+. $RAIDA_HOME/bin/aida-setup.sh
+
+#--------------  use JAIDA -----------------------
 # modify the following pathes as needed
-export JDK_HOME=/opt/products/java/1.4.2
+#export JDK_HOME=/opt/products/java/1.4.2
+#export JAIDA_HOME=/opt/products/JAIDA/3.2.3
+#export AIDAJNI_HOME=/opt/products/AIDAJNI/3.2.3
 
-export JAIDA_HOME=/opt/products/JAIDA/3.2.3
-
-export AIDAJNI_HOME=/opt/products/AIDAJNI/3.2.3
-
-. $JAIDA_HOME/bin/aida-setup.sh
-. $AIDAJNI_HOME/bin/Linux-g++/aidajni-setup.sh
-
+#. $JAIDA_HOME/bin/aida-setup.sh
+#. $AIDAJNI_HOME/bin/Linux-g++/aidajni-setup.sh
 #------------------------------------------
