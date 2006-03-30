@@ -30,8 +30,8 @@ export MARLINDEBUG=1
 # out before compiling what you don't need/want
 
 #---- CLHEP ---------
-export CLHEP=/opt/products/CLHEP/1.8.2
-
+#export CLHEP=/opt/products/CLHEP/2.0.2.2
+export CLHEP=/opt/products/CLHEP/1.8.2.0
 
 #---- LCCD -----------
 

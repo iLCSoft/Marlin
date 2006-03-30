@@ -6,6 +6,10 @@
 #include "CLHEP/Random/RandEngine.h"
 #include <cmath>
 
+
+namespace CLHEP{} 
+using namespace CLHEP ;
+
 // #include "CLHEP/Vector/ThreeVector.h"
 
 

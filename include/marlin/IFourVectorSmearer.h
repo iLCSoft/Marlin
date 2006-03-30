@@ -5,6 +5,9 @@
 
 #include "CLHEP/Vector/LorentzVector.h"
 
+namespace CLHEP{}    // declare namespace CLHEP for backward compatibility
+using namespace CLHEP ;
+
 
 namespace marlin{
 
@@ -12,7 +15,7 @@ namespace marlin{
   /** Interface for smearing of four vectors - based on CLHEP::HepLorentzVector
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: IFourVectorSmearer.h,v 1.2 2005-10-11 12:56:28 gaede Exp $ 
+   *  @version $Id: IFourVectorSmearer.h,v 1.3 2006-03-30 16:12:16 gaede Exp $ 
    */ 
   
   class IFourVectorSmearer {
