@@ -21,7 +21,7 @@ namespace marlin{
    *  Processor::registerProcessorParameter() 
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: ProcessorParameter.h,v 1.8 2005-10-11 12:56:28 gaede Exp $ 
+   *  @version $Id: ProcessorParameter.h,v 1.9 2006-08-03 15:16:34 gaede Exp $ 
    */
   
   class ProcessorParameter {
@@ -78,6 +78,7 @@ namespace marlin{
   void toStream(  std::ostream& s, float f , int N) ;
   void toStream(  std::ostream& s, double d , int N) ;
   void toStream(  std::ostream& s, const std::string& str , int N) ; 
+  void toStream(  std::ostream& s, bool b , int N) ;
   
   template< class T>
   std::ostream& toStream(  std::ostream& s, const std::vector<T>& v , int N) {
@@ -150,7 +151,9 @@ namespace marlin{
       else if( typeid( _parameter ) == typeid( StringVec )) return "StringVec" ;
       else if( typeid( _parameter ) == typeid( int   )) return "int" ;
       else if( typeid( _parameter ) == typeid( float )) return "float" ;
+      else if( typeid( _parameter ) == typeid( double )) return "double" ;
       else if( typeid( _parameter ) == typeid(std::string) ) return "string" ;
+      else if( typeid( _parameter ) == typeid( bool ) ) return "bool";
       
       else
 	return typeid( _parameter ).name() ; 
