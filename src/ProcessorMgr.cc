@@ -111,8 +111,13 @@ namespace marlin{
 
     std::cout  <<  " <global>" << std::endl 
 	       <<  "  <parameter name=\"LCIOInputFiles\"> simjob.slcio </parameter>" << std::endl
+	       <<  "  <-- limit the number of processed records (run+evt): -->  " << std::endl
 	       <<  "  <parameter name=\"MaxRecordNumber\" value=\"5001\" />  " << std::endl
+	       <<  "  <XXXparameter name=\"SkipNEvents\" value=\"0\" />  " << std::endl
 	       <<  "  <parameter name=\"SupressCheck\" value=\"false\" />  " << std::endl
+#ifdef USE_GEAR
+	       <<  "  <parameter name=\"GearXMLFile\"> gear_ldc.xml </parameter>  " << std::endl
+#endif
 	       <<  " </global>" << std::endl
 	       << std::endl ;
 
