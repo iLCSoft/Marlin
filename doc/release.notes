@@ -3,9 +3,16 @@
  ======================
   
  -----------
+| v00-09-05 |
+ -----------
+  - introduced bool processor parameters
+  - allow to skip first N events (global parameter: SkipNEvents) requires LCIO > v01-05
+  
+
+ -----------
 | v00-09-04 |
  -----------
-  - made compliant for use with AIDA 
+  - made compliant for use with RAIDA 
   - no new functionality, only minor fixes and documentation
 
  -----------
