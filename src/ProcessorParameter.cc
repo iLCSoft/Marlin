@@ -17,6 +17,7 @@ namespace marlin {
   void toStream(  std::ostream& s, float f , int N) { s << f ; }
   void toStream(  std::ostream& s, double d , int N) { s << d ; }
   void toStream(  std::ostream& s, const std::string& str , int N) { s << str ; }
+  void toStream(  std::ostream& s, bool b , int N) { s << ( b ? "true":"false" ) ; }
 
   template<>
   void setProcessorParameter<int>( ProcessorParameter_t<int>* procParam,  StringParameters* params ) {
@@ -70,4 +71,29 @@ namespace marlin {
     }
     params->getStringVals( procParam->_name,  procParam->_parameter ) ; 
   }
+  template<>
+  void setProcessorParameter<bool>( ProcessorParameter_t<bool>* procParam ,  StringParameters* params ) 
+  {
+    if( params->isParameterSet( procParam->name() ) ) {
+      std::string param = params->getStringVal( procParam->_name );
+      std::transform( param.begin(),param.end(),param.begin(), 
+		      (int (*)(int)) std::tolower );
+      if ( param == "false" || param == "0" )	{
+	procParam->_parameter = false;
+	procParam->_valueSet = true;
+      }
+      else if ( param == "true" || param == "1" ) {
+	procParam->_parameter = true;
+	procParam->_valueSet = true;
+      }
+      else {
+	std::cerr << "Warning: Parameter ["<< procParam->name()
+		  << "] is boolean but neither \"true\" nor \"false\"! "
+		  << "Ignoring steering parameter" << std::endl;
+	procParam->_valueSet = false;
+      }      
+    }
+  }
+
+  
 }
