@@ -148,6 +148,7 @@ int main(int argc, char** argv ){
   } else { 
     
     int maxRecord = Global::parameters->getIntVal("MaxRecordNumber") ;
+    int skipNEvents = Global::parameters->getIntVal("SkipNEvents");
     
     // create lcio reader 
     LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
@@ -162,6 +163,14 @@ int main(int argc, char** argv ){
     
     ProcessorMgr::instance()->init() ; 
     
+    if( skipNEvents > 0 ){
+
+      std::cout << " --- Marlin.cc - will skip first " << skipNEvents << " event(s)" 
+		<< std::endl << std::endl ;
+
+      lcReader->skipNEvents(  skipNEvents ) ;
+    }
+
     try{ 
       if( maxRecord > 0 ){
 	
