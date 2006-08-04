@@ -184,9 +184,18 @@ namespace marlin{
   
   void ConditionsProcessor::processEvent( LCEvent * evt ) { 
     
-    // update all condition handlers
-    lccd::LCConditionsMgr::instance()->updateEvent(  evt ) ;
+    static int lastEvent = -1 ;
+    static int lastRun   = -1 ;
     
+    // update all condition handlers - if not yet done by previous conditions processor
+
+    if( evt->getEventNumber() != lastEvent  || evt->getRunNumber() != lastRun ){
+
+      lccd::LCConditionsMgr::instance()->updateEvent(  evt ) ;
+
+      lastEvent = evt->getEventNumber() ;
+      lastRun = evt->getRunNumber() ;
+    }
   }
   
 //   void ConditionsProcessor::check( LCEvent * evt ) { 
