@@ -140,14 +140,30 @@ void Processor::setParameters( StringParameters* parameters) {
 
       if( p->isOptional() ) {
 	std::cout << "  <!--parameter name=\"" << p->name() << "\" " 
-		  << "type=\"" << p->type() << "\">"
+		  << "type=\"" << p->type() ;
+
+	if ( isInputCollectionName( p->name() ) )
+	  std::cout << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
+
+	if ( isOutputCollectionName( p->name() ) )
+	  std::cout << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
+
+	std::cout << "\">"
 		  << p->defaultValue() 
 		  << " </parameter-->"
 		  << std::endl ;
       } else {
 	std::cout << "  <parameter name=\"" << p->name() << "\" " 
-		  << "type=\"" << p->type() << "\">"
-		  << p->defaultValue() 
+		  << "type=\"" << p->type() ;
+
+	if ( isInputCollectionName( p->name() ) )
+	  std::cout << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
+
+	if ( isOutputCollectionName( p->name() ) )
+	  std::cout << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
+
+	std::cout  << "\">"
+		   << p->defaultValue() 
 		  << " </parameter>"
 		  << std::endl ;
       }
@@ -188,6 +204,22 @@ void Processor::setParameters( StringParameters* parameters) {
     ProcessorMgr::instance()->setProcessorReturnValue(  this , val ) ;
   }
   
+  void Processor::setLCIOInType(const std::string& collectionName,  const std::string& lcioInType) {
+    _inTypeMap[ collectionName ] = lcioInType ;
+  }
+
+  bool Processor::isInputCollectionName( const std::string& pName  ) {
+    return _inTypeMap.find( pName  ) != _inTypeMap.end() ;
+  }
+  
+  void Processor::setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) {
+   _outTypeMap[ collectionName ] = lcioOutType ;
+  }
+
+  bool Processor::isOutputCollectionName( const std::string& pName  ) {
+    return _outTypeMap.find( pName ) != _outTypeMap.end() ;
+  }
+
   void Processor::setReturnValue( const std::string& name, bool val ){
   
   ProcessorMgr::instance()->setProcessorReturnValue(  this , val , name ) ;

@@ -50,10 +50,12 @@ namespace marlin{
     
     // register steering parameters: name, description, class-variable, default value
     
-    registerProcessorParameter( "InputCollectionName" , 
-				"Name of the MCParticle input collection"  ,
-				_inputCollectionName ,
-				std::string("MCParticle") ) ;
+    registerInputCollection( LCIO::MCPARTICLE,
+			     "InputCollectionName" , 
+			     "Name of the MCParticle input collection"  ,
+			     _inputCollectionName ,
+			     std::string("MCParticle") ) ;
+    
     
     registerProcessorParameter( "MomentumCut" , 
 				"No reconstructed particles are produced for smaller momenta (in [GeV])"  ,

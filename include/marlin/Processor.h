@@ -23,6 +23,7 @@ namespace marlin{
   //  class ProcessorParameter ;
 
   typedef std::map<std::string, ProcessorParameter* > ProcParamMap ;
+  typedef std::map<std::string, std::string >         LCIOTypeMap ;
 
   /** Base class for Marlin processors.
    * Users can optionaly overwrite the following methods: <br>
@@ -40,7 +41,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.15 2005-10-11 12:56:28 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.16 2006-10-11 09:32:17 gaede Exp $ 
    */
   
   class Processor {
@@ -162,29 +163,71 @@ namespace marlin{
 						   false , setSize) ;
      }
     
+    /** Specialization of registerProcessorParameter() for a parameter that defines an 
+     *  input collection - can be used fo checking the consistency of the steering file.
+     */
+    void registerInputCollection(const std::string& type,
+				 const std::string& name, 
+				 const std::string&description,
+				 std::string& parameter,
+				 const std::string& defaultVal,
+				 int setSize=0 ) {
+      
+      setLCIOInType( name , type ) ;
+      registerProcessorParameter( name, description, parameter, defaultVal, setSize ) ; 
+    }
+    
+    /** Specialization of registerProcessorParameter() for a parameter that defines an 
+     *  output collection - can be used fo checking the consistency of the steering file.
+     */
+    void registerOutputCollection(const std::string& type,
+				  const std::string& name, 
+				  const std::string&description,
+				  std::string& parameter,
+				  const std::string& defaultVal,
+				  int setSize=0 ) {
+      
+      setLCIOOutType( name , type ) ;
+      registerProcessorParameter( name, description, parameter, defaultVal, setSize ) ; 
+    }
+
+    /** Specialization of registerProcessorParameter() for a parameter that defines one or several 
+     *  input collections - can be used fo checking the consistency of the steering file.
+     */
+    void registerInputCollections(const std::string& type,
+				  const std::string& name, 
+				  const std::string&description,
+				  StringVec& parameter,
+				  const StringVec& defaultVal,
+				  int setSize=0 ) {
+      
+      setLCIOInType( name , type ) ;
+      registerProcessorParameter( name, description, parameter, defaultVal, setSize ) ; 
+    }
+    
     /** Same as  registerProcessorParameter except that the parameter is optional.
      *  The value of the parameter will still be set to the default value, which
      *  is used to print an example steering line.
      *  Use parameterSet() to check whether it actually has been set in the steering 
      *  file.
      */
-     template<class T>
-     void registerOptionalParameter(const std::string& name, 
- 				    const std::string&description,
- 				    T& parameter,
- 				    const T& defaultVal,
-				    int setSize=0 ) {
-    
-       _map[ name ] = new ProcessorParameter_t<T>( name , description, 
-						   parameter, defaultVal, 
-						   true , setSize) ;
-     }
+    template<class T>
+    void registerOptionalParameter(const std::string& name, 
+				   const std::string&description,
+				   T& parameter,
+				   const T& defaultVal,
+				   int setSize=0 ) {
+      
+      _map[ name ] = new ProcessorParameter_t<T>( name , description, 
+						  parameter, defaultVal, 
+						  true , setSize) ;
+    }
     
     /** Tests whether the parameter has been set in the steering file
      */
     bool parameterSet( const std::string& name ) ;
-
-
+    
+    
   private: // called by ProcessorMgr
     
     /** Set processor name */
@@ -200,6 +243,31 @@ namespace marlin{
     /** Called by ProcessorMgr */
     void setFirstEvent( bool isFirstEvent ) { _isFirstEvent =  isFirstEvent ; }
 
+    // called internally
+    
+    /** Set the expected LCIO type for a parameter that refers to one or more 
+     *  input collections, e.g.:<br>
+     *  &nbsp;&nbsp;  setReturnValue( "InputCollecitonName" , LCIO::MCPARTICLE ) ; <br>
+     *  Set to LCIO::LCObject if more than one type is allowed, e.g. for a viewer processor.
+     */
+    void setLCIOInType(const std::string& colName,  const std::string& lcioInType) ;
+    
+    /** True if the given parameter defines an LCIO input collection, i.e. the type has 
+     *  been defined with setLCIOInType().
+     */
+
+    bool isInputCollectionName( const std::string& parameterName  ) ;  
+
+
+    /** Set the  LCIO type for a parameter that refers to an output collections, i.e. the type has 
+     *  been defined with setLCIOOutType().
+     */
+    void setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) ;
+    
+
+    /** True if the given parameter defines an LCIO output collection */
+    bool isOutputCollectionName( const std::string& parameterName  ) ;  
+
 
   protected:
 
@@ -212,6 +280,8 @@ namespace marlin{
 
     ProcParamMap _map ;  
     bool _isFirstEvent ;
+    LCIOTypeMap   _inTypeMap ;
+    LCIOTypeMap   _outTypeMap ;
 
   private:
     Processor() ; 
