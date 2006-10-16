@@ -3,6 +3,13 @@
  ======================
   
  -----------
+| 
+ -----------
+
+ - switched to  latest version of tinyxml:  2.5.2
+ - ...
+
+ -----------
 | v00-09-05 |
  -----------
   - introduced bool processor parameters

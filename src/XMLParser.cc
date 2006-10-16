@@ -34,7 +34,7 @@ namespace marlin{
       throw ParseException( str.str() ) ;
     }
     
-    TiXmlHandle docHandle( _doc );
+//     TiXmlHandle docHandle( _doc );
     
     TiXmlElement* root = _doc->RootElement();
     if( root==0 ){
@@ -168,7 +168,7 @@ namespace marlin{
     if( el == 0 ) 
       throw ParseException("XMLParser::getAttribute not an XMLElement " ) ;
 
-    const char* at = el->Attribute( name ) ;
+    const char* at = el->Attribute( name.c_str() )  ;
 
     if( at == 0 ){
 
@@ -354,7 +354,7 @@ namespace marlin{
     
     while( (child = node->IterateChildren( type , child ) )  != 0  ){
       
-      if( std::string( child->ToElement()->Attribute( attribute ) ) == value ) { 
+      if( std::string( *child->ToElement()->Attribute( attribute ) ) == value ) { 
 	elementFound = true ;
 	break ;
       }
