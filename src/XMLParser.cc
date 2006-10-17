@@ -24,7 +24,7 @@ namespace marlin{
     bool loadOkay = _doc->LoadFile(_fileName  ) ;
     
     if( !loadOkay ) {
-
+      
       std::stringstream str ;
       
       str  << "XMLParser::parse error in file [" << _fileName 
@@ -38,15 +38,16 @@ namespace marlin{
     
     TiXmlElement* root = _doc->RootElement();
     if( root==0 ){
-
+      
       throw ParseException(std::string( "XMLParser::parse : no root tag <marlin>...</marlin> found in  ") 
 			   + _fileName  ) ;
     }
     
     TiXmlNode* section = 0 ;
     
-
-    _map[ "Global" ] = new StringParameters() ;
+    
+    StringParameters*  globalParameters = new StringParameters() ;
+    _map[ "Global" ] = globalParameters ;
 
     section = root->FirstChild("global")  ;
 
@@ -138,14 +139,19 @@ namespace marlin{
     
     
     // process processor sections -------------------------------------------------------------------------
+    std::vector<std::string> availableProcs ;
+    availableProcs.push_back("AvailableProcessors") ;
+    
     while( (section = root->IterateChildren("processor",  section ) )  != 0  ){
       
 //       std::cout << " processor found: " << section->Value() << std::endl ;
-      
+
       _current = new StringParameters() ;
       
-      _map[ getAttribute( section, "name") ] =  _current ;
-      
+      std::string name( getAttribute( section, "name") ) ;
+      _map[ name  ] =  _current ;
+
+      availableProcs.push_back( name ) ; 
 
       // add ProcessorType to processor parameters
       std::vector<std::string> procType(2)  ;
@@ -155,8 +161,9 @@ namespace marlin{
 
       parametersFromNode( section ) ;
     }
-
-
+    
+    globalParameters->add( availableProcs )  ;
+    
     // DEBUG:
     _doc->SaveFile( "debug.xml" ) ;
 
@@ -192,11 +199,16 @@ namespace marlin{
 //        std::cout << " parameter found : " << par->ToElement()->Attribute("name") << std::endl ;
       
       std::vector<std::string> tokens ;
-      tokens.push_back( std::string( getAttribute( par, "name" )  )  ) ; // first token is parameter name 
+
+      std::string name( getAttribute( par, "name" )  ) ;
+
+      tokens.push_back(  name ) ; // first token is parameter name 
+
       LCTokenizer t( tokens ,' ') ;
       
       std::string inputLine("") ;
       
+
       try{  inputLine = getAttribute( par , "value" )  ; 
       }      
       catch( ParseException ) {
@@ -222,7 +234,41 @@ namespace marlin{
       
       _current->add( tokens ) ;
 
-    }
+
+
+      //--------------- check for lcio input/output type attributes -----------
+      
+      std::vector<std::string> lcioInTypes ;
+      std::vector<std::string> lcioOutTypes ;
+
+      lcioInTypes.push_back( "_marlin.lcioInType" ) ;
+      lcioOutTypes.push_back( "_marlin.lcioOutType" ) ;
+      
+      std::string colType("")  ;
+
+      try{  
+	
+	colType = getAttribute( par , "lcioInType" )  ; 
+	lcioInTypes.push_back( name ) ; 
+	lcioInTypes.push_back( colType ) ; 
+	
+      }      
+      catch( ParseException ) { }
+      
+      try{  
+	
+	colType = getAttribute( par , "lcioOutType" )  ; 
+	lcioOutTypes.push_back( name ) ; 
+	lcioOutTypes.push_back( colType ) ; 
+	
+      }      
+      catch( ParseException ) { }
+      
+
+      
+      _current->add( lcioInTypes  ) ; 
+      _current->add( lcioOutTypes  ) ; 
+    } 
   }
   
   //   TiXmlElement* child2 = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).Child( "Child", 1 ).Element();

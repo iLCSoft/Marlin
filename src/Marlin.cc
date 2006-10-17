@@ -20,6 +20,8 @@
 
 #include "marlin/Global.h"
 
+#include "marlin/MarlinSteerCheck.h"
+
 #include <sstream>
 #include <fstream>
 #include <string>
@@ -65,6 +67,17 @@ int main(int argc, char** argv ){
     if( std::string(argv[1]) == "-x" ){
       listAvailableProcessorsXML() ;
       exit(0) ;
+    }
+    if( std::string(argv[1]) == "-c" ){
+      if( argc == 3 ){
+	MarlinSteerCheck msc(argv[2]);
+	msc.dump_information();
+        exit(0) ;
+      }
+      else{
+	std::cout << "usage: Marlin -c steeringFile.xml" << std::endl;
+	exit(1);
+      }
     }
 
     steeringFileName = argv[1] ;

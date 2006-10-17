@@ -29,10 +29,15 @@ void StringParameters::add( const std::vector<std::string> & tokens ) {
   }
 }
 
-  bool StringParameters::isParameterSet(  const std::string& key ) {
+void StringParameters::erase( const std::string& key ) {
+    
+  _map.erase( key );
+}
 
-    return _map[ key ].size() > 0 ;
-  }
+bool StringParameters::isParameterSet(  const std::string& key ) {
+
+  return _map[ key ].size() > 0 ;
+}
 
 int StringParameters::getIntVal( const std::string& key ) {
   
@@ -78,6 +83,15 @@ StringVec& StringParameters::getStringVals( const std::string& key  , StringVec&
 
   copy( _map[ key ].begin() , _map[ key ].end()  , back_inserter(stringVec) ) ;
 
+  return  stringVec ;
+}
+
+StringVec& StringParameters::getStringKeys( StringVec& stringVec ) {
+
+  for(ParametersMap::iterator m = _map.begin() ; m != _map.end() ; m++){
+    stringVec.push_back( m->first ); 
+  }
+  
   return  stringVec ;
 }
 

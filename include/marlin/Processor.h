@@ -41,7 +41,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.16 2006-10-11 09:32:17 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.17 2006-10-17 07:49:47 engels Exp $ 
    */
   
   class Processor {
@@ -126,7 +126,12 @@ namespace marlin{
     /** True if first event in processEvent(evt) - use this e.g. to initialize histograms etc.
      */
     bool isFirstEvent() { return _isFirstEvent ; } ;
-
+    
+    /** FIXME: Workaraound for Marlin GUI - publicly allow to change/reset processor parameters */
+    virtual void setProcessorParameters( StringParameters* parameters) {
+	setParameters( parameters ) ;
+    }
+	
   protected:
 
     /** Set the return value for this processor - typically at end of processEvent(). 
@@ -153,7 +158,7 @@ namespace marlin{
      */
      template<class T>
      void registerProcessorParameter(const std::string& name, 
- 				    const std::string&description,
+ 				    const std::string& description,
  				    T& parameter,
  				    const T& defaultVal,
 				    int setSize=0 ) {
@@ -168,7 +173,7 @@ namespace marlin{
      */
     void registerInputCollection(const std::string& type,
 				 const std::string& name, 
-				 const std::string&description,
+				 const std::string& description,
 				 std::string& parameter,
 				 const std::string& defaultVal,
 				 int setSize=0 ) {
@@ -182,7 +187,7 @@ namespace marlin{
      */
     void registerOutputCollection(const std::string& type,
 				  const std::string& name, 
-				  const std::string&description,
+				  const std::string& description,
 				  std::string& parameter,
 				  const std::string& defaultVal,
 				  int setSize=0 ) {
@@ -196,7 +201,7 @@ namespace marlin{
      */
     void registerInputCollections(const std::string& type,
 				  const std::string& name, 
-				  const std::string&description,
+				  const std::string& description,
 				  StringVec& parameter,
 				  const StringVec& defaultVal,
 				  int setSize=0 ) {
@@ -213,7 +218,7 @@ namespace marlin{
      */
     template<class T>
     void registerOptionalParameter(const std::string& name, 
-				   const std::string&description,
+				   const std::string& description,
 				   T& parameter,
 				   const T& defaultVal,
 				   int setSize=0 ) {
