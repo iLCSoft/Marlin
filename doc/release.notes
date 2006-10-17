@@ -7,7 +7,16 @@
  -----------
 
  - switched to  latest version of tinyxml:  2.5.2
- - ...
+
+ - new features 'Marlin -c steer.xml' checks steering file
+   for consistency (names and types of LCIO collections (author J.Engels) 
+
+ - new features 'Marlin -f old.xml steer.xml ' adds LCIO collection
+   type information to old xml steering file for usage with Marlin -c
+
+ - new methods Processor::registerInput/OutputCollections() 
+   for checking consistency 
+
 
  -----------
 | v00-09-05 |

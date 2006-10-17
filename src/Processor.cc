@@ -175,6 +175,14 @@ void Processor::setParameters( StringParameters* parameters) {
     
   }
 
+//   ProcessorParameter* Processor::getProcessorParameter( const std::string name) {
+//     ProcParamMap::iterator it = _map.find(name) ;
+//     if( it != _map.end() )
+//       return it->second ;    
+//     else
+//       return 0 ;
+//   }
+
   bool Processor::parameterSet( const std::string& name ) {
 
     ProcParamMap::iterator it = _map.find(name) ;
@@ -207,6 +215,24 @@ void Processor::setParameters( StringParameters* parameters) {
   void Processor::setLCIOInType(const std::string& collectionName,  const std::string& lcioInType) {
     _inTypeMap[ collectionName ] = lcioInType ;
   }
+
+  std::string Processor::getLCIOInType( const std::string& colName ) {
+
+    if( isInputCollectionName( colName )  )
+      return _inTypeMap[ colName ] ;
+    else
+      return "" ;
+  }
+
+
+  std::string Processor::getLCIOOutType( const std::string& colName ) {
+
+    if( isOutputCollectionName( colName )  )
+      return _outTypeMap[ colName ] ;
+    else
+      return "" ;
+ }
+
 
   bool Processor::isInputCollectionName( const std::string& pName  ) {
     return _inTypeMap.find( pName  ) != _inTypeMap.end() ;

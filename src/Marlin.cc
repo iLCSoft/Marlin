@@ -21,6 +21,7 @@
 #include "marlin/Global.h"
 
 #include "marlin/MarlinSteerCheck.h"
+#include "marlin/XMLFixCollTypes.h"
 
 #include <sstream>
 #include <fstream>
@@ -79,6 +80,19 @@ int main(int argc, char** argv ){
 	exit(1);
       }
     }
+    if( std::string(argv[1]) == "-f" ){
+      if( argc == 4 ){
+	XMLFixCollTypes fixColTypes(argv[2]);
+	fixColTypes.parse(argv[3] );
+        exit(0) ;
+      }
+      else{
+	std::cout << "usage: Marlin -f oldsteering.xml newsteering.xml" << std::endl;
+	exit(1);
+      }
+    }
+
+
 
     steeringFileName = argv[1] ;
 

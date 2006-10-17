@@ -21,6 +21,8 @@ namespace marlin{
 
   class ProcessorMgr ;
   //  class ProcessorParameter ;
+  class CCProcessor ;
+  class XMLFixCollTypes ;
 
   typedef std::map<std::string, ProcessorParameter* > ProcParamMap ;
   typedef std::map<std::string, std::string >         LCIOTypeMap ;
@@ -41,12 +43,14 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.17 2006-10-17 07:49:47 engels Exp $ 
+   *  @version $Id: Processor.h,v 1.18 2006-10-17 16:17:30 gaede Exp $ 
    */
   
   class Processor {
   
     friend class ProcessorMgr ;
+    friend class CCProcessor ;
+    friend class XMLFixCollTypes ;
 
   public:
   
@@ -127,11 +131,29 @@ namespace marlin{
      */
     bool isFirstEvent() { return _isFirstEvent ; } ;
     
-    /** FIXME: Workaraound for Marlin GUI - publicly allow to change/reset processor parameters */
-    virtual void setProcessorParameters( StringParameters* parameters) {
-	setParameters( parameters ) ;
-    }
-	
+    /** Return the LCIO input type for the collection colName - empty string if colName is
+     *  not  a registered collection name */
+    std::string getLCIOInType( const std::string& colName ) ;
+
+    /** Return the LCIO output type for the collection colName - empty string if colName is
+     *  not  a registered collection name */
+    std::string getLCIOOutType( const std::string& colName ) ;
+
+    /** True if the given parameter defines an LCIO input collection, i.e. the type has 
+     *  been defined with setLCIOInType().
+     */
+
+    bool isInputCollectionName( const std::string& parameterName  ) ;  
+
+
+    /** True if the given parameter defines an LCIO output collection */
+    bool isOutputCollectionName( const std::string& parameterName  ) ;  
+
+
+//     /** Helper function returns the ProcessorParameter for the given name
+//      */
+//     ProcessorParameter* getProcessorParameter( const std::string name) ;
+    
   protected:
 
     /** Set the return value for this processor - typically at end of processEvent(). 
@@ -233,8 +255,15 @@ namespace marlin{
     bool parameterSet( const std::string& name ) ;
     
     
+
+
   private: // called by ProcessorMgr
     
+    /** Allow friend class CCProcessor to change/reset processor parameters */
+    virtual void setProcessorParameters( StringParameters* parameters) {
+	setParameters( parameters ) ;
+    }
+
     /** Set processor name */
     virtual void setName( const std::string & name) { _processorName = name ; }
     
@@ -257,11 +286,6 @@ namespace marlin{
      */
     void setLCIOInType(const std::string& colName,  const std::string& lcioInType) ;
     
-    /** True if the given parameter defines an LCIO input collection, i.e. the type has 
-     *  been defined with setLCIOInType().
-     */
-
-    bool isInputCollectionName( const std::string& parameterName  ) ;  
 
 
     /** Set the  LCIO type for a parameter that refers to an output collections, i.e. the type has 
@@ -270,9 +294,8 @@ namespace marlin{
     void setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) ;
     
 
-    /** True if the given parameter defines an LCIO output collection */
-    bool isOutputCollectionName( const std::string& parameterName  ) ;  
-
+    /** Helper function for fixing old steering files */
+    const ProcParamMap& procMap() { return _map ; }  
 
   protected:
 

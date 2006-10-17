@@ -142,9 +142,15 @@ namespace marlin{
     std::vector<std::string> availableProcs ;
     availableProcs.push_back("AvailableProcessors") ;
     
+    // count processors with collection type information in order to generate warning
+    // about old files or missing type info
+    std::pair<unsigned,unsigned> typeCount ;
+    unsigned procCount(0) ; 
+    unsigned typedProcCount(0) ;
+
     while( (section = root->IterateChildren("processor",  section ) )  != 0  ){
       
-//       std::cout << " processor found: " << section->Value() << std::endl ;
+      //       std::cout << " processor found: " << section->Value() << std::endl ;
 
       _current = new StringParameters() ;
       
@@ -159,22 +165,63 @@ namespace marlin{
       procType[1] =   getAttribute( section, "type")  ;
       _current->add( procType ) ;
 
-      parametersFromNode( section ) ;
+
+
+      std::pair<unsigned,unsigned> currentCount( typeCount ) ;
+
+      parametersFromNode( section , &typeCount ) ;
+
+      if( typeCount.first > currentCount.first || typeCount.second > currentCount.second ){
+	++typedProcCount ; // at least one type info attribute found in processor
+      }
+//       else { 
+// 	std::cout << " -- processor w/o type info : " << name << std::endl ;
+//       }
+      
+      ++procCount ;
     }
     
     globalParameters->add( availableProcs )  ;
     
     // DEBUG:
     _doc->SaveFile( "debug.xml" ) ;
-
-   }
+    
+    
+    if( typeCount.first==0 && typeCount.second ==0){
+      std::cout  << "---------------------------------------------------------------------" << std::endl
+		 << "  WARNING XMLParser : none of the available processors have input or " << std::endl
+		 << "  or output collection information assigned. You won't be able to    " << std::endl 
+		 << "  check the steering file for consistency with 'Marlin -c  steer.xml'" << std::endl 
+		 << "  Please use Processor::registerInputCollection() and                " << std::endl 
+		 << "  Processor::registerOutputCollection()  in you Marlin processors    " << std::endl 
+		 << "  and create a new steering file with 'Marlin -x > newsteer.xml'     " << std::endl 
+		 << "  or add the appropriate information to your existing steering files " << std::endl 
+		 << "---------------------------------------------------------------------" << std::endl ;
+    } 
+    //
+    // fg --- this is not really a warning as there are a number of processors w/o any input or output collections
+    //
+    //     else if( procCount > typedProcCount ){
+    //       std::cout  << "---------------------------------------------------------------------" << std::endl
+    // 		 << "  WARNING XMLParser : some of the available processors don't have    " << std::endl
+    // 		 << "  input or output collection information assigned. This is           " << std::endl 
+    // 		 << "  needed to check the steering file for consistency with 'Marlin -c'." << std::endl 
+    // 		 << "  Please use Processor::registerInputCollection() and                " << std::endl 
+    // 		 << "  Processor::registerOutputCollection()  in you Marlin processors    " << std::endl 
+    // 		 << "  and create a new steering file with 'Marlin -x > newsteer.xml'     " << std::endl 
+    // 		 << "  or add the appropriate information to your existing steering files " << std::endl 
+    // 		 << "---------------------------------------------------------------------" << std::endl ;
+    //     }
+    
+  }
+  
   
   const char* XMLParser::getAttribute( TiXmlNode* node , const std::string& name ){
- 
+    
     TiXmlElement* el = node->ToElement() ;
     if( el == 0 ) 
       throw ParseException("XMLParser::getAttribute not an XMLElement " ) ;
-
+    
     const char* at = el->Attribute( name.c_str() )  ;
 
     if( at == 0 ){
@@ -190,7 +237,7 @@ namespace marlin{
   }  
 
 
-  void XMLParser::parametersFromNode(TiXmlNode* section) { 
+  void XMLParser::parametersFromNode(TiXmlNode* section, std::pair<unsigned,unsigned>*typeCount) { 
     
     TiXmlNode* par = 0 ;
     while( ( par = section->IterateChildren( "parameter", par ) )  != 0  ){
@@ -249,6 +296,7 @@ namespace marlin{
       try{  
 	
 	colType = getAttribute( par , "lcioInType" )  ; 
+	++typeCount->first ; // count type description to identify old files w/o type description
 	lcioInTypes.push_back( name ) ; 
 	lcioInTypes.push_back( colType ) ; 
 	
@@ -258,6 +306,7 @@ namespace marlin{
       try{  
 	
 	colType = getAttribute( par , "lcioOutType" )  ; 
+	++typeCount->second ; // count type description to identify old files w/o type description
 	lcioOutTypes.push_back( name ) ; 
 	lcioOutTypes.push_back( colType ) ; 
 	
