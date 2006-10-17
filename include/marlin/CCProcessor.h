@@ -10,8 +10,8 @@
  *
  */
 
-#include "marlin/CCCollection.h"
 #include "marlin/Processor.h"
+
 
 #define MAX_ERRORS 3
 #define ACTIVE true
@@ -24,6 +24,8 @@
 
 
 namespace marlin {
+
+  class CCCollection;
 
   typedef std::map<std::string, std::string> ssMap;
   typedef std::vector< CCCollection* > ColVec;
@@ -52,6 +54,8 @@ namespace marlin {
     const StringVec& getErrors(){ return _errors; }
     const std::string getError(){ return ( _errors.size() != 0 ? _errors[0] : "" ); }
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
+    
+    StringParameters* getParameters(){ return _param; }
 
     const ssMap& getColHeaders( const std::string& iotype ){ return _types[iotype]; }
 

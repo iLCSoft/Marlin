@@ -18,15 +18,13 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.2 2006-10-17 14:48:37 gaede Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.3 2006-10-17 16:53:03 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
 #include "marlin/CCCollection.h"
 
 #include "marlin/XMLParser.h"
-
-#include <map>
 
 // to make colored output
 #define clrscr() printf("\033[2J")
@@ -43,6 +41,9 @@
 
 
 namespace marlin {
+
+  class CCCollection;
+  class CCProcessor;
 
   typedef std::vector< CCProcessor* > ProcVec;
 

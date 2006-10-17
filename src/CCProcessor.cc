@@ -1,5 +1,5 @@
 #include "marlin/CCProcessor.h"
-#include "marlin/Processor.h"
+#include "marlin/CCCollection.h"
 #include "marlin/ProcessorMgr.h"
 
 using namespace std;
