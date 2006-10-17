@@ -22,18 +22,19 @@
 #define INPUT "_marlin.lcioInType"
 #define OUTPUT "_marlin.lcioOutType"
 
-using namespace marlin ;
 
-typedef std::map<std::string, std::string> ssMap;
-typedef std::vector< CCCollection* > ColVec;
+namespace marlin {
 
-typedef std::map< std::string, ColVec > sColVecMap;
-typedef std::map< std::string, ssMap > sssMap;
-typedef std::map< std::string, sColVecMap > ssColVecMap;
+  typedef std::map<std::string, std::string> ssMap;
+  typedef std::vector< CCCollection* > ColVec;
 
-class CCProcessor{
+  typedef std::map< std::string, ColVec > sColVecMap;
+  typedef std::map< std::string, ssMap > sssMap;
+  typedef std::map< std::string, sColVecMap > ssColVecMap;
 
-public:
+  class CCProcessor{
+
+  public:
 
     CCProcessor();
     CCProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL);
@@ -69,7 +70,7 @@ public:
     void setError( int error );
     void clearError( int error );
 
-private:
+  private:
 
     void init();
 
@@ -94,6 +95,7 @@ private:
     sssMap _types;		    // first key for Types "INPUT" : "OUTPUT", second value for Names, third value for Collection Types
     
     ColVec _errorCols;		    // vector of unavailable collections
-};
+  };
 
+} // end namespace marlin
 #endif

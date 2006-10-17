@@ -1,24 +1,29 @@
 #include "marlin/CCCollection.h"
 
-CCCollection::CCCollection() :
-  _value(""),
-  _type(""),
-  _name(""),
-  _srcProc(0){
-}
- 
-void CCCollection::setValue( const std::string& value ){
-    _value = value;
-}
-                                                                                                                                                             
-void CCCollection::setType( const std::string& type ){
-    _type = type;
-}
+namespace marlin{
 
-void CCCollection::setName( const std::string& name ){
+  CCCollection::CCCollection() :
+    _value(""),
+    _type(""),
+    _name(""),
+    _srcProc(0){
+  }
+ 
+  void CCCollection::setValue( const std::string& value ){
+    _value = value;
+  }
+                                                                                                                                                             
+  void CCCollection::setType( const std::string& type ){
+    _type = type;
+  }
+
+  void CCCollection::setName( const std::string& name ){
     _name = name;
-}
+  }
                                                                                                                                                             
-void CCCollection::setSrcProc( CCProcessor* srcProc ){
+  void CCCollection::setSrcProc( CCProcessor* srcProc ){
     _srcProc = srcProc;
-}
+  }
+
+} // namespace 
+

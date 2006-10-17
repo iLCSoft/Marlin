@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- *
+ * @version $Id: MarlinSteerCheck.h,v 1.2 2006-10-17 14:48:37 gaede Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -42,11 +42,13 @@
 #define endcolor() printf("\x1b[m")
 
 
-typedef std::vector< CCProcessor* > ProcVec;
+namespace marlin {
 
-class MarlinSteerCheck{
+  typedef std::vector< CCProcessor* > ProcVec;
 
-public:
+  class MarlinSteerCheck{
+
+  public:
 
     MarlinSteerCheck( const char* steerFileName );
 
@@ -73,7 +75,7 @@ public:
     void dump_information();
     void dump_colErrors();
 
-private:
+  private:
 
     //collection retrieval methods
     ColVec& getAllCols() const;
@@ -94,6 +96,7 @@ private:
 
     std::map<std::string, int> _procTypes; //all available processor types
     std::map<std::string, int> _collTypes; //all available collection types
-};
+  };
 
+} // namespace
 #endif
