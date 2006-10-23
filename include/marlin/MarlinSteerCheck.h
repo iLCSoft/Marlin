@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.3 2006-10-17 16:53:03 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.4 2006-10-23 08:28:20 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -55,38 +55,46 @@ namespace marlin {
 
     ProcVec& getAProcs() { return _aProc; };
     ProcVec& getIProcs() { return _iProc; };
-    StringVec& getLCIOFiles() const;
     ColVec& getLCIOCols() const;
+    StringVec& getLCIOFiles() const;
 
+    sSet& getColsSet( const std::string& type, CCProcessor* proc );
+    sSet& getProcTypes(){ return _procTypes; }
+
+    StringParameters* getParameters( const std::string& key );
+    
     const std::string& getErrors( unsigned int index );
    
     //operations to perform
     void addLCIOFile( const std::string& file );
     void remLCIOFile( const std::string& file );
+    void addGEARFile( const std::string& file );
+    void remGEARFile( const std::string& file );
     void addProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL );
-    void remProcessor( int index, bool status );
+    void addProcessor( const std::string& name, CCProcessor* p );
+    void remProcessor( unsigned int index, bool status );
     void activateProcessor( unsigned int index );
     void deactivateProcessor( unsigned int index );
     void changeProcessorPos( unsigned int pos, unsigned int newPos );
+    CCProcessor* findProc(const std::string& type);
     
     void consistencyCheck();
     void saveAsXMLFile( const std::string& file );
     
     //dump methods
     void dump_information();
-    void dump_colErrors();
+    bool dump_colErrors();
 
   private:
 
     //collection retrieval methods
     ColVec& getAllCols() const;
-    ColVec& getAProcCols() const;
-    ColVec& getIProcCols() const;
+    ColVec& getProcCols( const ProcVec& v ) const;
     
     //utility methods
     void parseXMLFile( const std::string& file );
     CCProcessor* popProc(ProcVec& v, CCProcessor* p);
-    ColVec& findMatchingCols( ColVec& v, CCCollection* c, bool matchvalue=true );
+    ColVec& findMatchingCols( ColVec& v, CCProcessor* srcProc, const std::string& type, const std::string& value="UNDEFINED" );
     
     //VARIABLES
     IParser* _parser;			//parser
@@ -94,9 +102,9 @@ namespace marlin {
     ProcVec _aProc;			//active processors
     ProcVec _iProc;			//inactive processors
     sColVecMap _lcioCols;		//LCIO collections
-
-    std::map<std::string, int> _procTypes; //all available processor types
-    std::map<std::string, int> _collTypes; //all available collection types
+    
+    sSet _procTypes;			//all available processor types (use in ComboBox)
+    sSet _colValues;			//all available collection values for a given type (use in ComboBox)
   };
 
 } // namespace

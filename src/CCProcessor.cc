@@ -25,7 +25,6 @@ namespace marlin{
   {
     init();
     setParameters( p );
-    createMarlinProc();
   }
 
   void CCProcessor::init(){
@@ -62,6 +61,7 @@ namespace marlin{
     if( p != NULL ){
       _param = p;
       clearError( NO_PARAMETERS );
+      createMarlinProc();
       updateCollections();
     }
   }
@@ -87,7 +87,7 @@ namespace marlin{
       _errors=tmp;
 
       if( error == COL_ERRORS ){
-	_errorCols.clear();
+	_cols[ UNAVAILABLE ].clear();
       }
     }
   }
@@ -109,7 +109,10 @@ namespace marlin{
   }
 
   void CCProcessor::addUCol( CCCollection* c ){
-    _errorCols.push_back( c );
+    //add collection to the map
+    _cols[ UNAVAILABLE ][ c->getType() ].push_back( c );
+
+    //set the error
     setError( COL_ERRORS );
   }
 
@@ -117,10 +120,9 @@ namespace marlin{
     static ColVec newVec;
    
     newVec.clear();
-    sColVecMap::const_iterator p;
     
     if( _cols.find( iotype ) != _cols.end() ){
-      for( p=_cols[iotype].begin(); p!=_cols[iotype].end(); p++ ){
+      for( sColVecMap::const_iterator p=_cols[iotype].begin(); p!=_cols[iotype].end(); p++ ){
 	if( name=="ALL_COLLECTIONS" || name==(*p).first ){
 	  for(unsigned int i=0; i<(*p).second.size(); i++){
 	    newVec.push_back( (*p).second[i] );
@@ -132,13 +134,23 @@ namespace marlin{
     return newVec;
   }
 
+  sSet& CCProcessor::getUColTypes(){
+      static sSet types;
+      
+      types.clear();
+      
+      for( sColVecMap::const_iterator p=_cols[ UNAVAILABLE ].begin(); p!=_cols[ UNAVAILABLE ].end(); p++ ){
+	  types.insert( (*p).first );
+      }
+      return types;
+  }
 
   void CCProcessor::updateCollections(){
     StringVec InCols, OutCols, values;
     string name, type;
 
     //erase the processor type from the string parameters
-    //_param->erase( "ProcessorType" );
+    _param->erase( "ProcessorType" );
     
     _param->getStringVals( INPUT, InCols );
     _param->getStringVals( OUTPUT, OutCols );
@@ -277,28 +289,20 @@ namespace marlin{
     //checks if marlin has this processor type installed
     if( pp ){
       //create a new marlin processor of this type
-      //ProcessorMgr::instance()->addActiveProcessor(_type, _name, _param);
-      //ProcessorMgr::instance()->init();
-      //_proc = ProcessorMgr::instance()->getActiveProcessor(_name);
-      /*
-	StringParameters* p = _proc->parameters();
-        cout << *p << endl;
-      */
-      //_proc->printDescriptionXML();
-      //_proc->printParameters();
-
       _proc = pp->newProcessor();
-      //_proc->baseInit();
       if( hasParameters() ){
 	//set processor's parameters to the same ones as this processor
 	_proc->setProcessorParameters( _param );
-	/*
-	  StringParameters* p = _proc->parameters();
-	  cout << *p << endl;
-	  _proc->printDescriptionXML();
-	  _proc->printParameters();
-	*/
       }
+      //call baseInit() to update the marlin processor parameters
+      //_proc->baseInit();
+      //write the updated parameters + new default parameters back to the CCProcessor
+      //_param = _proc->parameters();
+	
+      //dbg
+      //_proc->printParameters();
+      //_proc->printDescriptionXML();
+      //cout << *_param << endl;
 	
       clearError( NOT_INSTALLED );
     }
@@ -306,6 +310,14 @@ namespace marlin{
     else{
       setError( NOT_INSTALLED );
     }
+  }
+
+  void CCProcessor::setDefaultParameters(){
+      createMarlinProc();
+      _proc->baseInit();
+      _param = _proc->parameters();
+      clearError( NO_PARAMETERS );
+      updateCollections();
   }
 
 } // end namespace marlin

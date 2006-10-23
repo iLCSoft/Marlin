@@ -12,6 +12,7 @@
 
 #include "marlin/Processor.h"
 
+#include <set>
 
 #define MAX_ERRORS 3
 #define ACTIVE true
@@ -21,13 +22,15 @@
 #define COL_ERRORS 2
 #define INPUT "_marlin.lcioInType"
 #define OUTPUT "_marlin.lcioOutType"
-
+#define UNAVAILABLE "_marlin.lcioUnavailableType"
 
 namespace marlin {
 
   class CCCollection;
 
-  typedef std::map<std::string, std::string> ssMap;
+  typedef std::set< std::string > sSet;
+  
+  typedef std::map< std::string, std::string > ssMap;
   typedef std::vector< CCCollection* > ColVec;
 
   typedef std::map< std::string, ColVec > sColVecMap;
@@ -56,16 +59,18 @@ namespace marlin {
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
     
     StringParameters* getParameters(){ return _param; }
-
+    Processor* getMarlinProcessor(){ return _proc; }
+    
+    sSet& getUColTypes();
     const ssMap& getColHeaders( const std::string& iotype ){ return _types[iotype]; }
 
     ColVec& getCols( const std::string& iotype, const std::string& name="ALL_COLLECTIONS" );
-    ColVec& getUCols(){ return _errorCols; }
     
     void changeStatus();
     void setName( const std::string& name );
     void setType( const std::string& type );
     void setParameters( StringParameters* p );
+    void setDefaultParameters();
     
     void addCol( const std::string& iotype, const std::string& name, const std::string& type, const std::string& value );
     void remCol( const std::string& iotype, const std::string& name, unsigned int index );
@@ -95,10 +100,12 @@ namespace marlin {
     StringVec _error_desc;	    // error descriptions for all processors
     StringVec _errors;		    // list of errors found in a processor
   
-    ssColVecMap _cols;		    // first key for Types "INPUT" : "OUTPUT", second key for Names, third value for Collections
-    sssMap _types;		    // first key for Types "INPUT" : "OUTPUT", second value for Names, third value for Collection Types
-    
-    ColVec _errorCols;		    // vector of unavailable collections
+    ssColVecMap _cols;		    // first key for Types INPUT : OUTPUT : UNAVAILABLE
+				    // for INPUT/OUPUT the second key is for Collection Names
+				    // for UNAVAILABLE the second key is for Collection Types
+
+    sssMap _types;		    // first key for Types INPUT : OUTPUT
+				    // second key is for Collection Names and the third string for Collection Types
   };
 
 } // end namespace marlin
