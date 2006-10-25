@@ -30,7 +30,14 @@ namespace marlin{
     setParameters( p );
   }
 
-//TODO destructor!!
+  CCProcessor::~CCProcessor(){
+      if( _param != NULL ){
+	  delete _param;
+      }
+      if( _proc != NULL ){
+	  delete _proc;
+      }
+  }
   
   void CCProcessor::changeStatus(){
     _status = !_status;
@@ -102,7 +109,6 @@ namespace marlin{
 	}
 	//set the default parameters from the processor
 	else{
-	    //TODO DANGER: does marlin processor deletes this alocated memory?
 	    _param = new StringParameters();
 
 	    //initialize marlin processor parameters

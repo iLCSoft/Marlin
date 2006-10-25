@@ -40,6 +40,7 @@ namespace marlin {
   public:
 
     CCProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL);
+    ~CCProcessor();
    
     bool hasErrors();
     bool hasParameters();
