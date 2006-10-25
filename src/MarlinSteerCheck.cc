@@ -7,10 +7,20 @@
 ///////////////////////////////
 
 // MARLIN INCLUDES /////////////
+#include "marlin/ProcessorMgr.h"
 #include "marlin/XMLParser.h"
 #include "marlin/tinyxml.h"
+#include "marlin/Global.h"
+                                                                                                                                                             
+#ifdef USE_GEAR
+#include "gearimpl/Util.h"
+#include "gearxml/GearXML.h"
+#include "gearimpl/GearMgrImpl.h"
+#endif
+
 ////////////////////////////////
 
+#include <assert.h>
 #include <iomanip>
 #include <fstream>
 #include <iostream>
@@ -26,29 +36,41 @@ namespace marlin{
       //parse the file
       parseXMLFile( steeringFile );
     }
+    //get a list of all available processor types from marlin Processor Manager
+    _procTypes = ProcessorMgr::instance()->getAvailableProcessorTypes();
   }
 
-  //TEMPORARY
-  CCProcessor* MarlinSteerCheck::findProc( const string& type ){
-    for( unsigned int i=0; i<_aProc.size(); i++ ){
-	if( _aProc[i]->getType() == type )
-	    return _aProc[i];
+  /**************************************************************
+   * Returns a list of all available Collections of a given Type
+   * for a given Processor (to use in a ComboBox)
+   **************************************************************/
+  sSet& MarlinSteerCheck::getColsSet( const string& type, CCProcessor* proc ){
+    
+    _colValues.clear();
+    ColVec v = getAllCols();
+    
+    for( unsigned int i=0; i<v.size(); i++ ){
+      if( v[i]->getSrcProc() != proc && v[i]->getType() == type ){
+        _colValues.insert( v[i]->getValue() );
+      }
     }
-    for( unsigned int i=0; i<_iProc.size(); i++ ){
-	if( _iProc[i]->getType() == type )
-	    return _iProc[i];
-    }
-    return NULL;
+    return _colValues;
   }
-
-
   
+  /****************************************
+   * Returns the parameters of a given Key
+   ****************************************/
+  StringParameters* MarlinSteerCheck::getParameters( const string& key ){
+      return _parser->getParameters( key );
+  }
+
   /***************************************************
    * Add LCIO file and read all collections inside it
    ***************************************************/
   void MarlinSteerCheck::addLCIOFile( const string& file ){
    
-    //FIXME
+    //FIXME: this is to prevent crashing the application if
+    //the file doesn't exist (is there a better way to handle this??)
     string cmd="ls ";
     cmd+=file;
     if( system( cmd.c_str() ) ){ return; }
@@ -88,7 +110,6 @@ namespace marlin{
   /********************************************************
    * Remove lcio file and all collections associated to it
    ********************************************************/
-
   void MarlinSteerCheck::remLCIOFile( const string& file ){
     _lcioCols.erase( file );
     consistencyCheck();
@@ -109,26 +130,6 @@ namespace marlin{
     return filenames;
   }
 
-  /******************************************************************
-   * Get a list of all available Collections of a given type
-   * for a given Processor (to use in a ComboBox)
-   ******************************************************************/
-  sSet& MarlinSteerCheck::getColsSet( const string& type, CCProcessor* proc ){
-    
-    _colValues.clear();
-    ColVec v = getAllCols();
-    
-    for( unsigned int i=0; i<v.size(); i++ ){
-      if( v[i]->getSrcProc() != proc && v[i]->getType() == type ){
-        _colValues.insert( v[i]->getValue() );
-      }
-    }
-    return _colValues;
-  }
-
-  StringParameters* MarlinSteerCheck::getParameters( const string& key ){
-      return _parser->getParameters( key );
-  }
 
   /**********************
    * Add a new Processor
@@ -143,15 +144,6 @@ namespace marlin{
     else{
       _iProc.push_back( newProc );
     }
-    consistencyCheck();
-  }
-  
-  void MarlinSteerCheck::addProcessor( const string& name, CCProcessor* p ){
-
-    p->setName(name);
-    
-    _aProc.push_back( p );
-    
     consistencyCheck();
   }
 
@@ -293,7 +285,31 @@ namespace marlin{
 	
       _parser = new XMLParser( file ) ;
       _parser->parse();
-
+      
+      //============================================================
+      //GEAR
+      //============================================================
+/*
+       assert( ( Global::parameters = _parser->getParameters("Global") ) != 0 ) ;
+#ifdef USE_GEAR
+        std::string gearFile = Global::parameters->getStringVal("GearXMLFile" ) ;
+                                                                                                                                                             
+        if( gearFile.size() > 0 ) {
+                                                                                                                                                             
+          gear::GearXML gearXML( gearFile ) ;
+                                                                                                                                                             
+          Global::GEAR = gearXML.createGearMgr() ;
+                                                                                                                                                             
+          std::cout << " ---- instantiated  GEAR from file  " << gearFile  << std::endl ;
+          std::cout << *Global::GEAR << std::endl ;
+                                                                                                                                                             
+        } else {
+                                                                                                                                                             
+          std::cout << " ---- no GEAR XML file given  --------- " << std::endl ;
+          Global::GEAR = new gear::GearMgrImpl ;
+        }
+#endif
+*/    
       //============================================================
       //READ PARAMETERS
       //============================================================
@@ -327,16 +343,12 @@ namespace marlin{
 	
       for( unsigned int i=0; i<availableProcs.size(); i++ ){
 	    
-	//get StringParameters from xml file for the name of the CCProcessor
+	//get StringParameters from xml file for the name of the Processor
 	StringParameters* p = _parser->getParameters( availableProcs[i] );
 	    
 	//get type of processor from the parameters
 	string type = p->getStringVal( "ProcessorType" );
 	
-	//FIXME This should be done in another way...
-	//add type to map procTypes
-	_procTypes.insert( type );
-
 	//add this new processor
 	addProcessor( INACTIVE, availableProcs[i], type, p);
       }
@@ -535,9 +547,22 @@ namespace marlin{
       outfile << "      <Xprocessor name=\"" << _iProc[i]->getName() << "\"/>\n";
     }
    
-    outfile << "   </execute>\n";
+    outfile << "   </execute>\n\n";
     
-    //TODO
+    for( unsigned int i=0; i<_aProc.size(); i++ ){
+      if(_aProc[i]->isInstalled()){
+	_aProc[i]->updateMarlinProcessor();
+	_aProc[i]->getMarlinProcessor()->printDescriptionXML(outfile);
+	_aProc[i]->clearParameters();
+      }
+    }
+    for( unsigned int i=0; i<_iProc.size(); i++ ){
+      if(_iProc[i]->isInstalled()){
+	_iProc[i]->updateMarlinProcessor();
+	_iProc[i]->getMarlinProcessor()->printDescriptionXML(outfile);
+	_iProc[i]->clearParameters();
+      }
+    }
     
     outfile << "\n</marlin>\n";
   }
@@ -718,50 +743,57 @@ namespace marlin{
     //skip if index is not valid or processor has no col errors
     if( index>=0 && index<_aProc.size() && _aProc[index]->hasUnavailableCols() ){
 	
-	//get Unavailbale collections
-	uCols=_aProc[index]->getCols( UNAVAILABLE );
-	
-	//loop through all unavailable collections
-	for( unsigned int i=0; i<uCols.size(); i++ ){
-	    errors+= "\nCollection [";
-	    errors+= uCols[i]->getValue();
-	    errors+= "] of type[";
-	    errors+= uCols[i]->getType();
-	    errors+= "] is unavailable!!\n";
+	sSet uTypes = _aProc[index]->getUColTypes();
+
+	for( sSet::const_iterator p=uTypes.begin(); p!=uTypes.end(); p++){
+
+	    errors+= "\n* Following Collections of type [";
+	    errors+= (*p);
+	    errors+= "] are unavailable:\n";
+	    errors+= "--------------------------------------------------------------------------------";
+	    errors+= "--------------------------------------------------------------------------------\n";
+
+	    ColVec uCols = _aProc[index]->getCols( UNAVAILABLE, (*p) );
+	    for( unsigned int j=0; j<uCols.size(); j++ ){
+	      errors+= "   -> [";
+	      errors+= uCols[j]->getValue();
+	      errors+= "]\n";
+	    }
+	    errors+= "\n";
 
 	    //find collections that match the type of the unavailable collection
-	    avCols.clear();
-	    avCols = findMatchingCols( getAllCols(), _aProc[index], uCols[i]->getType() );
+	    ColVec avCols = findMatchingCols( getAllCols(), _aProc[index], (*p) );
+	    
+	    if( avCols.size() != 0 ){
+		errors+= "* Following available collections of the same type were found:\n";
+		for( unsigned int k=0; k<avCols.size(); k++ ){
+		  errors+= "      -> [";
+		  errors+= avCols[k]->getValue();
 
-	    if( avCols.size() != 0){
-		errors+= "   * Following available collections of the same type were found:\n";
-
-		for( unsigned int j=0; j<avCols.size(); j++ ){
-		    errors+= "      -> Name: [";
-		    errors+= avCols[j]->getValue();
-
-		    if( avCols[j]->getSrcProc() == NULL ){
-			errors+= "] in LCIO file: [";
-			errors+= avCols[j]->getName();
-			errors+= "]\n";
-		    }
-		    else{
-			errors+= "] in [";
-			errors+= avCols[j]->getSrcProc()->getStatusDesc();
-			errors+= "] Processor [";
-			errors+= avCols[j]->getSrcProc()->getName();
-			errors+= "] of Type: [";
-			errors+= avCols[j]->getSrcProc()->getType();
-			errors+= "]\n";
-		    }
+		  if( avCols[k]->getSrcProc() == 0 ){
+		    errors+= "] in LCIO file: [";
+		    errors+= avCols[k]->getName();
+		    errors+= "]\n";
+		  }
+		  else{
+		    errors+= "] in [";
+		    errors+= avCols[k]->getSrcProc()->getStatusDesc();
+		    errors+= "] Processor [";
+		    errors+= avCols[k]->getSrcProc()->getName();
+		    errors+= "] of Type [";
+		    errors+= avCols[k]->getSrcProc()->getType();
+		    errors+= "]\n";
+		  }
 		}
 	    }
 	    //no collections that match the unavailable collection were found
 	    else{
-		errors+= "   * Sorry, no suitable collections were found.\n";
+	      errors+= "   * Sorry, no suitable collections were found.\n";
 	    }
-	}
-    }
+	    errors+= "--------------------------------------------------------------------------------";
+	    errors+= "--------------------------------------------------------------------------------\n";
+	  }
+       }
     return errors;
   }
 

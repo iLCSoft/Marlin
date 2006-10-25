@@ -29,22 +29,18 @@ namespace marlin {
   class CCCollection;
 
   typedef std::set< std::string > sSet;
-  
-  typedef std::map< std::string, std::string > ssMap;
   typedef std::vector< CCCollection* > ColVec;
-
-  typedef std::map< std::string, ColVec > sColVecMap;
+  typedef std::map< std::string, std::string > ssMap;
   typedef std::map< std::string, ssMap > sssMap;
+  typedef std::map< std::string, ColVec > sColVecMap;
   typedef std::map< std::string, sColVecMap > ssColVecMap;
 
   class CCProcessor{
 
   public:
 
-    CCProcessor();
     CCProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL);
    
-
     bool hasErrors();
     bool hasParameters();
     bool hasUnavailableCols();
@@ -58,37 +54,33 @@ namespace marlin {
     const std::string getError(){ return ( _errors.size() != 0 ? _errors[0] : "" ); }
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
     
+    ColVec& getCols( const std::string& iotype, const std::string& name="ALL_COLLECTIONS" );
     StringParameters* getParameters(){ return _param; }
     Processor* getMarlinProcessor(){ return _proc; }
+    void updateMarlinProcessor();
+    void clearParameters();
     
     sSet& getUColTypes();
     const ssMap& getColHeaders( const std::string& iotype ){ return _types[iotype]; }
 
-    ColVec& getCols( const std::string& iotype, const std::string& name="ALL_COLLECTIONS" );
-    
-    void changeStatus();
-    void setName( const std::string& name );
-    void setType( const std::string& type );
-    void setParameters( StringParameters* p );
-    void setDefaultParameters();
-    
     void addCol( const std::string& iotype, const std::string& name, const std::string& type, const std::string& value );
     void remCol( const std::string& iotype, const std::string& name, unsigned int index );
     void addUCol( CCCollection* c );
-
+   
+    void changeStatus();
+    void setName( const std::string& name );
+    void setParameters( StringParameters* p );
+    
     void setError( int error );
     void clearError( int error );
 
   private:
 
-    void init();
-
     //utility methods
     void createMarlinProc();	    //sets error flag NOT_INSTALLED if processor couldn't be created
-    void updateCollections();
-    //void updateMarlinProcessors();
     CCCollection* popCol( ColVec& v, CCCollection* c );   
-   
+    void tokenize( const std::string str, StringVec& tokens, const std::string& delimiters = " " );
+
     //VARIABLES
     bool _status;		    // false = INACTIVE ; true = ACTIVE
     bool _error[MAX_ERRORS];	    // 0 = proc has no parameters; 1 = proc is not build in this marlin installation; 2 = unavailable collections

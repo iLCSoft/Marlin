@@ -6,16 +6,6 @@ using namespace std;
 
 namespace marlin{
 
-  CCProcessor::CCProcessor():
-    _status(INACTIVE),
-    _name("Unnamed!!"),
-    _type("Undefined!!"),
-    _param(0),
-    _proc(0)
-  {
-    init();
-  }
-
   CCProcessor::CCProcessor( bool status, const string& name, const string& type, StringParameters* p ):
     _status(status),
     _name(name),
@@ -23,12 +13,6 @@ namespace marlin{
     _param(0),
     _proc(0)
   {
-    init();
-    setParameters( p );
-  }
-
-  void CCProcessor::init(){
-
     _error[0] = false;
     _error[1] = false;
     _error[2] = false;
@@ -42,8 +26,12 @@ namespace marlin{
 
     setError( NO_PARAMETERS );
     setError( NOT_INSTALLED );
+    
+    setParameters( p );
   }
 
+//TODO destructor!!
+  
   void CCProcessor::changeStatus(){
     _status = !_status;
     clearError( COL_ERRORS );
@@ -51,47 +39,180 @@ namespace marlin{
 
   void CCProcessor::setName( const string& name ){
     _name = name;
-  }
-
-  void CCProcessor::setType( const string& type ){
-    _type = type;
+    if(isInstalled()){
+	_proc->setName(name);
+    }
   }
 
   void CCProcessor::setParameters( StringParameters* p ){
-    if( p != NULL ){
-      _param = p;
-      clearError( NO_PARAMETERS );
-      createMarlinProc();
-      updateCollections();
-    }
-  }
+    //create a new Marlin Processor
+    createMarlinProc();
+    
+    //check if the Marlin Processor is installed
+    if(isInstalled()){
 
-  void CCProcessor::setError( int error ){
-    if( _error[ error ] == false ){
-      _error[ error ] = true;
-      _errors.push_back( _error_desc[ error ] );
-    }
-  }
+	// set the parameters read from the xml file
+	if( p != NULL ){
+    	    _param=p;
+	    _proc->setProcessorParameters( _param );
+	    _proc->updateParameters();
+	    
+	    StringVec InCols, OutCols, values;
+	    string name, type;
 
-  void CCProcessor::clearError( int error ){
-    if( _error[ error ] == true ){
-      _error[ error ] = false;
-	
-      StringVec tmp;
-      for( unsigned int i=0; i<_errors.size(); i++ ){
-	if( _errors[i] != _error_desc[ error ] ){
-	  tmp.push_back( _errors[i] );
+	    _param->getStringVals( INPUT, InCols );
+	    _param->getStringVals( OUTPUT, OutCols );
+																			     
+	    unsigned int index = 0;
+	    while( index < InCols.size() ){
+	      name = InCols[ index++ ];
+	      type = InCols[ index++ ];
+
+	      values.clear();
+	      _param->getStringVals(name, values); // get corresponding collections
+
+	      //erase the corresponding collection from the processor's parameters
+	      _param->erase( name );
+	      
+	      for (unsigned int i=0; i<values.size(); i++){
+		addCol( INPUT, name, type, values[i] );
+	      }
+	    }
+	    index = 0;
+	    while( index < OutCols.size() ){
+	      name = OutCols[index++];
+	      type = OutCols[index++];
+
+	      values.clear();
+	      _param->getStringVals(name, values); // get corresponding collections
+
+	      //erase the corresponding collection from the processor's parameters
+	      _param->erase( name );
+	      
+	      for( unsigned int i=0; i<values.size(); i++ ){
+		addCol( OUTPUT, name, type, values[i] );
+	      }
+	    }
+	    //erase the processor type from the string parameters
+	    _param->erase( "ProcessorType" );
+
+	    //erase the "name, type" list from processor's parameters
+	    _param->erase( INPUT );
+	    _param->erase( OUTPUT );
 	}
-      }
-      _errors.clear();
-      _errors=tmp;
+	//set the default parameters from the processor
+	else{
+	    //TODO DANGER: does marlin processor deletes this alocated memory?
+	    _param = new StringParameters();
 
-      if( error == COL_ERRORS ){
-	_cols[ UNAVAILABLE ].clear();
-      }
+	    //initialize marlin processor parameters
+	    _proc->setProcessorParameters( _param );
+	    _proc->updateParameters();
+	    
+	    StringVec keys;
+	    _param->getStringKeys(keys);
+	    
+	    for(unsigned int i=0; i<keys.size(); i++){
+		ProcParamMap::const_iterator p= _proc->procMap().find(keys[i]);
+		ProcessorParameter* par = p->second;
+
+		_param->erase(keys[i]);
+		
+		if(_proc->isInputCollectionName(keys[i])){
+		    if( par->type() == "StringVec" ){
+			StringVec v;
+			tokenize(par->defaultValue(), v);
+			string type =  _proc->getLCIOInType(keys[i]);
+			for( unsigned int j=0; j<v.size(); j++ ){
+			    addCol( INPUT, keys[i], type, v[j] );
+			}
+		    }
+		    else{
+			addCol( INPUT, keys[i], _proc->getLCIOInType(keys[i]), par->defaultValue() );
+		    }
+		}
+		else if(_proc->isOutputCollectionName(keys[i])){
+		    addCol( OUTPUT, keys[i], _proc->getLCIOOutType(keys[i]), par->defaultValue() );
+		}
+		else{
+		    StringVec defValue;
+		    defValue.push_back(par->defaultValue());
+		    _param->add(keys[i], defValue );
+		}
+	    }
+	}
+	clearError( NO_PARAMETERS );
     }
   }
 
+  void CCProcessor::createMarlinProc(){
+    //check if marlin has an installed processor of this type
+    Processor* pp = ProcessorMgr::instance()->getProcessor( _type );
+    //checks if marlin has this processor type installed
+    if( pp ){
+      //create a new marlin processor of this type
+      _proc = pp->newProcessor();
+      //set the processor name
+      _proc->setName( _name );
+      //clears error
+      clearError( NOT_INSTALLED );
+    }
+    //this processor type is not installed
+    else{
+      setError( NOT_INSTALLED );
+    }
+  }
+  
+  void CCProcessor::clearParameters(){
+      // skip if it does not contain parameters or is not installed
+      if( hasParameters() && isInstalled() ){
+	  for( sColVecMap::const_iterator p=_cols[INPUT].begin(); p!=_cols[INPUT].end(); p++ ){
+	      _param->erase((*p).first );
+	  }
+
+	  for( sColVecMap::const_iterator p=_cols[OUTPUT].begin(); p!=_cols[OUTPUT].end(); p++ ){
+	      _param->erase((*p).first );
+	  }
+      }     
+  }
+  
+  // write IO collections back to marlin processor's parameters
+  void CCProcessor::updateMarlinProcessor(){
+      StringVec value;
+
+      // skip if it does not contain parameters or is not installed
+      if( hasParameters() && isInstalled() ){
+	
+	  // loop over all collections of this processor
+	  // write every collection back to string parameters
+
+	  for( sColVecMap::const_iterator p=_cols[INPUT].begin(); p!=_cols[INPUT].end(); p++ ){
+	      
+	      value.clear();
+	      for(unsigned int i=0; i<(*p).second.size(); i++){
+		  value.push_back( (*p).second[i]->getValue() );
+	      }
+	      _param->add((*p).first, value );
+	  }
+
+	  for( sColVecMap::const_iterator p=_cols[OUTPUT].begin(); p!=_cols[OUTPUT].end(); p++ ){
+
+	      value.clear();
+	      for(unsigned int i=0; i<(*p).second.size(); i++){
+		  value.push_back( (*p).second[i]->getValue() );
+	      }
+	      _param->add((*p).first, value );
+	  }
+																		     
+	  //update Marlin Processor's parameters
+	  _proc->updateParameters();
+      }
+  }
+
+/////////////////////////////////////////////////////////////
+// COLLECTION METHODS
+/////////////////////////////////////////////////////////////
+  
   void CCProcessor::addCol( const string& iotype, const string& name, const string& type, const string& value ){
     
     CCCollection* newCol = new CCCollection();
@@ -114,6 +235,31 @@ namespace marlin{
 
     //set the error
     setError( COL_ERRORS );
+  }
+  
+  void CCProcessor::remCol( const string& iotype, const string& name, unsigned int index ){
+    if( index >=0 && index < _cols[iotype][name].size() ){
+      popCol( _cols[iotype][name], _cols[iotype][name][index] );
+    }
+  }
+
+  //pop a collection out of the given vector
+  CCCollection* CCProcessor::popCol( ColVec& v, CCCollection* c ){
+    //test if the vector is empty
+    if( v.size() == 0 ){
+      return c;
+    }
+                                                                                                                                                             
+    ColVec newVec;
+    for( unsigned int i=0; i<v.size(); i++ ){
+      if( v[i] != c ){
+	newVec.push_back( v[i] );
+      }
+    }
+                                                                                                                                                             
+    v.assign( newVec.begin(), newVec.end() );
+                                                                                                                                                             
+    return c;
   }
 
   ColVec& CCProcessor::getCols( const string& iotype, const string& name ){
@@ -145,116 +291,35 @@ namespace marlin{
       return types;
   }
 
-  void CCProcessor::updateCollections(){
-    StringVec InCols, OutCols, values;
-    string name, type;
+  
+/////////////////////////////////////////////////////////////
+// ERROR METHODS
+/////////////////////////////////////////////////////////////
 
-    //erase the processor type from the string parameters
-    _param->erase( "ProcessorType" );
-    
-    _param->getStringVals( INPUT, InCols );
-    _param->getStringVals( OUTPUT, OutCols );
-    
-    //erase the "name, type" list from processor's parameters
-    _param->erase( INPUT );
-    _param->erase( OUTPUT );
-	
-    unsigned int index = 0;
-    while( index < InCols.size() ){
-      name = InCols[ index++ ];
-      type = InCols[ index++ ];
+  void CCProcessor::setError( int error ){
+    if( _error[ error ] == false ){
+      _error[ error ] = true;
+      _errors.push_back( _error_desc[ error ] );
+    }
+  }
 
-      values.clear();
-      _param->getStringVals(name, values); // get corresponding collection names
+  void CCProcessor::clearError( int error ){
+    if( _error[ error ] == true ){
+      _error[ error ] = false;
 	
-      //erase the corresponding collection from the processor's parameters
-      _param->erase( name );
-        
-      for (unsigned int i=0; i<values.size(); i++){
-	addCol( INPUT, name, type, values[i] );
+      StringVec tmp;
+      for( unsigned int i=0; i<_errors.size(); i++ ){
+	if( _errors[i] != _error_desc[ error ] ){
+	  tmp.push_back( _errors[i] );
+	}
+      }
+      _errors.clear();
+      _errors=tmp;
+
+      if( error == COL_ERRORS ){
+	_cols[ UNAVAILABLE ].clear();
       }
     }
-    index = 0;
-    while( index < OutCols.size() ){
-      name = OutCols[index++];
-      type = OutCols[index++];
-
-      values.clear();
-      _param->getStringVals(name, values); // get corresponding collection names
-	
-      //erase the corresponding collection from the processor's parameters
-      _param->erase( name );
-        
-      for( unsigned int i=0; i<values.size(); i++ ){
-	addCol( OUTPUT, name, type, values[i] );
-      }
-    }
-  }
-  /*
-  // write IO collections back to marlin processor's parameters
-  void CCProcessor::updateMarlinProcessors(){
-  StringVec lcioInType, lcioOutType, value, ptype;
-  string name, type;
-
-  // skip if it does not contain parameters or is not installed
-  if( hasParameters() && isInstalled() ){
-
-  //ptype.push_back( _type );
-  //_param->add( "ProcessorType", ptype );
-	
-  // loop over all collections of this processor
-  // write every collection back to string parameters
-  for( unsigned int i=0; i<getCols(INPUT).size(); i++ ){
-  name = getCols(INPUT)[i]->getPName();
-  type = getCols(INPUT)[i]->getType();
-  lcioInType.push_back( name );
-  lcioInType.push_back( type );
-  value.clear();
-  value.push_back( getCols(INPUT)[i]->getValue() );
-  _param->add( name, value );
-  }
-  _param->add( INPUT , lcioInType );
-																		     
-  for( unsigned int i=0; i<_outCols.size(); i++ ){
-  name = _outCols[i]->getPName();
-  type = _outCols[i]->getType();
-  lcioOutType.push_back( name );
-  lcioOutType.push_back( type );
-  value.clear();
-  value.push_back(_outCols[i]->getValue());
-  _param->add( name, value );
-  }
-  _param->add( OUTPUT , lcioOutType );
-																		     
-  //update Marlin Processor's parameters
-  _proc->setProcessorParameters( _param );
-  }
-  }
-  */
-
-  void CCProcessor::remCol( const string& iotype, const string& name, unsigned int index ){
-    if( index >=0 && index < _cols[iotype][name].size() ){
-      popCol( _cols[iotype][name], _cols[iotype][name][index] );
-    }
-  }
-
-  //pop a collection out of the given vector
-  CCCollection* CCProcessor::popCol( ColVec& v, CCCollection* c ){
-    //test if the vector is empty
-    if( v.size() == 0 ){
-      return c;
-    }
-                                                                                                                                                             
-    ColVec newVec;
-    for( unsigned int i=0; i<v.size(); i++ ){
-      if( v[i] != c ){
-	newVec.push_back( v[i] );
-      }
-    }
-                                                                                                                                                             
-    v.assign( newVec.begin(), newVec.end() );
-                                                                                                                                                             
-    return c;
   }
 
   bool CCProcessor::hasErrors(){
@@ -283,41 +348,20 @@ namespace marlin{
     return false;
   }
 
-  void CCProcessor::createMarlinProc(){
-    //check if marlin has an installed processor of this type
-    Processor* pp = ProcessorMgr::instance()->getProcessor( _type );
-    //checks if marlin has this processor type installed
-    if( pp ){
-      //create a new marlin processor of this type
-      _proc = pp->newProcessor();
-      if( hasParameters() ){
-	//set processor's parameters to the same ones as this processor
-	_proc->setProcessorParameters( _param );
-      }
-      //call baseInit() to update the marlin processor parameters
-      //_proc->baseInit();
-      //write the updated parameters + new default parameters back to the CCProcessor
-      //_param = _proc->parameters();
-	
-      //dbg
-      //_proc->printParameters();
-      //_proc->printDescriptionXML();
-      //cout << *_param << endl;
-	
-      clearError( NOT_INSTALLED );
+  void CCProcessor::tokenize( const string str, StringVec& tokens, const string& delimiters ){
+    // Skip delimiters at beginning.
+    string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+    // Find first "non-delimiter".
+    string::size_type pos     = str.find_first_of(delimiters, lastPos);
+                                                                                                                                                             
+    while (string::npos != pos || string::npos != lastPos){
+        // Found a token, add it to the vector.
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+        // Skip delimiters.  Note the "not_of"
+        lastPos = str.find_first_not_of(delimiters, pos);
+        // Find next "non-delimiter"
+        pos = str.find_first_of(delimiters, lastPos);
     }
-    //this processor type is not installed
-    else{
-      setError( NOT_INSTALLED );
-    }
-  }
-
-  void CCProcessor::setDefaultParameters(){
-      createMarlinProc();
-      _proc->baseInit();
-      _param = _proc->parameters();
-      clearError( NO_PARAMETERS );
-      updateCollections();
   }
 
 } // end namespace marlin

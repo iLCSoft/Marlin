@@ -122,13 +122,21 @@ void Processor::setParameters( StringParameters* parameters) {
 
   }
 
-  void Processor::printDescriptionXML() {
+  void Processor::printDescriptionXML(std::ostream& stream) {
     
-    std::cout << " <processor name=\"My" <<  type()  << "\"" 
+    if(stream == std::cout){
+    stream << " <processor name=\"My" <<  type()  << "\"" 
 	      << " type=\"" <<  type() << "\">" 
 	      << std::endl ;
+    }
+    else{
+    stream << " <processor name=\"" <<  name()  << "\"" 
+	      << " type=\"" <<  type() << "\">" 
+	      << std::endl ;
+
+    }
     
-    std::cout << " <!--" << description() << "-->" << std::endl ;
+    stream << " <!--" << description() << "-->" << std::endl ;
     
     typedef ProcParamMap::iterator PMI ;
     
@@ -136,40 +144,40 @@ void Processor::setParameters( StringParameters* parameters) {
       
       ProcessorParameter* p = i->second ;
 
-      std::cout << "  <!--" << p->description() << "-->" << std::endl ;
+      stream << "  <!--" << p->description() << "-->" << std::endl ;
 
       if( p->isOptional() ) {
-	std::cout << "  <!--parameter name=\"" << p->name() << "\" " 
+	stream << "  <!--parameter name=\"" << p->name() << "\" " 
 		  << "type=\"" << p->type() ;
 
 	if ( isInputCollectionName( p->name() ) )
-	  std::cout << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
+	  stream << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
 
 	if ( isOutputCollectionName( p->name() ) )
-	  std::cout << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
+	  stream << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
 
-	std::cout << "\">"
+	stream << "\">"
 		  << p->defaultValue() 
 		  << " </parameter-->"
 		  << std::endl ;
       } else {
-	std::cout << "  <parameter name=\"" << p->name() << "\" " 
+	stream << "  <parameter name=\"" << p->name() << "\" " 
 		  << "type=\"" << p->type() ;
 
 	if ( isInputCollectionName( p->name() ) )
-	  std::cout << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
+	  stream << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
 
 	if ( isOutputCollectionName( p->name() ) )
-	  std::cout << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
+	  stream << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
 
-	std::cout  << "\">"
+	stream  << "\">"
 		   << p->defaultValue() 
 		  << " </parameter>"
 		  << std::endl ;
       }
     }
     
-    std::cout << "</processor>" 
+    stream << "</processor>" 
 	      << std::endl 
 	      << std::endl ;
     
@@ -194,6 +202,14 @@ void Processor::setParameters( StringParameters* parameters) {
   }
   
   void Processor::baseInit() {
+    
+    updateParameters();
+    
+    init() ;
+
+  }
+  
+  void Processor::updateParameters() {
 
     typedef ProcParamMap::iterator PMI ;
 
@@ -201,11 +217,7 @@ void Processor::setParameters( StringParameters* parameters) {
 
       i->second->setValue( _parameters ) ;
     }
-
-    init() ;
-
   }
-
 
   void Processor::setReturnValue( bool val) {
     

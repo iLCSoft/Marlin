@@ -43,7 +43,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.18 2006-10-17 16:17:30 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.19 2006-10-25 09:36:15 engels Exp $ 
    */
   
   class Processor {
@@ -116,7 +116,7 @@ namespace marlin{
 
     /** Print information about this processor in XML steering file format.
      */
-    virtual void printDescriptionXML() ;
+    virtual void printDescriptionXML(std::ostream& stream=std::cout) ;
 
     /** Print the parameters and its values.
      */
@@ -263,6 +263,9 @@ namespace marlin{
     virtual void setProcessorParameters( StringParameters* parameters) {
 	setParameters( parameters ) ;
     }
+    
+    /** Allow friend class CCProcessor to update processor parameters */
+    virtual void updateParameters();
 
     /** Set processor name */
     virtual void setName( const std::string & name) { _processorName = name ; }

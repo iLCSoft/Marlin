@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.4 2006-10-23 08:28:20 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.5 2006-10-25 09:36:15 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -58,8 +58,11 @@ namespace marlin {
     ColVec& getLCIOCols() const;
     StringVec& getLCIOFiles() const;
 
+    /** Returns a list of all available Collections for a given type and processor (to use in a ComboBox) */
     sSet& getColsSet( const std::string& type, CCProcessor* proc );
-    sSet& getProcTypes(){ return _procTypes; }
+
+    /** Returns a list of all available Processor Types (to use in a ComboBox) */
+    sSet& getAvailableProcTypes(){ return _procTypes; }
 
     StringParameters* getParameters( const std::string& key );
     

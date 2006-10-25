@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <set>
 
 #include "marlin/DataSourceProcessor.h"
 
@@ -132,7 +133,15 @@ namespace marlin{
 
   }
 
-  
+  std::set<std::string> ProcessorMgr::getAvailableProcessorTypes(){
+      
+     std::set<std::string> ptypes;
+     
+     for(ProcessorMap::iterator i=_map.begin() ; i!= _map.end() ; i++) {
+      ptypes.insert( i->first );
+    }
+    return ptypes;
+  }
 
   Processor* ProcessorMgr::getProcessor( const std::string& type ){
     return _map[ type ] ;
