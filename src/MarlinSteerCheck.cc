@@ -71,8 +71,9 @@ namespace marlin{
    
     //FIXME: this is to prevent crashing the application if
     //the file doesn't exist (is there a better way to handle this??)
-    string cmd="ls ";
+    string cmd= "ls ";
     cmd+=file;
+    cmd+= " >/dev/null";
     if( system( cmd.c_str() ) ){ return; }
     
     HANDLE_LCIO_EXCEPTIONS;
@@ -550,18 +551,10 @@ namespace marlin{
     outfile << "   </execute>\n\n";
     
     for( unsigned int i=0; i<_aProc.size(); i++ ){
-      if(_aProc[i]->isInstalled()){
-	_aProc[i]->updateMarlinProcessor();
-	_aProc[i]->getMarlinProcessor()->printDescriptionXML(outfile);
-	_aProc[i]->clearParameters();
-      }
+      _aProc[i]->writeToXML( outfile );
     }
     for( unsigned int i=0; i<_iProc.size(); i++ ){
-      if(_iProc[i]->isInstalled()){
-	_iProc[i]->updateMarlinProcessor();
-	_iProc[i]->getMarlinProcessor()->printDescriptionXML(outfile);
-	_iProc[i]->clearParameters();
-      }
+      _iProc[i]->writeToXML( outfile );
     }
     
     outfile << "\n</marlin>\n";

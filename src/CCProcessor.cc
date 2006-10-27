@@ -51,6 +51,24 @@ namespace marlin{
     }
   }
 
+  const string CCProcessor::getParamDesc( const string& key ){
+      if( isInstalled() ){
+	ProcParamMap::const_iterator p= _proc->procMap().find(key);
+	ProcessorParameter* par = p->second;
+	return par->description();
+      }
+      return "";
+  }
+  
+  const string CCProcessor::getParamType( const string& key ){
+      if( isInstalled() ){
+	ProcParamMap::const_iterator p= _proc->procMap().find(key);
+	ProcessorParameter* par = p->second;
+	return par->type();
+      }
+      return "";
+  }
+ 
   void CCProcessor::setParameters( StringParameters* p ){
     //create a new Marlin Processor
     createMarlinProc();
@@ -370,4 +388,11 @@ namespace marlin{
     }
   }
 
+  void CCProcessor::writeToXML( ofstream& stream ){
+    if( isInstalled() ){
+        updateMarlinProcessor();
+        _proc->printDescriptionXML( stream );
+        clearParameters();
+    }
+  }
 } // end namespace marlin

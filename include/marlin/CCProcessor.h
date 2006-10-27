@@ -13,6 +13,7 @@
 #include "marlin/Processor.h"
 
 #include <set>
+#include <fstream>
 
 #define MAX_ERRORS 3
 #define ACTIVE true
@@ -54,7 +55,9 @@ namespace marlin {
     const StringVec& getErrors(){ return _errors; }
     const std::string getError(){ return ( _errors.size() != 0 ? _errors[0] : "" ); }
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
-    
+    const std::string getParamDesc( const std::string& key );
+    const std::string getParamType( const std::string& key );
+
     ColVec& getCols( const std::string& iotype, const std::string& name="ALL_COLLECTIONS" );
     StringParameters* getParameters(){ return _param; }
     Processor* getMarlinProcessor(){ return _proc; }
@@ -74,6 +77,8 @@ namespace marlin {
     
     void setError( int error );
     void clearError( int error );
+
+    void writeToXML( std::ofstream& stream );
 
   private:
 
