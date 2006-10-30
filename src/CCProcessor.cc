@@ -54,8 +54,15 @@ namespace marlin{
   const string CCProcessor::getParamDesc( const string& key ){
       if( isInstalled() ){
 	ProcParamMap::const_iterator p= _proc->procMap().find(key);
-	ProcessorParameter* par = p->second;
-	return par->description();
+	if( p!= _proc->procMap().end() ){
+	    ProcessorParameter* par = p->second;
+	    if( par ){
+		return par->description();
+	    }
+	    else{
+		return "Sorry, no description for this parameter";
+	    }
+	}
       }
       return "";
   }
@@ -63,8 +70,15 @@ namespace marlin{
   const string CCProcessor::getParamType( const string& key ){
       if( isInstalled() ){
 	ProcParamMap::const_iterator p= _proc->procMap().find(key);
-	ProcessorParameter* par = p->second;
-	return par->type();
+	if( p!= _proc->procMap().end() ){
+	    ProcessorParameter* par = p->second;
+	    if( par ){
+		return par->type();
+	    }
+	    else{
+		return "Undefined!!";
+	    }
+	}
       }
       return "";
   }
@@ -294,7 +308,7 @@ namespace marlin{
     if( _cols.find( iotype ) != _cols.end() ){
       for( sColVecMap::const_iterator p=_cols[iotype].begin(); p!=_cols[iotype].end(); p++ ){
 	if( name=="ALL_COLLECTIONS" || name==(*p).first ){
-	  for(unsigned int i=0; i<(*p).second.size(); i++){
+	  for( unsigned int i=0; i<(*p).second.size(); i++ ){
 	    newVec.push_back( (*p).second[i] );
 	  }
 	}
