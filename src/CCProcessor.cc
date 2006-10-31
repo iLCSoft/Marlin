@@ -27,6 +27,10 @@ namespace marlin{
     setError( NO_PARAMETERS );
     setError( NOT_INSTALLED );
     
+    //create a new Marlin Processor
+    createMarlinProc();
+ 
+    //set the Processor Parameters
     setParameters( p );
   }
 
@@ -84,8 +88,10 @@ namespace marlin{
   }
  
   void CCProcessor::setParameters( StringParameters* p ){
-    //create a new Marlin Processor
-    createMarlinProc();
+   
+    if( p!= NULL ){
+	clearError( NO_PARAMETERS );
+    }
     
     //check if the Marlin Processor is installed
     if(isInstalled()){
@@ -327,6 +333,18 @@ namespace marlin{
 	  types.insert( (*p).first );
       }
       return types;
+  }
+
+  bool CCProcessor::isErrorCol( const string& value ){
+      ColVec v = getCols( UNAVAILABLE );
+      
+      for( unsigned int i=0; i<v.size(); i++ ){
+	  if( v[i]->getValue() == value ){
+	      return true;
+	  }
+      }
+      
+      return false;
   }
 
   

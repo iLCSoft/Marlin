@@ -57,6 +57,7 @@ namespace marlin {
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
     const std::string getParamDesc( const std::string& key );
     const std::string getParamType( const std::string& key );
+    bool CCProcessor::isErrorCol( const std::string& value );
 
     ColVec& getCols( const std::string& iotype, const std::string& name="ALL_COLLECTIONS" );
     StringParameters* getParameters(){ return _param; }
