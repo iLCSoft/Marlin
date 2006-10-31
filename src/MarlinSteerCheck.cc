@@ -31,13 +31,38 @@ using namespace std;
 
 namespace marlin{
 
-  MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) : _steeringFile( steeringFile ){
+  MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) {
     if( steeringFile != 0 ){
+      _steeringFile=steeringFile;
       //parse the file
       parseXMLFile( steeringFile );
     }
+    else{
+	_gparam = new StringParameters;
+	StringVec value;
+	value.push_back("5001");
+	_gparam->add("MaxRecordNumber", value);
+	value.clear();
+	value.push_back("0");
+	_gparam->add("SkipNEvents", value);
+	value.clear();
+	value.push_back("false");
+	_gparam->add("SupressCheck", value);
+	value.clear();
+	value.push_back("gear_ldc.xml");
+	_gparam->add("GearXMLFile", value);
+    }
     //get a list of all available processor types from marlin Processor Manager
     _procTypes = ProcessorMgr::instance()->getAvailableProcessorTypes();
+  }
+
+  MarlinSteerCheck::~MarlinSteerCheck(){
+    if(_parser){
+	delete _parser;
+    }
+    if(_gparam){
+	delete _gparam;
+    }
   }
 
   /**************************************************************
@@ -56,14 +81,7 @@ namespace marlin{
     }
     return _colValues;
   }
-  
-  /****************************************
-   * Returns the parameters of a given Key
-   ****************************************/
-  StringParameters* MarlinSteerCheck::getParameters( const string& key ){
-      return _parser->getParameters( key );
-  }
-
+ 
   /***************************************************
    * Add LCIO file and read all collections inside it
    ***************************************************/
@@ -286,48 +304,25 @@ namespace marlin{
 	
       _parser = new XMLParser( file ) ;
       _parser->parse();
+      _gparam = _parser->getParameters( "Global" );
       
-      //============================================================
-      //GEAR
-      //============================================================
-/*
-       assert( ( Global::parameters = _parser->getParameters("Global") ) != 0 ) ;
-#ifdef USE_GEAR
-        std::string gearFile = Global::parameters->getStringVal("GearXMLFile" ) ;
-                                                                                                                                                             
-        if( gearFile.size() > 0 ) {
-                                                                                                                                                             
-          gear::GearXML gearXML( gearFile ) ;
-                                                                                                                                                             
-          Global::GEAR = gearXML.createGearMgr() ;
-                                                                                                                                                             
-          std::cout << " ---- instantiated  GEAR from file  " << gearFile  << std::endl ;
-          std::cout << *Global::GEAR << std::endl ;
-                                                                                                                                                             
-        } else {
-                                                                                                                                                             
-          std::cout << " ---- no GEAR XML file given  --------- " << std::endl ;
-          Global::GEAR = new gear::GearMgrImpl ;
-        }
-#endif
-*/    
       //============================================================
       //READ PARAMETERS
       //============================================================
 	
       //list of lcio files defined in the global section
-      _parser->getParameters( "Global" )->getStringVals( "LCIOInputFiles" , lcioFiles );
-      _parser->getParameters( "Global" )->erase("LCIOInputFiles");
+      _gparam->getStringVals( "LCIOInputFiles" , lcioFiles );
+      _gparam->erase("LCIOInputFiles");
 	
       //list of all processors defined in the xml file NOT including the ones in the execute section
-      _parser->getParameters( "Global" )->getStringVals( "AvailableProcessors" , availableProcs );
-      _parser->getParameters( "Global" )->erase("AvailableProcessors");
+      _gparam->getStringVals( "AvailableProcessors" , availableProcs );
+      _gparam->erase("AvailableProcessors");
 	
       //this gets a name list of all processors defined in the execute section
-      _parser->getParameters( "Global" )->getStringVals( "ActiveProcessors" , activeProcs );
-      _parser->getParameters( "Global" )->erase("ActiveProcessors");
+      _gparam->getStringVals( "ActiveProcessors" , activeProcs );
+      _gparam->erase("ActiveProcessors");
     
-      _parser->getParameters( "Global" )->erase("ProcessorConditions");
+      _gparam->erase("ProcessorConditions");
 	 
     
       //============================================================
@@ -515,7 +510,7 @@ namespace marlin{
       outfile << " </parameter>\n";
  
       StringVec keys;
-      _parser->getParameters( "Global" )->getStringKeys( keys );
+      _gparam->getStringKeys( keys );
       
       //Other parameters
       for( unsigned int i=0; i<keys.size(); i++ ){
@@ -523,14 +518,14 @@ namespace marlin{
 
 	StringVec values;
 	//get the values for the given key
-	_parser->getParameters( "Global" )->getStringVals( keys[i], values );
+	_gparam->getStringVals( keys[i], values );
 
 	outfile << ( values.size() == 1 ? " value=\"" : ">" );
       
         for( unsigned int j=0; j<values.size(); j++ ){
 	    outfile << ( values.size() == 1 ? "" : " ") << values[j];
 	}
-	outfile << ( values.size() == 1 ? "\" />\n" : " </parameter>\n" );
+	outfile << ( values.size() == 1 ? "\"/>\n" : " </parameter>\n" );
       }
     
     outfile << "   </global>\n\n";

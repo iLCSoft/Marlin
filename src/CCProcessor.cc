@@ -54,45 +54,45 @@ namespace marlin{
 	_proc->setName(name);
     }
   }
-
-  const string CCProcessor::getParamDesc( const string& key ){
+  
+  ProcessorParameter* CCProcessor::getProcParam( const string& key ){
       if( isInstalled() ){
-	ProcParamMap::const_iterator p= _proc->procMap().find(key);
-	if( p!= _proc->procMap().end() ){
-	    ProcessorParameter* par = p->second;
-	    if( par ){
-		return par->description();
-	    }
-	    else{
-		return "Sorry, no description for this parameter";
-	    }
-	}
+        ProcParamMap::const_iterator p= _proc->procMap().find(key);
+        if( p != _proc->procMap().end() ){
+            ProcessorParameter* par = p->second;
+            if( par ){
+                return par;
+            }
+            else{
+                return NULL;
+            }
+        }
       }
-      return "";
+      return NULL;
+  }
+  
+  const string CCProcessor::getParamDesc( const string& key ){
+      ProcessorParameter* par = getProcParam(key);
+      if( par ){
+	return par->description();
+      }
+      else{
+	return "Sorry, no description for this parameter";
+      }
   }
   
   const string CCProcessor::getParamType( const string& key ){
-      if( isInstalled() ){
-	ProcParamMap::const_iterator p= _proc->procMap().find(key);
-	if( p!= _proc->procMap().end() ){
-	    ProcessorParameter* par = p->second;
-	    if( par ){
-		return par->type();
-	    }
-	    else{
-		return "Undefined!!";
-	    }
-	}
+      ProcessorParameter* par = getProcParam(key);
+      if( par ){
+	return par->type();
       }
-      return "";
+      else{
+	return "Undefined!!";
+      }
   }
  
   void CCProcessor::setParameters( StringParameters* p ){
    
-    if( p!= NULL ){
-	clearError( NO_PARAMETERS );
-    }
-    
     //check if the Marlin Processor is installed
     if(isInstalled()){
 
@@ -186,6 +186,14 @@ namespace marlin{
 	    }
 	}
 	clearError( NO_PARAMETERS );
+    }
+    //processor is not installed
+    else{
+	if(p!= NULL ){
+	    _param=p;
+	    _param->erase("ProcessorType");
+	    clearError( NO_PARAMETERS );
+	}
     }
   }
 
@@ -420,6 +428,7 @@ namespace marlin{
     }
   }
 
+/*
   void CCProcessor::writeToXML( ofstream& stream ){
     if( isInstalled() ){
         updateMarlinProcessor();
@@ -427,4 +436,66 @@ namespace marlin{
         clearParameters();
     }
   }
+*/
+
+  void CCProcessor::writeToXML( ofstream& stream ){
+    stream << " <processor name=\"" <<  _name  << "\" type=\"" <<  _type << "\">\n";
+    if( isInstalled() ){
+        updateMarlinProcessor();
+	stream << " <!--" << _proc->description() << "-->\n";
+    }
+    else{
+	stream << " <!-- This processor is NOT Installed in your Marlin binary so ALL parameter descriptions are lost!!!-->\n";
+    }
+    
+    
+    StringVec keys;
+    if( hasParameters() ){
+	_param->getStringKeys( keys );
+    }
+    
+    //parameters
+    for( unsigned int i=0; i<keys.size(); i++ ){
+
+	ProcessorParameter* p = getProcParam( keys[i] );
+    
+        if( p != NULL ){
+	    
+	    stream << "  <!--" << getParamDesc( keys[i] ) << "-->" << std::endl ;
+	    stream << "  <" << (p->isOptional() ? "!--" : "") << "parameter name=\"" << p->name() << "\" type=\"" << p->type() ;
+	    
+	    if( _proc->isInputCollectionName( keys[i] )){
+		stream << "\" lcioInType=\"" << _types[ INPUT ][ keys[i] ];
+	    }
+
+	    if( _proc->isOutputCollectionName( keys[i] )){
+		stream << "\" lcioOutType=\"" << _types[ OUTPUT ][ keys[i] ];
+	    }
+																		 
+	    stream << "\">" << p->defaultValue() << " </parameter"<< (p->isOptional() ? "--" : "")  << ">\n";
+	}
+	else{
+	    if(isInstalled()){
+		stream << "  <!-- Sorry, this parameter isn't a default parameter for this processor so it's description was lost!  -->" << std::endl ;
+	    }
+	    stream << "  <parameter name=\"" << keys[i] << "\"";
+
+	    StringVec values;
+	    //get the values for the given key
+	    _param->getStringVals( keys[i], values );
+																			 
+	    stream << ( values.size() == 1 ? " value=\"" : ">" );
+																			 
+	    for( unsigned int j=0; j<values.size(); j++ ){
+		stream << ( values.size() == 1 ? "" : " ") << values[j];
+	    }
+	    stream << ( values.size() == 1 ? "\"/>\n" : " </parameter>\n" );
+	}
+    }
+    stream << "</processor>\n\n";
+    if( isInstalled() ){
+        clearParameters();
+    }
+  }
+
 } // end namespace marlin

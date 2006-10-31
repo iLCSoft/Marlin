@@ -87,6 +87,7 @@ namespace marlin {
     void createMarlinProc();	    //sets error flag NOT_INSTALLED if processor couldn't be created
     CCCollection* popCol( ColVec& v, CCCollection* c );   
     void tokenize( const std::string str, StringVec& tokens, const std::string& delimiters = " " );
+    ProcessorParameter* getProcParam( const std::string& key );
 
     //VARIABLES
     bool _status;		    // false = INACTIVE ; true = ACTIVE

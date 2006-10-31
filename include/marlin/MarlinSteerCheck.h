@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.5 2006-10-25 09:36:15 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.6 2006-10-31 15:49:24 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -51,7 +51,8 @@ namespace marlin {
 
   public:
 
-    MarlinSteerCheck( const char* steerFileName );
+    MarlinSteerCheck( const char* steerFileName=NULL );
+    ~MarlinSteerCheck();
 
     ProcVec& getAProcs() { return _aProc; };
     ProcVec& getIProcs() { return _iProc; };
@@ -64,7 +65,7 @@ namespace marlin {
     /** Returns a list of all available Processor Types (to use in a ComboBox) */
     sSet& getAvailableProcTypes(){ return _procTypes; }
 
-    StringParameters* getParameters( const std::string& key );
+    StringParameters* getGlobalParameters(){ return _gparam; }
     
     const std::string& getErrors( unsigned int index );
    
@@ -101,6 +102,7 @@ namespace marlin {
     
     //VARIABLES
     IParser* _parser;			//parser
+    StringParameters* _gparam;		//global parameters (without LCIO Files)
     std::string _steeringFile;		//steering file
     ProcVec _aProc;			//active processors
     ProcVec _iProc;			//inactive processors
