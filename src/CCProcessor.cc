@@ -314,14 +314,14 @@ namespace marlin{
     return c;
   }
 
-  ColVec& CCProcessor::getCols( const string& iotype, const string& name ){
+  ColVec& CCProcessor::getCols( const string& iotype, const string& type_name ){
     static ColVec newVec;
    
     newVec.clear();
     
     if( _cols.find( iotype ) != _cols.end() ){
       for( sColVecMap::const_iterator p=_cols[iotype].begin(); p!=_cols[iotype].end(); p++ ){
-	if( name=="ALL_COLLECTIONS" || name==(*p).first ){
+	if( type_name=="ALL_COLLECTIONS" || type_name==(*p).first ){
 	  for( unsigned int i=0; i<(*p).second.size(); i++ ){
 	    newVec.push_back( (*p).second[i] );
 	  }

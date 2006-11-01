@@ -11,32 +11,24 @@
 #include "marlin/XMLParser.h"
 #include "marlin/tinyxml.h"
 #include "marlin/Global.h"
-                                                                                                                                                             
-#ifdef USE_GEAR
-#include "gearimpl/Util.h"
-#include "gearxml/GearXML.h"
-#include "gearimpl/GearMgrImpl.h"
-#endif
-
 ////////////////////////////////
 
-#include <assert.h>
 #include <iomanip>
 #include <fstream>
 #include <iostream>
-//#include <stdlib.h>
-//#include <time.h>
 
 using namespace std;
 
 namespace marlin{
 
+  // Constructor
   MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) : _parser(NULL), _gparam(NULL) {
     if( steeringFile != 0 ){
       _steeringFile=steeringFile;
       //parse the file
       parseXMLFile( steeringFile );
     }
+    //create Global Parameters
     else{
 	_gparam = new StringParameters;
 	StringVec value;
@@ -56,6 +48,7 @@ namespace marlin{
     _procTypes = ProcessorMgr::instance()->getAvailableProcessorTypes();
   }
 
+  // Destructor
   MarlinSteerCheck::~MarlinSteerCheck(){
     if(_parser){
 	delete _parser;
@@ -65,10 +58,8 @@ namespace marlin{
     }
   }
 
-  /**************************************************************
-   * Returns a list of all available Collections of a given Type
-   * for a given Processor (to use in a ComboBox)
-   **************************************************************/
+  // Returns a list of all available Collections of a given Type
+  // for a given Processor (to use in a ComboBox)
   sSet& MarlinSteerCheck::getColsSet( const string& type, CCProcessor* proc ){
     
     _colValues.clear();
@@ -82,9 +73,7 @@ namespace marlin{
     return _colValues;
   }
  
-  /***************************************************
-   * Add LCIO file and read all collections inside it
-   ***************************************************/
+  // Add LCIO file and read all collections inside it
   void MarlinSteerCheck::addLCIOFile( const string& file ){
    
     //FIXME: this is to prevent crashing the application if
@@ -126,17 +115,13 @@ namespace marlin{
     consistencyCheck();
   } 
 
-  /********************************************************
-   * Remove lcio file and all collections associated to it
-   ********************************************************/
+  // Remove lcio file and all collections associated to it
   void MarlinSteerCheck::remLCIOFile( const string& file ){
     _lcioCols.erase( file );
     consistencyCheck();
   }
 
-  /*****************************
-   * Get the list of LCIO Files
-   *****************************/
+  // Get the list of LCIO Files
   StringVec& MarlinSteerCheck::getLCIOFiles() const{
     static StringVec filenames;
     
@@ -149,10 +134,7 @@ namespace marlin{
     return filenames;
   }
 
-
-  /**********************
-   * Add a new Processor
-   **********************/
+  // Add a new Processor
   void MarlinSteerCheck::addProcessor( bool status, const string& name, const string& type, StringParameters* p ){
 
     CCProcessor* newProc = new CCProcessor(status, name, type, p);
@@ -166,9 +148,7 @@ namespace marlin{
     consistencyCheck();
   }
 
-  /*********************
-   * Remove a Processor
-   *********************/
+  // Remove a Processor
   void MarlinSteerCheck::remProcessor( unsigned int index, bool status ){
 
     if( status == ACTIVE ){
@@ -184,9 +164,7 @@ namespace marlin{
     consistencyCheck();
   }
 
-  /***********************
-   * Activate a processor
-   ***********************/
+  // Activate a processor
   void MarlinSteerCheck::activateProcessor( unsigned int index ){
 
     if( index >=0 && index < _iProc.size() ){
@@ -204,9 +182,7 @@ namespace marlin{
     }
   }
 
-  /***********************
-   * Deactivate a processor
-   ***********************/
+  // Deactivate a processor
   void MarlinSteerCheck::deactivateProcessor( unsigned int index ){
     
     if( index >=0 && index < _aProc.size() ){
@@ -224,9 +200,7 @@ namespace marlin{
     }
   }
 
-  /****************************************
-   * Change an active processor's position
-   ****************************************/
+  // Change an active processor's position
   void MarlinSteerCheck::changeProcessorPos( unsigned int pos, unsigned int newPos ){
     //check if positions are valid
     if( pos != newPos && pos >= 0 && newPos >= 0 && pos < _aProc.size() && newPos < _aProc.size() ){
@@ -254,9 +228,7 @@ namespace marlin{
     }
   }
 
-  /******************************************************
-   * Check active processors for unavailable collections
-   ******************************************************/
+  // Check active processors for unavailable collections
   void MarlinSteerCheck::consistencyCheck(){
     //the availableCols vector will contain all the available collections read from LCIO files
     //and all output collections from active processors found before the processor being checked
@@ -460,6 +432,7 @@ namespace marlin{
     return cols;
   }
 
+  // Saves the data to an XML file with the given name
   void MarlinSteerCheck::saveAsXMLFile( const string& file ){
       
     if( file.size() == 0 ){ return; }
@@ -546,6 +519,7 @@ namespace marlin{
   // DUMP METHODS
   ////////////////////////////////////////////////////////////////////////////////
 
+  // Dumps all information read from the steering file to stdout
   void MarlinSteerCheck::dump_information()
   {
     bool found_errors = false;
@@ -640,6 +614,7 @@ namespace marlin{
     cout << endl;
   }
 
+  // Dumps collection errors found in the steering file for all active processors
   bool MarlinSteerCheck::dump_colErrors(){
     
     bool found_errors = false;
@@ -710,6 +685,7 @@ namespace marlin{
     return found_errors;
   }
   
+  // Returns the Errors for an Active Processor at the given index
   const string& MarlinSteerCheck::getErrors( unsigned int index ){
     static string errors;
     ColVec avCols, uCols;
