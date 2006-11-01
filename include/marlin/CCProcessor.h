@@ -74,7 +74,6 @@ namespace marlin {
    
     void changeStatus();
     void setName( const std::string& name );
-    void setParameters( StringParameters* p );
     
     void setError( int error );
     void clearError( int error );
@@ -82,6 +81,8 @@ namespace marlin {
     void writeToXML( std::ofstream& stream );
 
   private:
+
+    void setParameters( StringParameters* p );
 
     //utility methods
     void createMarlinProc();	    //sets error flag NOT_INSTALLED if processor couldn't be created

@@ -31,7 +31,7 @@ using namespace std;
 
 namespace marlin{
 
-  MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) {
+  MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) : _parser(NULL), _gparam(NULL) {
     if( steeringFile != 0 ){
       _steeringFile=steeringFile;
       //parse the file
