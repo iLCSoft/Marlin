@@ -36,8 +36,6 @@ namespace marlin{
       _steeringFile=steeringFile;
       //parse the file
       parseXMLFile( steeringFile );
-
-      saveAsXMLFile("teste.xml");
     }
     else{
 	_gparam = new StringParameters;
