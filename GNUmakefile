@@ -16,7 +16,7 @@
 #  
 #
 # @author Frank Gaede, DESY
-# @version $Id: GNUmakefile,v 1.7 2005-08-04 20:38:05 gaede Exp $
+# @version $Id: GNUmakefile,v 1.8 2006-11-02 10:19:31 engels Exp $
 #
 #########################################################
 
@@ -48,12 +48,18 @@ export MARLINLIB
 packagelibs := $(foreach package,$(packages), packages/$(package)/lib/lib$(package).a )
 export packagelibs
 
-.PHONY: lib clean bin doc $(subdirs) test
+.PHONY: gui lib clean bin doc $(subdirs) test
 
 
 
-all: lib bin 
+all: lib bin gui
 
+
+gui: bin
+	@if [ $(MARLIN_GUI) ] ; then \
+	if [ -f "${QTDIR}/bin/qmake" ] ; then \
+	echo "Building library for Marlin GUI..."; \
+	cd "${MARLIN}/gui"; qmake ; $(MAKE) ; fi ; fi
 
 lib:
 	$(MAKE) -C src lib
@@ -77,8 +83,10 @@ clean:
 	@for i in $(subdirs); do \
 	if [ -f "$$i/src/GNUmakefile" ] ; then \
 	echo "Clearing in $$i..."; \
-	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) clean); fi ; done
-
+	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) clean); fi ; done ; \
+	if [ -f "gui/Makefile" ] ; then \
+	echo "Clearing in gui..."; \
+	(cd $(MARLIN)/gui; $(MAKE) clean); fi
 
 test:
 	@echo $(subdirs)
