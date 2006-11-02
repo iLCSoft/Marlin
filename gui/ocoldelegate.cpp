@@ -1,0 +1,37 @@
+#include <QtGui>
+
+#include "marlin/CCProcessor.h"
+#include "marlin/CCCollection.h"
+
+#include "ocoldelegate.h"
+
+OColDelegate::OColDelegate(CCProcessor* p, QObject *parent) : QItemDelegate(parent){
+    _parent = qobject_cast<QTableWidget *>(parent);
+    _p=p;
+}
+
+QWidget *OColDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & /* option */, const QModelIndex &index) const
+{
+    
+    QLineEdit *edit = new QLineEdit(parent);
+    if( index.column() != 2){
+	edit->setReadOnly(true);
+    }
+    return edit;
+}
+
+void OColDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+{
+    QLineEdit *edit = qobject_cast<QLineEdit *>(editor);
+    edit->setText(index.model()->data(index).toString());
+}
+
+void OColDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    QLineEdit *edit = qobject_cast<QLineEdit *>(editor);
+    model->setData(index, edit->displayText());
+    
+    //update the processor
+    _p->getCols( OUTPUT, _parent->item(index.row(),0)->text().toStdString() )[ 0 ]->setValue(edit->displayText().toStdString());
+}
+
