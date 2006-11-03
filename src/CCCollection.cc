@@ -9,6 +9,13 @@ namespace marlin{
     _srcProc(0){
   }
  
+  CCCollection::CCCollection(CCCollection const &c) : 
+    _value(c._value),
+    _type(c._type),
+    _name(c._name),
+    _srcProc(c._srcProc){
+  }
+  
   void CCCollection::setValue( const std::string& value ){
     _value = value;
   }

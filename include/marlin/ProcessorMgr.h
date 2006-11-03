@@ -13,7 +13,7 @@
 #include "LogicalExpressions.h"
 
 #include <map>
-#include <set>
+//#include <set>
 #include <list>
 
 using namespace lcio ;
@@ -29,7 +29,7 @@ typedef std::map< const std::string , int > SkippedEventMap ;
 /** Processor manager singleton class. Holds references to all registered Processors. 
  *
  *  @author F. Gaede, DESY
- *  @version $Id: ProcessorMgr.h,v 1.11 2006-10-25 09:36:15 engels Exp $ 
+ *  @version $Id: ProcessorMgr.h,v 1.12 2006-11-03 16:21:30 engels Exp $ 
  */
 class ProcessorMgr : public LCRunListener, public LCEventListener {
 
@@ -103,7 +103,7 @@ protected:
   void registerProcessor( Processor* processor ) ;
   
   /** Returns a list of all registered processors found */
-  std::set<std::string> getAvailableProcessorTypes() ;
+  std::map< std::string, std::string > getAvailableProcessorTypes() ;
 
 
 //   ProcessorMgr() : _outputProcessor(0) {}

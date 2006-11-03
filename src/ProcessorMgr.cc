@@ -133,12 +133,16 @@ namespace marlin{
 
   }
 
-  std::set<std::string> ProcessorMgr::getAvailableProcessorTypes(){
+  std::map< std::string, std::string > ProcessorMgr::getAvailableProcessorTypes(){
       
-     std::set<std::string> ptypes;
+     std::map< std::string, std::string > ptypes;
      
      for(ProcessorMap::iterator i=_map.begin() ; i!= _map.end() ; i++) {
-      ptypes.insert( i->first );
+      if( i->second != NULL )
+	ptypes[i->first] = i->second->description();
+      else
+	ptypes[i->first] = "This processor is NOT installed!! Please install it before using it...";
+	
     }
     return ptypes;
   }

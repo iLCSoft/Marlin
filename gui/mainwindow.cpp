@@ -108,8 +108,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
 	    "Please be aware that comments made in the original steering files will get lost in the saving process.\n"
 	    "Processors that are not installed in your Marlin binary will loose all their descriptions as well.\n"
 	    "All extra parameters that aren't categorized as default in a processor also loose their descriptions.\n\n" ),
-	    QMessageBox::Yes | QMessageBox::Default,
-	    QMessageBox::No,
+	    QMessageBox::Yes,
+	    QMessageBox::No | QMessageBox::Default,
 	    QMessageBox::Cancel | QMessageBox::Escape);
 
     if( ret == QMessageBox::Yes ){
@@ -650,7 +650,7 @@ void MainWindow::selectionChanged(int row)
 void MainWindow::addAProcessor()
 {
     APDialog dg( msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
-    dg.resize(400,200);
+    dg.resize(700,300);
     dg.exec();
     emit modifiedContent();
 }

@@ -6,6 +6,7 @@ using namespace std;
 
 namespace marlin{
 
+  //constructor
   CCProcessor::CCProcessor( bool status, const string& name, const string& type, StringParameters* p ):
     _status(status),
     _name(name),
@@ -34,6 +35,52 @@ namespace marlin{
     setParameters( p );
   }
 
+  //copy constructor
+  CCProcessor::CCProcessor(CCProcessor const &p){
+      _status=p._status;
+      _name=p._name;
+      _type=p._type;
+      
+      _error[0] = false;
+      _error[1] = false;
+      _error[2] = false;
+      
+      _error_desc.push_back( "Processor has no Parameters" );
+      _error_desc.push_back( "Processor is not build in this Marlin binary" );
+      _error_desc.push_back( "Some Collections are not available" );
+
+      for( int i=0; i<MAX_ERRORS; i++ ){
+	if(p._error[i]){
+	    setError(i);
+	}
+      }
+      
+      //create a new Marlin Processor
+      createMarlinProc();
+
+      _param=new StringParameters();
+      
+      StringVec keys;
+      p._param->getStringKeys(keys);
+      
+      for(unsigned int i=0; i<keys.size(); i++){
+	StringVec values;
+	p._param->getStringVals(keys[i],values);
+	_param->add(keys[i], values);
+      }
+
+      _types=p._types;
+
+      for( ssColVecMap::const_iterator q=p._cols.begin(); q!=p._cols.end(); q++ ){
+        for( sColVecMap::const_iterator r=(*q).second.begin(); r!=(*q).second.end(); r++ ){
+	  for( unsigned int i=0; i<(*r).second.size(); i++ ){
+	    _cols[(*q).first][(*r).first].push_back( new CCCollection( (*(*r).second[i]) ));
+	  }
+	}
+      }
+
+  }
+  
   CCProcessor::~CCProcessor(){
       if( _param != NULL ){
 	  delete _param;

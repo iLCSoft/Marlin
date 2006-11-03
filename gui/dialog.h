@@ -17,6 +17,10 @@ class Dialog : public QDialog
 public:
     Dialog(CCProcessor* p, MarlinSteerCheck* msc, QWidget *parent = 0, Qt::WFlags f = 0);
 
+private slots:
+    void apply();
+    void cancel();
+    
 private:
     void setupViews();
     
@@ -24,6 +28,7 @@ private:
     QVBoxLayout *mainLayout; 
     
     CCProcessor* _p;
+    CCProcessor* _backup;
     MarlinSteerCheck* _msc;
 };
 

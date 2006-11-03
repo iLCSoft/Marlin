@@ -43,6 +43,9 @@ namespace marlin {
     // Constructor
     CCProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL);
 
+    // Copy Constructor
+    CCProcessor( CCProcessor const &p );
+    
     // Destructor
     ~CCProcessor();
    

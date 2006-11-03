@@ -8,6 +8,7 @@
 class QVBoxLayout;
 class QComboBox;
 class QLineEdit;
+class QLabel;
 class QMainWindow;
 
 using namespace marlin;
@@ -24,11 +25,14 @@ signals:
     
 private slots:
     void addProcessor();
+    void changeLabel(const QString& text);
 
 private:
     //Variables
+    ssMap procTypes;
     QMainWindow* _parent;
     QComboBox *cb;
+    QLabel *procLabel;
     QLineEdit *le;
     QVBoxLayout *mainLayout; 
     

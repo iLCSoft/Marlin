@@ -21,6 +21,7 @@ namespace marlin {
   public:
     
     CCCollection();
+    CCCollection(CCCollection const &c);
     
     const std::string& getValue() const { return _value; }
     const std::string& getType() const { return _type; }

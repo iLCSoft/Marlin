@@ -15,6 +15,8 @@ using namespace std;
 
 Dialog::Dialog( CCProcessor *p, MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDialog(parent,f), _p(p), _msc(msc)
 {
+    _backup = new CCProcessor(*p);
+    
     mainLayout = new QVBoxLayout;
     
     setupViews();
@@ -31,7 +33,24 @@ Dialog::Dialog( CCProcessor *p, MarlinSteerCheck* msc, QWidget *parent, Qt::WFla
 
 void Dialog::setupViews()
 {
+    //PROCESSOR DESCRIPTION
+    QLabel *desc = new QLabel(_p->getDescription().c_str());
+    desc->setFont( QFont("Helvetica", 10, QFont::Bold) );
+    
+    QPalette pal = desc->palette();
+    pal.setColor(QPalette::WindowText, QColor(32,64,140,220) );
+    desc->setPalette(pal);
+		
+    desc->setWordWrap(true);
 
+    QVBoxLayout *descLO = new QVBoxLayout;
+    descLO->addWidget( desc );
+                                                                                                                                                             
+    QGroupBox *descGB = new QGroupBox(tr("Processor Description "), this);
+    descGB->setLayout( descLO );
+
+    mainLayout->addWidget(descGB);
+    
     //////////////////////////////
     //INTPUT COLLECTIONS TABLE
     //////////////////////////////
@@ -77,7 +96,7 @@ void Dialog::setupViews()
 		    item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);
 		    
 		    item2->setBackgroundColor( _p->isErrorCol( cols[i]->getValue().c_str() ) ? QColor(184,16,0,180) : QColor(32,140,64,180) );
-	    
+	   
 		    colTable->setItem(row, 0, item0);
 		    colTable->setItem(row, 1, item1);
 		    colTable->setItem(row, 2, item2);
@@ -273,63 +292,98 @@ void Dialog::setupViews()
     //PARAMETERS TABLE
     //////////////////////////////
     if(_p->hasParameters()){
-    QTableWidget *paramTable = new QTableWidget;
-                                                                                                                                                             
-    QStringList labels;
-    labels << tr("Parameter Name") << tr("Parameter Value");
-    paramTable->setColumnCount(2);
-    paramTable->verticalHeader()->hide();
-    paramTable->setHorizontalHeaderLabels(labels);
-    paramTable->horizontalHeader()->resizeSection(0, 400);
-    paramTable->horizontalHeader()->resizeSection(1, 500);
-    paramTable->setSelectionMode(QAbstractItemView::NoSelection);
-    paramTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
+	QTableWidget *paramTable = new QTableWidget;
+																				 
+	QStringList labels;
+	labels << tr("Parameter Name") << tr("Parameter Value");
+	paramTable->setColumnCount(2);
+	paramTable->verticalHeader()->hide();
+	paramTable->setHorizontalHeaderLabels(labels);
+	paramTable->horizontalHeader()->resizeSection(0, 400);
+	paramTable->horizontalHeader()->resizeSection(1, 500);
+	paramTable->setSelectionMode(QAbstractItemView::NoSelection);
+	paramTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
-    //initialize table
-    StringVec paramKeys;
-    _p->getParameters()->getStringKeys(paramKeys);
-    for( unsigned int i=0; i<paramKeys.size(); i++ ){
-    
-	int row = paramTable->rowCount();
-        paramTable->setRowCount(row + 1);
-                                                                                                                                                             
-	StringVec paramValues;
-	_p->getParameters()->getStringVals(paramKeys[i], paramValues);
+	//initialize table
+	StringVec paramKeys;
+	_p->getParameters()->getStringKeys(paramKeys);
+	for( unsigned int i=0; i<paramKeys.size(); i++ ){
 	
-	QString str;
-	
-	for( unsigned int j=0; j<paramValues.size(); j++ ){
-	    str+=paramValues[j].c_str();
-	    str+=" ";
+	    int row = paramTable->rowCount();
+	    paramTable->setRowCount(row + 1);
+																				 
+	    StringVec paramValues;
+	    _p->getParameters()->getStringVals(paramKeys[i], paramValues);
+	    
+	    QString str;
+	    
+	    for( unsigned int j=0; j<paramValues.size(); j++ ){
+		str+=paramValues[j].c_str();
+		str+=" ";
+	    }
+	    
+	    QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
+	    QTableWidgetItem *item1 = new QTableWidgetItem( str );
+	    
+	    item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
+
+	    item0->setToolTip( QString(_p->getParamDesc( paramKeys[i] ).c_str() ) );
+	    item1->setToolTip( QString(_p->getParamDesc( paramKeys[i] ).c_str() ) );
+	    
+	    paramTable->setItem(row, 0, item0);
+	    paramTable->setItem(row, 1, item1);
+
+	    //paramTable->openPersistentEditor(item1);
 	}
 	
-	QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
-        QTableWidgetItem *item1 = new QTableWidgetItem( str );
-	
-	item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
+	//Delegate
+	ParamDelegate *pDelegate = new ParamDelegate(_p, paramTable);
+	paramTable->setItemDelegate( pDelegate );
+																				 
+	//Layout
+	QVBoxLayout *paramLayout = new QVBoxLayout;
+	paramLayout->addWidget(paramTable);
 
-	item0->setToolTip( QString(_p->getParamDesc( paramKeys[i] ).c_str() ) );
-	item1->setToolTip( QString(_p->getParamDesc( paramKeys[i] ).c_str() ) );
+	//GroupBox
+	QGroupBox *paramGroupBox = new QGroupBox(tr("Processor Parameters"));
+	paramGroupBox->setLayout(paramLayout);
 	
-        paramTable->setItem(row, 0, item0);
-        paramTable->setItem(row, 1, item1);
-
-	//paramTable->openPersistentEditor(item1);
+	mainLayout->addWidget(paramGroupBox);
     }
-    
-    //Delegate
-    ParamDelegate *pDelegate = new ParamDelegate(_p, paramTable);
-    paramTable->setItemDelegate( pDelegate );
-                                                                                                                                                             
-    //Layout
-    QVBoxLayout *paramLayout = new QVBoxLayout;
-    paramLayout->addWidget(paramTable);
 
+    //////////////////////////////
+    // APPLY, CANCEL BUTTONS
+    //////////////////////////////
+
+    QPushButton *applyButton = new QPushButton(tr("Apply Changes"));
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+
+    connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+    applyButton->setAutoDefault( false );
+    cancelButton->setAutoDefault( false );
+	
+    //Buttons Layout
+    QHBoxLayout *mainButtonsLayout = new QHBoxLayout;
+    mainButtonsLayout->addWidget(applyButton);
+    mainButtonsLayout->addWidget(cancelButton);
+    
     //GroupBox
-    QGroupBox *paramGroupBox = new QGroupBox(tr("Processor Parameters"));
-    paramGroupBox->setLayout(paramLayout);
+    QWidget *mainButtons = new QWidget;
+    mainButtons->setLayout(mainButtonsLayout);
     
-    mainLayout->addWidget(paramGroupBox);
-    }
+    mainLayout->addWidget(mainButtons);
+}
 
+void Dialog::apply(){
+    delete _backup;
+
+    this->close();
+}
+
+void Dialog::cancel(){
+   //delete _p;
+   _p=_backup;
+   
+   this->close();
 }

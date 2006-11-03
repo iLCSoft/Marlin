@@ -14,21 +14,35 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
     
     mainLayout = new QVBoxLayout;
     
+    //Processor Description
+    procLabel = new QLabel;
+    procLabel->setWordWrap(true);
+    
+    QVBoxLayout *descLO = new QVBoxLayout;
+    descLO->addWidget( procLabel );
+    
+    QGroupBox *descGB = new QGroupBox(tr("Processor Description "), this);
+    descGB->setLayout( descLO );
+    descGB->setMinimumHeight( 80 );
+    
     //Processor Type
     cb = new QComboBox;
-
-    sSet procTypes=msc->getAvailableProcTypes();
+    procTypes=msc->getAvailableProcTypes();
     
-    for( sSet::const_iterator p=procTypes.begin(); p != procTypes.end(); p++ ){
-        cb->addItem((*p).c_str());
+    for( ssMap::const_iterator p=procTypes.begin(); p != procTypes.end(); p++ ){
+        cb->addItem((*p).first.c_str());
     }
     
+    connect(cb, SIGNAL(highlighted(const QString&)), this, SLOT(changeLabel(const QString&)));
+    
     QVBoxLayout *typeLO = new QVBoxLayout;
+    typeLO->addWidget( descGB );
     typeLO->addWidget( cb );
     
     QGroupBox *typeGB = new QGroupBox(tr("Processor Type "), this);
     typeGB->setLayout( typeLO );
     
+   
     //Processor Name
     le = new QLineEdit;
     
@@ -60,7 +74,17 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
 
     setLayout(mainLayout);
 
+    changeLabel((*procTypes.begin()).first.c_str());
+
     setWindowTitle(tr("Add New Processor"));
+}
+
+void APDialog::changeLabel(const QString& text){
+
+    //set the label with the processor description
+    if(procTypes.find(text.toStdString()) != procTypes.end()){
+	procLabel->setText(procTypes[text.toStdString()].c_str());
+    }
 }
 
 void APDialog::addProcessor(){
