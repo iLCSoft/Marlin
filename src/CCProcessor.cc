@@ -78,7 +78,6 @@ namespace marlin{
 	  }
 	}
       }
-
   }
   
   CCProcessor::~CCProcessor(){
@@ -207,8 +206,9 @@ namespace marlin{
 		ProcParamMap::const_iterator p= _proc->procMap().find(keys[i]);
 		ProcessorParameter* par = p->second;
 
+		//erase the collection from the parameters
 		_param->erase(keys[i]);
-		
+
 		if(_proc->isInputCollectionName(keys[i])){
 		    if( par->type() == "StringVec" ){
 			StringVec v;
@@ -505,22 +505,26 @@ namespace marlin{
     for( unsigned int i=0; i<keys.size(); i++ ){
 
 	ProcessorParameter* p = getProcParam( keys[i] );
-    
+   
+	//if the parameter is recognized by the marlin processor
         if( p != NULL ){
 	    
 	    stream << "  <!--" << getParamDesc( keys[i] ) << "-->" << std::endl ;
 	    stream << "  <" << (p->isOptional() ? "!--" : "") << "parameter name=\"" << p->name() << "\" type=\"" << p->type() ;
 	    
 	    if( _proc->isInputCollectionName( keys[i] )){
-		stream << "\" lcioInType=\"" << _types[ INPUT ][ keys[i] ];
+		//stream << "\" lcioInType=\"" << _types[ INPUT ][ keys[i] ];
+		stream << "\" lcioInType=\"" << _proc->getLCIOInType(keys[i]);
 	    }
 
 	    if( _proc->isOutputCollectionName( keys[i] )){
-		stream << "\" lcioOutType=\"" << _types[ OUTPUT ][ keys[i] ];
+		//stream << "\" lcioOutType=\"" << _types[ OUTPUT ][ keys[i] ];
+		stream << "\" lcioOutType=\"" << _proc->getLCIOOutType(keys[i]);
 	    }
 																		 
 	    stream << "\">" << p->defaultValue() << " </parameter"<< (p->isOptional() ? "--" : "")  << ">\n";
 	}
+	//else it's a parameter from an uninstalled processor or an extra parameter from an installed processor
 	else{
 	    if(isInstalled()){
 		stream << "  <!-- Sorry, this parameter isn't a default parameter for this processor so it's description was lost!  -->" << std::endl ;
@@ -530,7 +534,7 @@ namespace marlin{
 	    StringVec values;
 	    //get the values for the given key
 	    _param->getStringVals( keys[i], values );
-																			 
+
 	    stream << ( values.size() == 1 ? " value=\"" : ">" );
 																			 
 	    for( unsigned int j=0; j<values.size(); j++ ){

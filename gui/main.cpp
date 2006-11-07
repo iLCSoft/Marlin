@@ -4,18 +4,20 @@
 
 int main(int argc, char *argv[])
 {
-	QApplication app(argc, argv);
+    std::cout << "\nPlease be patient, loading GUI...\n";
 	
-	app.setStyle("plastique");
-	//app.setStyle("windowsxp");
-	
-	MainWindow window;
+    QApplication app(argc, argv);
+    
+    app.setStyle("plastique");
+    //app.setStyle("windowsxp");
+    
+    MainWindow window;
 
-	if( argc == 2 ){ 
-	    window.setMarlinSteerCheck(argv[1]);
-	}
-	
-	window.show();
+    if( argc == 2 ){ 
+	window.setMarlinSteerCheck(argv[1]);
+    }
+    
+    window.show();
 
-	return app.exec();
+    return app.exec();
 }

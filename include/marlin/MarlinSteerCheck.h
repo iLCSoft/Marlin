@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.8 2006-11-03 16:21:30 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.9 2006-11-07 11:07:22 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -67,7 +67,7 @@ namespace marlin {
     ColVec& getLCIOCols() const;
     
     /** Returns the names of the LCIO files found in the global section*/
-    StringVec& getLCIOFiles() const;
+    StringVec& getLCIOFiles(){ return _lcioFiles; }
 
     /** Returns a list of all available Collections for a given type and processor (to use in a ComboBox) */
     sSet& getColsSet( const std::string& type, CCProcessor* proc );
@@ -86,7 +86,10 @@ namespace marlin {
 
     /** Remove LCIO file and all collections associated to it */
     void remLCIOFile( const std::string& file );
-
+    
+    /** Change the LCIO File at the given index to the new given position */
+    void changeLCIOFilePos( unsigned int pos, unsigned int newPos );
+ 
     /** Add a new processor */
     void addProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL );
 
@@ -146,6 +149,7 @@ namespace marlin {
     ProcVec _aProc;			//active processors
     ProcVec _iProc;			//inactive processors
     sColVecMap _lcioCols;		//LCIO collections
+    StringVec _lcioFiles;		//LCIO filenames
     
     ssMap _procTypes;			//all available processor types and their corresponding descriptions (use in ComboBox)
     sSet _colValues;			//all available collection values for a given type (use in ComboBox)

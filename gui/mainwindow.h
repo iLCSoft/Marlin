@@ -50,6 +50,8 @@ private slots:
     void editIProcessor();
     void activateProcessor();
     void deactivateProcessor();
+    void moveLCIOFileUp();
+    void moveLCIOFileDown();
     void moveProcessorUp();
     void moveProcessorDown();
     void changeGearFile();
@@ -65,9 +67,10 @@ private:
     void updateProcessors();
     void updateAProcessors( int row=-1 );
     void updateIProcessors( int row=-1 );
-    void updateFiles();
+    void updateFiles( int row=-1 );
     void updateGlobalSection();
     void selectRow( QTableWidget* t, int row, bool colors=false );
+    void selectLCIORow( QListWidget* t, int row );
     QMenu* createMenu();
 
     //variables

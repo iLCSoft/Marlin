@@ -382,7 +382,7 @@ void Dialog::apply(){
 }
 
 void Dialog::cancel(){
-   //delete _p;
+   delete _p;
    _p=_backup;
    
    this->close();

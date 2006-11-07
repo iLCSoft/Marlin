@@ -17,6 +17,8 @@
 #include <fstream>
 #include <iostream>
 
+#define MAXEVENTS 30
+
 using namespace std;
 
 namespace marlin{
@@ -83,44 +85,120 @@ namespace marlin{
     cmd+= " >/dev/null";
     if( system( cmd.c_str() ) ){ return; }
     
+    //add the filename to the vector of LCIO files
+    bool found=false;
+    for( unsigned int i=0; i<getLCIOFiles().size(); i++ ){
+      if( getLCIOFiles()[i] == file ){
+	  found=true;
+	  break;
+      }
+    }
+
+    //abort if file already exists
+    if(found){ return; }
+    
     HANDLE_LCIO_EXCEPTIONS;
     ColVec newCols;
     
     LCReader* lcReader = LCFactory::getInstance()->createLCReader();
     lcReader->open( file );
     
-    LCEvent* evt = lcReader->readNextEvent();
-    const StringVec* strVec = evt->getCollectionNames();
-    StringVec::const_iterator name;
-
-    for( name = strVec->begin(); name != strVec->end(); name++ ){
-      LCCollection* col = evt->getCollection( *name ) ;
+    LCEvent* evt;
+    int nEvents=0;
+    
+    cout << "Loading LCIO file [" << file << "]\n";
+    cout << "Reading Events...";
+    
+    while( ((evt = lcReader->readNextEvent()) != 0) && nEvents < MAXEVENTS ){
+	cout << ".";
+	cout.flush();
 	
-      //store the LCIO Filename in the unused name variable from the processor parameters
-      CCCollection* newCol = new CCCollection();
+	const StringVec* strVec = evt->getCollectionNames();
+	StringVec::const_iterator name;
 
-      newCol->setType( col->getTypeName() );
-      newCol->setValue( *name );
-      newCol->setName( file );
+	for( name = strVec->begin(); name != strVec->end(); name++ ){
+	  LCCollection* col = evt->getCollection( *name ) ;
+	  
+	  if( findMatchingCols(newCols, &CCProcessor(ACTIVE, "Temporary", "Temporary"), col->getTypeName(), *name).size() == 0 ){
+	      //store the LCIO Filename in the unused name variable from the processor parameters
+	      CCCollection* newCol = new CCCollection();
+
+	      newCol->setType( col->getTypeName() );
+	      newCol->setValue( *name );
+	      newCol->setName( file );
+		
+	      newCols.push_back( newCol );
+	  }
+	}
 	
-      newCols.push_back( newCol );
+	nEvents++;
     }
     
     //add the new Collections vector to the vector of LCIO file's Collections
     _lcioCols[file]=newCols;
-    
+
+    //add the file to the list of LCIO files
+    _lcioFiles.push_back(file);
+
     lcReader->close();
     delete lcReader;
+
+    cout << "\nFinished loading LCIO file [" << file << "]\n";
 
     consistencyCheck();
   } 
 
   // Remove lcio file and all collections associated to it
   void MarlinSteerCheck::remLCIOFile( const string& file ){
+    
     _lcioCols.erase( file );
+    
+    for( StringVec::iterator p=_lcioFiles.begin(); p != _lcioFiles.end(); p++ ){
+	if( (*p) == file ){
+	    _lcioFiles.erase(p);
+	    break;
+	}
+    }
+    
     consistencyCheck();
   }
 
+  // Change LCIO File position
+  void MarlinSteerCheck::changeLCIOFilePos( unsigned int pos, unsigned int newPos ){
+  
+    //check if positions are valid
+    if( pos != newPos && pos >= 0 && newPos >= 0 && pos < _lcioFiles.size() && newPos < _lcioFiles.size() ){
+	
+	string file = _lcioFiles[pos];
+	     
+	for( StringVec::iterator p=_lcioFiles.begin(); p != _lcioFiles.end(); p++ ){
+	    if( (*p) == file ){
+		_lcioFiles.erase(p);
+		break;
+	    }
+	}
+
+      if(newPos == _lcioFiles.size() ){
+	_lcioFiles.push_back( file );
+      }
+      else{
+	StringVec v;
+		
+	for( unsigned int i=0; i<_lcioFiles.size(); i++ ){
+	  if( i == newPos ){
+	    v.push_back( file );
+	  }
+	  v.push_back( _lcioFiles[i] );
+	}
+	_lcioFiles = v;
+      }
+    }
+    else{
+      cerr << "changeLCIOFilePos: Index out of bounds!!" << endl;
+    }
+  }
+
+/*
   // Get the list of LCIO Files
   StringVec& MarlinSteerCheck::getLCIOFiles() const{
     static StringVec filenames;
@@ -133,7 +211,7 @@ namespace marlin{
 
     return filenames;
   }
-
+*/
   // Add a new Processor
   void MarlinSteerCheck::addProcessor( bool status, const string& name, const string& type, StringParameters* p ){
 
@@ -363,6 +441,7 @@ namespace marlin{
 	    cols.push_back( v[i] );
 	  }
 	}
+	//if value == "UNDEFINED" it means we want all collections of a given type
 	else{
 	  cols.push_back( v[i] );
 	}
@@ -532,9 +611,8 @@ namespace marlin{
     dunderline(); cout << "\nLCIO Input Files:" << endl; endcolor();
     dhell(); dblue();
     
-    sColVecMap::const_iterator p;
-    for( p=_lcioCols.begin(); p!=_lcioCols.end(); p++ ){
-      cout << (*p).first << endl;
+    for( unsigned int i=0; i<getLCIOFiles().size(); i++ ){
+      cout << getLCIOFiles()[i] << endl;
     }
     
     endcolor();

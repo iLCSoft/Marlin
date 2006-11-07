@@ -291,25 +291,31 @@ void MainWindow::setupViews()
     lcioFilesList = new QListWidget;
     
     //Buttons
-    QPushButton *addFile = new QPushButton(tr("Add New LCIO File"));
-    QPushButton *remFile = new QPushButton(tr("Remove Selected LCIO File"));
+    QPushButton *mvFileUp = new QPushButton(tr("Move File Up"));
+    QPushButton *mvFileDn = new QPushButton(tr("Move File Down"));
+    QPushButton *addFile = new QPushButton(tr("Add LCIO File"));
+    QPushButton *remFile = new QPushButton(tr("Remove LCIO File"));
     
     connect(addFile, SIGNAL(clicked()), this, SLOT(addLCIOFile()));
     connect(remFile, SIGNAL(clicked()), this, SLOT(remLCIOFile()));
+    connect(mvFileUp, SIGNAL(clicked()), this, SLOT(moveLCIOFileUp()));
+    connect(mvFileDn, SIGNAL(clicked()), this, SLOT(moveLCIOFileDown()));
     
     //Layout
-    QHBoxLayout *lcioButtonsLayout = new QHBoxLayout;
+    QVBoxLayout *lcioButtonsLayout = new QVBoxLayout;
     lcioButtonsLayout->addWidget(addFile);
     lcioButtonsLayout->addWidget(remFile);
+    lcioButtonsLayout->addWidget(mvFileUp);
+    lcioButtonsLayout->addWidget(mvFileDn);
     
     QWidget *lcioButtons = new QWidget;
     lcioButtons->setLayout( lcioButtonsLayout );
-   
-    //Layout
-    QVBoxLayout *lcioFilesLayout = new QVBoxLayout;
-    lcioFilesLayout->addWidget(lcioFilesList);
-    lcioFilesLayout->addWidget(lcioButtons);
     
+    //Layout
+    QGridLayout *lcioFilesLayout = new QGridLayout;
+    lcioFilesLayout->addWidget(lcioFilesList,0,0);
+    lcioFilesLayout->addWidget(lcioButtons,0,1,Qt::AlignTop);
+ 
     //GroupBox
     lcioFilesGBox = new QGroupBox(tr("Global Section LCIO Files"));
     lcioFilesGBox->setLayout(lcioFilesLayout);
@@ -458,7 +464,7 @@ void MainWindow::updateGlobalSection(){
  
 }
 
-void MainWindow::updateFiles()
+void MainWindow::updateFiles(int row)
 {
     //initialize LCIO collections table
     lcioColsTable->setRowCount(0);
@@ -480,6 +486,21 @@ void MainWindow::updateFiles()
     lcioFilesList->clear();
     for( unsigned int i=0; i<msc->getLCIOFiles().size(); i++ ){
 	new QListWidgetItem(msc->getLCIOFiles()[i].c_str(), lcioFilesList);
+    }
+
+    if( row == -1 ){
+	selectLCIORow( lcioFilesList, lcioFilesList->count() );
+    }
+    else{
+	selectLCIORow( lcioFilesList, row );
+    }
+}
+
+void MainWindow::selectLCIORow(QListWidget* t, int row ){
+    if( row>=0 && row<=t->count() ){
+	if( row==t->count() ){ row--; }
+ 	t->setCurrentRow( row );
+        t->setItemSelected( t->item(row), true );
     }
 }
 
@@ -748,6 +769,26 @@ void MainWindow::moveProcessorDown()
     if( pos < aProcTable->rowCount() - 1 ){
 	msc->changeProcessorPos( pos, pos + 1 );
 	updateAProcessors(pos + 1);
+	emit modifiedContent();
+    }
+}
+
+void MainWindow::moveLCIOFileUp()
+{
+    int pos = lcioFilesList->currentRow();
+    if( pos > 0 ){
+	msc->changeLCIOFilePos( pos, pos - 1 );
+	updateFiles(pos -1);
+	emit modifiedContent();
+    }
+}
+
+void MainWindow::moveLCIOFileDown()
+{
+    int pos = lcioFilesList->currentRow();
+    if( pos < lcioFilesList->count() - 1 ){
+	msc->changeLCIOFilePos( pos, pos + 1 );
+	updateFiles(pos + 1);
 	emit modifiedContent();
     }
 }
