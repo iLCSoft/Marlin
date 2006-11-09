@@ -80,7 +80,6 @@ namespace marlin{
       }
 
       //create a new Marlin Processor
-      //FIXME AIDA Processor crashes
       if(p._proc!=NULL){
 	createMarlinProc();
 
@@ -99,7 +98,10 @@ namespace marlin{
 	  delete _param;
       }
       if( isInstalled() && _proc != NULL ){
+	//FIXME AIDA Processor crashes
+	if(_type != "AIDAProcessor"){
 	  delete _proc;
+	}
       }
   }
   
