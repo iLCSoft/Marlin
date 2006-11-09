@@ -25,10 +25,9 @@ private:
     void setupViews();
     
     //Variables
-    QVBoxLayout *mainLayout; 
+    QVBoxLayout *mainLayout;
     
     CCProcessor* _p;
-    CCProcessor* _backup;
     MarlinSteerCheck* _msc;
 };
 

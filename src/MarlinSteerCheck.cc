@@ -17,8 +17,6 @@
 #include <fstream>
 #include <iostream>
 
-#define MAXEVENTS 30
-
 using namespace std;
 
 namespace marlin{
@@ -65,13 +63,26 @@ namespace marlin{
   sSet& MarlinSteerCheck::getColsSet( const string& type, CCProcessor* proc ){
     
     _colValues.clear();
-    ColVec v = getAllCols();
     
+    ColVec v = findMatchingCols( getAllCols(), proc, type );
     for( unsigned int i=0; i<v.size(); i++ ){
-      if( v[i]->getSrcProc() != proc && v[i]->getType() == type ){
-        _colValues.insert( v[i]->getValue() );
-      }
+	//check for duplicates
+	bool found=false;
+	ColVec pv = proc->getCols( INPUT );
+	for( unsigned int j=0; j<pv.size(); j++ ){
+	    //filter collections by type
+	    if( pv[j]->getType() == type ){
+		//if collection value matches it means the collections already exists
+		if( pv[j]->getValue() == v[i]->getValue() ){
+		    found=true;
+		}
+	    }
+	}
+	if(!found){
+	    _colValues.insert( v[i]->getValue() );
+	}
     }
+
     return _colValues;
   }
  
@@ -118,15 +129,12 @@ namespace marlin{
 
 	for( name = strVec->begin(); name != strVec->end(); name++ ){
 	  LCCollection* col = evt->getCollection( *name ) ;
-	  
+	 
+	  //check if collection already exists
 	  if( findMatchingCols(newCols, &CCProcessor(ACTIVE, "Temporary", "Temporary"), col->getTypeName(), *name).size() == 0 ){
 	      //store the LCIO Filename in the unused name variable from the processor parameters
-	      CCCollection* newCol = new CCCollection();
+	      CCCollection* newCol = new CCCollection( *name, col->getTypeName(), file);
 
-	      newCol->setType( col->getTypeName() );
-	      newCol->setValue( *name );
-	      newCol->setName( file );
-		
 	      newCols.push_back( newCol );
 	  }
 	}
@@ -212,6 +220,7 @@ namespace marlin{
     return filenames;
   }
 */
+
   // Add a new Processor
   void MarlinSteerCheck::addProcessor( bool status, const string& name, const string& type, StringParameters* p ){
 
@@ -231,13 +240,45 @@ namespace marlin{
 
     if( status == ACTIVE ){
 	if( index >=0 && index < _aProc.size() ){
-	  popProc( _aProc, _aProc[index] );
+	  CCProcessor *p=popProc( _aProc, _aProc[index] );
+	  delete p;
 	}
     }
     else{
 	if( index >=0 && index < _iProc.size() ){
-	  popProc( _iProc, _iProc[index] );
+	  CCProcessor *p=popProc( _iProc, _iProc[index] );
+	  delete p;
 	}
+    }
+    consistencyCheck();
+  }
+  
+  // Replace a Processor
+  void MarlinSteerCheck::repProcessor( CCProcessor* newProc ){
+
+    bool found=false;
+
+    if( newProc->isActive() ){
+	for(unsigned int i=0; i<_aProc.size(); i++ ){
+	    if( (_aProc[i]->getName() == newProc->getName()) && (_aProc[i]->getType() == newProc->getType()) ){
+		found=true;
+		delete _aProc[i];
+		_aProc[i]=newProc;
+	    }
+	}
+    }
+    else{
+	for(unsigned int i=0; i<_iProc.size(); i++ ){
+	    if( (_iProc[i]->getName() == newProc->getName()) && (_iProc[i]->getType() == newProc->getType()) ){
+		found=true;
+		delete _iProc[i];
+		_iProc[i]=newProc;
+	    }
+	}
+    }
+    if(!found){
+	cerr << "MarlinSteerCheck::repProcessor: processor to be replaced was NOT found!!!\n";
+	delete newProc;
     }
     consistencyCheck();
   }

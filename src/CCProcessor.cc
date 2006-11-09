@@ -36,10 +36,11 @@ namespace marlin{
   }
 
   //copy constructor
-  CCProcessor::CCProcessor(CCProcessor const &p){
+  CCProcessor::CCProcessor(const CCProcessor &p) : _param(0), _proc(0) {
       _status=p._status;
       _name=p._name;
       _type=p._type;
+      _types=p._types;
       
       _error[0] = false;
       _error[1] = false;
@@ -55,36 +56,49 @@ namespace marlin{
 	}
       }
       
-      //create a new Marlin Processor
-      createMarlinProc();
+      if( p._param != NULL ){
+	_param=new StringParameters();
 
-      _param=new StringParameters();
-      
-      StringVec keys;
-      p._param->getStringKeys(keys);
-      
-      for(unsigned int i=0; i<keys.size(); i++){
-	StringVec values;
-	p._param->getStringVals(keys[i],values);
-	_param->add(keys[i], values);
+	StringVec keys;
+	p._param->getStringKeys(keys);
+
+	for(unsigned int i=0; i<keys.size(); i++){
+	    StringVec values;
+	    p._param->getStringVals(keys[i],values);
+	    _param->add(keys[i], values);
+	}
       }
-
-      _types=p._types;
-
+      
       for( ssColVecMap::const_iterator q=p._cols.begin(); q!=p._cols.end(); q++ ){
         for( sColVecMap::const_iterator r=(*q).second.begin(); r!=(*q).second.end(); r++ ){
 	  for( unsigned int i=0; i<(*r).second.size(); i++ ){
-	    _cols[(*q).first][(*r).first].push_back( new CCCollection( (*(*r).second[i]) ));
+	    CCCollection *c = new CCCollection( (*(*r).second[i]) );
+	    c->setSrcProc( this );
+	    _cols[(*q).first][(*r).first].push_back( c );
 	  }
 	}
       }
+
+      //create a new Marlin Processor
+      //FIXME AIDA Processor crashes
+      if(p._proc!=NULL){
+	createMarlinProc();
+
+	//initialize marlin processor parameters
+	_proc->setProcessorParameters( _param );
+	_proc->updateParameters();
+
+	//clear collection paramteres
+	clearParameters();
+      }
+
   }
   
   CCProcessor::~CCProcessor(){
-      if( _param != NULL ){
+      if( !isInstalled() && _param != NULL){
 	  delete _param;
       }
-      if( _proc != NULL ){
+      if( isInstalled() && _proc != NULL ){
 	  delete _proc;
       }
   }
@@ -313,13 +327,18 @@ namespace marlin{
 /////////////////////////////////////////////////////////////
   
   void CCProcessor::addCol( const string& iotype, const string& name, const string& type, const string& value ){
-    
-    CCCollection* newCol = new CCCollection();
+    /*  
+    ColVec v = getCols(iotype, name);
 
-    newCol->setName( name );
-    newCol->setType( type );
-    newCol->setValue( value );
-    newCol->setSrcProc( this );
+    //test if collection already exists to avoid duplicate collections
+    for( unsigned int i=0; i<v.size(); i++){
+	if( v[i]->getName() == name && v[i]->getType() == type && v[i]->getValue() == value ){
+	    //abort if collection already exists
+	    return;
+	}
+    }
+    */
+    CCCollection* newCol = new CCCollection(value, type, name, this);
 
     //add collection to the map
     _cols[iotype][name].push_back( newCol );
@@ -427,7 +446,7 @@ namespace marlin{
       _errors.clear();
       _errors=tmp;
 
-      if( error == COL_ERRORS ){
+      if( error == COL_ERRORS && (_cols.find(UNAVAILABLE) != _cols.end())){
 	_cols[ UNAVAILABLE ].clear();
       }
     }
@@ -510,7 +529,8 @@ namespace marlin{
         if( p != NULL ){
 	    
 	    stream << "  <!--" << getParamDesc( keys[i] ) << "-->" << std::endl ;
-	    stream << "  <" << (p->isOptional() ? "!--" : "") << "parameter name=\"" << p->name() << "\" type=\"" << p->type() ;
+	    //stream << "  <" << (p->isOptional() ? "!--" : "") << "parameter name=\"" << p->name() << "\" type=\"" << p->type() ;
+	    stream << "  <parameter name=\"" << p->name() << "\" type=\"" << p->type() << (p->isOptional() ? "\" optional=\"true" : "");
 	    
 	    if( _proc->isInputCollectionName( keys[i] )){
 		//stream << "\" lcioInType=\"" << _types[ INPUT ][ keys[i] ];
@@ -522,7 +542,8 @@ namespace marlin{
 		stream << "\" lcioOutType=\"" << _proc->getLCIOOutType(keys[i]);
 	    }
 																		 
-	    stream << "\">" << p->defaultValue() << " </parameter"<< (p->isOptional() ? "--" : "")  << ">\n";
+	    //stream << "\">" << p->defaultValue() << " </parameter"<< (p->isOptional() ? "--" : "")  << ">\n";
+	    stream << "\">" << p->defaultValue() << " </parameter>\n";
 	}
 	//else it's a parameter from an uninstalled processor or an extra parameter from an installed processor
 	else{

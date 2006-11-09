@@ -19,9 +19,15 @@ namespace marlin {
   class CCCollection{
     
   public:
+
+    //constructor
+    CCCollection( const std::string& value="", const std::string& type="", const std::string& name="", CCProcessor* srcProc=NULL );
     
-    CCCollection();
-    CCCollection(CCCollection const &c);
+    //copy constructor
+    CCCollection( const CCCollection &c );
+    
+    //destructor
+    ~CCCollection();
     
     const std::string& getValue() const { return _value; }
     const std::string& getType() const { return _type; }

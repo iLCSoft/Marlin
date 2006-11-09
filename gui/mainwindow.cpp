@@ -208,12 +208,12 @@ void MainWindow::setupViews()
     //////////////////////////////
     //ACTIVE PROCESSOR BUTTONS
     //////////////////////////////
-    QPushButton *addAProc = new QPushButton(tr("Add New Processor"));
-    QPushButton *editAProc = new QPushButton(tr("Edit Selected Processor"));
+    QPushButton *addAProc = new QPushButton(tr("&Add New Processor"));
+    QPushButton *editAProc = new QPushButton(tr("&Edit Selected Processor"));
     QPushButton *remAProc = new QPushButton(tr("Delete Selected Processor"));
-    QPushButton *deactProc = new QPushButton(tr("Deactivate Selected Processor"));
-    QPushButton *mvAProcUp = new QPushButton(tr("Move Selected Processor Up"));
-    QPushButton *mvAProcDn = new QPushButton(tr("Move Selected Processor Down"));
+    QPushButton *deactProc = new QPushButton(tr("Dea&ctivate Selected Processor"));
+    QPushButton *mvAProcUp = new QPushButton(tr("Move Selected Processor &Up"));
+    QPushButton *mvAProcDn = new QPushButton(tr("Move Selected Processor &Down"));
     
     connect(addAProc, SIGNAL(clicked()), this, SLOT(addAProcessor()));
     connect(editAProc, SIGNAL(clicked()), this, SLOT(editAProcessor()));
@@ -464,7 +464,7 @@ void MainWindow::updateGlobalSection(){
  
 }
 
-void MainWindow::updateFiles(int row)
+void MainWindow::updateFiles(int pos)
 {
     //initialize LCIO collections table
     lcioColsTable->setRowCount(0);
@@ -488,11 +488,11 @@ void MainWindow::updateFiles(int row)
 	new QListWidgetItem(msc->getLCIOFiles()[i].c_str(), lcioFilesList);
     }
 
-    if( row == -1 ){
+    if( pos == -1 ){
 	selectLCIORow( lcioFilesList, lcioFilesList->count() );
     }
     else{
-	selectLCIORow( lcioFilesList, row );
+	selectLCIORow( lcioFilesList, pos );
     }
 }
 
@@ -504,7 +504,7 @@ void MainWindow::selectLCIORow(QListWidget* t, int row ){
     }
 }
 
-void MainWindow::updateAProcessors( int row )
+void MainWindow::updateAProcessors( int pos )
 {
     //clear errors
     aProcErrors->clear();
@@ -534,15 +534,15 @@ void MainWindow::updateAProcessors( int row )
 	item0->setBackgroundColor( (msc->getAProcs()[i]->hasErrors() ? QColor(184,16,0,180) : QColor(32,140,64,180)) );
 	item1->setBackgroundColor( (msc->getAProcs()[i]->hasErrors() ? QColor(184,16,0,180) : QColor(32,140,64,180)) );
     }
-    if( row == -1 ){
+    if( pos == -1 ){
 	selectRow(aProcTable, aProcTable->rowCount(), true);
     }
     else{
-	selectRow(aProcTable, row, true);
+	selectRow(aProcTable, pos, true);
     }
 }
 
-void MainWindow::updateIProcessors( int row )
+void MainWindow::updateIProcessors( int pos )
 {
     //initialize inactive processors table
     iProcTable->setRowCount(0);
@@ -567,11 +567,11 @@ void MainWindow::updateIProcessors( int row )
 	iProcTable->setItem(row, 0, item0);
 	iProcTable->setItem(row, 1, item1);
     }
-    if( row == -1 ){
+    if( pos == -1 ){
 	selectRow(iProcTable, iProcTable->rowCount());
     }
     else{
-	selectRow(iProcTable, row);
+	selectRow(iProcTable, pos);
     }
 }
 
@@ -646,7 +646,7 @@ void MainWindow::hideAProcErrors(bool checked)
 
 void MainWindow::selectionChanged(int row)
 {
-    if( row >= 0 ){
+    if( row >= 0 && ((unsigned)row) < msc->getAProcs().size() ){
 	
 	//set the selection color to red or green acoording to the active processor's errors
 	QPalette pal = aProcTable->palette();
@@ -699,23 +699,44 @@ void MainWindow::remIProcessor()
 void MainWindow::editAProcessor(int row)
 {
     int pos;
-    
+   
+    //if new processor
     if(row != -1 ){
 	updateAProcessors(row);
 	pos=row;
     }
+    //existing processor
     else{
 	pos = aProcTable->currentRow();
     }
+    
     if( pos >= 0 && msc->getAProcs()[pos]->isInstalled() ){
+
+	//save the current processor before editing it
+	//FIXME AIDA Processor
+	CCProcessor *p=NULL;
+	if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
+	    p = new CCProcessor( *msc->getAProcs()[pos] );
+	}
+	
 	Dialog dg( msc->getAProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
 	dg.resize(1100,900);
 	dg.setWindowState( Qt::WindowMaximized);
-	dg.exec();
 
+	if(dg.exec()){
+	    //FIXME AIDA Processor
+	    if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
+		delete p;
+	    }
+	}
+	else{
+	     //FIXME AIDA Processor
+	    if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
+		msc->repProcessor(p);
+	    }
+	}
 	msc->consistencyCheck();
 	updateAProcessors(pos);
-	emit modifiedContent();
     }	    
 }
 
@@ -723,11 +744,30 @@ void MainWindow::editIProcessor()
 {
     int pos = iProcTable->currentRow();
     if( pos >= 0 && msc->getIProcs()[pos]->isInstalled() ){
+	
+	//save the current processor before editing it
+	//FIXME AIDA Processor
+	CCProcessor* p=NULL;
+	if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
+	    p = new CCProcessor( *msc->getIProcs()[pos] );
+	}
+	
 	Dialog dg( msc->getIProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
 	dg.resize(1100,900);
 	dg.setWindowState( Qt::WindowMaximized);
-	dg.exec();
-	emit modifiedContent();
+	
+	if(dg.exec()){
+	    //FIXME AIDA Processor
+	    if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
+		delete p;
+	    }
+	}
+	else{
+	    //FIXME AIDA Processor
+	    if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
+		msc->repProcessor(p);
+	    }
+	}
     }	    
 }
 
@@ -838,6 +878,25 @@ void MainWindow::remLCIOFile()
 
 void MainWindow::openXMLFile()
 {
+    if( _modified ){
+	int ret = QMessageBox::warning(this, tr("Exit Marlin GUI"),tr(
+	    "You made changes that will get lost.\nDo you want to save your changes?\n\n"
+	    "WARNING:\n"
+	    "Please be aware that comments made in the original steering files will get lost in the saving process.\n"
+	    "Processors that are not installed in your Marlin binary will loose all their descriptions as well.\n"
+	    "All extra parameters that aren't categorized as default in a processor also loose their descriptions.\n\n" ),
+	    QMessageBox::Yes,
+	    QMessageBox::No | QMessageBox::Default,
+	    QMessageBox::Cancel | QMessageBox::Escape);
+
+	if( ret == QMessageBox::Yes ){
+	    saveXMLFile();
+	}
+	else if( ret == QMessageBox::Cancel ){
+	    return;
+	}
+    }
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Choose a data file"), "", "*.xml");
 
     if( !fileName.isEmpty() ){

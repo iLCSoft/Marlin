@@ -65,9 +65,9 @@ private slots:
 private:
     void setupViews();
     void updateProcessors();
-    void updateAProcessors( int row=-1 );
-    void updateIProcessors( int row=-1 );
-    void updateFiles( int row=-1 );
+    void updateAProcessors( int pos=-1 );
+    void updateIProcessors( int pos=-1 );
+    void updateFiles( int pos=-1 );
     void updateGlobalSection();
     void selectRow( QTableWidget* t, int row, bool colors=false );
     void selectLCIORow( QListWidget* t, int row );
@@ -77,11 +77,6 @@ private:
     bool _modified;
     std::string _file;
     MarlinSteerCheck* msc;
-    MarlinSteerCheck* mx;
-    ProcVec _aProc;
-    ProcVec _iProc;
-    ColVec _lcioCols;
-    StringVec _lcioFiles;
 
     QGroupBox *aProcErrorsGBox;
     QGroupBox *viewButtonsGBox;

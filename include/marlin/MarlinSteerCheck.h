@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.9 2006-11-07 11:07:22 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.10 2006-11-09 17:23:51 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -39,6 +39,7 @@
 #define dblink() printf("\x1b[5m")
 #define endcolor() printf("\x1b[m")
 
+#define MAXEVENTS 30
 
 namespace marlin {
 
@@ -95,6 +96,9 @@ namespace marlin {
 
     /** Remove processor with the given status at the given index */
     void remProcessor( unsigned int index, bool status );
+
+    /** Replace processor with the given status at the given index with new CCProcessor*/
+    void repProcessor( CCProcessor* newProc );
 
     /** Activate processor at the given index */
     void activateProcessor( unsigned int index );

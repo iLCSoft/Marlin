@@ -2,14 +2,17 @@
 
 namespace marlin{
 
-  CCCollection::CCCollection() :
-    _value(""),
-    _type(""),
-    _name(""),
-    _srcProc(0){
+  CCCollection::CCCollection( const std::string& value, const std::string& type, const std::string& name, CCProcessor* srcProc ) :
+    _value(value),
+    _type(type),
+    _name(name),
+    _srcProc(srcProc){
   }
  
-  CCCollection::CCCollection(CCCollection const &c) : 
+  CCCollection::~CCCollection(){
+  }
+  
+  CCCollection::CCCollection(const CCCollection &c) : 
     _value(c._value),
     _type(c._type),
     _name(c._name),

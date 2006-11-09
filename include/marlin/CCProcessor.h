@@ -44,11 +44,11 @@ namespace marlin {
     CCProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL);
 
     // Copy Constructor
-    CCProcessor( CCProcessor const &p );
+    CCProcessor( const CCProcessor &p );
     
     // Destructor
     ~CCProcessor();
-   
+    
     /** Returns true if the processor has errors */
     bool hasErrors();
     
@@ -66,7 +66,7 @@ namespace marlin {
 
     /** Returns the Status of the processor ( ACTIVE=true / INACTIVE=false ) */
     bool getStatus(){ return _status; }
-
+   
     /** Returns the Name of the processor */
     const std::string& getName(){ return _name; }
 

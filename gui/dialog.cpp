@@ -15,8 +15,6 @@ using namespace std;
 
 Dialog::Dialog( CCProcessor *p, MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDialog(parent,f), _p(p), _msc(msc)
 {
-    _backup = new CCProcessor(*p);
-    
     mainLayout = new QVBoxLayout;
     
     setupViews();
@@ -355,8 +353,8 @@ void Dialog::setupViews()
     // APPLY, CANCEL BUTTONS
     //////////////////////////////
 
-    QPushButton *applyButton = new QPushButton(tr("Apply Changes"));
-    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    QPushButton *applyButton = new QPushButton(tr("&Apply Changes"));
+    QPushButton *cancelButton = new QPushButton(tr("&Cancel"));
 
     connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
@@ -376,14 +374,9 @@ void Dialog::setupViews()
 }
 
 void Dialog::apply(){
-    delete _backup;
-
-    this->close();
+    accept();
 }
 
 void Dialog::cancel(){
-   delete _p;
-   _p=_backup;
-   
-   this->close();
+    reject();
 }
