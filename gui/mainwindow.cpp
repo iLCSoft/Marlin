@@ -715,12 +715,8 @@ void MainWindow::editAProcessor(int row)
 	//save the current processor before editing it
 	//FIXME AIDA Processor
 	CCProcessor *p=NULL;
-	StringParameters *AIDAParam=NULL;
 	if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
 	    p = new CCProcessor( *msc->getAProcs()[pos] );
-	}
-	else{
-	    AIDAParam=new StringParameters( *msc->getAProcs()[pos]->getParameters() );
 	}
 	
 	Dialog dg( msc->getAProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
@@ -732,17 +728,11 @@ void MainWindow::editAProcessor(int row)
 	    if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
 		delete p;
 	    }
-	    else{
-		delete AIDAParam;
-	    }
 	}
 	else{
 	     //FIXME AIDA Processor
 	    if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
 		msc->repProcessor(p);
-	    }
-	    else{
-		msc->getAProcs()[pos]->setParametersAIDA( AIDAParam );
 	    }
 	}
 	msc->consistencyCheck();
@@ -758,12 +748,8 @@ void MainWindow::editIProcessor()
 	//save the current processor before editing it
 	//FIXME AIDA Processor
 	CCProcessor* p=NULL;
-	StringParameters *AIDAParam=NULL;
 	if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
 	    p = new CCProcessor( *msc->getIProcs()[pos] );
-	}
-	else{
-	    AIDAParam=new StringParameters( *msc->getIProcs()[pos]->getParameters() );
 	}
 	
 	Dialog dg( msc->getIProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
@@ -775,17 +761,11 @@ void MainWindow::editIProcessor()
 	    if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
 		delete p;
 	    }
-	    else{
-		delete AIDAParam;
-	    }
 	}
 	else{
 	    //FIXME AIDA Processor
 	    if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
 		msc->repProcessor(p);
-	    }
-	    else{
-		msc->getIProcs()[pos]->setParametersAIDA( AIDAParam );
 	    }
 	}
     }	    
