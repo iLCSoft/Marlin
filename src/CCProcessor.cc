@@ -97,12 +97,6 @@ namespace marlin{
       if( !isInstalled() && _param != NULL){
 	  delete _param;
       }
-      if( isInstalled() && _proc != NULL ){
-	//FIXME AIDA Processor crashes
-	if(_type != "AIDAProcessor"){
-	  delete _proc;
-	}
-      }
   }
   
   void CCProcessor::changeStatus(){
@@ -112,9 +106,11 @@ namespace marlin{
 
   void CCProcessor::setName( const string& name ){
     _name = name;
+    /*
     if(isInstalled()){
 	_proc->setName(name);
     }
+    */
   }
   
   ProcessorParameter* CCProcessor::getProcParam( const string& key ){
@@ -495,16 +491,6 @@ namespace marlin{
         pos = str.find_first_of(delimiters, lastPos);
     }
   }
-
-/*
-  void CCProcessor::writeToXML( ofstream& stream ){
-    if( isInstalled() ){
-        updateMarlinProcessor();
-        _proc->printDescriptionXML( stream );
-        clearParameters();
-    }
-  }
-*/
 
   void CCProcessor::writeToXML( ofstream& stream ){
     stream << " <processor name=\"" <<  _name  << "\" type=\"" <<  _type << "\">\n";

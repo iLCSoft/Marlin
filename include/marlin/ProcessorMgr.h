@@ -13,7 +13,7 @@
 #include "LogicalExpressions.h"
 
 #include <map>
-//#include <set>
+#include <set>
 #include <list>
 
 using namespace lcio ;
@@ -29,11 +29,12 @@ typedef std::map< const std::string , int > SkippedEventMap ;
 /** Processor manager singleton class. Holds references to all registered Processors. 
  *
  *  @author F. Gaede, DESY
- *  @version $Id: ProcessorMgr.h,v 1.12 2006-11-03 16:21:30 engels Exp $ 
+ *  @version $Id: ProcessorMgr.h,v 1.13 2006-11-10 13:28:58 engels Exp $ 
  */
 class ProcessorMgr : public LCRunListener, public LCEventListener {
 
 friend class  Processor ;   
+friend class  CMProcessor ;   
 friend class  MarlinSteerCheck ;   
 
 public:
@@ -103,8 +104,10 @@ protected:
   void registerProcessor( Processor* processor ) ;
   
   /** Returns a list of all registered processors found */
-  std::map< std::string, std::string > getAvailableProcessorTypes() ;
-
+  std::set< std::string > getAvailableProcessorTypes() ;
+  
+  /** FIXME: temporary: Returns processors descriptions */
+  std::map< std::string, std::string > getAvailableProcessorDescriptions() ;
 
 //   ProcessorMgr() : _outputProcessor(0) {}
   ProcessorMgr() {}

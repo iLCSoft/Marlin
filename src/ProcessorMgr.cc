@@ -133,19 +133,30 @@ namespace marlin{
 
   }
 
-  std::map< std::string, std::string > ProcessorMgr::getAvailableProcessorTypes(){
+  std::set< std::string > ProcessorMgr::getAvailableProcessorTypes(){
       
-     std::map< std::string, std::string > ptypes;
+     std::set< std::string > ptypes;
+     
+     for(ProcessorMap::iterator i=_map.begin() ; i!= _map.end() ; i++) {
+       ptypes.insert(i->first);
+     }
+    return ptypes;
+  }
+  
+  //FIXME temporary
+  std::map< std::string, std::string > ProcessorMgr::getAvailableProcessorDescriptions(){
+      
+     std::map< std::string, std::string > pdesc;
      
      for(ProcessorMap::iterator i=_map.begin() ; i!= _map.end() ; i++) {
       if( i->second != NULL )
-	ptypes[i->first] = i->second->description();
+	pdesc[i->first] = i->second->description();
       else
-	ptypes[i->first] = "This processor is NOT installed!! Please install it before using it...";
-	
+	pdesc[i->first] = "This processor is NOT installed!! Please install it before using it...";
     }
-    return ptypes;
+    return pdesc;
   }
+
 
   Processor* ProcessorMgr::getProcessor( const std::string& type ){
     return _map[ type ] ;
