@@ -28,7 +28,7 @@ namespace marlin{
 /** Simple parameters class for Marlin.
  *  Holds named parameters as string vectors.
  *  @author F. Gaede, DESY
- *  @version $Id: StringParameters.h,v 1.4 2006-10-17 07:49:47 engels Exp $ 
+ *  @version $Id: StringParameters.h,v 1.5 2006-11-10 11:56:07 engels Exp $ 
  */
 
 class StringParameters {
@@ -38,6 +38,7 @@ class StringParameters {
 public:
   
   StringParameters() ; 
+  StringParameters( const StringParameters &sp ) ; 
 
   void add( const std::string& key , const std::vector<std::string> & values ) ;
   void add( const std::vector<std::string> & tokens ) ;

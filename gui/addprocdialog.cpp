@@ -30,6 +30,9 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
     procTypes=msc->getAvailableProcTypes();
     
     for( ssMap::const_iterator p=procTypes.begin(); p != procTypes.end(); p++ ){
+	if( (*p).first=="AIDAProcessor" && _msc->existsProcessor("AIDAProcessor") ){
+	    continue;
+	}
         cb->addItem((*p).first.c_str());
     }
     
@@ -74,7 +77,7 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
 
     setLayout(mainLayout);
 
-    changeLabel((*procTypes.begin()).first.c_str());
+    changeLabel( cb->currentText() );
 
     setWindowTitle(tr("Add New Processor"));
 }

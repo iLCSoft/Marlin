@@ -206,21 +206,6 @@ namespace marlin{
     }
   }
 
-/*
-  // Get the list of LCIO Files
-  StringVec& MarlinSteerCheck::getLCIOFiles() const{
-    static StringVec filenames;
-    
-    filenames.clear();
-    
-    for( sColVecMap::const_iterator p=_lcioCols.begin(); p!=_lcioCols.end(); p++ ){
-      filenames.push_back( (*p).first );
-    }
-
-    return filenames;
-  }
-*/
-
   // Add a new Processor
   void MarlinSteerCheck::addProcessor( bool status, const string& name, const string& type, StringParameters* p ){
 
@@ -253,11 +238,29 @@ namespace marlin{
     consistencyCheck();
   }
   
+  //returns true if a processor of this type already exists
+  bool MarlinSteerCheck::existsProcessor( const string& type ){
+    for(unsigned int i=0; i<getAllProcs().size(); i++ ){
+	if( getAllProcs()[i]->getType() == type ){
+	    return true;
+	}
+    }
+    return false;
+  }
+  
   // Replace a Processor
   void MarlinSteerCheck::repProcessor( CCProcessor* newProc ){
 
     bool found=false;
 
+    for(unsigned int i=0; i<getAllProcs().size(); i++ ){
+	if( (getAllProcs()[i]->getName() == newProc->getName()) && (getAllProcs()[i]->getType() == newProc->getType()) ){
+	    found=true;
+	    delete getAllProcs()[i];
+	    getAllProcs()[i]=newProc;
+	}
+    }
+    /*
     if( newProc->isActive() ){
 	for(unsigned int i=0; i<_aProc.size(); i++ ){
 	    if( (_aProc[i]->getName() == newProc->getName()) && (_aProc[i]->getType() == newProc->getType()) ){
@@ -276,6 +279,7 @@ namespace marlin{
 	    }
 	}
     }
+    */
     if(!found){
 	cerr << "MarlinSteerCheck::repProcessor: processor to be replaced was NOT found!!!\n";
 	delete newProc;
@@ -509,6 +513,17 @@ namespace marlin{
     
     return p;
   }
+  
+  //all processors
+  ProcVec& MarlinSteerCheck::getAllProcs() const {
+    static ProcVec procs;
+    
+    procs.assign( _aProc.begin(), _aProc.end() );
+    procs.insert( procs.end(), _iProc.begin(), _iProc.end() );
+    
+    return procs;
+  }
+
 
   ////////////////////////////////////////////////////////////////////////////////
   // COLLECTIONS RETRIEVAL METHODS
