@@ -1,5 +1,7 @@
 #include "marlin/CCCollection.h"
 
+#include <iostream>
+
 namespace marlin{
 
   CCCollection::CCCollection( const std::string& value, const std::string& type, const std::string& name, CCProcessor* srcProc ) :
@@ -10,6 +12,7 @@ namespace marlin{
   }
  
   CCCollection::~CCCollection(){
+      _srcProc=NULL;
   }
   
   CCCollection::CCCollection(const CCCollection &c) : 

@@ -713,27 +713,18 @@ void MainWindow::editAProcessor(int row)
     if( pos >= 0 && msc->getAProcs()[pos]->isInstalled() ){
 
 	//save the current processor before editing it
-	//FIXME AIDA Processor
-	CCProcessor *p=NULL;
-	if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
-	    p = new CCProcessor( *msc->getAProcs()[pos] );
-	}
+	CCProcessor *p = new CCProcessor( *msc->getAProcs()[pos] );
 	
 	Dialog dg( msc->getAProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
 	dg.resize(1100,900);
 	dg.setWindowState( Qt::WindowMaximized);
 
 	if(dg.exec()){
-	    //FIXME AIDA Processor
-	    if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
-		delete p;
-	    }
+	    delete p;
 	}
 	else{
-	     //FIXME AIDA Processor
-	    if( msc->getAProcs()[pos]->getType() != "AIDAProcessor" ){
-		msc->repProcessor(p);
-	    }
+	    delete msc->getAProcs()[pos];
+	    msc->getAProcs()[pos]=p;
 	}
 	msc->consistencyCheck();
 	updateAProcessors(pos);
@@ -746,27 +737,18 @@ void MainWindow::editIProcessor()
     if( pos >= 0 && msc->getIProcs()[pos]->isInstalled() ){
 	
 	//save the current processor before editing it
-	//FIXME AIDA Processor
-	CCProcessor* p=NULL;
-	if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
-	    p = new CCProcessor( *msc->getIProcs()[pos] );
-	}
+	CCProcessor *p = new CCProcessor( *msc->getIProcs()[pos] );
 	
 	Dialog dg( msc->getIProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
 	dg.resize(1100,900);
 	dg.setWindowState( Qt::WindowMaximized);
 	
 	if(dg.exec()){
-	    //FIXME AIDA Processor
-	    if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
-		delete p;
-	    }
+	    delete p;
 	}
 	else{
-	    //FIXME AIDA Processor
-	    if( msc->getIProcs()[pos]->getType() != "AIDAProcessor" ){
-		msc->repProcessor(p);
-	    }
+	    delete msc->getIProcs()[pos];
+	    msc->getIProcs()[pos]=p;
 	}
     }	    
 }

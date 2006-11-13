@@ -83,11 +83,11 @@ void IColDelegate::addCollection(){
     _parent->setRowCount(row + 1);
     
     QTableWidgetItem *item0 = new QTableWidgetItem( _msc->getColsSet( _type, _p ).size() != 0 ? 
-			(* _msc->getColsSet( _type, _p ).begin()).c_str() : "No Suitable Collection Found" );
+			(* _msc->getColsSet( _type, _p ).begin()).c_str() : "No_Suitable_Collection_Found" );
     
     //update the processor
     _p->addCol( INPUT, _name, _type, _msc->getColsSet( _type, _p ).size() != 0 ?
-		(* _msc->getColsSet( _type, _p ).begin()).c_str() : "No Suitable Collection Found" );
+		(* _msc->getColsSet( _type, _p ).begin()).c_str() : "No_Suitable_Collection_Found" );
     _msc->consistencyCheck();
 
     //set background color

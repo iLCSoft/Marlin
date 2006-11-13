@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.11 2006-11-10 11:56:07 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.12 2006-11-13 17:11:05 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -58,6 +58,9 @@ namespace marlin {
     // Destructor
     ~MarlinSteerCheck();
 
+    /** Returns the Marlin Processors */
+    CMProcessor* getMProcs() { return _marlinProcs; };
+    
     /** Returns the Active Processors */
     ProcVec& getAProcs() { return _aProc; };
     
@@ -99,9 +102,6 @@ namespace marlin {
 
     /** Remove processor with the given status at the given index */
     void remProcessor( unsigned int index, bool status );
-
-    /** Replace processor with the given status at the given index with new CCProcessor*/
-    void repProcessor( CCProcessor* newProc );
 
     /** Activate processor at the given index */
     void activateProcessor( unsigned int index );
@@ -163,6 +163,8 @@ namespace marlin {
     
     ssMap _procTypes;			//all available processor types and their corresponding descriptions (use in ComboBox)
     sSet _colValues;			//all available collection values for a given type (use in ComboBox)
+
+    CMProcessor* _marlinProcs;		//Sigleton class containing all marlin processors
   };
 
 } // namespace

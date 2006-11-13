@@ -1,4 +1,5 @@
 #include "marlin/MarlinSteerCheck.h"
+#include "marlin/CMProcessor.h"
 
 // LCIO INCLUDES ///////////////
 #include "lcio.h"
@@ -46,7 +47,10 @@ namespace marlin{
     }
     //get a list of all available processor types from marlin Processor Manager
     _procTypes = ProcessorMgr::instance()->getAvailableProcessorDescriptions();
-  }
+
+    _marlinProcs = CMProcessor::instance();
+
+    }
 
   // Destructor
   MarlinSteerCheck::~MarlinSteerCheck(){
@@ -246,45 +250,6 @@ namespace marlin{
 	}
     }
     return false;
-  }
-  
-  // Replace a Processor
-  void MarlinSteerCheck::repProcessor( CCProcessor* newProc ){
-
-    bool found=false;
-
-    for(unsigned int i=0; i<getAllProcs().size(); i++ ){
-	if( (getAllProcs()[i]->getName() == newProc->getName()) && (getAllProcs()[i]->getType() == newProc->getType()) ){
-	    found=true;
-	    delete getAllProcs()[i];
-	    getAllProcs()[i]=newProc;
-	}
-    }
-    /*
-    if( newProc->isActive() ){
-	for(unsigned int i=0; i<_aProc.size(); i++ ){
-	    if( (_aProc[i]->getName() == newProc->getName()) && (_aProc[i]->getType() == newProc->getType()) ){
-		found=true;
-		delete _aProc[i];
-		_aProc[i]=newProc;
-	    }
-	}
-    }
-    else{
-	for(unsigned int i=0; i<_iProc.size(); i++ ){
-	    if( (_iProc[i]->getName() == newProc->getName()) && (_iProc[i]->getType() == newProc->getType()) ){
-		found=true;
-		delete _iProc[i];
-		_iProc[i]=newProc;
-	    }
-	}
-    }
-    */
-    if(!found){
-	cerr << "MarlinSteerCheck::repProcessor: processor to be replaced was NOT found!!!\n";
-	delete newProc;
-    }
-    consistencyCheck();
   }
 
   // Activate a processor
@@ -517,6 +482,8 @@ namespace marlin{
   //all processors
   ProcVec& MarlinSteerCheck::getAllProcs() const {
     static ProcVec procs;
+
+    procs.clear();
     
     procs.assign( _aProc.begin(), _aProc.end() );
     procs.insert( procs.end(), _iProc.begin(), _iProc.end() );

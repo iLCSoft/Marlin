@@ -43,13 +43,14 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.19 2006-10-25 09:36:15 engels Exp $ 
+   *  @version $Id: Processor.h,v 1.20 2006-11-13 17:11:05 engels Exp $ 
    */
   
   class Processor {
   
     friend class ProcessorMgr ;
     friend class CCProcessor ;
+    friend class CMProcessor ;
     friend class XMLFixCollTypes ;
 
   public:

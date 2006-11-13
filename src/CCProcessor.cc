@@ -1,4 +1,5 @@
 #include "marlin/CCProcessor.h"
+#include "marlin/CMProcessor.h"
 #include "marlin/CCCollection.h"
 #include "marlin/ProcessorMgr.h"
 
@@ -14,9 +15,7 @@ namespace marlin{
     _param(0),
     _proc(0)
   {
-    _error[0] = false;
-    _error[1] = false;
-    _error[2] = false;
+    _error[0] = _error[1] = _error[2] = false;
  
     //FIXME: this has to be global
     //if( _error_desc.size() == 0 ){
@@ -25,258 +24,141 @@ namespace marlin{
     _error_desc.push_back( "Some Collections are not available" );
     //}
 
-    setError( NO_PARAMETERS );
-    setError( NOT_INSTALLED );
-    
-    //create a new Marlin Processor
-    createMarlinProc();
+    //setup Marlin Processor
+    setMarlinProc();
  
-    //set the Processor Parameters
-    setParameters( p );
+    //merge the Processor Parameters with the default ones for this type of processor
+    _param=CMProcessor::instance()->mergeParams( type, p );
+
+    //adds the input/output collections from the string parameters
+    addColsFromParam( _param );
+
+    //clears all collections related parameters and the processor type
+    clearParameters();
   }
+  
 
   //copy constructor
-  CCProcessor::CCProcessor(const CCProcessor &p) : _param(0), _proc(0) {
+  CCProcessor::CCProcessor( CCProcessor &p) : _param(0), _proc(p._proc) {
       _status=p._status;
       _name=p._name;
       _type=p._type;
       _types=p._types;
       
-      _error[0] = false;
-      _error[1] = false;
-      _error[2] = false;
+      _error[0] = _error[1] = _error[2] = false;
       
-      _error_desc.push_back( "Processor has no Parameters" );
-      _error_desc.push_back( "Processor is not build in this Marlin binary" );
-      _error_desc.push_back( "Some Collections are not available" );
-
       for( int i=0; i<MAX_ERRORS; i++ ){
+        _error_desc.push_back( p._error_desc[i] );
+	  
 	if(p._error[i]){
 	    setError(i);
 	}
       }
-      
+
       if( p._param != NULL ){
-	_param=new StringParameters();
-
-	StringVec keys;
-	p._param->getStringKeys(keys);
-
-	for(unsigned int i=0; i<keys.size(); i++){
-	    StringVec values;
-	    p._param->getStringVals(keys[i],values);
-	    _param->add(keys[i], values);
-	}
-      }
-      
-      for( ssColVecMap::const_iterator q=p._cols.begin(); q!=p._cols.end(); q++ ){
-        for( sColVecMap::const_iterator r=(*q).second.begin(); r!=(*q).second.end(); r++ ){
-	  for( unsigned int i=0; i<(*r).second.size(); i++ ){
-	    CCCollection *c = new CCCollection( (*(*r).second[i]) );
-	    c->setSrcProc( this );
-	    _cols[(*q).first][(*r).first].push_back( c );
-	  }
-	}
-      }
-
-      //create a new Marlin Processor
-      if(p._proc!=NULL){
-	createMarlinProc();
-
-	//initialize marlin processor parameters
-	_proc->setProcessorParameters( _param );
-	_proc->updateParameters();
-
-	//clear collection paramteres
-	clearParameters();
-      }
-
-  }
-  
-  CCProcessor::~CCProcessor(){
-      if( !isInstalled() && _param != NULL){
-	  delete _param;
-      }
-  }
-  
-  void CCProcessor::changeStatus(){
-    _status = !_status;
-    clearError( COL_ERRORS );
-  }
-
-  void CCProcessor::setName( const string& name ){
-    _name = name;
-    /*
-    if(isInstalled()){
-	_proc->setName(name);
-    }
-    */
-  }
-  
-  ProcessorParameter* CCProcessor::getProcParam( const string& key ){
-      if( isInstalled() ){
-        ProcParamMap::const_iterator p= _proc->procMap().find(key);
-        if( p != _proc->procMap().end() ){
-            ProcessorParameter* par = p->second;
-            if( par ){
-                return par;
-            }
-            else{
-                return NULL;
-            }
-        }
-      }
-      return NULL;
-  }
-  
-  const string CCProcessor::getParamDesc( const string& key ){
-      ProcessorParameter* par = getProcParam(key);
-      if( par ){
-	return par->description();
-      }
-      else{
-	return "Sorry, no description for this parameter";
-      }
-  }
-  
-  const string CCProcessor::getParamType( const string& key ){
-      ProcessorParameter* par = getProcParam(key);
-      if( par ){
-	return par->type();
-      }
-      else{
-	return "Undefined!!";
+	p.writeColsToParam();
+	_param=new StringParameters( *p._param );
+	addColsFromParam( _param );
+	p.clearParameters();
+        clearParameters();
       }
   }
  
-  void CCProcessor::setParameters( StringParameters* p ){
-   
-    //check if the Marlin Processor is installed
-    if(isInstalled()){
-
-	// set the parameters read from the xml file
-	if( p != NULL ){
-    	    _param=p;
-	    _proc->setProcessorParameters( _param );
-	    _proc->updateParameters();
-	    
-	    StringVec InCols, OutCols, values;
-	    string name, type;
-
-	    _param->getStringVals( INPUT, InCols );
-	    _param->getStringVals( OUTPUT, OutCols );
-																			     
-	    unsigned int index = 0;
-	    while( index < InCols.size() ){
-	      name = InCols[ index++ ];
-	      type = InCols[ index++ ];
-
-	      values.clear();
-	      _param->getStringVals(name, values); // get corresponding collections
-
-	      //erase the corresponding collection from the processor's parameters
-	      _param->erase( name );
-	      
-	      for (unsigned int i=0; i<values.size(); i++){
-		addCol( INPUT, name, type, values[i] );
-	      }
-	    }
-	    index = 0;
-	    while( index < OutCols.size() ){
-	      name = OutCols[index++];
-	      type = OutCols[index++];
-
-	      values.clear();
-	      _param->getStringVals(name, values); // get corresponding collections
-
-	      //erase the corresponding collection from the processor's parameters
-	      _param->erase( name );
-	      
-	      for( unsigned int i=0; i<values.size(); i++ ){
-		addCol( OUTPUT, name, type, values[i] );
-	      }
-	    }
-	    //erase the processor type from the string parameters
-	    _param->erase( "ProcessorType" );
-
-	    //erase the "name, type" list from processor's parameters
-	    _param->erase( INPUT );
-	    _param->erase( OUTPUT );
-	}
-	//set the default parameters from the processor
-	else{
-	    _param = new StringParameters();
-
-	    //initialize marlin processor parameters
-	    _proc->setProcessorParameters( _param );
-	    _proc->updateParameters();
-	    
-	    StringVec keys;
-	    _param->getStringKeys(keys);
-	    
-	    for(unsigned int i=0; i<keys.size(); i++){
-		ProcParamMap::const_iterator p= _proc->procMap().find(keys[i]);
-		ProcessorParameter* par = p->second;
-
-		//erase the collection from the parameters
-		_param->erase(keys[i]);
-
-		if(_proc->isInputCollectionName(keys[i])){
-		    if( par->type() == "StringVec" ){
-			StringVec v;
-			tokenize(par->defaultValue(), v);
-			string type =  _proc->getLCIOInType(keys[i]);
-			for( unsigned int j=0; j<v.size(); j++ ){
-			    addCol( INPUT, keys[i], type, v[j] );
-			}
-		    }
-		    else{
-			addCol( INPUT, keys[i], _proc->getLCIOInType(keys[i]), par->defaultValue() );
-		    }
+  CCProcessor::~CCProcessor(){
+      if( _param != NULL){
+	  delete _param;
+	  _param=NULL;
+      }
+      if( _cols.size() != 0){
+	  for( ssColVecMap::const_iterator q=_cols.begin(); q!=_cols.end(); q++ ){
+	     if( (*q).first !=UNAVAILABLE ){
+		for( sColVecMap::const_iterator r=(*q).second.begin(); r!=(*q).second.end(); r++ ){
+		  for( unsigned int i=0; i<(*r).second.size(); i++ ){
+		    delete (*r).second[i];
+		  }
 		}
-		else if(_proc->isOutputCollectionName(keys[i])){
-		    addCol( OUTPUT, keys[i], _proc->getLCIOOutType(keys[i]), par->defaultValue() );
-		}
-		else{
-		    StringVec defValue;
-		    defValue.push_back(par->defaultValue());
-		    _param->add(keys[i], defValue );
-		}
-	    }
-	}
-	clearError( NO_PARAMETERS );
+	     }
+	  }
+      }
+  }
+
+  void CCProcessor::addColsFromParam( StringParameters* p ){
+    if( p == NULL ){
+	setError( NO_PARAMETERS );
+	return;
     }
-    //processor is not installed
-    else{
-	if(p!= NULL ){
-	    _param=p;
-	    _param->erase("ProcessorType");
-	    clearError( NO_PARAMETERS );
+    
+    clearError( NO_PARAMETERS );
+    
+    //check if the Marlin Processor is installed
+    if( isInstalled() ){
+	
+	StringVec keys;
+	_param->getStringKeys( keys );
+	
+	for( unsigned int i=0; i<keys.size(); i++ ){
+	    StringVec values;
+	    _param->getStringVals( keys[i], values );
+	    
+	    if( _proc->isInputCollectionName( keys[i] )){
+		for( unsigned int j=0; j<values.size(); j++ ){
+		    addCol( INPUT, keys[i], _proc->getLCIOInType( keys[i] ), values[j] );
+		}
+	    }
+	    else if( _proc->isOutputCollectionName( keys[i] )){
+		for( unsigned int j=0; j<values.size(); j++ ){
+		    addCol( OUTPUT, keys[i], _proc->getLCIOOutType( keys[i] ), values[j] );
+		}
+	    }
 	}
+    }
+    else{
+	StringVec InCols, OutCols;
+	string name, type;
+
+	_param->getStringVals( INPUT, InCols );
+	_param->getStringVals( OUTPUT, OutCols );
+
+	unsigned int index = 0;
+	while( index < InCols.size() ){
+	  name = InCols[ index++ ];
+	  type = InCols[ index++ ];
+
+	  StringVec values;
+	  _param->getStringVals(name, values); // get corresponding collections
+
+	  for (unsigned int i=0; i<values.size(); i++){
+	    addCol( INPUT, name, type, values[i] );
+	  }
+	}
+
+	index = 0;
+        while( index < OutCols.size() ){
+	  name = OutCols[index++];
+	  type = OutCols[index++];
+
+	  StringVec values;
+	  _param->getStringVals(name, values); // get corresponding collections
+
+	  for( unsigned int i=0; i<values.size(); i++ ){
+	    addCol( OUTPUT, name, type, values[i] );
+	  }
+      }
     }
   }
 
-  void CCProcessor::createMarlinProc(){
-    //check if marlin has an installed processor of this type
-    Processor* pp = ProcessorMgr::instance()->getProcessor( _type );
-    //checks if marlin has this processor type installed
-    if( pp ){
-      //create a new marlin processor of this type
-      _proc = pp->newProcessor();
-      //set the processor name
-      _proc->setName( _name );
-      //clears error
+  void CCProcessor::setMarlinProc(){
+      if( !CMProcessor::instance()->isInstalled( _type )){
+	setError( NOT_INSTALLED );
+	return;
+      }
+      _proc = CMProcessor::instance()->getProc( _type );
       clearError( NOT_INSTALLED );
-    }
-    //this processor type is not installed
-    else{
-      setError( NOT_INSTALLED );
-    }
   }
   
   void CCProcessor::clearParameters(){
       // skip if it does not contain parameters or is not installed
-      if( hasParameters() && isInstalled() ){
+      if( hasParameters() ){
 	  for( sColVecMap::const_iterator p=_cols[INPUT].begin(); p!=_cols[INPUT].end(); p++ ){
 	      _param->erase((*p).first );
 	  }
@@ -284,11 +166,19 @@ namespace marlin{
 	  for( sColVecMap::const_iterator p=_cols[OUTPUT].begin(); p!=_cols[OUTPUT].end(); p++ ){
 	      _param->erase((*p).first );
 	  }
-      }     
+
+	  //erase the processor type from the string parameters
+	  _param->erase( "ProcessorType" );
+
+	  //erase the "name, type" list from processor's parameters
+	  _param->erase( INPUT );
+	  _param->erase( OUTPUT );
+
+      }
   }
   
   // write IO collections back to marlin processor's parameters
-  void CCProcessor::updateMarlinProcessor(){
+  void CCProcessor::writeColsToParam(){
       StringVec value;
 
       // skip if it does not contain parameters or is not installed
@@ -314,10 +204,16 @@ namespace marlin{
 	      }
 	      _param->add((*p).first, value );
 	  }
-																		     
-	  //update Marlin Processor's parameters
-	  _proc->updateParameters();
       }
+  }
+  
+  void CCProcessor::changeStatus(){
+    _status = !_status;
+    clearError( COL_ERRORS );
+  }
+
+  void CCProcessor::setName( const string& name ){
+    _name = name;
   }
 
 /////////////////////////////////////////////////////////////
@@ -476,47 +372,36 @@ namespace marlin{
     return false;
   }
 
-  void CCProcessor::tokenize( const string str, StringVec& tokens, const string& delimiters ){
-    // Skip delimiters at beginning.
-    string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-    // Find first "non-delimiter".
-    string::size_type pos     = str.find_first_of(delimiters, lastPos);
-                                                                                                                                                             
-    while (string::npos != pos || string::npos != lastPos){
-        // Found a token, add it to the vector.
-        tokens.push_back(str.substr(lastPos, pos - lastPos));
-        // Skip delimiters.  Note the "not_of"
-        lastPos = str.find_first_not_of(delimiters, pos);
-        // Find next "non-delimiter"
-        pos = str.find_first_of(delimiters, lastPos);
-    }
-  }
-
   void CCProcessor::writeToXML( ofstream& stream ){
+
+    //FIXME: make uninstalled processors write collections as input / output
+    
+    writeColsToParam();
+
     stream << " <processor name=\"" <<  _name  << "\" type=\"" <<  _type << "\">\n";
     if( isInstalled() ){
-        updateMarlinProcessor();
 	stream << " <!--" << _proc->description() << "-->\n";
     }
     else{
 	stream << " <!-- This processor is NOT Installed in your Marlin binary so ALL parameter descriptions are lost!!!-->\n";
     }
     
-    
+ 
     StringVec keys;
     if( hasParameters() ){
 	_param->getStringKeys( keys );
     }
     
+    
     //parameters
     for( unsigned int i=0; i<keys.size(); i++ ){
 
-	ProcessorParameter* p = getProcParam( keys[i] );
+	ProcessorParameter* p = CMProcessor::instance()->getParam( _type, keys[i] );
    
 	//if the parameter is recognized by the marlin processor
         if( p != NULL ){
 	    
-	    stream << "  <!--" << getParamDesc( keys[i] ) << "-->" << std::endl ;
+	    stream << "  <!--" << CMProcessor::instance()->getParamD( _type, keys[i] ) << "-->" << std::endl ;
 	    //stream << "  <" << (p->isOptional() ? "!--" : "") << "parameter name=\"" << p->name() << "\" type=\"" << p->type() ;
 	    stream << "  <parameter name=\"" << p->name() << "\" type=\"" << p->type() << (p->isOptional() ? "\" optional=\"true" : "");
 	    
@@ -531,7 +416,15 @@ namespace marlin{
 	    }
 																		 
 	    //stream << "\">" << p->defaultValue() << " </parameter"<< (p->isOptional() ? "--" : "")  << ">\n";
-	    stream << "\">" << p->defaultValue() << " </parameter>\n";
+	    
+	    stream << "\">";
+	    
+	    StringVec values;
+	    _param->getStringVals( keys[i], values );
+	    for( unsigned int j=0; j<values.size(); j++ ){
+		stream << values[j] << " ";
+	    }
+	    stream << " </parameter>\n";
 	}
 	//else it's a parameter from an uninstalled processor or an extra parameter from an installed processor
 	else{
@@ -553,9 +446,8 @@ namespace marlin{
 	}
     }
     stream << "</processor>\n\n";
-    if( isInstalled() ){
-        clearParameters();
-    }
+    
+    clearParameters();
   }
 
 } // end namespace marlin

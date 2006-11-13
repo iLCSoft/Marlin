@@ -1,6 +1,7 @@
 #include <QtGui>
 
 #include "marlin/CCProcessor.h"
+#include "marlin/CMProcessor.h"
 #include "marlin/CCCollection.h"
 
 #include "dialog.h"
@@ -75,7 +76,7 @@ void Dialog::setupViews()
 	    //initialize table
 	    ColVec cols = _p->getCols( INPUT , (*p).first );
 	    for( unsigned int i=0; i<cols.size(); i++ ){
-		if( _p->getParamType( (*p).first ) == "string" ){
+		if( _msc->getMProcs()->getParamT( _p->getType(), (*p).first ) == "string" ){
 
 		    found=true;
 		    
@@ -86,9 +87,9 @@ void Dialog::setupViews()
 		    QTableWidgetItem *item1 = new QTableWidgetItem( (*p).second.c_str() );
 		    QTableWidgetItem *item2 = new QTableWidgetItem( cols[i]->getValue().c_str() );
 		    
-		    item0->setToolTip( QString(_p->getParamDesc( (*p).first ).c_str() ) );
-		    item1->setToolTip( QString(_p->getParamDesc( (*p).first ).c_str() ) );
-		    item2->setToolTip( QString(_p->getParamDesc( (*p).first ).c_str() ) );
+		    item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
+		    item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
+		    item2->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
 		    
 		    item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
 		    item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);
@@ -134,7 +135,7 @@ void Dialog::setupViews()
 	
 	for( ssMap::const_iterator p=colHeaders.begin(); p!=colHeaders.end(); p++ ){
 	    
-	    if( _p->getParamType( (*p).first ) == "StringVec" ){
+	    if( _msc->getMProcs()->getParamT( _p->getType(), (*p).first ) == "StringVec" ){
 
 		found = true;
 		
@@ -157,7 +158,7 @@ void Dialog::setupViews()
 		    
 		    QTableWidgetItem *item0 = new QTableWidgetItem( cols[i]->getValue().c_str() );
 		    
-		    item0->setToolTip( QString(_p->getParamDesc( (*p).first ).c_str() ) );
+		    item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
 		   
 		    item0->setBackgroundColor( _p->isErrorCol( cols[i]->getValue().c_str() ) ? QColor(184,16,0,180) : QColor(32,140,64,180) );
 
@@ -254,9 +255,9 @@ void Dialog::setupViews()
 		QTableWidgetItem *item1 = new QTableWidgetItem( (*p).second.c_str() );
 		QTableWidgetItem *item2 = new QTableWidgetItem( cols[i]->getValue().c_str() );
 		
-		item0->setToolTip( QString(_p->getParamDesc( (*p).first ).c_str() ) );
-		item1->setToolTip( QString(_p->getParamDesc( (*p).first ).c_str() ) );
-		item2->setToolTip( QString(_p->getParamDesc( (*p).first ).c_str() ) );
+		item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
+		item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
+		item2->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
 		
 		item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);	
 		item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);	
@@ -325,9 +326,9 @@ void Dialog::setupViews()
 	    
 	    item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
 
-	    item0->setToolTip( QString(_p->getParamDesc( paramKeys[i] ).c_str() ) );
-	    item1->setToolTip( QString(_p->getParamDesc( paramKeys[i] ).c_str() ) );
-	    
+	    item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
+	    item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
+		
 	    paramTable->setItem(row, 0, item0);
 	    paramTable->setItem(row, 1, item1);
 

@@ -44,7 +44,7 @@ namespace marlin {
     CCProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL);
 
     // Copy Constructor
-    CCProcessor( const CCProcessor &p );
+    CCProcessor( CCProcessor &p );
     
     // Destructor
     ~CCProcessor();
@@ -74,7 +74,7 @@ namespace marlin {
     const std::string& getType(){ return _type; }
 
     /** Returns the Description of the processor */
-    const std::string getDescription(){ return (isInstalled() ? _proc->description() : ""); }
+    const std::string getDescription(){ return (isInstalled() ? _proc->description() : "Sorry, This Processor is not installed. No description available"); }
     
     /* Returns a string vector with the errors of the processor - Obsolete: use getError() instead */
     //const StringVec& getErrors(){ return _errors; }
@@ -84,12 +84,6 @@ namespace marlin {
     
     /** Returns a string with the processor status ( "Active", "Inactive" ) */
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
-    
-    /** Returns a string with the description for a given parameter */
-    const std::string getParamDesc( const std::string& key );
-    
-    /** Returns a string with the type of a given parameter */
-    const std::string getParamType( const std::string& key );
     
     /** Returns true if the given collection is unavailable for this processor */
     bool CCProcessor::isErrorCol( const std::string& value );
@@ -137,13 +131,11 @@ namespace marlin {
     ///////////////////////////////////////////////////////////////////////////////
     // METHODS
     ///////////////////////////////////////////////////////////////////////////////
-    void setParameters( StringParameters* p );
+    void addColsFromParam( StringParameters* p );
+    void writeColsToParam();
     void clearParameters();
-    void updateMarlinProcessor();
-    void createMarlinProc();	    //sets error flag NOT_INSTALLED if processor couldn't be created
+    void setMarlinProc();	    //sets error flag NOT_INSTALLED if processor couldn't be set
     CCCollection* popCol( ColVec& v, CCCollection* c );   
-    void tokenize( const std::string str, StringVec& tokens, const std::string& delimiters = " " );
-    ProcessorParameter* getProcParam( const std::string& key );
 
     ///////////////////////////////////////////////////////////////////////////////
     // VARIABLES
