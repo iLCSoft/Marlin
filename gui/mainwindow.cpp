@@ -75,9 +75,10 @@ MainWindow::MainWindow() : _modified(false), _file(""), msc(NULL)
 	"new Steering Files for Marlin.\n\n"
 	"WARNING:\n"
 	"Please be aware that comments made in the original steering files will get lost in the saving process.\n"
-    	"Processors that are not installed in your Marlin binary are not editable in this application and loose all their descriptions as well.\n"
-    	"All extra parameters that aren't categorized as default in a processor also loose their descriptions.\n\n"
-    	"In order for this application to work correctly you should first check if all processors found in the "
+    	"Processors that are not installed in your Marlin binary are not editable in this application and loose their parameter's descriptions and types.\n"
+    	"Extra parameters that aren't categorized as default in a processor also loose their description and type.\n\n"
+    	
+	"In order for this application to work correctly you should first check if all processors found in the "
 	"steering file are installed in your Marlin binary.\n You can easily check this by running \"Marlin -c SteeringFile.xml\""
     ));
     defLab->setAlignment(Qt::AlignCenter);
@@ -106,8 +107,9 @@ void MainWindow::closeEvent(QCloseEvent *e)
 	    "You made changes that will get lost.\nDo you want to save your changes?\n\n"
 	    "WARNING:\n"
 	    "Please be aware that comments made in the original steering files will get lost in the saving process.\n"
-	    "Processors that are not installed in your Marlin binary will loose all their descriptions as well.\n"
-	    "All extra parameters that aren't categorized as default in a processor also loose their descriptions.\n\n" ),
+	    "Processors that are not installed in your Marlin binary will loose their parameter's descriptions and types as well.\n"
+	    "Extra parameters that aren't categorized as default in a processor also loose their description and type.\n\n" ),
+
 	    QMessageBox::Yes,
 	    QMessageBox::No | QMessageBox::Default,
 	    QMessageBox::Cancel | QMessageBox::Escape);
@@ -518,14 +520,8 @@ void MainWindow::updateAProcessors( int pos )
 	QTableWidgetItem *item0 = new QTableWidgetItem(msc->getAProcs()[i]->getName().c_str());
 	QTableWidgetItem *item1 = new QTableWidgetItem(msc->getAProcs()[i]->getType().c_str());
 	
-	if( msc->getAProcs()[i]->isInstalled() ){
-	    item0->setToolTip( QString(msc->getAProcs()[i]->getDescription().c_str() ));
-	    item1->setToolTip( QString(msc->getAProcs()[i]->getDescription().c_str() ));
-	}
-	else{
-	    item0->setToolTip( QString( "Processor NOT installed!!!" ));
-	    item1->setToolTip( QString( "Processor NOT installed!!!" ));
-	}
+	item0->setToolTip( QString(msc->getAProcs()[i]->getDescription().c_str() ));
+	item1->setToolTip( QString(msc->getAProcs()[i]->getDescription().c_str() ));
 
 	item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);
 	
@@ -553,14 +549,8 @@ void MainWindow::updateIProcessors( int pos )
 	QTableWidgetItem *item0 = new QTableWidgetItem(msc->getIProcs()[i]->getName().c_str());
 	QTableWidgetItem *item1 = new QTableWidgetItem(msc->getIProcs()[i]->getType().c_str());
 	
-	if( msc->getIProcs()[i]->isInstalled() ){
-	    item0->setToolTip( QString(msc->getIProcs()[i]->getDescription().c_str() ));
-	    item1->setToolTip( QString(msc->getIProcs()[i]->getDescription().c_str() ));
-	}
-	else{
-	    item0->setToolTip( QString( "Processor NOT installed!!!" ));
-	    item1->setToolTip( QString( "Processor NOT installed!!!" ));
-	}
+	item0->setToolTip( QString(msc->getIProcs()[i]->getDescription().c_str() ));
+	item1->setToolTip( QString(msc->getIProcs()[i]->getDescription().c_str() ));
 	
 	item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);
 	

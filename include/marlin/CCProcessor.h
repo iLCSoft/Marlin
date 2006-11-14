@@ -21,9 +21,9 @@
 #define NO_PARAMETERS 0
 #define NOT_INSTALLED 1
 #define COL_ERRORS 2
-#define INPUT "_marlin.lcioInType"
-#define OUTPUT "_marlin.lcioOutType"
-#define UNAVAILABLE "_marlin.lcioUnavailableType"
+#define INPUT "lcioInType"
+#define OUTPUT "lcioOutType"
+#define UNAVAILABLE "lcioUnavailableType"
 
 namespace marlin {
 
@@ -74,7 +74,9 @@ namespace marlin {
     const std::string& getType(){ return _type; }
 
     /** Returns the Description of the processor */
-    const std::string getDescription(){ return (isInstalled() ? _proc->description() : "Sorry, This Processor is not installed. No description available"); }
+    const std::string getDescription(){	return (isInstalled() ? _proc->description() : 
+	    "This processor is NOT installed in your Marlin binary: parameter descriptions and types lost!!");
+    }
     
     /* Returns a string vector with the errors of the processor - Obsolete: use getError() instead */
     //const StringVec& getErrors(){ return _errors; }

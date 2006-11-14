@@ -79,6 +79,9 @@ namespace marlin{
     	}
     } //end constructor
 
+    //destructor
+    CMProcessor::~CMProcessor(){}
+    
     bool CMProcessor::isInstalled( const string& type ){
 	if( _mpStatus.find( type ) != _mpStatus.end() ){
 	    return _mpStatus[ type ];
@@ -162,14 +165,29 @@ namespace marlin{
 	return "Undefined!!";
     }
 
-    bool CMProcessor::getParamO( const string& type, const string& key ){
+    bool CMProcessor::isParamOpt( const string& type, const string& key ){
 	ProcessorParameter* par = getParam( type, key );
 	if( par ){
 	    return par->isOptional();
 	}
+	//for consistency reasons return false if parameter isn't recognized
 	return false;
     }
-
+    
+    bool CMProcessor::isParamVec( const std::string& type, const std::string& key ){
+	ProcessorParameter* par = getParam( type, key );
+	if( par ){
+	    if( par->type() == "StringVec" || par->type() == "FloatVec" || par->type() == "IntVec" ){
+		return true;
+	    }
+	    else{
+		return false;
+	    }
+	}
+	//for consistency reasons return true if parameter isn't recognized
+	return true;
+    }
+    
     void CMProcessor::tokenize( const string str, StringVec& tokens, const string& delimiters ){
 	// Skip delimiters at beginning.
 	string::size_type lastPos = str.find_first_not_of(delimiters, 0);

@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.12 2006-11-13 17:11:05 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.13 2006-11-14 15:19:13 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -122,7 +122,7 @@ namespace marlin {
     void dump_information();
 
     /** Dumps collection errors found in the steering file for all active processors */
-    bool dump_colErrors();
+    void dump_colErrors();
 
     
   private:

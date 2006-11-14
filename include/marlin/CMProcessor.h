@@ -33,7 +33,8 @@ namespace marlin{
 	/** returns the parameters for the processor of the given type */
 	StringParameters* getSParams( const std::string& type );
 	
-	/** merges the given parameters with the default ones from the processor with the given type */
+	/** merges the given parameters with the default ones 
+	 *  from the processor with the given type */
 	StringParameters* mergeParams( const std::string& type, StringParameters* sp );
 	
 	/** returns the parameter with the given key
@@ -49,19 +50,23 @@ namespace marlin{
 	const std::string getParamT( const std::string& type, const std::string& key );
 	
 	/** returns true if the parameter with the given key
+	 *  for the processor with the given type is a vector */
+	bool isParamVec( const std::string& type, const std::string& key );
+	
+	/** returns true if the parameter with the given key
 	 *  for the processor with the given type is optional*/
-	bool getParamO( const std::string& type, const std::string& key );
+	bool isParamOpt( const std::string& type, const std::string& key );
 	
 	/** returns true if the processor with the given type is installed */
 	bool isInstalled( const std::string& type );
 
-	void tokenize( const std::string str, StringVec& tokens, const std::string& delimiters = " " );
     protected:
 	// Constructor
 	CMProcessor();
 
     private:
 	//utility function to tokenize strings
+	void tokenize( const std::string str, StringVec& tokens, const std::string& delimiters = " " );
 	
 	static CMProcessor*  _me;	//singleton instance
 	ProcessorMap _mProcs;		//processor instances

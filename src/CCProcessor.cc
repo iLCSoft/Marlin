@@ -45,11 +45,12 @@ namespace marlin{
       _type=p._type;
       _types=p._types;
       
-      _error[0] = _error[1] = _error[2] = false;
+      for( int i=0; i<MAX_ERRORS; i++ ){
+	_error[i] = false;
+        _error_desc.push_back( p._error_desc[i] );
+      }
       
       for( int i=0; i<MAX_ERRORS; i++ ){
-        _error_desc.push_back( p._error_desc[i] );
-	  
 	if(p._error[i]){
 	    setError(i);
 	}
@@ -69,16 +70,14 @@ namespace marlin{
 	  delete _param;
 	  _param=NULL;
       }
-      if( _cols.size() != 0){
-	  for( ssColVecMap::const_iterator q=_cols.begin(); q!=_cols.end(); q++ ){
-	     if( (*q).first !=UNAVAILABLE ){
-		for( sColVecMap::const_iterator r=(*q).second.begin(); r!=(*q).second.end(); r++ ){
-		  for( unsigned int i=0; i<(*r).second.size(); i++ ){
-		    delete (*r).second[i];
-		  }
-		}
-	     }
-	  }
+      for( ssColVecMap::const_iterator q=_cols.begin(); q!=_cols.end(); q++ ){
+	 if( q->first != UNAVAILABLE ){
+	    for( sColVecMap::const_iterator r=q->second.begin(); r!=q->second.end(); r++ ){
+	      for( unsigned int i=0; i<r->second.size(); i++ ){
+		delete r->second[i];
+	      }
+	    }
+	 }
       }
   }
 
@@ -160,17 +159,19 @@ namespace marlin{
       // skip if it does not contain parameters or is not installed
       if( hasParameters() ){
 	  for( sColVecMap::const_iterator p=_cols[INPUT].begin(); p!=_cols[INPUT].end(); p++ ){
-	      _param->erase((*p).first );
+	      _param->erase( p->first );
 	  }
 
 	  for( sColVecMap::const_iterator p=_cols[OUTPUT].begin(); p!=_cols[OUTPUT].end(); p++ ){
-	      _param->erase((*p).first );
+	      _param->erase( p->first );
 	  }
 
 	  //erase the processor type from the string parameters
 	  _param->erase( "ProcessorType" );
 
 	  //erase the "name, type" list from processor's parameters
+	  _param->erase( "_marlin.lcioInType" );
+	  _param->erase( "_marlin.lcioOutType" );
 	  _param->erase( INPUT );
 	  _param->erase( OUTPUT );
 
@@ -190,19 +191,19 @@ namespace marlin{
 	  for( sColVecMap::const_iterator p=_cols[INPUT].begin(); p!=_cols[INPUT].end(); p++ ){
 	      
 	      value.clear();
-	      for(unsigned int i=0; i<(*p).second.size(); i++){
-		  value.push_back( (*p).second[i]->getValue() );
+	      for(unsigned int i=0; i< p->second.size(); i++){
+		  value.push_back( p->second[i]->getValue() );
 	      }
-	      _param->add((*p).first, value );
+	      _param->add( p->first, value );
 	  }
 
 	  for( sColVecMap::const_iterator p=_cols[OUTPUT].begin(); p!=_cols[OUTPUT].end(); p++ ){
 
 	      value.clear();
-	      for(unsigned int i=0; i<(*p).second.size(); i++){
-		  value.push_back( (*p).second[i]->getValue() );
+	      for(unsigned int i=0; i< p->second.size(); i++){
+		  value.push_back( p->second[i]->getValue() );
 	      }
-	      _param->add((*p).first, value );
+	      _param->add( p->first, value );
 	  }
       }
   }
@@ -281,9 +282,9 @@ namespace marlin{
     
     if( _cols.find( iotype ) != _cols.end() ){
       for( sColVecMap::const_iterator p=_cols[iotype].begin(); p!=_cols[iotype].end(); p++ ){
-	if( type_name=="ALL_COLLECTIONS" || type_name==(*p).first ){
-	  for( unsigned int i=0; i<(*p).second.size(); i++ ){
-	    newVec.push_back( (*p).second[i] );
+	if( type_name=="ALL_COLLECTIONS" || type_name == p->first ){
+	  for( unsigned int i=0; i<p->second.size(); i++ ){
+	    newVec.push_back( p->second[i] );
 	  }
 	}
       }
@@ -298,7 +299,7 @@ namespace marlin{
       types.clear();
       
       for( sColVecMap::const_iterator p=_cols[ UNAVAILABLE ].begin(); p!=_cols[ UNAVAILABLE ].end(); p++ ){
-	  types.insert( (*p).first );
+	  types.insert( p->first );
       }
       return types;
   }
@@ -374,18 +375,77 @@ namespace marlin{
 
   void CCProcessor::writeToXML( ofstream& stream ){
 
-    //FIXME: make uninstalled processors write collections as input / output
-    
-    writeColsToParam();
-
     stream << " <processor name=\"" <<  _name  << "\" type=\"" <<  _type << "\">\n";
-    if( isInstalled() ){
-	stream << " <!--" << _proc->description() << "-->\n";
-    }
-    else{
-	stream << " <!-- This processor is NOT Installed in your Marlin binary so ALL parameter descriptions are lost!!!-->\n";
+    stream << " <!--" << getDescription() << "-->\n";
+
+    StringVec value;
+    //write I/O collections
+    for( ssColVecMap::const_iterator p=_cols.begin(); p!=_cols.end(); p++ ){
+     if( p->first != UNAVAILABLE ){
+	for( sColVecMap::const_iterator q=p->second.begin(); q!=p->second.end(); q++ ){
+	  if( q->second.size() != 0){
+	    if( isInstalled() ){
+		stream << "  <!--" << CMProcessor::instance()->getParamD( _type, q->first ) << "-->" << std::endl ;
+	    }
+	    stream << "  <parameter name=\"" << q->first << "\" type=\"" << (q->second.size() == 1 ? "string" : "StringVec") << "\" ";
+	    stream << p->first << "=\"" << q->second[0]->getType() << "\"> ";
+	    value.clear();
+	    for( unsigned int i=0; i<q->second.size(); i++ ){
+		stream << q->second[i]->getValue() << " ";
+	    }
+	    stream << "</parameter>\n";
+	  }
+	}
+      }
     }
     
+    StringVec keys;
+    if( hasParameters() ){
+	_param->getStringKeys( keys );
+    }
+    
+    //parameters
+    for( unsigned int i=0; i<keys.size(); i++ ){
+
+	ProcessorParameter* p = CMProcessor::instance()->getParam( _type, keys[i] );
+   
+	//if the parameter is recognized by the marlin processor
+        if( p != NULL ){
+	    
+	    stream << "  <!--" << CMProcessor::instance()->getParamD( _type, keys[i] ) << "-->" << std::endl ;
+	    stream << "  <" << (p->isOptional() ? "!--" : "") << "parameter name=\"" << keys[i] << "\" ";
+	    stream << "type=\"" << p->type() << "\"";
+	    
+	    StringVec values;
+	    _param->getStringVals( keys[i], values );
+	    stream << (values.size() == 1 ? " value=\"" : "> ");
+	    for( unsigned int j=0; j<values.size(); j++ ){
+		stream << values[j] << (values.size() > 1 ? " " : "");
+	    }
+	    stream << (values.size() == 1 ? "\"/" : "</parameter") << (p->isOptional() ? "--" : "")  << ">\n";
+	}
+	//else it's a parameter from an uninstalled processor or an extra parameter from an installed processor
+	else{
+	    if( isInstalled() ){
+		stream << "  <!-- Sorry, this parameter isn't a default parameter for this processor: description and type lost!!  -->" << std::endl ;
+	    }
+	    stream << "  <parameter name=\"" << keys[i] << "\"";
+
+	    StringVec values;
+	    //get the values for the given key
+	    _param->getStringVals( keys[i], values );
+
+	    stream << ( values.size() == 1 ? " value=\"" : ">" );
+																			 
+	    for( unsigned int j=0; j<values.size(); j++ ){
+		stream << ( values.size() == 1 ? "" : " ") << values[j];
+	    }
+	    stream << ( values.size() == 1 ? "\"/>\n" : " </parameter>\n" );
+	}
+    }
+   
+    /*
+    writeColsToParam();
  
     StringVec keys;
     if( hasParameters() ){
@@ -445,9 +505,9 @@ namespace marlin{
 	    stream << ( values.size() == 1 ? "\"/>\n" : " </parameter>\n" );
 	}
     }
+    */
     stream << "</processor>\n\n";
-    
-    clearParameters();
+    //clearParameters();
   }
 
 } // end namespace marlin

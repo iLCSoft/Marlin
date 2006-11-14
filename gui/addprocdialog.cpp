@@ -3,6 +3,7 @@
 #include "addprocdialog.h"
 
 #include "marlin/MarlinSteerCheck.h"
+#include "marlin/CMProcessor.h"
 
 using namespace std;
 
@@ -30,7 +31,7 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
     procTypes=msc->getAvailableProcTypes();
     
     for( ssMap::const_iterator p=procTypes.begin(); p != procTypes.end(); p++ ){
-	if( (*p).first=="AIDAProcessor" && _msc->existsProcessor("AIDAProcessor") ){
+	if( (p->first =="AIDAProcessor" && _msc->existsProcessor("AIDAProcessor")) || !_msc->getMProcs()->isInstalled( p->first ) ){
 	    continue;
 	}
         cb->addItem((*p).first.c_str());
