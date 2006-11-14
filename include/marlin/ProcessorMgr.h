@@ -29,7 +29,7 @@ typedef std::map< const std::string , int > SkippedEventMap ;
 /** Processor manager singleton class. Holds references to all registered Processors. 
  *
  *  @author F. Gaede, DESY
- *  @version $Id: ProcessorMgr.h,v 1.13 2006-11-10 13:28:58 engels Exp $ 
+ *  @version $Id: ProcessorMgr.h,v 1.14 2006-11-14 16:01:41 engels Exp $ 
  */
 class ProcessorMgr : public LCRunListener, public LCEventListener {
 
@@ -106,9 +106,6 @@ protected:
   /** Returns a list of all registered processors found */
   std::set< std::string > getAvailableProcessorTypes() ;
   
-  /** FIXME: temporary: Returns processors descriptions */
-  std::map< std::string, std::string > getAvailableProcessorDescriptions() ;
-
 //   ProcessorMgr() : _outputProcessor(0) {}
   ProcessorMgr() {}
 

@@ -46,11 +46,8 @@ namespace marlin{
 	_gparam->add("GearXMLFile", value);
     }
 
-    //get a list of all available processor types from marlin Processor Manager
-    _procTypes = ProcessorMgr::instance()->getAvailableProcessorDescriptions();
-
     _marlinProcs = CMProcessor::instance();
-
+    
     }
 
   // Destructor

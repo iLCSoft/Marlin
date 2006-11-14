@@ -28,7 +28,7 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
     
     //Processor Type
     cb = new QComboBox;
-    procTypes=msc->getAvailableProcTypes();
+    procTypes=msc->getMProcs()->getProcDesc();
     
     for( ssMap::const_iterator p=procTypes.begin(); p != procTypes.end(); p++ ){
 	if( (p->first =="AIDAProcessor" && _msc->existsProcessor("AIDAProcessor")) || !_msc->getMProcs()->isInstalled( p->first ) ){

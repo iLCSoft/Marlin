@@ -21,7 +21,6 @@ namespace marlin{
 
   class ProcessorMgr ;
   //  class ProcessorParameter ;
-  class CCProcessor ;
   class XMLFixCollTypes ;
 
   typedef std::map<std::string, ProcessorParameter* > ProcParamMap ;
@@ -43,13 +42,12 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.20 2006-11-13 17:11:05 engels Exp $ 
+   *  @version $Id: Processor.h,v 1.21 2006-11-14 16:01:41 engels Exp $ 
    */
   
   class Processor {
   
     friend class ProcessorMgr ;
-    friend class CCProcessor ;
     friend class CMProcessor ;
     friend class XMLFixCollTypes ;
 

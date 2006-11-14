@@ -142,21 +142,6 @@ namespace marlin{
      }
     return ptypes;
   }
-  
-  //FIXME temporary
-  std::map< std::string, std::string > ProcessorMgr::getAvailableProcessorDescriptions(){
-      
-     std::map< std::string, std::string > pdesc;
-     
-     for(ProcessorMap::iterator i=_map.begin() ; i!= _map.end() ; i++) {
-      if( i->second != NULL )
-	pdesc[i->first] = i->second->description();
-      else
-	pdesc[i->first] = "This processor is NOT installed!! Please install it before using it...";
-    }
-    return pdesc;
-  }
-
 
   Processor* ProcessorMgr::getProcessor( const std::string& type ){
     return _map[ type ] ;

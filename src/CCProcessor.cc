@@ -115,8 +115,8 @@ namespace marlin{
 	StringVec InCols, OutCols;
 	string name, type;
 
-	_param->getStringVals( INPUT, InCols );
-	_param->getStringVals( OUTPUT, OutCols );
+	_param->getStringVals( "_marlin.lcioInType", InCols );
+	_param->getStringVals( "_marlin.lcioOutType", OutCols );
 
 	unsigned int index = 0;
 	while( index < InCols.size() ){

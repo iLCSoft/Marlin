@@ -30,6 +30,9 @@ namespace marlin{
 	/** returns the instance of the processor with the given type */
 	Processor* getProc( const std::string& type );
 
+	/** returns a map with the processor descriptions */
+	ssMap getProcDesc(){ return _mpDescriptions; }
+
 	/** returns the parameters for the processor of the given type */
 	StringParameters* getSParams( const std::string& type );
 	
