@@ -40,7 +40,7 @@ namespace marlin{
  * @param SimpleFileHandler Initialization of a simple conditions file handler
  *
  *  @author F. Gaede, DESY
- *  @version $Id: ConditionsProcessor.h,v 1.4 2005-10-11 12:56:28 gaede Exp $ 
+ *  @version $Id: ConditionsProcessor.h,v 1.5 2006-11-15 16:28:10 gaede Exp $ 
  */
  
 class ConditionsProcessor : public Processor {
@@ -75,7 +75,7 @@ class ConditionsProcessor : public Processor {
 //   virtual void check( LCEvent * evt ) ; 
 //   /** Called after data processing for clean up.
 //    */
-//   virtual void end() ;
+  virtual void end() ;
   
   
  protected:
@@ -94,6 +94,9 @@ class ConditionsProcessor : public Processor {
 
   /** initialization of DataFileHandlers */
   StringVec _datafileHandlerInit ;
+
+  /** the names of all handlers */
+  StringVec _condHandlerNames ;
 
   int _nRun ;
   int _nEvt ;

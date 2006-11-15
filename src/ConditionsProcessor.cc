@@ -124,6 +124,8 @@ namespace marlin{
 	
 	lccd::LCConditionsMgr::instance()->
 	  registerHandler( condName ,  new lccd::SimpleFileHandler( fileName, condName, colName ) ) ;
+
+	_condHandlerNames.push_back( condName ) ;
       }
     }
     
@@ -143,6 +145,8 @@ namespace marlin{
 	
 	lccd::LCConditionsMgr::instance()->
 	  registerHandler( condName, new lccd::DBCondHandler( _dbInit , folder , condName, tag ) ) ;
+
+	_condHandlerNames.push_back( condName ) ;
       }
     }
     
@@ -159,6 +163,8 @@ namespace marlin{
 	
 	lccd::LCConditionsMgr::instance()->
 	  registerHandler( condName ,  new lccd::DBFileHandler( fileName, condName, colName ) ) ;
+
+	_condHandlerNames.push_back( condName ) ;
       }
     }
     
@@ -172,6 +178,8 @@ namespace marlin{
 	
 	lccd::LCConditionsMgr::instance()->
 	  registerHandler( condName ,  new lccd::DataFileHandler( condName ) ) ;
+
+	_condHandlerNames.push_back( condName ) ;
       }
     }
     
@@ -198,14 +206,19 @@ namespace marlin{
     }
   }
   
-//   void ConditionsProcessor::check( LCEvent * evt ) { 
-//     // nothing to check here - could be used to fill checkplots in reconstruction processor
-//   }
-//   void ConditionsProcessor::end(){ 
-//     //   std::cout << "ConditionsProcessor::end()  " << name() 
-//     // 	    << " processed " << _nEvt << " events in " << _nRun << " runs "
-//     // 	    << std::endl ;
-//   }
+  //   void ConditionsProcessor::check( LCEvent * evt ) { 
+  //     // nothing to check here - could be used to fill checkplots in reconstruction processor
+  //   }
+  
+  
+  void ConditionsProcessor::end(){ 
+
+    // delete all handlers
+    for(unsigned int i=0; i< _condHandlerNames.size()  ; ++i){
+
+      lccd::LCConditionsMgr::instance()->removeHandler( _condHandlerNames[i] );
+    }
+  }
   
 }
   
