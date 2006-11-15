@@ -7,6 +7,7 @@
 #include "marlin/MarlinSteerCheck.h"
 
 class QVBoxLayout;
+class QTableWidget;
 
 using namespace marlin;
 
@@ -20,12 +21,14 @@ public:
 private slots:
     void apply();
     void cancel();
+    void optParamChanged();
     
 private:
     void setupViews();
     
     //Variables
     QVBoxLayout *mainLayout;
+    QTableWidget *optParamTable;
     
     CCProcessor* _p;
     MarlinSteerCheck* _msc;

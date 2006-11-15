@@ -13,8 +13,8 @@ QWidget *ParamDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
     
     if( index.column() == 0 ){
 	edit->setReadOnly(true);
+	return edit;
     }
-   
     return edit;
 }
 

@@ -125,6 +125,12 @@ namespace marlin {
     /** Clears an error flag in this processor ( NO_PARAMETERS=0, NOT_INSTALLED=1, COL_ERRORS=2 ) */
     void clearError( int error );
 
+    /** Sets a parameter as optional (if optional=true parameter is written out as a comment) */
+    void setOptionalParam( const std::string& key, bool optional=true );
+    
+    /** Returns true if a parameter is optional (optional means the parameter will be written out as a comment) */
+    bool isParamOptional( const std::string& key );
+    
     /** Writes this processor to a stream using the XML format */
     void writeToXML( std::ofstream& stream );
 
@@ -158,6 +164,8 @@ namespace marlin {
 
     sssMap _types;		    // first key for Types INPUT : OUTPUT
 				    // second key is for Collection Names and the third string for Collection Types
+
+    sSet _optParams;		    // list of optional parameters that shall be written out as normal parameters
   };
 
 } // end namespace marlin

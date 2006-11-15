@@ -122,6 +122,18 @@ namespace marlin{
 			//add the default parameter to the given (xml) parameters
 			sp->add( keys[i], values);
 		    }
+		    //parameter is already set in the xml file
+		    else{
+			//if the parameter is an optional parameter that isn't
+			//commented out in the given xml file we don't want to
+			//write it as a comment when saving to an xml file again,
+			//so we pass this information to the CCProcessor
+			if( isParamOpt( type, keys[i] )){
+			    StringVec optParams;
+			    optParams.push_back( keys[i] );
+			    sp->add( "Opt_Params_Set", optParams );
+			}
+		    }
 		}
 		return sp;
 	    }

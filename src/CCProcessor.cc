@@ -44,6 +44,7 @@ namespace marlin{
       _name=p._name;
       _type=p._type;
       _types=p._types;
+      _optParams=p._optParams;
       
       for( int i=0; i<MAX_ERRORS; i++ ){
 	_error[i] = false;
@@ -175,6 +176,17 @@ namespace marlin{
 	  _param->erase( INPUT );
 	  _param->erase( OUTPUT );
 
+	  //if there are any optional parameters set we save the keys into _optParams
+	  if( _param->isParameterSet( "Opt_Params_Set" )){
+	      StringVec values;
+	      _param->getStringVals( "Opt_Params_Set", values );
+	      for( unsigned int i=0; i<values.size(); i++ ){
+		  _optParams.insert( values[i] );
+	      }
+	  }
+
+	  //erase the list of optional parameters
+	  _param->erase( "Opt_Params_Set" );
       }
   }
   
@@ -372,6 +384,24 @@ namespace marlin{
     if( _status == true ){ return true; }
     return false;
   }
+  
+  bool CCProcessor::isParamOptional( const string& key ){
+      if( CMProcessor::instance()->isParamOpt( _type, key )){
+	  if( _optParams.find( key ) == _optParams.end() ){
+	      return true;
+	  }
+      }
+      return false;
+  }
+
+  void CCProcessor::setOptionalParam( const string& key, bool optional ){
+      if( optional ){
+	  _optParams.erase( key );
+      }
+      else{
+	  _optParams.insert( key );
+      }
+  }
 
   void CCProcessor::writeToXML( ofstream& stream ){
 
@@ -413,7 +443,7 @@ namespace marlin{
         if( p != NULL ){
 	    
 	    stream << "  <!--" << CMProcessor::instance()->getParamD( _type, keys[i] ) << "-->" << std::endl ;
-	    stream << "  <" << (p->isOptional() ? "!--" : "") << "parameter name=\"" << keys[i] << "\" ";
+	    stream << "  <" << (isParamOptional( keys[i] ) ? "!--" : "") << "parameter name=\"" << keys[i] << "\" ";
 	    stream << "type=\"" << p->type() << "\"";
 	    
 	    StringVec values;
@@ -422,7 +452,7 @@ namespace marlin{
 	    for( unsigned int j=0; j<values.size(); j++ ){
 		stream << values[j] << (values.size() > 1 ? " " : "");
 	    }
-	    stream << (values.size() == 1 ? "\"/" : "</parameter") << (p->isOptional() ? "--" : "")  << ">\n";
+	    stream << (values.size() == 1 ? "\"/" : "</parameter") << (isParamOptional( keys[i] ) ? "--" : "")  << ">\n";
 	}
 	//else it's a parameter from an uninstalled processor or an extra parameter from an installed processor
 	else{

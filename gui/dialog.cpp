@@ -76,7 +76,7 @@ void Dialog::setupViews()
 	    //initialize table
 	    ColVec cols = _p->getCols( INPUT , (*p).first );
 	    for( unsigned int i=0; i<cols.size(); i++ ){
-		if( _msc->getMProcs()->getParamT( _p->getType(), (*p).first ) == "string" ){
+		if( !_msc->getMProcs()->isParamVec( _p->getType(), (*p).first )){
 
 		    found=true;
 		    
@@ -135,7 +135,7 @@ void Dialog::setupViews()
 	
 	for( ssMap::const_iterator p=colHeaders.begin(); p!=colHeaders.end(); p++ ){
 	    
-	    if( _msc->getMProcs()->getParamT( _p->getType(), (*p).first ) == "StringVec" ){
+	    if( _msc->getMProcs()->isParamVec( _p->getType(), (*p).first )){
 
 		found = true;
 		
@@ -243,8 +243,12 @@ void Dialog::setupViews()
 	colTable->horizontalHeader()->resizeSection(2, 300);
 	colTable->setSelectionMode(QAbstractItemView::NoSelection);
 	colTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-
+	
+	bool found = false;
+	
 	for( ssMap::const_iterator p=colHeaders.begin(); p!=colHeaders.end(); p++ ){
+	    found=true;
+
 	    //initialize table
 	    ColVec cols = _p->getCols( OUTPUT , (*p).first );
 	    for( unsigned int i=0; i<cols.size(); i++ ){
@@ -268,22 +272,24 @@ void Dialog::setupViews()
 		
 		//colTable->openPersistentEditor(item2);
 	    }
-	}		
-	//delegate
-	QItemDelegate *delegate = new OColDelegate(_p, colTable);
-	colTable->setItemDelegate(delegate);
-	
-	//Layout
-	QVBoxLayout *colsLayout = new QVBoxLayout;
-	colsLayout->addWidget(colTable);
-	
-	//create group box for all collections
-	QGroupBox *colsGroupBox = new QGroupBox(tr("OUTPUT COLLECTIONS"));
-	colsGroupBox->setLayout(colsLayout);
-	colsGroupBox->setMaximumHeight(160);
-	
-	//add group box to main layout
-	mainLayout->addWidget(colsGroupBox);
+	}
+	if(found){
+	    //delegate
+	    QItemDelegate *delegate = new OColDelegate(_p, colTable);
+	    colTable->setItemDelegate(delegate);
+	    
+	    //Layout
+	    QVBoxLayout *colsLayout = new QVBoxLayout;
+	    colsLayout->addWidget(colTable);
+	    
+	    //create group box for all collections
+	    QGroupBox *colsGroupBox = new QGroupBox(tr("OUTPUT COLLECTIONS"));
+	    colsGroupBox->setLayout(colsLayout);
+	    colsGroupBox->setMaximumHeight(160);
+	    
+	    //add group box to main layout
+	    mainLayout->addWidget(colsGroupBox);
+	}
     }
    
 
@@ -302,53 +308,152 @@ void Dialog::setupViews()
 	paramTable->horizontalHeader()->resizeSection(1, 500);
 	paramTable->setSelectionMode(QAbstractItemView::NoSelection);
 	paramTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
+	
+	//initialize table
+	StringVec paramKeys;
+	_p->getParameters()->getStringKeys(paramKeys);
+	
+	bool found=false;
+	
+	for( unsigned int i=0; i<paramKeys.size(); i++ ){
+	
+	    if( !_msc->getMProcs()->isParamOpt( _p->getType(), paramKeys[i] )){
+		found = true;
+		
+		int row = paramTable->rowCount();
+		paramTable->setRowCount(row + 1);
+																				     
+		StringVec paramValues;
+		_p->getParameters()->getStringVals(paramKeys[i], paramValues);
+		
+		QString str;
+		
+		for( unsigned int j=0; j<paramValues.size(); j++ ){
+		    str+=paramValues[j].c_str();
+		    str+=" ";
+		}
+		
+		QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
+		QTableWidgetItem *item1 = new QTableWidgetItem( str );
+		
+		item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
 
+		item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
+		item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
+		    
+		paramTable->setItem(row, 0, item0);
+		paramTable->setItem(row, 1, item1);
+
+		//paramTable->openPersistentEditor(item1);
+		
+	    }
+	}
+	if(found){
+	    //Delegate
+	    ParamDelegate *pDelegate = new ParamDelegate(_p, paramTable);
+	    paramTable->setItemDelegate( pDelegate );
+																				     
+	    //Layout
+	    QVBoxLayout *paramLayout = new QVBoxLayout;
+	    paramLayout->addWidget(paramTable);
+
+	    //GroupBox
+	    QGroupBox *paramGroupBox = new QGroupBox(tr("Processor Parameters"));
+	    paramGroupBox->setLayout(paramLayout);
+	    
+	    mainLayout->addWidget(paramGroupBox);
+	}
+    }
+
+    //////////////////////////////
+    //PARAMETERS TABLE (Optional)
+    //////////////////////////////
+    if(_p->hasParameters()){
+	optParamTable = new QTableWidget;
+
+	QStringList labels;
+	labels << tr("Parameter Name") << tr("Parameter Value") << tr("Optional");
+	optParamTable->setColumnCount(3);
+	optParamTable->verticalHeader()->hide();
+	optParamTable->setHorizontalHeaderLabels(labels);
+	optParamTable->horizontalHeader()->resizeSection(0, 400);
+	optParamTable->horizontalHeader()->resizeSection(1, 500);
+	optParamTable->horizontalHeader()->resizeSection(2, 300);
+	optParamTable->setSelectionMode(QAbstractItemView::NoSelection);
+	optParamTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
+
+	
+	bool found = false;
 	//initialize table
 	StringVec paramKeys;
 	_p->getParameters()->getStringKeys(paramKeys);
 	for( unsigned int i=0; i<paramKeys.size(); i++ ){
-	
-	    int row = paramTable->rowCount();
-	    paramTable->setRowCount(row + 1);
-																				 
-	    StringVec paramValues;
-	    _p->getParameters()->getStringVals(paramKeys[i], paramValues);
-	    
-	    QString str;
-	    
-	    for( unsigned int j=0; j<paramValues.size(); j++ ){
-		str+=paramValues[j].c_str();
-		str+=" ";
-	    }
-	    
-	    QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
-	    QTableWidgetItem *item1 = new QTableWidgetItem( str );
-	    
-	    item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
 
-	    item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
-	    item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
+	    if( _msc->getMProcs()->isParamOpt( _p->getType(), paramKeys[i] )){
+		found = true;
+	    
+		int row = optParamTable->rowCount();
+		optParamTable->setRowCount(row + 1);
+																				     
+		StringVec paramValues;
+		_p->getParameters()->getStringVals(paramKeys[i], paramValues);
 		
-	    paramTable->setItem(row, 0, item0);
-	    paramTable->setItem(row, 1, item1);
+		QString str;
+		
+		for( unsigned int j=0; j<paramValues.size(); j++ ){
+		    str+=paramValues[j].c_str();
+		    str+=" ";
+		}
+		
+		QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
+		QTableWidgetItem *item1 = new QTableWidgetItem( str );
+		QTableWidgetItem *item2 = new QTableWidgetItem((
+			_p->isParamOptional( paramKeys[i] ) ?
+			"Write as a comment" :
+			"Write as a normal parameter"
+			));
 
-	    //paramTable->openPersistentEditor(item1);
+		item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
+            	//item2->setData(Qt::UserRole, "Optional");
+            	item2->setFlags(item0->flags() & ~Qt::ItemIsEditable);
+
+		item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ));
+		item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ));
+		item2->setToolTip( QString(
+			    tr( "Activate this checkbox to write the parameter as a normal parameter in the xml file.\n" 
+				"Please take into account that if you don't want to use this parameter and leave this\n"
+				"option unchecked the value of the parameter will still be written as a comment in the\n"
+				"xml file but the next time you open the xml file in the GUI the value will get lost."
+			    )));
+		optParamTable->setItem(row, 0, item0);
+		optParamTable->setItem(row, 1, item1);
+		optParamTable->setItem(row, 2, item2);
+
+		item2->setCheckState( _p->isParamOptional( paramKeys[i] ) ? Qt::Unchecked : Qt::Checked );
+
+		//optParamTable->openPersistentEditor(item2);
+	    }
 	}
-	
-	//Delegate
-	ParamDelegate *pDelegate = new ParamDelegate(_p, paramTable);
-	paramTable->setItemDelegate( pDelegate );
-																				 
-	//Layout
-	QVBoxLayout *paramLayout = new QVBoxLayout;
-	paramLayout->addWidget(paramTable);
+	if(found){
+	    
+	    //Delegate
+	    ParamDelegate *pDelegate = new ParamDelegate(_p, optParamTable);
+	    optParamTable->setItemDelegate( pDelegate );
+																				     
+	    //Layout
+	    QVBoxLayout *paramLayout = new QVBoxLayout;
+	    paramLayout->addWidget(optParamTable);
 
-	//GroupBox
-	QGroupBox *paramGroupBox = new QGroupBox(tr("Processor Parameters"));
-	paramGroupBox->setLayout(paramLayout);
-	
-	mainLayout->addWidget(paramGroupBox);
+	    //GroupBox
+	    QGroupBox *paramGroupBox = new QGroupBox(tr("Optional Processor Parameters"));
+	    paramGroupBox->setLayout(paramLayout);
+	    
+	    mainLayout->addWidget(paramGroupBox);
+
+	    connect(optParamTable, SIGNAL(cellClicked(int, int)), this, SLOT(optParamChanged()));
+	}
     }
+
 
     //////////////////////////////
     // APPLY, CANCEL BUTTONS
@@ -372,6 +477,22 @@ void Dialog::setupViews()
     mainButtons->setLayout(mainButtonsLayout);
     
     mainLayout->addWidget(mainButtons);
+}
+
+void Dialog::optParamChanged(){
+    for( int row = 0; row < optParamTable->rowCount(); row++ ){
+        QTableWidgetItem *item0 = optParamTable->item(row, 0);
+        QTableWidgetItem *item2 = optParamTable->item(row, 2);
+                                                                                                                                                             
+        if(item2->checkState() == Qt::Checked){
+	    item2->setText("Write as a normal parameter");
+	    _p->setOptionalParam( item0->text().toStdString(), false );
+        }
+	else{
+	    item2->setText("Write as a comment");
+	    _p->setOptionalParam( item0->text().toStdString() );
+	}
+    }
 }
 
 void Dialog::apply(){
