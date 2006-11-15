@@ -1,12 +1,13 @@
 #ifndef CCPROCESSOR_H
 #define CCPROCESSOR_H
 
-/*
+/* @class
  * This class handles information about
  * marlin processors and their collections
  * needed by MarlinSteerCheck
  *
  * @author Benjamin Eberhardt, Jan Engels
+ * @version $Id: CCProcessor.h,v 1.17 2006-11-15 16:21:04 engels Exp $
  *
  */
 

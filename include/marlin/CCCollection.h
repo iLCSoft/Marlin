@@ -1,9 +1,10 @@
 
-/*
+/* @class
  * this class handles information about LCIO collections
  * needed by MarlinSteerCheck
  *
- * @author: Benjamin Eberhardt, Jan Engels
+ * @author Benjamin Eberhardt, Jan Engels
+ * @version $Id: CCCollection.h,v 1.6 2006-11-15 16:21:04 engels Exp $
  *
  */
 

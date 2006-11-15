@@ -1,10 +1,11 @@
 #ifndef CMPROCESSOR_H
 #define CMPROCESSOR_H
 
-/*
+/* @class
  * This singleton class contains an instance of every available marlin processor type
  * 
  * @author Jan Engels
+ * @version $Id: CMProcessor.h,v 1.4 2006-11-15 16:21:04 engels Exp $
  *
  */
 

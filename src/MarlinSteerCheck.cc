@@ -249,9 +249,9 @@ namespace marlin{
   }
   
   //returns true if a processor of this type already exists
-  bool MarlinSteerCheck::existsProcessor( const string& type ){
-    for(unsigned int i=0; i<getAllProcs().size(); i++ ){
-	if( getAllProcs()[i]->getType() == type ){
+  bool MarlinSteerCheck::existsActiveProcessor( const string& type ){
+    for(unsigned int i=0; i<_aProc.size(); i++ ){
+	if( _aProc[i]->getType() == type ){
 	    return true;
 	}
     }
