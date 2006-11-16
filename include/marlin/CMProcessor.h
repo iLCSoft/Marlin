@@ -5,7 +5,7 @@
  * This singleton class contains an instance of every available marlin processor type
  * 
  * @author Jan Engels
- * @version $Id: CMProcessor.h,v 1.4 2006-11-15 16:21:04 engels Exp $
+ * @version $Id: CMProcessor.h,v 1.5 2006-11-16 17:11:01 engels Exp $
  *
  */
 
@@ -64,14 +64,13 @@ namespace marlin{
 	/** returns true if the processor with the given type is installed */
 	bool isInstalled( const std::string& type );
 
-    protected:
+	//utility function to tokenize strings
+	void tokenize( const std::string str, StringVec& tokens, const std::string& delimiters = " " );
+
+    private:
 	// Constructor
 	CMProcessor();
 
-    private:
-	//utility function to tokenize strings
-	void tokenize( const std::string str, StringVec& tokens, const std::string& delimiters = " " );
-	
 	static CMProcessor*  _me;	//singleton instance
 	ProcessorMap _mProcs;		//processor instances
 	ssMap _mpDescriptions;		//processor descriptions

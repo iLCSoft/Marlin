@@ -16,6 +16,7 @@ class QByteArray;
 class QTextEdit;
 class QLabel;
 class QString;
+class QActionGroup;
 
 using namespace marlin;
 
@@ -41,6 +42,7 @@ protected slots:
     virtual void closeEvent(QCloseEvent *e);
 	
 private slots:
+    void changeStyle(bool checked);
     void aboutGUI();
     void madeChanges();
     void selectionChanged(int row);
@@ -75,6 +77,7 @@ private:
     void selectRow( QTableWidget* t, int row, bool colors=false );
     void selectLCIORow( QListWidget* t, int row );
     void createMenus();
+    void checkCurrentStyle();
 
     //variables
     bool _modified;
@@ -111,6 +114,8 @@ private:
     QSplitter *hSplitter;
     
     QWidget *centralWidget;
+
+    QActionGroup *styleActionGroup;
 };
 
 #endif

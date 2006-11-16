@@ -80,8 +80,10 @@ MainWindow::MainWindow() : _modified(false), _file(""), msc(NULL)
     	"Extra parameters that aren't categorized as default in a processor also loose their description and type.</font><br><br><br>"
     	
 	"In order for this application to work correctly you should first check if all processors found in the "
-	"steering file are installed in your Marlin binary.<br> You can easily check this by running \"Marlin -c SteeringFile.xml\"<br><br><br>"
-	"If you have comments or suggestions please send me an email (<a href=\"mailto:jan.engels@desy.de\">jan.engels@desy.de</a>). Thanks"
+	"steering file are installed in your Marlin binary.<br>This can easily be check by running \"Marlin -c SteeringFile.xml\"<br><br><br>"
+	"If you have comments or suggestions please take a look at the ILC Forum<br>under the Marlin section at "
+	"<a href=\"http://forum.linearcollider.org/\">http://forum.linearcollider.org</a>. Thanks <br><br>"
+	"Author: Jan Engels"
     ));
     
     //save changes message
@@ -105,6 +107,8 @@ MainWindow::MainWindow() : _modified(false), _file(""), msc(NULL)
     
     //Window Title
     setWindowTitle(tr("Marlin GUI"));
+    
+    checkCurrentStyle();
 
     //Window Size
     resize(800,400);
@@ -141,17 +145,18 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 void MainWindow::createMenus()
 {
-    QMenu *fileMenu = new QMenu(tr("&File"), this);
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QAction *newAction = fileMenu->addAction(tr("&New..."));
     newAction->setShortcut(QKeySequence(tr("Ctrl+N")));
     QAction *openAction = fileMenu->addAction(tr("&Open..."));
     openAction->setShortcut(QKeySequence(tr("Ctrl+O")));
     QAction *saveAction = fileMenu->addAction(tr("&Save..."));
-    saveAction->setShortcut(QKeySequence(tr("Ctrl+S"))); QAction *saveasAction
-	= fileMenu->addAction(tr("Save &As..."));
-    saveasAction->setShortcut(QKeySequence(tr("Ctrl+A"))); QAction *quitAction
-	= fileMenu->addAction(tr("E&xit"));
-    quitAction->setShortcut(QKeySequence(tr("Ctrl+Q")));
+    saveAction->setShortcut(QKeySequence(tr("Ctrl+S")));
+    QAction *saveasAction = fileMenu->addAction(tr("Save &As..."));
+    saveasAction->setShortcut(QKeySequence(tr("Ctrl+A")));
+    fileMenu->addSeparator();
+    QAction *quitAction = fileMenu->addAction(tr("E&xit"));
+    quitAction->setShortcut(QKeySequence(tr("Ctrl+X")));
     
     connect(newAction, SIGNAL(triggered()), this, SLOT(newXMLFile()));
     connect(openAction, SIGNAL(triggered()), this, SLOT(openXMLFile()));
@@ -159,14 +164,26 @@ void MainWindow::createMenus()
     connect(saveasAction, SIGNAL(triggered()), this, SLOT(saveAsXMLFile()));
     connect(quitAction, SIGNAL(triggered()), this, SLOT(close()));
 
-    QMenu *aboutMenu = new QMenu(tr("A&bout"), this);
+    styleActionGroup = new QActionGroup(this);
+    foreach (QString styleName, QStyleFactory::keys()) {
+        QAction *action = new QAction(styleActionGroup);
+        action->setText(tr("%1 Style").arg(styleName));
+        action->setData(styleName);
+        action->setCheckable(true);
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(changeStyle(bool)));
+    }
+    
+    QMenu *viewMenu = menuBar()->addMenu(tr("&View"));
+    foreach( QAction *action, styleActionGroup->actions() )
+    viewMenu->addAction(action);
+    
+    QMenu *aboutMenu = menuBar()->addMenu(tr("A&bout"));
     QAction *aboutGUIAction = aboutMenu->addAction(tr("About &Marlin GUI..."));
     QAction *aboutQTAction = aboutMenu->addAction(tr("About &QT..."));
     
     connect(aboutGUIAction, SIGNAL(triggered()), this, SLOT(aboutGUI()));
     connect(aboutQTAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-    
-    menuBar()->addMenu(fileMenu); menuBar()->addMenu(aboutMenu); }
+}
 
 void MainWindow::aboutGUI(){
     QMessageBox::about(this, tr("About Marlin GUI"), aboutGUIMsg);
@@ -435,7 +452,7 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
     }
 
     msc = new MarlinSteerCheck(filename);
-    
+
     updateGlobalSection();
     updateFiles();
     updateAProcessors();
@@ -954,3 +971,27 @@ void MainWindow::saveAsXMLFile()
 void MainWindow::madeChanges(){
     _modified=true;
 }
+
+void MainWindow::checkCurrentStyle()
+{
+    foreach (QAction *action, styleActionGroup->actions()){
+        QString styleName = action->data().toString();
+        QStyle *candidate = QStyleFactory::create(styleName);
+        Q_ASSERT(candidate);
+        if(candidate->metaObject()->className() == QApplication::style()->metaObject()->className()){
+            action->trigger();
+            return;
+        }
+        delete candidate;
+    }
+}
+
+void MainWindow::changeStyle(bool checked)
+{
+    if (!checked){ return; }
+    QAction *action = qobject_cast<QAction *>(sender());
+    QStyle *style = QStyleFactory::create(action->data().toString());
+    Q_ASSERT(style);
+    QApplication::setStyle(style);
+}
+

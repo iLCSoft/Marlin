@@ -99,19 +99,19 @@ namespace marlin{
     cmd+=file;
     cmd+= " >/dev/null";
     if( system( cmd.c_str() ) ){ return; }
+
+    //get the filename without the hole path
+    //StringVec file_tokens;
+    //_marlinProcs->tokenize(file, file_tokens, "/");
     
     //add the filename to the vector of LCIO files
-    bool found=false;
     for( unsigned int i=0; i<getLCIOFiles().size(); i++ ){
       if( getLCIOFiles()[i] == file ){
-	  found=true;
-	  break;
+	  //abort if file already exists
+	  return;
       }
     }
 
-    //abort if file already exists
-    if(found){ return; }
-    
     HANDLE_LCIO_EXCEPTIONS;
     ColVec newCols;
     
@@ -163,14 +163,17 @@ namespace marlin{
 
   // Remove lcio file and all collections associated to it
   void MarlinSteerCheck::remLCIOFile( const string& file ){
-   
+  
+    //erase the allocated memory for the collections associated to the file
     sColVecMap::const_iterator q=_lcioCols.find( file );
     for( unsigned int i=0; i<q->second.size(); i++ ){
 	delete q->second[i];
     }
 
+    //delete the file from the map
     _lcioCols.erase( file );
     
+    //delete the file from the list of files
     for( StringVec::iterator p=_lcioFiles.begin(); p != _lcioFiles.end(); p++ ){
 	if( (*p) == file ){
 	    _lcioFiles.erase(p);
@@ -388,7 +391,7 @@ namespace marlin{
       _gparam->getStringVals( "ActiveProcessors" , activeProcs );
       _gparam->erase("ActiveProcessors");
     
-      _gparam->erase("ProcessorConditions");
+      //_gparam->erase("ProcessorConditions");
 	 
     
       //============================================================
