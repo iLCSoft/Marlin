@@ -98,7 +98,7 @@ namespace marlin{
    * </pre>
    * 
    * @author F. Gaede, DESY
-   * @version $Id: XMLParser.h,v 1.5 2006-10-17 16:17:30 gaede Exp $ 
+   * @version $Id: XMLParser.h,v 1.6 2006-11-16 14:44:45 gaede Exp $ 
    */
 
   class XMLParser : public IParser {
@@ -163,7 +163,7 @@ namespace marlin{
     void parametersFromNode(TiXmlNode* section, std::pair<unsigned,unsigned>* typeCount=0) ;
 
     /** Return named attribute - throws ParseException if attribute doesn't exist */
-    const char* XMLParser::getAttribute( TiXmlNode* node , const std::string& name ) ;
+    const char* getAttribute( TiXmlNode* node , const std::string& name ) ;
 
     /** Helper method - replaces all <group/> tag with corresponding <processor/> tags 
      */
