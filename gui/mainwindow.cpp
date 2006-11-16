@@ -246,12 +246,19 @@ void MainWindow::setupViews()
     //////////////////////////////
     //ACTIVE PROCESSOR BUTTONS
     //////////////////////////////
-    QPushButton *addAProc = new QPushButton(tr("&Add New Processor"));
-    QPushButton *editAProc = new QPushButton(tr("&Edit Selected Processor"));
-    QPushButton *remAProc = new QPushButton(tr("Delete Selected Processor"));
-    QPushButton *deactProc = new QPushButton(tr("Dea&ctivate Selected Processor"));
-    QPushButton *mvAProcUp = new QPushButton(tr("Move Selected Processor &Up"));
-    QPushButton *mvAProcDn = new QPushButton(tr("Move Selected Processor &Down"));
+    QPushButton *addAProc = new QPushButton(tr("&Add"));
+    QPushButton *editAProc = new QPushButton(tr("&Edit"));
+    QPushButton *remAProc = new QPushButton(tr("Delete"));
+    QPushButton *deactProc = new QPushButton(tr("Dea&ctivate"));
+    QPushButton *mvAProcUp = new QPushButton(tr("Move &Up"));
+    QPushButton *mvAProcDn = new QPushButton(tr("Move &Down"));
+    
+    addAProc->setToolTip(tr("Add New Processor"));
+    editAProc->setToolTip(tr("Edit Selected Processor"));
+    remAProc->setToolTip(tr("Delete Selected Processor"));
+    deactProc->setToolTip(tr("Deactivate Selected Processor"));
+    mvAProcUp->setToolTip(tr("Move Selected Processor Up"));
+    mvAProcDn->setToolTip(tr("Move Selected Processor Down"));
     
     connect(addAProc, SIGNAL(clicked()), this, SLOT(addAProcessor()));
     connect(editAProc, SIGNAL(clicked()), this, SLOT(editAProcessor()));
@@ -270,16 +277,20 @@ void MainWindow::setupViews()
     aProcButtonsLayout->addWidget(mvAProcDn);
     
     //GroupBox
-    aProcButtonsGBox = new QGroupBox(tr("Active Processor Operations"));
+    aProcButtonsGBox = new QGroupBox(tr("Operations"));
     aProcButtonsGBox->setLayout(aProcButtonsLayout);
-    aProcButtonsGBox->setFixedWidth(220);
+    aProcButtonsGBox->setFixedWidth(120);
 
     //////////////////////////////
     //INACTIVE PROCESSOR BUTTONS
     //////////////////////////////
-    QPushButton *editIProc = new QPushButton(tr("Edit Selected Processor"));
-    QPushButton *remIProc = new QPushButton(tr("Delete Selected Processor"));
-    QPushButton *actProc = new QPushButton(tr("Activate Selected Processor"));
+    QPushButton *editIProc = new QPushButton(tr("Edit"));
+    QPushButton *remIProc = new QPushButton(tr("Delete"));
+    QPushButton *actProc = new QPushButton(tr("Activate"));
+    
+    editIProc->setToolTip(tr("Edit Selected Processor"));
+    remIProc->setToolTip(tr("Delete Selected Processor"));
+    actProc->setToolTip(tr("Activate Selected Processor"));
     
     connect(editIProc, SIGNAL(clicked()), this, SLOT(editIProcessor()));
     connect(remIProc, SIGNAL(clicked()), this, SLOT(remIProcessor()));
@@ -292,9 +303,9 @@ void MainWindow::setupViews()
     iProcButtonsLayout->addWidget(actProc);
     
     //GroupBox
-    iProcButtonsGBox = new QGroupBox(tr("Inactive Processor Operations"));
+    iProcButtonsGBox = new QGroupBox(tr("Operations"));
     iProcButtonsGBox->setLayout(iProcButtonsLayout);
-    iProcButtonsGBox->setFixedWidth(220);
+    iProcButtonsGBox->setFixedWidth(120);
 
     //////////////////////////////
     //LCIO COLLECTIONS LIST
@@ -329,10 +340,15 @@ void MainWindow::setupViews()
     lcioFilesList = new QListWidget;
     
     //Buttons
-    QPushButton *mvFileUp = new QPushButton(tr("Move File Up"));
-    QPushButton *mvFileDn = new QPushButton(tr("Move File Down"));
-    QPushButton *addFile = new QPushButton(tr("Add LCIO File"));
-    QPushButton *remFile = new QPushButton(tr("Remove LCIO File"));
+    QPushButton *mvFileUp = new QPushButton(tr("Move Up"));
+    QPushButton *mvFileDn = new QPushButton(tr("Move Down"));
+    QPushButton *addFile = new QPushButton(tr("Add"));
+    QPushButton *remFile = new QPushButton(tr("Remove"));
+    
+    addFile->setToolTip(tr("Add New LCIO File"));
+    remFile->setToolTip(tr("Remove Selected LCIO File"));
+    mvFileUp->setToolTip(tr("Move Selected File Up"));
+    mvFileDn->setToolTip(tr("Move Selected File Down"));
     
     connect(addFile, SIGNAL(clicked()), this, SLOT(addLCIOFile()));
     connect(remFile, SIGNAL(clicked()), this, SLOT(remLCIOFile()));
