@@ -14,6 +14,8 @@ class QSplitter;
 class QPushButton;
 class QByteArray;
 class QTextEdit;
+class QLabel;
+class QString;
 
 using namespace marlin;
 
@@ -95,6 +97,9 @@ private:
     QListWidget *lcioFilesList;
 
     QTextEdit *aProcErrors;
+    
+    QLabel *defLab;
+    QString saveChangesMsg;
     
     QPushButton *hideProcs;
     QPushButton *hideErrors;
