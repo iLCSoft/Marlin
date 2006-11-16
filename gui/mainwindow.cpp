@@ -68,7 +68,23 @@ MainWindow::MainWindow() : _modified(false), _file(""), msc(NULL)
     hSizes << 600 << 800;
     hSplitter->setSizes( hSizes );
  
-    //save changess message
+    //about Marlin GUI message
+    aboutGUIMsg = QString(tr(
+	"<font size=5><b>Marlin - Graphical User Interface</b></font><br><br>"
+	"<font size=4>This application lets you \"repair\" or create "
+	"new Steering Files for Marlin.</font><br><br><br>"
+	"<b>WARNING:</b><br>"
+	"<font color=#FB0000>Please be aware that comments made in the original steering files will get lost in the saving process.<br>"
+    	"Processors that are not installed in your Marlin binary are not editable in this application and loose "
+	"their parameter's descriptions and types.<br>"
+    	"Extra parameters that aren't categorized as default in a processor also loose their description and type.</font><br><br><br>"
+    	
+	"In order for this application to work correctly you should first check if all processors found in the "
+	"steering file are installed in your Marlin binary.<br> You can easily check this by running \"Marlin -c SteeringFile.xml\"<br><br><br>"
+	"If you have comments or suggestions please send me an email (<a href=\"mailto:jan.engels@desy.de\">jan.engels@desy.de</a>). Thanks"
+    ));
+    
+    //save changes message
     saveChangesMsg = QString(tr( 
 	"You made changes that will get lost.\nDo you want to save your changes?\n\n"
 	"WARNING:\n"
@@ -76,27 +92,15 @@ MainWindow::MainWindow() : _modified(false), _file(""), msc(NULL)
 	"Processors that are not installed in your Marlin binary will loose their parameter's descriptions and types as well.\n"
 	"Extra parameters that aren't categorized as default in a processor also loose their description and type.\n\n"
     ));
-    
+   
     //set central widget
-    defLab = new QLabel(tr(
-	"Marlin - Graphical User Interface\n\n"
-	"This application lets you \"repair\" or create "
-	"new Steering Files for Marlin.\n\n"
-	"WARNING:\n"
-	"Please be aware that comments made in the original steering files will get lost in the saving process.\n"
-    	"Processors that are not installed in your Marlin binary are not editable in this application and loose their parameter's descriptions and types.\n"
-    	"Extra parameters that aren't categorized as default in a processor also loose their description and type.\n\n"
-    	
-	"In order for this application to work correctly you should first check if all processors found in the "
-	"steering file are installed in your Marlin binary.\n You can easily check this by running \"Marlin -c SteeringFile.xml\"\n\n\n"
-	"If you have comments or suggestions please send me an email (jan.engels@desy.de). Thanks"
-    ));
+    QLabel *defLab = new QLabel(aboutGUIMsg);
 
     defLab->setAlignment(Qt::AlignCenter);
     setCentralWidget(defLab);
     
     //Menu & Status Bars
-    menuBar()->addMenu(createMenu());
+    createMenus();
     statusBar();
     
     //Window Title
@@ -135,7 +139,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 //INIT METHODS
 ////////////////////////////////////////////////////////////////////////////////
 
-QMenu* MainWindow::createMenu()
+void MainWindow::createMenus()
 {
     QMenu *fileMenu = new QMenu(tr("&File"), this);
     QAction *newAction = fileMenu->addAction(tr("&New..."));
@@ -143,10 +147,10 @@ QMenu* MainWindow::createMenu()
     QAction *openAction = fileMenu->addAction(tr("&Open..."));
     openAction->setShortcut(QKeySequence(tr("Ctrl+O")));
     QAction *saveAction = fileMenu->addAction(tr("&Save..."));
-    saveAction->setShortcut(QKeySequence(tr("Ctrl+S")));
-    QAction *saveasAction = fileMenu->addAction(tr("Save &As..."));
-    saveasAction->setShortcut(QKeySequence(tr("Ctrl+A")));
-    QAction *quitAction = fileMenu->addAction(tr("E&xit"));
+    saveAction->setShortcut(QKeySequence(tr("Ctrl+S"))); QAction *saveasAction
+	= fileMenu->addAction(tr("Save &As..."));
+    saveasAction->setShortcut(QKeySequence(tr("Ctrl+A"))); QAction *quitAction
+	= fileMenu->addAction(tr("E&xit"));
     quitAction->setShortcut(QKeySequence(tr("Ctrl+Q")));
     
     connect(newAction, SIGNAL(triggered()), this, SLOT(newXMLFile()));
@@ -155,7 +159,17 @@ QMenu* MainWindow::createMenu()
     connect(saveasAction, SIGNAL(triggered()), this, SLOT(saveAsXMLFile()));
     connect(quitAction, SIGNAL(triggered()), this, SLOT(close()));
 
-    return fileMenu;
+    QMenu *aboutMenu = new QMenu(tr("A&bout"), this);
+    QAction *aboutGUIAction = aboutMenu->addAction(tr("About &Marlin GUI..."));
+    QAction *aboutQTAction = aboutMenu->addAction(tr("About &QT..."));
+    
+    connect(aboutGUIAction, SIGNAL(triggered()), this, SLOT(aboutGUI()));
+    connect(aboutQTAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    
+    menuBar()->addMenu(fileMenu); menuBar()->addMenu(aboutMenu); }
+
+void MainWindow::aboutGUI(){
+    QMessageBox::about(this, tr("About Marlin GUI"), aboutGUIMsg);
 }
 
 void MainWindow::setupViews()

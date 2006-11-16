@@ -41,6 +41,7 @@ protected slots:
     virtual void closeEvent(QCloseEvent *e);
 	
 private slots:
+    void aboutGUI();
     void madeChanges();
     void selectionChanged(int row);
     void hideIProcessors(bool checked);
@@ -73,7 +74,7 @@ private:
     void updateGlobalSection();
     void selectRow( QTableWidget* t, int row, bool colors=false );
     void selectLCIORow( QListWidget* t, int row );
-    QMenu* createMenu();
+    void createMenus();
 
     //variables
     bool _modified;
@@ -98,8 +99,8 @@ private:
 
     QTextEdit *aProcErrors;
     
-    QLabel *defLab;
     QString saveChangesMsg;
+    QString aboutGUIMsg;
     
     QPushButton *hideProcs;
     QPushButton *hideErrors;

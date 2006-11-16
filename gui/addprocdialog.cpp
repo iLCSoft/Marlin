@@ -58,7 +58,9 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
     
     //Buttons
     QPushButton *okButton = new QPushButton(tr("OK"));
-    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    QPushButton *cancelButton = new QPushButton(tr("&Cancel"));
+
+    okButton->setAutoDefault(true);
 
     connect(okButton, SIGNAL(clicked()), this, SLOT(addProcessor()));
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
