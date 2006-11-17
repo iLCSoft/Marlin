@@ -451,8 +451,16 @@ void MainWindow::setupViews()
 
 void MainWindow::setMarlinSteerCheck( const char* filename )
 {
+    //create backup file
+    std::string cmd= "cp -f ";
+    cmd+=filename;
+    cmd+=" ";
+    cmd+=filename;
+    cmd+="~";
+    if( system( cmd.c_str() ) ){ std::cerr << "Marlin GUI::setMarlinSteerCheck: Error creating backup file!!\n"; }
 
-    _file=filename;
+
+    //_file=filename;
 
     QString title= "Marlin GUI - ";
     title+=filename;
@@ -722,6 +730,15 @@ void MainWindow::remAProcessor()
 {   
     int pos = aProcTable->currentRow();
     if( pos >= 0 && pos < aProcTable->rowCount() ){
+    
+	int ret = QMessageBox::warning(this, tr("Delete Processor"), tr("Delete selected processor?"),
+            QMessageBox::Yes | QMessageBox::Default,
+            QMessageBox::No | QMessageBox::Escape);
+
+	if( ret == QMessageBox::No ){
+	    return;
+	}
+
 	msc->remProcessor( pos, ACTIVE );
 	updateAProcessors(pos);
 	emit modifiedContent();
@@ -732,6 +749,15 @@ void MainWindow::remIProcessor()
 {
     int pos = iProcTable->currentRow();
     if( pos >= 0 && pos < iProcTable->rowCount() ){
+	
+	int ret = QMessageBox::warning(this, tr("Delete Processor"), tr("Delete selected processor?"),
+            QMessageBox::Yes | QMessageBox::Default,
+            QMessageBox::No | QMessageBox::Escape);
+
+	if( ret == QMessageBox::No ){
+	    return;
+	}
+
 	msc->remProcessor( pos, INACTIVE );
 	updateIProcessors(pos);
 	emit modifiedContent();
@@ -874,7 +900,7 @@ void MainWindow::changeGearFile()
 
 void MainWindow::addLCIOFile()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose an LCIO file"), "", "*.slcio");
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose an LCIO file"), "", "*.slcio", 0, QFileDialog::DontResolveSymlinks);
     //fileName = QFileInfo(fileName).baseName();
     //fileName+=".slcio";
 
@@ -916,10 +942,16 @@ void MainWindow::openXMLFile()
 	}
     }
 
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose a data file"), "", "*.xml");
-
+    QString fileName = QFileDialog::getOpenFileName(this,
+	    tr("Choose a Marlin Steering File to open..."),
+	    QDir::currentPath(),
+	    "*.xml",
+	    0,
+	    QFileDialog::DontResolveSymlinks
+    );
+    
     if( !fileName.isEmpty() ){
-	_file=fileName.toStdString();
+	//_file=fileName.toStdString();
 	_modified=false;
 	setMarlinSteerCheck(fileName.toStdString().c_str());
         statusBar()->showMessage(tr("Loaded %1").arg(fileName), 2000);
@@ -953,7 +985,14 @@ void MainWindow::saveXMLFile()
 {
     if( _file != "" ){
 	_modified=false;
-	msc->saveAsXMLFile(_file);
+	if(!msc->saveAsXMLFile(_file)){
+	    QMessageBox::critical(this,
+		     tr("Error Saving File"),
+		     tr("Sorry, there was an error saving the file. Please choose another file.")
+	     );
+	     saveAsXMLFile();
+	     return;
+	}
 	statusBar()->showMessage(tr("Saved %1").arg(QString(_file.c_str())), 2000);
     }
     else{
@@ -963,23 +1002,31 @@ void MainWindow::saveXMLFile()
 
 void MainWindow::saveAsXMLFile()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save file as"), "", "*.xml");
+    QFileDialog *fd = new QFileDialog(this, tr("Save file as"), QDir::currentPath(), "*.xml");
+    
+    fd->setDefaultSuffix( "xml" );
+    fd->setAcceptMode( QFileDialog::AcceptSave );
+    fd->setFileMode( QFileDialog::AnyFile );
+    fd->setResolveSymlinks( false );
+    fd->setFilter( "*.xml" );
+
+    QString fileName;
+
+    if( fd->exec() ){
+	fileName=fd->selectedFiles().at(0);
+    }
 
     if( !fileName.isEmpty() ){
-	_modified=false;
-
+	
+	//update the window title bar
 	QString title= "Marlin GUI - ";
 	title+=fileName;
 	setWindowTitle(title);
 
 	_file=fileName.toStdString();
+	saveXMLFile();
 	
-	/*
-	if( !fileName.contains(".xml") ){
-	    fileName+=".xml";
-	}
-	*/
-	msc->saveAsXMLFile(fileName.toStdString());
+	//msc->saveAsXMLFile(fileName.toStdString());
 	statusBar()->showMessage(tr("Saved %1").arg(fileName), 2000);
     }
 }

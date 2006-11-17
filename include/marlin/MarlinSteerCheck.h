@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.15 2006-11-15 16:21:04 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.16 2006-11-17 13:25:07 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -112,8 +112,9 @@ namespace marlin {
     /** Performs a check at all active processors to search for unavailable collections */
     void consistencyCheck();
 
-    /** Saves the data to an XML file with the given name */
-    void saveAsXMLFile( const std::string& file );
+    /** Saves the data to an XML file with the given name
+     *  Returns false if error occured */
+    bool saveAsXMLFile( const std::string& file );
     
     /** Dumps all information read from the steering file to stdout */
     void dump_information();

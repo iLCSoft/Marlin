@@ -544,11 +544,18 @@ namespace marlin{
   }
 
   // Saves the data to an XML file with the given name
-  void MarlinSteerCheck::saveAsXMLFile( const string& file ){
-      
-    if( file.size() == 0 ){ return; }
+  bool MarlinSteerCheck::saveAsXMLFile( const string& file ){
+
+    if( file.size() == 0 ){ return false; }
     
-    ofstream outfile( file.c_str() );
+    ofstream outfile;
+    outfile.open( file.c_str() );
+
+    //abort if file cannot be created or modified
+    if( !outfile ){
+	cerr << "MarlinSteerCheck::saveAsXMLFile: Error creating or modifying XML File [" << file << "]\n";
+	return false;
+    }
     
     const time_t* pnow;
     time_t now;
@@ -624,6 +631,8 @@ namespace marlin{
     }
     
     outfile << "</marlin>\n";
+
+    return true;
   }
 
   ////////////////////////////////////////////////////////////////////////////////
