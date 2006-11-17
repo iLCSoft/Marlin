@@ -91,14 +91,24 @@ namespace marlin{
   }
  
   // Add LCIO file and read all collections inside it
-  void MarlinSteerCheck::addLCIOFile( const string& file ){
+  const string MarlinSteerCheck::addLCIOFile( const string& file ){
+    string error="OPEN_SUCCESSFUL";
    
     //FIXME: this is to prevent crashing the application if
     //the file doesn't exist (is there a better way to handle this??)
     string cmd= "ls ";
     cmd+=file;
-    cmd+= " >/dev/null";
-    if( system( cmd.c_str() ) ){ return; }
+    cmd+= " >/dev/null 2>/dev/null";
+    if( system( cmd.c_str() ) ){
+	error="Error opening LCIO file [";
+	error+=file;
+	error+="]. File doesn't exist, or link is not valid!!";
+	dred();
+	cout << error << endl;
+	endcolor();
+	errors_found=2;
+	return error;
+    }
 
     //get the filename without the hole path
     //StringVec file_tokens;
@@ -108,7 +118,14 @@ namespace marlin{
     for( unsigned int i=0; i<getLCIOFiles().size(); i++ ){
       if( getLCIOFiles()[i] == file ){
 	  //abort if file already exists
-	  return;
+	  error="Error opening LCIO file [";
+	  error+=file;
+       	  error+="]. This file has already been opened!!";
+	  dred();
+	  cout << error << endl;
+	  endcolor();
+	  errors_found=2;
+	  return error;
       }
     }
 
@@ -156,9 +173,11 @@ namespace marlin{
     lcReader->close();
     delete lcReader;
 
-    cout << "\nFinished loading LCIO file [" << file << "]\n";
+    cout << "\nLCIO file [" << file << "] was loaded successfully\n";
 
     consistencyCheck();
+
+    return error;
   } 
 
   // Remove lcio file and all collections associated to it
@@ -642,8 +661,6 @@ namespace marlin{
   // Dumps all information read from the steering file to stdout
   void MarlinSteerCheck::dump_information()
   {
-    int found_errors = 0;
-    
     //steering file
     dunderline(); cout << "\nSteering File:" << endl; endcolor();
     dhell(); dblue(); cout << _steeringFile << endl; endcolor();
@@ -685,7 +702,7 @@ namespace marlin{
 
       //print processor errors
       if( _aProc[i]->hasErrors() ){
-	found_errors = 1;
+	if( !errors_found ){ errors_found = 3;}
 	cout << " : " << _aProc[i]->getError();
 	/* 
 	   for( unsigned int j=0; j<_aProc[i]->getErrors().size(); j++ ){
@@ -712,7 +729,7 @@ namespace marlin{
 	
       //print processor errors
       if( _iProc[i]->hasErrors() ){
-	if( !found_errors ){ found_errors = 2;}
+	if( !errors_found ){ errors_found = 1;}
 	cout << " : " << _iProc[i]->getError();
 	/*
 	  for( unsigned int j=0; j<_iProc[i]->getErrors().size(); j++ ){
@@ -729,11 +746,14 @@ namespace marlin{
 
     dump_colErrors();
     
-    if( !found_errors ){
+    if( !errors_found ){
 	cout << "\nNo Errors were found :)" << endl;
     }
-    else if( found_errors == 2 ){
+    else if( errors_found == 1 ){
 	cout << "\nWarning: Some inactive processors are uninstalled..." << endl;
+    }
+    else if( errors_found > 1 ){
+	cout << "\nErrors were found (see above)..." << endl;
     }
 
     cout << endl;

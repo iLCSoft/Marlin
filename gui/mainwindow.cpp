@@ -477,6 +477,13 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
 
     msc = new MarlinSteerCheck(filename);
 
+    if(msc->getErrors()==2){
+	QMessageBox::critical(this,
+	    tr("Errors Occured loading LCIO Files"), 
+	    tr("Errors Occured loading LCIO Files specified in the steering file. Please minimize this window and check your console for details...")
+	); 
+    }
+
     updateGlobalSection();
     updateFiles();
     updateAProcessors();
@@ -905,7 +912,11 @@ void MainWindow::addLCIOFile()
     //fileName+=".slcio";
 
     if( !fileName.isEmpty() ){
-	msc->addLCIOFile(fileName.toStdString().c_str());
+	std::string error = msc->addLCIOFile( fileName.toStdString().c_str() );
+	if( error != "OPEN_SUCCESSFUL" ){
+	    QMessageBox::critical(this, tr("Error Opening LCIO File"), error.c_str() );
+	    return;
+	}
         statusBar()->showMessage(tr("Added LCIO File %1").arg(fileName), 2000);
 	updateFiles();
 	updateAProcessors();
