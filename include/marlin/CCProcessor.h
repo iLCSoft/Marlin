@@ -7,7 +7,7 @@
  * needed by MarlinSteerCheck
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: CCProcessor.h,v 1.17 2006-11-15 16:21:04 engels Exp $
+ * @version $Id: CCProcessor.h,v 1.18 2006-11-20 16:40:53 engels Exp $
  *
  */
 
@@ -89,7 +89,7 @@ namespace marlin {
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
     
     /** Returns true if the given collection is unavailable for this processor */
-    bool CCProcessor::isErrorCol( const std::string& value );
+    bool CCProcessor::isErrorCol( const std::string& type, const std::string& value );
 
     /** Returns collections of a given iotype ( INPUT, OUTPUT, UNAVAILABLE ) for a given name or type
      *  If iotype == INPUT/OUTPUT then type_name is the name of the collection

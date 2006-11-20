@@ -15,17 +15,20 @@ IColDelegate::IColDelegate(CCProcessor* p, MarlinSteerCheck* msc, const QString&
 
 QWidget *IColDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & /* option */, const QModelIndex &index) const
 {
-    QComboBox *comboBox = new QComboBox(parent);
-    
-    sSet colsSet=_msc->getColsSet( _type, _p );
-    
-    for( sSet::const_iterator p=colsSet.begin(); p != colsSet.end(); p++ ){
-	comboBox->addItem((*p).c_str());
-    }
-    comboBox->setEditable(true);
-    comboBox->setAutoCompletion(true);
+    if( index.column() == 0 ){
+	QComboBox *comboBox = new QComboBox(parent);
+	
+	sSet colsSet=_msc->getColsSet( _type, _p );
+	
+	for( sSet::const_iterator p=colsSet.begin(); p != colsSet.end(); p++ ){
+	    comboBox->addItem((*p).c_str());
+	}
+	comboBox->setEditable(true);
+	comboBox->setAutoCompletion(true);
 
-    return comboBox;
+	return comboBox;
+    }
+    return NULL;
 }
 
 void IColDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
@@ -44,11 +47,13 @@ void IColDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
     }
 
     //set background color
-    _parent->currentItem()->setBackgroundColor( _p->isErrorCol( comboBox->currentText().toStdString() ) ? QColor(184,16,0,180) : QColor(32,140,64,180) );
+    _parent->currentItem()->setBackgroundColor( _p->isErrorCol( _type, comboBox->currentText().toStdString() ) ?
+	    QColor(184,16,0,180) : QColor(32,140,64,180) );
 
     //set background color from (combobox)
     QPalette pal = comboBox->palette();
-    pal.setColor(QPalette::Base, _p->isErrorCol( comboBox->currentText().toStdString() ) ? QColor(164,32,16) : QColor(32,140,64) );
+    pal.setColor(QPalette::Base, _p->isErrorCol( _type, comboBox->currentText().toStdString() ) ?
+	    QColor(164,32,16) : QColor(32,140,64) );
     pal.setColor(QPalette::Text, QColor(255,255,255) );
     comboBox->setPalette(pal);
 
@@ -66,11 +71,13 @@ void IColDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
     _msc->consistencyCheck();
     
     //set background color
-    _parent->currentItem()->setBackgroundColor( _p->isErrorCol( comboBox->currentText().toStdString() ) ? QColor(184,16,0,180) : QColor(32,140,64,180) );
+    _parent->currentItem()->setBackgroundColor( _p->isErrorCol( _type, comboBox->currentText().toStdString() ) ?
+	    QColor(184,16,0,180) : QColor(32,140,64,180) );
 
     //set background color from (combobox)
     QPalette pal = comboBox->palette();
-    pal.setColor(QPalette::Base, _p->isErrorCol( comboBox->currentText().toStdString() ) ? QColor(164,32,16) : QColor(32,140,64) );
+    pal.setColor(QPalette::Base, _p->isErrorCol( _type, comboBox->currentText().toStdString() ) ?
+	    QColor(164,32,16) : QColor(32,140,64) );
     pal.setColor(QPalette::Text, QColor(255,255,255) );
     comboBox->setPalette(pal);
 
@@ -91,7 +98,8 @@ void IColDelegate::addCollection(){
     _msc->consistencyCheck();
 
     //set background color
-    item0->setBackgroundColor( _p->isErrorCol( item0->text().toStdString() ) ? QColor(184,16,0,180) : QColor(32,140,64,180) );
+    item0->setBackgroundColor( _p->isErrorCol( _type, item0->text().toStdString() ) ?
+	    QColor(184,16,0,180) : QColor(32,140,64,180) );
 
     _parent->setItem(row, 0, item0);
 }

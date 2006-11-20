@@ -316,11 +316,11 @@ namespace marlin{
       return types;
   }
 
-  bool CCProcessor::isErrorCol( const string& value ){
+  bool CCProcessor::isErrorCol( const string& type, const string& value ){
       ColVec v = getCols( UNAVAILABLE );
       
       for( unsigned int i=0; i<v.size(); i++ ){
-	  if( v[i]->getValue() == value ){
+	  if(( v[i]->getValue() == value ) && ( v[i]->getType() == type )){
 	      return true;
 	  }
       }
