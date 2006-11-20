@@ -451,6 +451,34 @@ void MainWindow::setupViews()
 
 void MainWindow::setMarlinSteerCheck( const char* filename )
 {
+
+    //_file=filename;
+    if( msc != NULL ){
+	delete msc;
+    }
+
+    msc = new MarlinSteerCheck(filename);
+
+    if(msc->getErrors()==-1){
+	QMessageBox::critical(this,
+	    tr("Error Occured loading Steering File"), 
+	    tr("Error Occured loading the Steering File. Please check if the file you've tried to open is a valid steering file.")
+	);
+	return;
+    }
+ 
+    //set the window title
+    QString title= "Marlin GUI - ";
+    QFileInfo xmlFile(filename);
+    title+=xmlFile.absoluteFilePath();
+    setWindowTitle(title);
+
+    setCentralWidget(hSplitter);
+
+    resize(1200,800);
+    showMaximized();
+
+   
     //create backup file
     std::string cmd= "cp -f ";
     cmd+=filename;
@@ -459,23 +487,6 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
     cmd+="~";
     if( system( cmd.c_str() ) ){ std::cerr << "Marlin GUI::setMarlinSteerCheck: Error creating backup file!!\n"; }
 
-
-    //_file=filename;
-
-    QString title= "Marlin GUI - ";
-    title+=filename;
-    setWindowTitle(title);
-
-    setCentralWidget(hSplitter);
-
-    resize(1200,800);
-    showMaximized();
-
-    if( msc != NULL ){
-	delete msc;
-    }
-
-    msc = new MarlinSteerCheck(filename);
 
     if(msc->getErrors()==2){
 	QMessageBox::critical(this,
@@ -892,8 +903,13 @@ void MainWindow::moveLCIOFileDown()
 
 void MainWindow::changeGearFile()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose a Gear file"), "", "*.xml");
-
+    QString absFileName = QFileDialog::getOpenFileName(this, tr("Choose a Gear file"), "", "*.xml", 0, QFileDialog::DontResolveSymlinks);
+    QFileInfo xmlFile(msc->getXMLFile().c_str());
+    //extract the absolute path from the xml file
+    QDir dir(xmlFile.absolutePath());
+    //get the relative path for the GEAR file
+    QString fileName = dir.relativeFilePath(absFileName);
+    
     if( !fileName.isEmpty() ){
         statusBar()->showMessage(tr("Changed GEAR File to %1").arg(fileName), 2000);
 	msc->getGlobalParameters()->erase( "GearXMLFile" );
@@ -907,11 +923,37 @@ void MainWindow::changeGearFile()
 
 void MainWindow::addLCIOFile()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose an LCIO file"), "", "*.slcio", 0, QFileDialog::DontResolveSymlinks);
-    //fileName = QFileInfo(fileName).baseName();
-    //fileName+=".slcio";
+    QString absFileName = QFileDialog::getOpenFileName(this, tr("Choose an LCIO file"), "", "*.slcio", 0, QFileDialog::DontResolveSymlinks);
+    
+    QString fileName;
+    
+    if( _file != "Untitled.xml" ){
+	QFileInfo xmlFile(msc->getXMLFile().c_str());
+	//extract the absolute path from the xml file
+	QDir dir(xmlFile.absolutePath());
+	//get the relative path for the LCIO file
+	fileName = dir.relativeFilePath(absFileName);
+    }
+    else{
+	//get the current Path
+	QDir dir;
+	//get the relative path for the LCIO file
+	fileName = dir.relativeFilePath(absFileName);
+    }
 
     if( !fileName.isEmpty() ){
+
+	QDir newFile(absFileName);
+	for( unsigned int i=0; i<msc->getLCIOFiles().size(); i++){
+	    QDir existingFile(msc->getLCIOFiles()[i].c_str());
+	    if(newFile.canonicalPath()==existingFile.canonicalPath()){
+		QString error="Error opening LCIO file [";
+		error+=absFileName;
+		error+="]. This file has already been opened!!";
+		QMessageBox::critical(this, tr("Error Opening LCIO File"), error );
+		return;
+	    }
+	}
 	std::string error = msc->addLCIOFile( fileName.toStdString().c_str() );
 	if( error != "OPEN_SUCCESSFUL" ){
 	    QMessageBox::critical(this, tr("Error Opening LCIO File"), error.c_str() );
@@ -956,13 +998,20 @@ void MainWindow::openXMLFile()
     QString fileName = QFileDialog::getOpenFileName(this,
 	    tr("Choose a Marlin Steering File to open..."),
 	    QDir::currentPath(),
-	    "*.xml",
-	    0,
-	    QFileDialog::DontResolveSymlinks
+	    "*.xml"
     );
     
     if( !fileName.isEmpty() ){
-	//_file=fileName.toStdString();
+	_file="";
+
+	QFileInfo xmlFile(fileName);
+	//get the current path
+	QDir dir(QDir::currentPath());
+	//get the relative path for the LCIO file
+	fileName = dir.relativeFilePath(xmlFile.absoluteFilePath());
+
+	std::cout << "Marlin steering file [" << fileName.toStdString() << "] loaded successfully into the GUI\n";
+
 	_modified=false;
 	setMarlinSteerCheck(fileName.toStdString().c_str());
         statusBar()->showMessage(tr("Loaded %1").arg(fileName), 2000);
@@ -972,9 +1021,9 @@ void MainWindow::openXMLFile()
 
 void MainWindow::newXMLFile(){
   
-    _file="";
+    _file="Untitled.xml";
     _modified=false;
-    setWindowTitle(tr("Marlin GUI - Untitled"));
+    setWindowTitle(tr("Marlin GUI - Untitled.xml"));
     resize(1200,800);
     showMaximized();
 
@@ -994,7 +1043,10 @@ void MainWindow::newXMLFile(){
 
 void MainWindow::saveXMLFile()
 {
-    if( _file != "" ){
+    if( _file == "" || _file == "Untitled.xml" ){
+	saveAsXMLFile();
+    }
+    else{
 	_modified=false;
 	if(!msc->saveAsXMLFile(_file)){
 	    QMessageBox::critical(this,
@@ -1005,9 +1057,6 @@ void MainWindow::saveXMLFile()
 	     return;
 	}
 	statusBar()->showMessage(tr("Saved %1").arg(QString(_file.c_str())), 2000);
-    }
-    else{
-	saveAsXMLFile();
     }
 }
 

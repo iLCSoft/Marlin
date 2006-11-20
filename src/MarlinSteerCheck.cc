@@ -17,17 +17,18 @@
 #include <iomanip>
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <stdlib.h>
 
 using namespace std;
 
 namespace marlin{
 
   // Constructor
-  MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) : _parser(NULL), _gparam(NULL) {
+  MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) : _parser(NULL), _gparam(NULL), _steeringFile("Untitled.xml") {
+    errors_found=0;
     if( steeringFile != 0 ){
       _steeringFile=steeringFile;
-      //parse the file
-      parseXMLFile( steeringFile );
     }
     //create Global Parameters
     else{
@@ -44,6 +45,51 @@ namespace marlin{
 	value.clear();
 	value.push_back("gear_ldc.xml");
 	_gparam->add("GearXMLFile", value);
+    }
+    
+    _XMLFileAbsPath="/";
+    _XMLFileRelPath="";
+
+    //save the fileName and erase it from the Path
+    StringVec path;
+    CMProcessor::instance()->tokenize(_steeringFile, path, "/");
+    _XMLFileName=path[path.size()-1];
+    path.erase(path.end());
+
+    //if the path is relative
+    if(_steeringFile[0]!='/'){
+      string absPath=getenv("PWD");
+      StringVec absPathT;
+      CMProcessor::instance()->tokenize(absPath, absPathT, "/");
+      for( unsigned int i=0; i<path.size(); i++ ){
+	  if(path[i]!="."){
+	      _XMLFileRelPath+=path[i];
+	      _XMLFileRelPath+="/";
+	      
+	      if(path[i]==".."){
+		  absPathT.erase(absPathT.end());
+	      }
+	      else{
+		  absPathT.push_back(path[i]);
+	      }
+	  }
+      }
+      for( unsigned int i=0; i<absPathT.size(); i++ ){
+	  _XMLFileAbsPath+=absPathT[i];
+	  _XMLFileAbsPath+="/";
+      }
+    }
+    else{
+      for( unsigned int i=0; i<path.size(); i++ ){
+	  _XMLFileAbsPath+=path[i];
+	  _XMLFileAbsPath+="/";
+      }
+    }
+    //parse the file
+    if( steeringFile != 0 ){
+	if(!parseXMLFile( steeringFile )){
+	    errors_found=-1;
+	}
     }
 
     _marlinProcs = CMProcessor::instance();
@@ -93,15 +139,40 @@ namespace marlin{
   // Add LCIO file and read all collections inside it
   const string MarlinSteerCheck::addLCIOFile( const string& file ){
     string error="OPEN_SUCCESSFUL";
-   
+    string fileName="/";
+    
+    //if path is relative concatenate XMLFileAbsPath with relative path of file
+    if(file[0]!='/'){
+	StringVec LCIOFilePath;
+	//initialize LCIOFilePath with the absolute path of the xml file
+	CMProcessor::instance()->tokenize(_XMLFileAbsPath, LCIOFilePath, "/");
+	
+	StringVec path;
+	CMProcessor::instance()->tokenize(file, path, "/");
+	for( unsigned int i=0; i<path.size(); i++ ){
+	    if(path[i]!="."){
+		LCIOFilePath.push_back(path[i]);
+	    }
+	}
+	for( unsigned int i=0; i<LCIOFilePath.size()-1; i++ ){
+	    fileName+=LCIOFilePath[i];
+	    fileName+="/";
+	}
+	//add the filename to the path
+	fileName+=LCIOFilePath[LCIOFilePath.size()-1];
+    }
+    else{
+	fileName=file;
+    }
+ 
     //FIXME: this is to prevent crashing the application if
     //the file doesn't exist (is there a better way to handle this??)
     string cmd= "ls ";
-    cmd+=file;
+    cmd+=fileName;
     cmd+= " >/dev/null 2>/dev/null";
     if( system( cmd.c_str() ) ){
 	error="Error opening LCIO file [";
-	error+=file;
+	error+=fileName;
 	error+="]. File doesn't exist, or link is not valid!!";
 	dred();
 	cout << error << endl;
@@ -110,30 +181,11 @@ namespace marlin{
 	return error;
     }
 
-    //get the filename without the hole path
-    //StringVec file_tokens;
-    //_marlinProcs->tokenize(file, file_tokens, "/");
-    
-    //add the filename to the vector of LCIO files
-    for( unsigned int i=0; i<getLCIOFiles().size(); i++ ){
-      if( getLCIOFiles()[i] == file ){
-	  //abort if file already exists
-	  error="Error opening LCIO file [";
-	  error+=file;
-       	  error+="]. This file has already been opened!!";
-	  dred();
-	  cout << error << endl;
-	  endcolor();
-	  errors_found=2;
-	  return error;
-      }
-    }
-
     HANDLE_LCIO_EXCEPTIONS;
     ColVec newCols;
     
     LCReader* lcReader = LCFactory::getInstance()->createLCReader();
-    lcReader->open( file );
+    lcReader->open( fileName );
     
     LCEvent* evt;
     int nEvents=0;
@@ -379,7 +431,7 @@ namespace marlin{
   ////////////////////////////////////////////////////////////////////////////////
 
   //parse an xml file and initialize data
-  void MarlinSteerCheck::parseXMLFile( const string& file ){
+  bool MarlinSteerCheck::parseXMLFile( const string& file ){
     TiXmlDocument doc( file );
 
     //if file loads with no errors
@@ -461,9 +513,11 @@ namespace marlin{
       //============================================================
 	
       consistencyCheck();
+      return true;
     }
     else{
       cerr << "parseXMLFile: Failed to load file: " << _steeringFile << endl;
+      return false;
     }
   }
 
@@ -661,9 +715,16 @@ namespace marlin{
   // Dumps all information read from the steering file to stdout
   void MarlinSteerCheck::dump_information()
   {
+    if(errors_found==-1){
+	dred();
+	cout << "\nThere was an error parsing the steering file!!\nPlease check if the steering file is valid." << endl;
+	endcolor();
+	return;
+    }
+      
     //steering file
     dunderline(); cout << "\nSteering File:" << endl; endcolor();
-    dhell(); dblue(); cout << _steeringFile << endl; endcolor();
+    dhell(); dblue(); cout << _XMLFileName << endl; endcolor();
     
     //LCIO files
     dunderline(); cout << "\nLCIO Input Files:" << endl; endcolor();

@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.17 2006-11-17 14:15:59 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.18 2006-11-20 15:53:24 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -115,6 +115,18 @@ namespace marlin {
     /** Saves the data to an XML file with the given name
      *  Returns false if error occured */
     bool saveAsXMLFile( const std::string& file );
+
+    /* Returns the relative path of the XML file */
+    const std::string getXMLFileRelPath(){ return _XMLFileRelPath; }
+    
+    /* Returns the absolute path of the XML file */
+    const std::string getXMLFileAbsPath(){ return _XMLFileAbsPath; }
+    
+    /* Returns the XML fileName */
+    const std::string getXMLFileName(){ return _XMLFileName; }
+    
+    /* Returns the XML file as given by the user in the command prompt */
+    const std::string getXMLFile(){ return _steeringFile; }
     
     /** Dumps all information read from the steering file to stdout */
     void dump_information();
@@ -141,7 +153,7 @@ namespace marlin {
     ProcVec& getAllProcs() const;
     
     // Parse the given steering file
-    void parseXMLFile( const std::string& file );
+    bool parseXMLFile( const std::string& file );
     
     // Pop a processor out of a vector from processors
     CCProcessor* popProc(ProcVec& v, CCProcessor* p);
@@ -156,7 +168,12 @@ namespace marlin {
     int errors_found;			//errors variable
     IParser* _parser;			//parser
     StringParameters* _gparam;		//global parameters (without LCIO Files)
-    std::string _steeringFile;		//steering file
+    
+    std::string _steeringFile;		//steering file name + path as passed by the user in the command line
+    std::string _XMLFileName;		//steering file name
+    std::string _XMLFileAbsPath;	//steering file (absolute path without filename)
+    std::string _XMLFileRelPath;	//steering file (relative path without filename)
+
     ProcVec _aProc;			//active processors
     ProcVec _iProc;			//inactive processors
     sColVecMap _lcioCols;		//LCIO collections
