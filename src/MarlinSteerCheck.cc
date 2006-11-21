@@ -29,6 +29,10 @@ namespace marlin{
     errors_found=0;
     if( steeringFile != 0 ){
       _steeringFile=steeringFile;
+
+      if(!parseXMLFile( steeringFile )){
+	errors_found=-1;
+      }
     }
     //create Global Parameters
     else{
@@ -46,7 +50,7 @@ namespace marlin{
 	value.push_back("gear_ldc.xml");
 	_gparam->add("GearXMLFile", value);
     }
-    
+/*    
     _XMLFileAbsPath="/";
     _XMLFileRelPath="";
 
@@ -85,13 +89,14 @@ namespace marlin{
 	  _XMLFileAbsPath+="/";
       }
     }
+
     //parse the file
     if( steeringFile != 0 ){
 	if(!parseXMLFile( steeringFile )){
 	    errors_found=-1;
 	}
     }
-
+*/
     _marlinProcs = CMProcessor::instance();
     
     }
@@ -139,6 +144,7 @@ namespace marlin{
   // Add LCIO file and read all collections inside it
   const string MarlinSteerCheck::addLCIOFile( const string& file ){
     string error="OPEN_SUCCESSFUL";
+/*
     string fileName="/";
     
     //if path is relative concatenate XMLFileAbsPath with relative path of file
@@ -164,15 +170,15 @@ namespace marlin{
     else{
 	fileName=file;
     }
- 
+*/ 
     //FIXME: this is to prevent crashing the application if
     //the file doesn't exist (is there a better way to handle this??)
     string cmd= "ls ";
-    cmd+=fileName;
+    cmd+=file;
     cmd+= " >/dev/null 2>/dev/null";
     if( system( cmd.c_str() ) ){
 	error="Error opening LCIO file [";
-	error+=fileName;
+	error+=file;
 	error+="]. File doesn't exist, or link is not valid!!";
 	dred();
 	cout << error << endl;
@@ -185,7 +191,7 @@ namespace marlin{
     ColVec newCols;
     
     LCReader* lcReader = LCFactory::getInstance()->createLCReader();
-    lcReader->open( fileName );
+    lcReader->open( file );
     
     LCEvent* evt;
     int nEvents=0;

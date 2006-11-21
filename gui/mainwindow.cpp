@@ -924,7 +924,7 @@ void MainWindow::changeGearFile()
 void MainWindow::addLCIOFile()
 {
     QString absFileName = QFileDialog::getOpenFileName(this, tr("Choose an LCIO file"), "", "*.slcio", 0, QFileDialog::DontResolveSymlinks);
-    
+/*    
     QString fileName;
     
     if( _file != "Untitled.xml" ){
@@ -940,7 +940,12 @@ void MainWindow::addLCIOFile()
 	//get the relative path for the LCIO file
 	fileName = dir.relativeFilePath(absFileName);
     }
-
+*/
+    //get the current Path
+    QDir dir;
+    //get the relative path for the LCIO file
+    QString fileName = dir.relativeFilePath(absFileName);
+    
     if( !fileName.isEmpty() ){
 
 	QDir newFile(absFileName);
