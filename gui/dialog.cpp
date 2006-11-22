@@ -46,9 +46,10 @@ void Dialog::setupViews()
     descLO->addWidget( desc );
                                                                                                                                                              
     QGroupBox *descGB = new QGroupBox(tr("Processor Description "), this);
+    descGB->setMaximumHeight( 80 );
     descGB->setLayout( descLO );
 
-    mainLayout->addWidget(descGB);
+    mainLayout->addWidget(descGB, Qt::AlignTop );
     
     //////////////////////////////
     //INTPUT COLLECTIONS TABLE
@@ -115,10 +116,10 @@ void Dialog::setupViews()
 	    //create group box for all collections
 	    QGroupBox *colsTGroupBox = new QGroupBox(tr("INPUT COLLECTIONS - SINGLE VALUE"));
 	    colsTGroupBox->setLayout(colsTLayout);
-	    colsTGroupBox->setMaximumHeight(160);
+	    colsTGroupBox->setMaximumHeight(220);
 	    
 	    //add group box to main layout
-	    mainLayout->addWidget(colsTGroupBox);
+	    mainLayout->addWidget(colsTGroupBox, Qt::AlignTop);
 	}
     }
     
@@ -143,7 +144,7 @@ void Dialog::setupViews()
 		QTableWidget *colTable = new QTableWidget;
 		
 		colTable->setColumnCount(1);
-		colTable->horizontalHeader()->resizeSection(0, 290);
+		colTable->horizontalHeader()->resizeSection(0, 240);
 		colTable->horizontalHeader()->hide();
 		colTable->verticalHeader()->hide();
 		//colTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -177,8 +178,11 @@ void Dialog::setupViews()
 		//COLLECTIONS BUTTONS
 		//////////////////////////////
 	     
-		QPushButton *addColButton = new QPushButton(tr("Add New Collection"));
-		QPushButton *remColButton = new QPushButton(tr("Remove Selected Collection"));
+		QPushButton *addColButton = new QPushButton(tr("+"));
+		QPushButton *remColButton = new QPushButton(tr("-"));
+
+		addColButton->setToolTip(tr("Add New Collection"));
+		remColButton->setToolTip(tr("Remove Selected Collection"));
 
 		connect(addColButton, SIGNAL(clicked()), delegate, SLOT(addCollection()));
 		connect(remColButton, SIGNAL(clicked()), delegate, SLOT(remCollection()));
@@ -186,19 +190,24 @@ void Dialog::setupViews()
 		remColButton->setAutoDefault( false );
 		    
 		//Buttons Layout
-		QHBoxLayout *colButtonsLayout = new QHBoxLayout;
+		QVBoxLayout *colButtonsLayout = new QVBoxLayout;
 		colButtonsLayout->addWidget(addColButton);
 		colButtonsLayout->addWidget(remColButton);
 		
 		//GroupBox
 		QWidget *colButtons = new QWidget;
+		colButtons->setFixedWidth(45);
 		colButtons->setLayout(colButtonsLayout);
 		 
 		//Layout
+		QGridLayout *colLayout = new QGridLayout;
+    		colLayout->addWidget(colTable,0,0);
+    		colLayout->addWidget(colButtons,0,1);
+/*
 		QVBoxLayout *colLayout = new QVBoxLayout;
 		colLayout->addWidget(colTable);
 		colLayout->addWidget(colButtons);
-
+*/
 		//set the title for this collection group
 		QString colTitle("Name: [");
 		colTitle+= (*p).first.c_str();
@@ -219,9 +228,14 @@ void Dialog::setupViews()
 	    //create group box for all collections
 	    QGroupBox *colsGroupBox = new QGroupBox(tr("INPUT COLLECTIONS - MULTIPLE VALUES"));
 	    colsGroupBox->setLayout(fLayout);
+	    colsGroupBox->setMinimumWidth(1300);
+	    //colsGroupBox->setMaximumHeight(400);
 	    
 	    //add group box to main layout
-	    mainLayout->addWidget(colsGroupBox);
+	    QScrollArea *scroll = new QScrollArea;
+	    scroll->setWidget(colsGroupBox);
+	    
+	    mainLayout->addWidget(scroll, Qt::AlignTop);
 	}
     }
 
@@ -287,10 +301,10 @@ void Dialog::setupViews()
 	    //create group box for all collections
 	    QGroupBox *colsGroupBox = new QGroupBox(tr("OUTPUT COLLECTIONS"));
 	    colsGroupBox->setLayout(colsLayout);
-	    colsGroupBox->setMaximumHeight(160);
+	    colsGroupBox->setMaximumHeight(240);
 	    
 	    //add group box to main layout
-	    mainLayout->addWidget(colsGroupBox);
+	    mainLayout->addWidget(colsGroupBox, Qt::AlignTop);
 	}
     }
    
@@ -363,7 +377,7 @@ void Dialog::setupViews()
 	    QGroupBox *paramGroupBox = new QGroupBox(tr("Processor Parameters"));
 	    paramGroupBox->setLayout(paramLayout);
 	    
-	    mainLayout->addWidget(paramGroupBox);
+	    mainLayout->addWidget(paramGroupBox, Qt::AlignTop);
 	}
     }
 
@@ -450,7 +464,7 @@ void Dialog::setupViews()
 	    QGroupBox *paramGroupBox = new QGroupBox(tr("Optional Processor Parameters"));
 	    paramGroupBox->setLayout(paramLayout);
 	    
-	    mainLayout->addWidget(paramGroupBox);
+	    mainLayout->addWidget(paramGroupBox, Qt::AlignTop);
 
 	    connect(optParamTable, SIGNAL(cellClicked(int, int)), this, SLOT(optParamChanged()));
 	}
@@ -468,17 +482,22 @@ void Dialog::setupViews()
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
     applyButton->setAutoDefault( false );
     cancelButton->setAutoDefault( false );
+    applyButton->setFixedHeight( 40 );
+    cancelButton->setFixedHeight( 40 );
+    applyButton->setFixedWidth( 150 );
+    cancelButton->setFixedWidth( 150 );
 	
     //Buttons Layout
-    QHBoxLayout *mainButtonsLayout = new QHBoxLayout;
-    mainButtonsLayout->addWidget(applyButton);
-    mainButtonsLayout->addWidget(cancelButton);
+    QGridLayout *mainButtonsLayout = new QGridLayout;
+    mainButtonsLayout->addWidget(cancelButton, 0, 1, 0, 1, Qt::AlignLeft | Qt::AlignTop);
+    mainButtonsLayout->addWidget(applyButton, 0, 2, 0, 2, Qt::AlignRight | Qt::AlignTop);
     
     //GroupBox
     QWidget *mainButtons = new QWidget;
+    mainButtons->setFixedHeight( 50 );
     mainButtons->setLayout(mainButtonsLayout);
     
-    mainLayout->addWidget(mainButtons);
+    mainLayout->addWidget(mainButtons, Qt::AlignTop);
 }
 
 void Dialog::optParamChanged(){

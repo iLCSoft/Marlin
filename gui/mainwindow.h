@@ -17,6 +17,7 @@ class QTextEdit;
 class QLabel;
 class QString;
 class QActionGroup;
+class QTextBrowser;
 
 using namespace marlin;
 
@@ -44,6 +45,7 @@ protected slots:
 private slots:
     void changeStyle(bool checked);
     void aboutGUI();
+    void help();
     void madeChanges();
     void selectionChanged(int row);
     void hideIProcessors(bool checked);
@@ -116,6 +118,8 @@ private:
     QWidget *centralWidget;
 
     QActionGroup *styleActionGroup;
+
+    QTextBrowser *browser;
 };
 
 #endif

@@ -12,6 +12,12 @@
 
 MainWindow::MainWindow() : _modified(false), _file(""), msc(NULL)
 {
+    browser = new QTextBrowser;
+    
+    QString path=getenv("MARLIN");
+    path+="/gui/help/index.html";
+    browser->setSource(QUrl(path));
+    
     connect(this, SIGNAL(modifiedContent()), this, SLOT(madeChanges())); 
 
     //init views
@@ -180,13 +186,23 @@ void MainWindow::createMenus()
     QMenu *aboutMenu = menuBar()->addMenu(tr("A&bout"));
     QAction *aboutGUIAction = aboutMenu->addAction(tr("About &Marlin GUI..."));
     QAction *aboutQTAction = aboutMenu->addAction(tr("About &QT..."));
+    QAction *helpAction = aboutMenu->addAction(tr("&Help..."));
     
     connect(aboutGUIAction, SIGNAL(triggered()), this, SLOT(aboutGUI()));
     connect(aboutQTAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(helpAction, SIGNAL(triggered()), this, SLOT(help()));
 }
 
 void MainWindow::aboutGUI(){
     QMessageBox::about(this, tr("About Marlin GUI"), aboutGUIMsg);
+}
+
+void MainWindow::help(){
+    QWidget *helpWidget=new QWidget;
+    QVBoxLayout *helpLayout = new QVBoxLayout;
+    helpLayout->addWidget(browser);
+    helpWidget->setLayout(helpLayout);
+    helpWidget->show();
 }
 
 void MainWindow::setupViews()
@@ -422,11 +438,14 @@ void MainWindow::setupViews()
     hideProcs->setCheckable(true);
     hideErrors->setCheckable(true);
     
+    hideProcs->setToolTip(tr("Hide/Show Inactive Processors"));
+    hideErrors->setToolTip(tr("Hide/Show Active Processor Errors"));
+    
     connect(hideProcs, SIGNAL(toggled(bool)), this, SLOT(hideIProcessors(bool)));
     connect(hideErrors, SIGNAL(toggled(bool)), this, SLOT(hideAProcErrors(bool)));
     
     //Layout
-    QVBoxLayout *viewButtonsLayout = new QVBoxLayout;
+    QHBoxLayout *viewButtonsLayout = new QHBoxLayout;
     viewButtonsLayout->addWidget(hideProcs);
     viewButtonsLayout->addWidget(hideErrors);
     
@@ -445,7 +464,7 @@ void MainWindow::setupViews()
     aProcErrorsLayout->addWidget(aProcErrors);
     
     //GroupBox
-    aProcErrorsGBox = new QGroupBox(tr("Error Description from selected Processor"));
+    aProcErrorsGBox = new QGroupBox(tr("Error Description for selected Active Processor"));
     aProcErrorsGBox->setLayout(aProcErrorsLayout);
 }
 

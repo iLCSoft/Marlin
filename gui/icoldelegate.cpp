@@ -102,6 +102,7 @@ void IColDelegate::addCollection(){
 	    QColor(184,16,0,180) : QColor(32,140,64,180) );
 
     _parent->setItem(row, 0, item0);
+    _parent->setCurrentItem(item0);
 }
 
 void IColDelegate::remCollection(){
