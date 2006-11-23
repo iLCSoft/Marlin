@@ -178,8 +178,8 @@ void Dialog::setupViews()
 		//COLLECTIONS BUTTONS
 		//////////////////////////////
 	     
-		QPushButton *addColButton = new QPushButton(tr("+"));
-		QPushButton *remColButton = new QPushButton(tr("-"));
+		QPushButton *addColButton = new QPushButton(tr("Add"));
+		QPushButton *remColButton = new QPushButton(tr("Rem"));
 
 		addColButton->setToolTip(tr("Add New Collection"));
 		remColButton->setToolTip(tr("Remove Selected Collection"));
@@ -196,7 +196,7 @@ void Dialog::setupViews()
 		
 		//GroupBox
 		QWidget *colButtons = new QWidget;
-		colButtons->setFixedWidth(45);
+		colButtons->setFixedWidth(55);
 		colButtons->setLayout(colButtonsLayout);
 		 
 		//Layout

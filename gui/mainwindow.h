@@ -83,6 +83,7 @@ private:
 
     //variables
     bool _modified;
+    bool _saved;
     std::string _file;
     MarlinSteerCheck* msc;
 

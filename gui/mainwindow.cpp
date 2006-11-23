@@ -10,7 +10,7 @@
 #include <string>
 #include <stdlib.h>
 
-MainWindow::MainWindow() : _modified(false), _file(""), msc(NULL)
+MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
 {
     browser = new QTextBrowser;
     
@@ -202,6 +202,8 @@ void MainWindow::help(){
     QVBoxLayout *helpLayout = new QVBoxLayout;
     helpLayout->addWidget(browser);
     helpWidget->setLayout(helpLayout);
+    helpWidget->resize(800,600);
+    helpWidget->setWindowTitle(tr("Marlin GUI Help"));
     helpWidget->show();
 }
 
@@ -314,9 +316,9 @@ void MainWindow::setupViews()
     
     //Layout
     QVBoxLayout *iProcButtonsLayout = new QVBoxLayout;
+    iProcButtonsLayout->addWidget(actProc);
     iProcButtonsLayout->addWidget(editIProc);
     iProcButtonsLayout->addWidget(remIProc);
-    iProcButtonsLayout->addWidget(actProc);
     
     //GroupBox
     iProcButtonsGBox = new QGroupBox(tr("Operations"));
@@ -471,7 +473,6 @@ void MainWindow::setupViews()
 void MainWindow::setMarlinSteerCheck( const char* filename )
 {
 
-    //_file=filename;
     if( msc != NULL ){
 	delete msc;
     }
@@ -486,6 +487,10 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
 	return;
     }
  
+    _file=filename;
+    _modified=false;
+    _saved=false;
+    std::cout << "Marlin steering file [" << filename << "] loaded successfully into the GUI\n";
     //set the window title
     QString title= "Marlin GUI - ";
     QFileInfo xmlFile(filename);
@@ -493,20 +498,42 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
     setWindowTitle(title);
 
     setCentralWidget(hSplitter);
-
     resize(1200,800);
     showMaximized();
 
    
     //create backup file
-    std::string cmd= "cp -f ";
-    cmd+=filename;
-    cmd+=" ";
+    std::string cmd= "ls ";
     cmd+=filename;
     cmd+="~";
-    if( system( cmd.c_str() ) ){ std::cerr << "Marlin GUI::setMarlinSteerCheck: Error creating backup file!!\n"; }
+    cmd+= " >/dev/null 2>/dev/null";
+    //if backup file doesn't exist create backup
+    if( system( cmd.c_str() ) ){
+	cmd= "cp -f ";
+	cmd+=filename;
+	cmd+=" ";
+	cmd+=filename;
+	cmd+="~";
+	if( system( cmd.c_str() ) ){
+	    std::cerr << "Marlin GUI::setMarlinSteerCheck: Error creating backup file!!\n";
+	}
+    }
 
+    //check GEAR file
+    StringVec gearfile;
+    msc->getGlobalParameters()->getStringVals("GearXMLFile", gearfile);
+    cmd= "ls ";
+    cmd+=gearfile[0];
+    cmd+= " >/dev/null 2>/dev/null";
+    //if gear file doesn't exist
+    if( system( cmd.c_str() ) ){
+	QMessageBox::critical(this,
+            tr("Error Occured loading GEAR File"),
+            tr("Error Occured loading the GEAR File specified in the steering file. Please choose another file...")
+        );
+    }
 
+    
     if(msc->getErrors()==2){
 	QMessageBox::critical(this,
 	    tr("Errors Occured loading LCIO Files"), 
@@ -539,7 +566,7 @@ void MainWindow::updateGlobalSection(){
                                                                                                                                                              
         StringVec paramValues;
         msc->getGlobalParameters()->getStringVals(paramKeys[i], paramValues);
-                                                                                                                                                             
+
         QString str;
                                                                                                                                                              
         for( unsigned int j=0; j<paramValues.size(); j++ ){
@@ -1026,20 +1053,17 @@ void MainWindow::openXMLFile()
     );
     
     if( !fileName.isEmpty() ){
-	_file="";
-
+	//_modified=false;
+	//_saved=false;
 	QFileInfo xmlFile(fileName);
 	//get the current path
 	QDir dir(QDir::currentPath());
 	//get the relative path for the LCIO file
 	fileName = dir.relativeFilePath(xmlFile.absoluteFilePath());
 
-	std::cout << "Marlin steering file [" << fileName.toStdString() << "] loaded successfully into the GUI\n";
-
-	_modified=false;
 	setMarlinSteerCheck(fileName.toStdString().c_str());
         statusBar()->showMessage(tr("Loaded %1").arg(fileName), 2000);
-	setCentralWidget(hSplitter);
+	//setCentralWidget(hSplitter);
     }
 }
 
@@ -1047,11 +1071,12 @@ void MainWindow::newXMLFile(){
   
     _file="Untitled.xml";
     _modified=false;
+    _saved=false;
     setWindowTitle(tr("Marlin GUI - Untitled.xml"));
-    resize(1200,800);
-    showMaximized();
 
     setCentralWidget(hSplitter);
+    resize(1200,800);
+    showMaximized();
   
     if( msc != NULL ){
 	delete msc;
@@ -1067,11 +1092,27 @@ void MainWindow::newXMLFile(){
 
 void MainWindow::saveXMLFile()
 {
-    if( _file == "" || _file == "Untitled.xml" ){
+    //create backup file
+    std::string cmd= "ls ";
+    cmd+=_file;
+    cmd+= " >/dev/null 2>/dev/null";
+    //if file already exists show overwrite warning
+    if( !_saved && !system( cmd.c_str()) ){
+	QString msg=_file.c_str();
+	msg+=" already exists. Do you want to replace it?";
+	int ret = QMessageBox::warning(this, tr("Save"), msg,
+		QMessageBox::Yes,
+		QMessageBox::No | QMessageBox::Default);
+	if( ret == QMessageBox::No ){
+	    saveAsXMLFile();
+	    return;
+	}
+    }
+
+    if( !_saved && _file == "Untitled.xml" ){
 	saveAsXMLFile();
     }
     else{
-	_modified=false;
 	if(!msc->saveAsXMLFile(_file)){
 	    QMessageBox::critical(this,
 		     tr("Error Saving File"),
@@ -1080,6 +1121,8 @@ void MainWindow::saveXMLFile()
 	     saveAsXMLFile();
 	     return;
 	}
+	_modified=false;
+	_saved=true;
 	statusBar()->showMessage(tr("Saved %1").arg(QString(_file.c_str())), 2000);
     }
 }
@@ -1108,6 +1151,7 @@ void MainWindow::saveAsXMLFile()
 	setWindowTitle(title);
 
 	_file=fileName.toStdString();
+	_saved=true;
 	saveXMLFile();
 	
 	//msc->saveAsXMLFile(fileName.toStdString());
