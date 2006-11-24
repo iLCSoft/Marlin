@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.19 2006-11-24 13:03:47 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.20 2006-11-24 15:10:47 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -86,7 +86,7 @@ namespace marlin {
     const std::string& getErrors( unsigned int index );
   
     /** Add LCIO file and read all collections inside it */
-    const std::string addLCIOFile( const std::string& file );
+    int addLCIOFile( const std::string& file );
 
     /** Remove LCIO file and all collections associated to it */
     void remLCIOFile( const std::string& file );
@@ -134,7 +134,7 @@ namespace marlin {
     /** Dumps collection errors found in the steering file for all active processors */
     void dump_colErrors();
 
-    int getErrors(){ return errors_found; };
+    sSet& getErrors(){ return _errors; };
 
     
   private:
@@ -165,7 +165,14 @@ namespace marlin {
     //VARIABLES
     /////////////////////////////////////////////////////
 
-    int errors_found;			//errors variable
+    sSet _errors;			//XML File parsing error
+					//LCIO Files loading error
+					//GEAR File loading error
+					//Some Processors have no parameters
+					//Some Active Processors are not installed
+					//Some Active Processors have collection errors
+					//Warning: Some Inactive Processors are not installed
+
     IParser* _parser;			//parser
     StringParameters* _gparam;		//global parameters (without LCIO Files)
     

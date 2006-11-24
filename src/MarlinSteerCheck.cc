@@ -26,12 +26,11 @@ namespace marlin{
 
   // Constructor
   MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) : _parser(NULL), _gparam(NULL), _steeringFile("Untitled.xml") {
-    errors_found=0;
     if( steeringFile != 0 ){
       _steeringFile=steeringFile;
 
       if(!parseXMLFile( steeringFile )){
-	errors_found=-1;
+	_errors.insert("XML File parsing error");
       }
     }
     //create Global Parameters
@@ -93,7 +92,7 @@ namespace marlin{
     //parse the file
     if( steeringFile != 0 ){
 	if(!parseXMLFile( steeringFile )){
-	    errors_found=-1;
+	    _errors.insert("XML File parsing error");
 	}
     }
 */
@@ -142,8 +141,7 @@ namespace marlin{
   }
  
   // Add LCIO file and read all collections inside it
-  const string MarlinSteerCheck::addLCIOFile( const string& file ){
-    string error="OPEN_SUCCESSFUL";
+  int MarlinSteerCheck::addLCIOFile( const string& file ){
 /*
     string fileName="/";
     
@@ -177,14 +175,11 @@ namespace marlin{
     cmd+=file;
     cmd+= " >/dev/null 2>/dev/null";
     if( system( cmd.c_str() ) ){
-	error="Error opening LCIO file [";
+	string error="Error opening LCIO file [";
 	error+=file;
 	error+="]. File doesn't exist, or link is not valid!!";
-	dred();
-	cout << error << endl;
-	endcolor();
-	errors_found=2;
-	return error;
+	_errors.insert(error);
+	return 0;
     }
 
     HANDLE_LCIO_EXCEPTIONS;
@@ -235,7 +230,7 @@ namespace marlin{
 
     consistencyCheck();
 
-    return error;
+    return 1;
   } 
 
   // Remove lcio file and all collections associated to it
@@ -461,7 +456,7 @@ namespace marlin{
 
     //if file loads with no errors
     if( doc.LoadFile() ){
-      StringVec lcioFiles, availableProcs, activeProcs;
+      StringVec lcioFiles, gearFile, availableProcs, activeProcs;
 
       //============================================================
       //PARSE THE XML FILE
@@ -474,7 +469,19 @@ namespace marlin{
       //============================================================
       //READ PARAMETERS
       //============================================================
-	
+
+      //check GEAR File
+      _gparam->getStringVals( "GearXMLFile" , gearFile );
+      string cmd= "ls ";
+      cmd+=gearFile[0];
+      cmd+= " >/dev/null 2>/dev/null";
+      if( system( cmd.c_str() ) ){
+	string error="Error opening GEAR file [";
+	error+=gearFile[0];
+	error+="]. File doesn't exist, or link is not valid!!";
+	_errors.insert(error);
+      }
+
       //list of lcio files defined in the global section
       _gparam->getStringVals( "LCIOInputFiles" , lcioFiles );
       _gparam->erase("LCIOInputFiles");
@@ -530,6 +537,7 @@ namespace marlin{
 	if( !found ){
 	  //add the processor to the active processors
 	  addProcessor( ACTIVE, activeProcs[i], "Undefined!!");
+	  _errors.insert("Some Processors have no parameters");
 	}
       }
 
@@ -538,6 +546,20 @@ namespace marlin{
       //============================================================
 	
       consistencyCheck();
+
+      for( unsigned int i=0; i<_aProc.size(); i++ ){
+	  if( !_aProc[i]->isInstalled() ){
+	      _errors.insert("Some Active Processors are not installed");
+	  }
+	  if( _aProc[i]->hasErrorCols() ){
+	      _errors.insert("Some Active Processors have collection errors");
+	  }
+      }
+      for( unsigned int i=0; i<_iProc.size(); i++ ){
+	  if( !_iProc[i]->isInstalled() ){
+	      _errors.insert("Warning: Some Inactive Processors are not installed");
+	  }
+      }
       return true;
     }
     else{
@@ -740,16 +762,12 @@ namespace marlin{
   // Dumps all information read from the steering file to stdout
   void MarlinSteerCheck::dump_information()
   {
-    if(errors_found==-1){
-	dred();
-	cout << "\nThere was an error parsing the steering file!!\nPlease check if the steering file is valid." << endl;
-	endcolor();
+    if( _errors.find("XML File parsing error") != _errors.end() ){
 	return;
     }
-      
     //steering file
     dunderline(); cout << "\nSteering File:" << endl; endcolor();
-    dhell(); dblue(); cout << _XMLFileName << endl; endcolor();
+    dhell(); dblue(); cout << _steeringFile << endl; endcolor();
     
     //LCIO files
     dunderline(); cout << "\nLCIO Input Files:" << endl; endcolor();
@@ -788,7 +806,6 @@ namespace marlin{
 
       //print processor errors
       if( _aProc[i]->hasErrors() ){
-	if( !errors_found ){ errors_found = 3;}
 	cout << " : " << _aProc[i]->getError();
 	/* 
 	   for( unsigned int j=0; j<_aProc[i]->getErrors().size(); j++ ){
@@ -815,7 +832,6 @@ namespace marlin{
 	
       //print processor errors
       if( _iProc[i]->hasErrors() ){
-	if( !errors_found ){ errors_found = 1;}
 	cout << " : " << _iProc[i]->getError();
 	/*
 	  for( unsigned int j=0; j<_iProc[i]->getErrors().size(); j++ ){
@@ -832,13 +848,18 @@ namespace marlin{
 
     dump_colErrors();
     
-    if( !errors_found ){
+    cout << endl << endl;
+    
+    for( sSet::const_iterator p=_errors.begin(); p!=_errors.end(); p++){
+	dred();
+	cout << (*p) << endl;
+	endcolor();
+    }
+   
+    if( _errors.size()==0 || (_errors.size()==1 && (_errors.find("Warning: Some Inactive Processors are not installed")!=_errors.end()))){
 	cout << "\nNo Errors were found :)" << endl;
     }
-    else if( errors_found == 1 ){
-	cout << "\nWarning: Some inactive processors are uninstalled..." << endl;
-    }
-    else if( errors_found > 1 ){
+    else{
 	cout << "\nErrors were found (see above)..." << endl;
     }
 

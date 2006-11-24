@@ -477,12 +477,19 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
 
     msc = new MarlinSteerCheck(filename);
 
-    if(msc->getErrors()==-1){
+    if( msc->getErrors().size()!=0 ){
+	QString errors;
+	for( sSet::const_iterator p=msc->getErrors().begin(); p!=msc->getErrors().end(); p++){
+	    errors+=(*p).c_str();
+	    errors+="\n";
+	}
 	QMessageBox::critical(this,
-	    tr("Error Occured loading Steering File"), 
-	    tr("Error Occured loading the Steering File. Please check if the file you've tried to open is a valid steering file.")
+	    tr("Errors Occured loading Steering File"), 
+	    errors
 	);
-	return;
+	if( msc->getErrors().find("XML File parsing error") != msc->getErrors().end() ){
+	    return;
+	}
     }
  
     _file=filename;
@@ -512,28 +519,6 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
 	if( system( cmd.c_str() ) ){
 	    std::cerr << "Marlin GUI::setMarlinSteerCheck: Error creating backup file!!\n";
 	}
-    }
-
-    //check GEAR file
-    StringVec gearfile;
-    msc->getGlobalParameters()->getStringVals("GearXMLFile", gearfile);
-    cmd= "ls ";
-    cmd+=gearfile[0];
-    cmd+= " >/dev/null 2>/dev/null";
-    //if gear file doesn't exist
-    if( system( cmd.c_str() ) ){
-	QMessageBox::critical(this,
-            tr("Error Occured loading GEAR File"),
-            tr("Error Occured loading the GEAR File specified in the steering file. Please choose another file...")
-        );
-    }
-
-    
-    if(msc->getErrors()==2){
-	QMessageBox::critical(this,
-	    tr("Errors Occured loading LCIO Files"), 
-	    tr("Errors Occured loading LCIO Files specified in the steering file. Please minimize this window and check your console for details...")
-	); 
     }
 
     updateGlobalSection();
@@ -646,6 +631,7 @@ void MainWindow::updateAProcessors( int pos )
 	
 	aProcTable->setItem(row, 0, item0);
 	aProcTable->setItem(row, 1, item1);
+	
 	item0->setBackgroundColor( (msc->getAProcs()[i]->hasErrors() ? QColor(184,16,0,180) : QColor(32,140,64,180)) );
 	item1->setBackgroundColor( (msc->getAProcs()[i]->hasErrors() ? QColor(184,16,0,180) : QColor(32,140,64,180)) );
     }
@@ -675,6 +661,11 @@ void MainWindow::updateIProcessors( int pos )
 	
 	iProcTable->setItem(row, 0, item0);
 	iProcTable->setItem(row, 1, item1);
+	
+	item0->setBackgroundColor( (msc->getIProcs()[i]->isInstalled() ? QColor(255,255,255) : QColor(128,128,128)) );
+	item1->setBackgroundColor( (msc->getIProcs()[i]->isInstalled() ? QColor(255,255,255) : QColor(128,128,128)) );
+	item0->setTextColor( (msc->getIProcs()[i]->isInstalled() ? QColor(0,0,0) : QColor(200,200,200)) );
+	item1->setTextColor( (msc->getIProcs()[i]->isInstalled() ? QColor(0,0,0) : QColor(200,200,200)) );
     }
     if( pos == -1 ){
 	selectRow(iProcTable, iProcTable->rowCount());
@@ -861,21 +852,28 @@ void MainWindow::editAProcessor(int row)
 void MainWindow::editIProcessor()
 {
     int pos = iProcTable->currentRow();
-    if( pos >= 0 && msc->getIProcs()[pos]->isInstalled() ){
-	
-	//save the current processor before editing it
-	CCProcessor *p = new CCProcessor( *msc->getIProcs()[pos] );
-	
-	Dialog dg( msc->getIProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
-	//dg.resize(1100,900);
-	dg.setWindowState( Qt::WindowMaximized);
-	
-	if(dg.exec()){
-	    delete p;
+    if( pos >= 0 ){
+	if( msc->getIProcs()[pos]->isInstalled() ){
+	    //save the current processor before editing it
+	    CCProcessor *p = new CCProcessor( *msc->getIProcs()[pos] );
+	    
+	    Dialog dg( msc->getIProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
+	    //dg.resize(1100,900);
+	    dg.setWindowState( Qt::WindowMaximized);
+	    
+	    if(dg.exec()){
+		delete p;
+	    }
+	    else{
+		delete msc->getIProcs()[pos];
+		msc->getIProcs()[pos]=p;
+	    }
 	}
 	else{
-	    delete msc->getIProcs()[pos];
-	    msc->getIProcs()[pos]=p;
+	    QMessageBox::warning(this, tr("Activate Processor"),
+		tr( "Sorry, you cannot edit this processor because it is not installed in your Marlin binary.\n"
+		    "Install it first and then try again")
+	    );
 	}
     }	    
 }
@@ -884,10 +882,18 @@ void MainWindow::activateProcessor()
 {
     int pos = iProcTable->currentRow();
     if( pos >= 0 ){
-	msc->activateProcessor( pos );
-	updateIProcessors(pos);
-	updateAProcessors();
-	emit modifiedContent();
+	if(msc->getIProcs()[pos]->isInstalled()){
+	    msc->activateProcessor( pos );
+	    updateIProcessors(pos);
+	    updateAProcessors();
+	    emit modifiedContent();
+	}
+	else{
+	    QMessageBox::warning(this, tr("Activate Processor"),
+		tr( "Sorry, you cannot activate this processor because it is not installed in your Marlin binary.\n"
+		    "Install it first and then try again")
+	    );
+	}
     }
 }
 
@@ -1000,11 +1006,7 @@ void MainWindow::addLCIOFile()
 		return;
 	    }
 	}
-	std::string error = msc->addLCIOFile( fileName.toStdString().c_str() );
-	if( error != "OPEN_SUCCESSFUL" ){
-	    QMessageBox::critical(this, tr("Error Opening LCIO File"), error.c_str() );
-	    return;
-	}
+	msc->addLCIOFile( fileName.toStdString().c_str() );
         statusBar()->showMessage(tr("Added LCIO File %1").arg(fileName), 2000);
 	updateFiles();
 	updateAProcessors();
