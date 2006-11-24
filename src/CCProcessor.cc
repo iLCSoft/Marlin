@@ -21,7 +21,7 @@ namespace marlin{
     //if( _error_desc.size() == 0 ){
     _error_desc.push_back( "Processor has no Parameters" );
     _error_desc.push_back( "Processor is not build in this Marlin binary" );
-    _error_desc.push_back( "Some Collections are not available" );
+    _error_desc.push_back( "Some Collections have Errors" );
     //}
 
     //setup Marlin Processor
@@ -72,7 +72,7 @@ namespace marlin{
 	  _param=NULL;
       }
       for( ssColVecMap::const_iterator q=_cols.begin(); q!=_cols.end(); q++ ){
-	 if( q->first != UNAVAILABLE ){
+	 if( q->first != UNAVAILABLE && q->first != DUPLICATE ){
 	    for( sColVecMap::const_iterator r=q->second.begin(); r!=q->second.end(); r++ ){
 	      for( unsigned int i=0; i<r->second.size(); i++ ){
 		delete r->second[i];
@@ -262,6 +262,14 @@ namespace marlin{
     setError( COL_ERRORS );
   }
   
+  void CCProcessor::addDCol( CCCollection* c ){
+    //add collection to the map
+    _cols[ DUPLICATE ][ c->getType() ].push_back( c );
+
+    //set the error
+    setError( COL_ERRORS );
+  }
+ 
   void CCProcessor::remCol( const string& iotype, const string& name, unsigned int index ){
     if( index >=0 && index < _cols[iotype][name].size() ){
       popCol( _cols[iotype][name], _cols[iotype][name][index] );
@@ -305,19 +313,20 @@ namespace marlin{
     return newVec;
   }
 
-  sSet& CCProcessor::getUColTypes(){
-      static sSet types;
+  sSet& CCProcessor::getColTypeNames( const string& iotype ){
+      static sSet type_names;
       
-      types.clear();
+      type_names.clear();
       
-      for( sColVecMap::const_iterator p=_cols[ UNAVAILABLE ].begin(); p!=_cols[ UNAVAILABLE ].end(); p++ ){
-	  types.insert( p->first );
+      for( sColVecMap::const_iterator p=_cols[ iotype ].begin(); p!=_cols[ iotype ].end(); p++ ){
+	  type_names.insert( p->first );
       }
-      return types;
+      return type_names;
   }
 
   bool CCProcessor::isErrorCol( const string& type, const string& value ){
       ColVec v = getCols( UNAVAILABLE );
+      v.insert( v.end(), getCols( DUPLICATE ).begin(), getCols( DUPLICATE ).end() );
       
       for( unsigned int i=0; i<v.size(); i++ ){
 	  if(( v[i]->getValue() == value ) && ( v[i]->getType() == type )){
@@ -356,6 +365,9 @@ namespace marlin{
       if( error == COL_ERRORS && (_cols.find(UNAVAILABLE) != _cols.end())){
 	_cols[ UNAVAILABLE ].clear();
       }
+      if( error == COL_ERRORS && (_cols.find(DUPLICATE) != _cols.end())){
+	_cols[ DUPLICATE ].clear();
+      }
     }
   }
 
@@ -376,7 +388,7 @@ namespace marlin{
     return !_error[1];
   }
 
-  bool CCProcessor::hasUnavailableCols(){
+  bool CCProcessor::hasErrorCols(){
     return _error[2];
   }
 
@@ -411,7 +423,7 @@ namespace marlin{
     StringVec value;
     //write I/O collections
     for( ssColVecMap::const_iterator p=_cols.begin(); p!=_cols.end(); p++ ){
-     if( p->first != UNAVAILABLE ){
+     if( p->first != UNAVAILABLE && p->first != DUPLICATE ){
 	for( sColVecMap::const_iterator q=p->second.begin(); q!=p->second.end(); q++ ){
 	  if( q->second.size() != 0){
 	    if( isInstalled() ){

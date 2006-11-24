@@ -4,6 +4,7 @@
 #include <QItemDelegate>
 
 #include "marlin/CCProcessor.h"
+#include "marlin/MarlinSteerCheck.h"
 
 class QTableWidget;
 
@@ -14,7 +15,7 @@ class OColDelegate : public QItemDelegate
     Q_OBJECT
 
 public:
-    OColDelegate(CCProcessor* p, QObject *parent = 0);
+    OColDelegate(CCProcessor* p, MarlinSteerCheck* msc, QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
@@ -22,6 +23,7 @@ public:
 
 private:
     CCProcessor* _p;
+    MarlinSteerCheck* _msc;
     QTableWidget* _parent;
 };
 

@@ -407,28 +407,47 @@ namespace marlin{
     //the availableCols vector will contain all the available collections read from LCIO files
     //and all output collections from active processors found before the processor being checked
     ColVec availableCols = getLCIOCols();
-    ColVec requiredCols, matchCols;
+    ColVec inputCols, outputCols, matchCols;
 
     //loop through all active processors and check for unavailable collections
     for( unsigned int i=0; i<_aProc.size(); i++ ){
       //first clear the processor collection errors
       _aProc[i]->clearError( COL_ERRORS );
-      //initialize required collections for every processor
-      requiredCols.clear();
-      requiredCols = _aProc[i]->getCols( INPUT );
+      
+      //initialize input collections for every processor
+      inputCols.clear();
+      inputCols = _aProc[i]->getCols( INPUT );
+      
+      //initialize output collections for every processor
+      outputCols.clear();
+      outputCols = _aProc[i]->getCols( OUTPUT );
+      
       //loop through all required collections
-      for( unsigned int j=0; j<requiredCols.size(); j++ ){
+      for( unsigned int j=0; j<inputCols.size(); j++ ){
 	matchCols.clear();
 	//check if required collections are found in available collections
-	matchCols = findMatchingCols( availableCols, _aProc[i], requiredCols[j]->getType(), requiredCols[j]->getValue() );
+	matchCols = findMatchingCols( availableCols, _aProc[i], inputCols[j]->getType(), inputCols[j]->getValue() );
 	//if the collection is not available
 	if( matchCols.size() == 0 ){
 	  //add it to the unavailable collections list of the processor
-	  _aProc[i]->addUCol( requiredCols[j] );
+	  _aProc[i]->addUCol( inputCols[j] );
 	}
       }
+      
+      //loop through all output collections
+      for( unsigned int j=0; j<outputCols.size(); j++ ){
+	matchCols.clear();
+	//check if output collections are found in available collections
+	matchCols = findMatchingCols( availableCols, _aProc[i], outputCols[j]->getType(), outputCols[j]->getValue() );
+	//if the collection is already available
+	if( matchCols.size() != 0 ){
+	  //add it to the duplicate collections list of the processor
+	  _aProc[i]->addDCol( outputCols[j] );
+	}
+      }
+
       //insert all Output Collections from this processor into availableCols
-      availableCols.insert( availableCols.end(), _aProc[i]->getCols( OUTPUT ).begin(), _aProc[i]->getCols( OUTPUT ).end() );
+      availableCols.insert( availableCols.end(), outputCols.begin(), outputCols.end() );
     }
   }
 
@@ -468,7 +487,7 @@ namespace marlin{
       _gparam->getStringVals( "ActiveProcessors" , activeProcs );
       _gparam->erase("ActiveProcessors");
     
-      //_gparam->erase("ProcessorConditions");
+      _gparam->erase("ProcessorConditions");
 	 
     
       //============================================================
@@ -597,12 +616,12 @@ namespace marlin{
   }
 
   //processor's available collections
-  ColVec& MarlinSteerCheck::getProcCols( const ProcVec& v ) const {
+  ColVec& MarlinSteerCheck::getProcCols( const ProcVec& v, const string& iotype ) const {
     static ColVec cols;
     
     cols.clear();
     for( unsigned int i=0; i<v.size(); i++ ){
-      cols.insert( cols.end(), v[i]->getCols( OUTPUT ).begin(), v[i]->getCols( OUTPUT ).end() );
+      cols.insert( cols.end(), v[i]->getCols( iotype ).begin(), v[i]->getCols( iotype ).end() );
     }
     return cols;
   }
@@ -612,8 +631,8 @@ namespace marlin{
     static ColVec cols;
     
     ColVec lcCols = getLCIOCols();
-    ColVec aPCols = getProcCols( _aProc );
-    ColVec iPCols = getProcCols( _iProc );
+    ColVec aPCols = getProcCols( _aProc, OUTPUT );
+    ColVec iPCols = getProcCols( _iProc, OUTPUT );
     
     cols.assign( lcCols.begin(), lcCols.end() );
     cols.insert( cols.end(), aPCols.begin(), aPCols.end() );
@@ -831,7 +850,7 @@ namespace marlin{
     
     for( unsigned int i=0; i<_aProc.size(); i++ ){
       //skip processor if it has no col errors
-      if( _aProc[i]->hasUnavailableCols() ){
+      if( _aProc[i]->hasErrorCols() ){
 	  
 	dred(); dunderline();
 	cout << "\nProcessor [" <<
@@ -840,12 +859,48 @@ namespace marlin{
 	endl;
 	endcolor();
 
-	sSet uTypes = _aProc[i]->getUColTypes();
+	sSet dTypes = _aProc[i]->getColTypeNames( DUPLICATE );
+
+	for( sSet::const_iterator q=dTypes.begin(); q!=dTypes.end(); q++){
+	    cout << "\n* Following Collections of type [";
+	    dhell(); dblue(); cout << (*q); endcolor();
+	    cout << "] were already found in the event:\n";
+
+	    ColVec dCols = _aProc[i]->getCols( DUPLICATE, (*q) );
+	    for( unsigned int j=0; j<dCols.size(); j++ ){
+		cout << "   -> [";
+		dyellow(); cout << dCols[j]->getValue(); endcolor();
+		cout << "]\n";
+	    }
+	    cout << "\n   * Following collections are in conflict with this collection:\n";
+	    for( unsigned int j=0; j<dCols.size(); j++ ){
+
+		ColVec lcioCols = findMatchingCols( getLCIOCols(), _aProc[i], dCols[j]->getType(), dCols[j]->getValue() );
+		if( lcioCols.size() != 0 ){
+		    for( unsigned int k=0; k<lcioCols.size(); k++ ){
+			cout << "      -> [";
+			dyellow(); cout << lcioCols[k]->getValue(); endcolor();
+			cout << "] in LCIO file: [" << lcioCols[k]->getName() << "]\n";
+		    }
+		}
+		ColVec oCols = findMatchingCols( getProcCols(_aProc, OUTPUT), _aProc[i], dCols[j]->getType(), dCols[j]->getValue() );
+		if( oCols.size() != 0 ){
+		    for( unsigned int k=0; k<oCols.size(); k++ ){
+			cout << "      -> [";
+			dyellow(); cout << oCols[k]->getValue(); endcolor();
+			cout << "] in [Active] Processor [" << oCols[k]->getSrcProc()->getName() 
+			     << "] of Type [" << oCols[k]->getSrcProc()->getType() << "]\n";
+		    }
+		}
+	    }
+	}
+
+	sSet uTypes = _aProc[i]->getColTypeNames( UNAVAILABLE );
 
 	for( sSet::const_iterator p=uTypes.begin(); p!=uTypes.end(); p++){
 	    cout << "\n* Following Collections of type [";
 	    dhell(); dblue(); cout << (*p); endcolor();
-	    cout <<"] are unavailable:\n";
+	    cout << "] are unavailable:\n";
 
 	    ColVec uCols = _aProc[i]->getCols( UNAVAILABLE, (*p) );
 	    for( unsigned int j=0; j<uCols.size(); j++ ){
@@ -893,15 +948,60 @@ namespace marlin{
   }
   
   // Returns the Errors for an Active Processor at the given index
-  const string& MarlinSteerCheck::getErrors( unsigned int index ){
+  const string& MarlinSteerCheck::getErrors( unsigned int i ){
     static string errors;
     ColVec avCols, uCols;
     
     errors.clear();
     //skip if index is not valid or processor has no col errors
-    if( index>=0 && index<_aProc.size() && _aProc[index]->hasUnavailableCols() ){
+    if( i>=0 && i<_aProc.size() && _aProc[i]->hasErrorCols() ){
 	
-	sSet uTypes = _aProc[index]->getUColTypes();
+	sSet dTypes = _aProc[i]->getColTypeNames( DUPLICATE );
+
+	for( sSet::const_iterator q=dTypes.begin(); q!=dTypes.end(); q++){
+	    errors+= "\n* Following Collections of type [";
+	    errors+= (*q);
+	    errors+= "] were already found in the event:\n";
+	    errors+= "--------------------------------------------------------------------------------";
+	    errors+= "--------------------------------------------------------------------------------\n";
+
+	    ColVec dCols = _aProc[i]->getCols( DUPLICATE, (*q) );
+	    for( unsigned int j=0; j<dCols.size(); j++ ){
+		errors+= "   -> [";
+		errors+= dCols[j]->getValue();
+		errors+= "]\n";
+	    }
+	    errors+= "\n   * Following collections are in conflict with this collection:\n";
+	    for( unsigned int j=0; j<dCols.size(); j++ ){
+
+		ColVec lcioCols = findMatchingCols( getLCIOCols(), _aProc[i], dCols[j]->getType(), dCols[j]->getValue() );
+		if( lcioCols.size() != 0 ){
+		    for( unsigned int k=0; k<lcioCols.size(); k++ ){
+			errors+= "      -> [";
+			errors+= lcioCols[k]->getValue();
+			errors+= "] in LCIO file: [";
+			errors+= lcioCols[k]->getName();
+			errors+= "]\n";
+		    }
+		}
+		ColVec oCols = findMatchingCols( getProcCols(_aProc, OUTPUT), _aProc[i], dCols[j]->getType(), dCols[j]->getValue() );
+		if( oCols.size() != 0 ){
+		    for( unsigned int k=0; k<oCols.size(); k++ ){
+			errors+= "      -> [";
+			errors+= oCols[k]->getValue();
+			errors+= "] in [Active] Processor [";
+			errors+= oCols[k]->getSrcProc()->getName();
+			errors+= "] of Type [";
+			errors+= oCols[k]->getSrcProc()->getType();
+			errors+= "]\n";
+		    }
+		}
+	    }
+	    errors+= "--------------------------------------------------------------------------------";
+	    errors+= "--------------------------------------------------------------------------------\n";
+	}
+	
+	sSet uTypes = _aProc[i]->getColTypeNames( UNAVAILABLE);
 
 	for( sSet::const_iterator p=uTypes.begin(); p!=uTypes.end(); p++){
 
@@ -911,7 +1011,7 @@ namespace marlin{
 	    errors+= "--------------------------------------------------------------------------------";
 	    errors+= "--------------------------------------------------------------------------------\n";
 
-	    ColVec uCols = _aProc[index]->getCols( UNAVAILABLE, (*p) );
+	    ColVec uCols = _aProc[i]->getCols( UNAVAILABLE, (*p) );
 	    for( unsigned int j=0; j<uCols.size(); j++ ){
 	      errors+= "   -> [";
 	      errors+= uCols[j]->getValue();
@@ -920,7 +1020,7 @@ namespace marlin{
 	    errors+= "\n";
 
 	    //find collections that match the type of the unavailable collection
-	    ColVec avCols = findMatchingCols( getAllCols(), _aProc[index], (*p) );
+	    ColVec avCols = findMatchingCols( getAllCols(), _aProc[i], (*p) );
 	    
 	    if( avCols.size() != 0 ){
 		errors+= "* Following available collections of the same type were found:\n";

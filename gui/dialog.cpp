@@ -279,6 +279,9 @@ void Dialog::setupViews()
 		item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
 		item2->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
 		
+		item2->setBackgroundColor( _p->isErrorCol( p->second.c_str(), cols[i]->getValue().c_str() ) ? 
+			    QColor(184,16,0,180) : QColor(32,140,64,180) );
+		
 		item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);	
 		item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);	
 	
@@ -291,7 +294,7 @@ void Dialog::setupViews()
 	}
 	if(found){
 	    //delegate
-	    QItemDelegate *delegate = new OColDelegate(_p, colTable);
+	    QItemDelegate *delegate = new OColDelegate(_p, _msc, colTable);
 	    colTable->setItemDelegate(delegate);
 	    
 	    //Layout

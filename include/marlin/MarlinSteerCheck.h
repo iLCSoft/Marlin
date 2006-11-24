@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.18 2006-11-20 15:53:24 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.19 2006-11-24 13:03:47 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -144,7 +144,7 @@ namespace marlin {
     /////////////////////////////////////////////////////
 
     // Return all available collections from the active or inactive processors
-    ColVec& getProcCols( const ProcVec& v ) const;
+    ColVec& getProcCols( const ProcVec& v, const std::string& iotype ) const;
 
     // Return all available collections found in LCIO files and active/inactive processors
     ColVec& getAllCols() const;

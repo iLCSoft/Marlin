@@ -7,7 +7,7 @@
  * needed by MarlinSteerCheck
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: CCProcessor.h,v 1.18 2006-11-20 16:40:53 engels Exp $
+ * @version $Id: CCProcessor.h,v 1.19 2006-11-24 13:03:47 engels Exp $
  *
  */
 
@@ -25,6 +25,7 @@
 #define INPUT "lcioInType"
 #define OUTPUT "lcioOutType"
 #define UNAVAILABLE "lcioUnavailableType"
+#define DUPLICATE "lcioDuplicate"
 
 namespace marlin {
 
@@ -56,8 +57,8 @@ namespace marlin {
     /** Returns true if the processor has parameters */
     bool hasParameters();
     
-    /** Returns true if the processor has unavailable collections */
-    bool hasUnavailableCols();
+    /** Returns true if the processor has collection errors */
+    bool hasErrorCols();
 
     /** Returns true if the processor is installed */
     bool isInstalled();
@@ -88,20 +89,22 @@ namespace marlin {
     /** Returns a string with the processor status ( "Active", "Inactive" ) */
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
     
-    /** Returns true if the given collection is unavailable for this processor */
+    /** Returns true if the given collection is in the unavailable or duplicate list of this processor */
     bool CCProcessor::isErrorCol( const std::string& type, const std::string& value );
 
-    /** Returns collections of a given iotype ( INPUT, OUTPUT, UNAVAILABLE ) for a given name or type
+    /** Returns collections of a given iotype ( INPUT, OUTPUT, UNAVAILABLE, DUPLICATE ) for a given name or type
      *  If iotype == INPUT/OUTPUT then type_name is the name of the collection
-     *  If iotype == UNAVAILABLE then type_name is the type of the collection */
+     *  If iotype == UNAVAILABLE/DUPLICATE then type_name is the type of the collection */
     ColVec& getCols( const std::string& iotype, const std::string& type_name="ALL_COLLECTIONS" );
 
     /** Returns the string parameters for this processor */
     StringParameters* getParameters(){ return _param; }
 
-    /** Returns all types of unavailable collections found in the processors */
-    sSet& getUColTypes();
-
+    /** Returns collection's types/names of a given iotype found in the processor
+     *  If iotype == INPUT/OUTPUT then names are returned
+     *  If iotype == UNAVAILABLE/DUPLICATE then types are returned */
+    sSet& getColTypeNames( const std::string& iotype );
+    
     /** Returns a map with collection names and their respective types for INPUT/OUTPUT collections of this processor */
     const ssMap& getColHeaders( const std::string& iotype ){ return _types[iotype]; }
 
@@ -113,6 +116,9 @@ namespace marlin {
 
     /** Adds an unavailable collection to this processor */
     void addUCol( CCCollection* c );
+   
+    /** Adds a duplicate collection to this processor */
+    void addDCol( CCCollection* c );
    
     /** Changes the processor status ( ACTIVE->INACTIVE or INACTIVE->ACTIVE ) */
     void changeStatus();
@@ -159,9 +165,9 @@ namespace marlin {
     StringVec _error_desc;	    // error descriptions for all processors
     StringVec _errors;		    // list of errors found in a processor
   
-    ssColVecMap _cols;		    // first key for Types INPUT : OUTPUT : UNAVAILABLE
+    ssColVecMap _cols;		    // first key for Types INPUT : OUTPUT : UNAVAILABLE : DUPLICATE
 				    // for INPUT/OUPUT the second key is for Collection Names
-				    // for UNAVAILABLE the second key is for Collection Types
+				    // for UNAVAILABLE/DUPLICATE the second key is for Collection Types
 
     sssMap _types;		    // first key for Types INPUT : OUTPUT
 				    // second key is for Collection Names and the third string for Collection Types

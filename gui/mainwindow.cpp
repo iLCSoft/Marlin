@@ -117,9 +117,7 @@ MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
     checkCurrentStyle();
 
     //Window Size
-    resize(800,400);
-    //resize(1200,800);
-    //showMaximized();
+    showMaximized();
 }
 
 void MainWindow::closeEvent(QCloseEvent *e)
@@ -498,10 +496,7 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
     setWindowTitle(title);
 
     setCentralWidget(hSplitter);
-    resize(1200,800);
-    showMaximized();
-
-   
+    
     //create backup file
     std::string cmd= "ls ";
     cmd+=filename;
@@ -770,7 +765,7 @@ void MainWindow::selectionChanged(int row)
 	//display the error description of active processors
 	if( msc->getAProcs()[row]->hasErrors() ){
 	    QString str(msc->getAProcs()[row]->getError().c_str());
-	    if( msc->getAProcs()[row]->hasUnavailableCols() ){
+	    if( msc->getAProcs()[row]->hasErrorCols() ){
 		str+= "\n";
 		str+= msc->getErrors(row).c_str();
 	    }
@@ -848,7 +843,7 @@ void MainWindow::editAProcessor(int row)
 	CCProcessor *p = new CCProcessor( *msc->getAProcs()[pos] );
 	
 	Dialog dg( msc->getAProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
-	dg.resize(1100,900);
+	//dg.resize(1100,900);
 	dg.setWindowState( Qt::WindowMaximized);
 
 	if(dg.exec()){
@@ -872,7 +867,7 @@ void MainWindow::editIProcessor()
 	CCProcessor *p = new CCProcessor( *msc->getIProcs()[pos] );
 	
 	Dialog dg( msc->getIProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
-	dg.resize(1100,900);
+	//dg.resize(1100,900);
 	dg.setWindowState( Qt::WindowMaximized);
 	
 	if(dg.exec()){
@@ -1053,8 +1048,6 @@ void MainWindow::openXMLFile()
     );
     
     if( !fileName.isEmpty() ){
-	//_modified=false;
-	//_saved=false;
 	QFileInfo xmlFile(fileName);
 	//get the current path
 	QDir dir(QDir::currentPath());
@@ -1063,7 +1056,6 @@ void MainWindow::openXMLFile()
 
 	setMarlinSteerCheck(fileName.toStdString().c_str());
         statusBar()->showMessage(tr("Loaded %1").arg(fileName), 2000);
-	//setCentralWidget(hSplitter);
     }
 }
 
@@ -1075,8 +1067,6 @@ void MainWindow::newXMLFile(){
     setWindowTitle(tr("Marlin GUI - Untitled.xml"));
 
     setCentralWidget(hSplitter);
-    resize(1200,800);
-    showMaximized();
   
     if( msc != NULL ){
 	delete msc;
