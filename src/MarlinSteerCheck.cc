@@ -481,6 +481,13 @@ namespace marlin{
 	error+="]. File doesn't exist, or link is not valid!!";
 	_errors.insert(error);
       }
+      
+      //remove other files if there are any
+      string gfile=gearFile[0];
+      gearFile.clear();
+      gearFile.push_back(gfile);
+      _gparam->erase( "GearXMLFile" );
+      _gparam->add( "GearXMLFile", gearFile );
 
       //list of lcio files defined in the global section
       _gparam->getStringVals( "LCIOInputFiles" , lcioFiles );

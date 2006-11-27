@@ -408,7 +408,7 @@ void MainWindow::setupViews()
     globalSectionTable->verticalHeader()->hide();
     globalSectionTable->setSelectionMode(QAbstractItemView::NoSelection);
     globalSectionTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
- 
+
     //GEAR Button
     QPushButton *gearButton = new QPushButton(tr("Browse for GEAR File"));
     connect(gearButton, SIGNAL(clicked()), this, SLOT(changeGearFile()));
@@ -527,6 +527,10 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
     updateFiles();
     updateAProcessors();
     updateIProcessors();
+
+    //Delegate
+    GParamDelegate *gpDelegate = new GParamDelegate( msc->getGlobalParameters(), this, globalSectionTable );
+    globalSectionTable->setItemDelegate( gpDelegate );
 }
 
 
@@ -534,9 +538,9 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
 //UPDATE VIEWS METHODS
 ////////////////////////////////////////////////////////////////////////////////
 
-void MainWindow::updateGlobalSection(){
+void MainWindow::updateGlobalSection()
+{
     //initialize global parameters 
-    
     StringVec paramKeys;
     msc->getGlobalParameters()->getStringKeys(paramKeys);
 
@@ -558,6 +562,12 @@ void MainWindow::updateGlobalSection(){
                                                                                                                                                              
         QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
         QTableWidgetItem *item1 = new QTableWidgetItem( str );
+
+	if(paramKeys[i]=="GearXMLFile"){
+	    QFileInfo gearInfo(paramValues[0].c_str());
+	    item1->setBackgroundColor( ( !gearInfo.exists() ? QColor(184,16,0,180) : QColor(32,140,64,180)) );
+	    item1->setFlags(item0->flags() & ~Qt::ItemIsEditable);
+	}
                                                                                                                                                              
         item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
                                                                                                                                                              
@@ -566,10 +576,6 @@ void MainWindow::updateGlobalSection(){
                                                                                                                                                              
         //globalSectionTable->openPersistentEditor(item1);
     }
-    //Delegate
-    GParamDelegate *gpDelegate = new GParamDelegate( msc->getGlobalParameters(), this, globalSectionTable );
-    globalSectionTable->setItemDelegate( gpDelegate );
- 
 }
 
 void MainWindow::updateFiles(int pos)
