@@ -383,10 +383,18 @@ void MainWindow::setupViews()
     QWidget *lcioButtons = new QWidget;
     lcioButtons->setLayout( lcioButtonsLayout );
     
+    //Label
+    QString currDirL = "CWD: ";
+    currDirL += QDir::currentPath();
+    QLabel *currDir = new QLabel(currDirL);
+
+    currDir->setToolTip(tr("Current Working Directory: LCIO Files in the same directory branch of this path are added with relative paths"));
+    
     //Layout
     QGridLayout *lcioFilesLayout = new QGridLayout;
-    lcioFilesLayout->addWidget(lcioFilesList,0,0);
-    lcioFilesLayout->addWidget(lcioButtons,0,1,Qt::AlignTop);
+    lcioFilesLayout->addWidget(currDir,0,0);
+    lcioFilesLayout->addWidget(lcioFilesList,1,0);
+    lcioFilesLayout->addWidget(lcioButtons,1,1,Qt::AlignTop);
  
     //GroupBox
     lcioFilesGBox = new QGroupBox(tr("Global Section LCIO Files"));
@@ -789,7 +797,10 @@ void MainWindow::remAProcessor()
     int pos = aProcTable->currentRow();
     if( pos >= 0 && pos < aProcTable->rowCount() ){
     
-	int ret = QMessageBox::warning(this, tr("Delete Processor"), tr("Delete selected processor?"),
+	int ret = QMessageBox::warning(this, tr("Delete Processor"),
+		tr( "Delete selected processor?\nAll parameter values for this processor will also be deleted!!\n"
+		    "If you don't want this processor to be executed, but still keep it's parameter values saved, "
+		    "try the \"Deactivate\" button instead."),
             QMessageBox::Yes | QMessageBox::Default,
             QMessageBox::No | QMessageBox::Escape);
 
@@ -808,7 +819,8 @@ void MainWindow::remIProcessor()
     int pos = iProcTable->currentRow();
     if( pos >= 0 && pos < iProcTable->rowCount() ){
 	
-	int ret = QMessageBox::warning(this, tr("Delete Processor"), tr("Delete selected processor?"),
+	int ret = QMessageBox::warning(this, tr("Delete Processor"),
+		tr("Delete selected processor?\nAll parameter values for this processor will also be deleted!!"),
             QMessageBox::Yes | QMessageBox::Default,
             QMessageBox::No | QMessageBox::Escape);
 
