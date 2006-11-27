@@ -7,6 +7,8 @@
 #include "dialog.h"
 #include "addprocdialog.h"
 
+#include "marlin/CMProcessor.h"
+
 #include <string>
 #include <stdlib.h>
 
@@ -951,13 +953,14 @@ void MainWindow::moveLCIOFileDown()
 void MainWindow::changeGearFile()
 {
     QString absFileName = QFileDialog::getOpenFileName(this, tr("Choose a Gear file"), "", "*.xml", 0, QFileDialog::DontResolveSymlinks);
-    QFileInfo xmlFile(msc->getXMLFile().c_str());
-    //extract the absolute path from the xml file
-    QDir dir(xmlFile.absolutePath());
-    //get the relative path for the GEAR file
-    QString fileName = dir.relativeFilePath(absFileName);
-    
-    if( !fileName.isEmpty() ){
+   
+    if( !absFileName.isEmpty() ){
+	QFileInfo xmlFile(msc->getXMLFile().c_str());
+	//extract the absolute path from the xml file
+	QDir dir(xmlFile.absolutePath());
+	//get the relative path for the GEAR file
+	QString fileName = dir.relativeFilePath(absFileName);
+     
         statusBar()->showMessage(tr("Changed GEAR File to %1").arg(fileName), 2000);
 	msc->getGlobalParameters()->erase( "GearXMLFile" );
 	StringVec file;
@@ -988,17 +991,32 @@ void MainWindow::addLCIOFile()
 	fileName = dir.relativeFilePath(absFileName);
     }
 */
-    //get the current Path
-    QDir dir;
-    //get the relative path for the LCIO file
-    QString fileName = dir.relativeFilePath(absFileName);
-    
-    if( !fileName.isEmpty() ){
+    if( !absFileName.isEmpty() ){
+	//get the current Path
+	QDir dir;
+
+	//test if the file is on the same directory-branch from the working directory
+	StringVec currentPath, filePath;
+	msc->getMProcs()->tokenize(dir.absolutePath().toStdString(),currentPath,"/");
+	msc->getMProcs()->tokenize(absFileName.toStdString(),filePath,"/");
+
+	QString fileName;
+	//if file is on the same directory-branch from the working directory take relative path
+	if(currentPath[0]==filePath[0]){
+	    fileName = dir.relativeFilePath(absFileName);
+	}
+	//else take absolute path
+	else{
+	    fileName = absFileName;
+	}
 
 	QDir newFile(absFileName);
+	QFileInfo newFileI(absFileName);
 	for( unsigned int i=0; i<msc->getLCIOFiles().size(); i++){
 	    QDir existingFile(msc->getLCIOFiles()[i].c_str());
-	    if(newFile.canonicalPath()==existingFile.canonicalPath()){
+	    QFileInfo existingFileI(msc->getLCIOFiles()[i].c_str());
+	    if((newFile.canonicalPath() == existingFile.canonicalPath()) || 
+		    (newFileI.fileName() == existingFileI.fileName()) ){
 		QString error="Error opening LCIO file [";
 		error+=absFileName;
 		error+="]. This file has already been opened!!";
