@@ -90,6 +90,9 @@ void APDialog::changeLabel(const QString& text){
     //set the label with the processor description
     if(procTypes.find(text.toStdString()) != procTypes.end()){
 	procLabel->setText(procTypes[text.toStdString()].c_str());
+	QString name="My";
+	name+=text;
+	le->setText(name);
     }
 }
 
