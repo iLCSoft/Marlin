@@ -63,7 +63,7 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
     okButton->setAutoDefault(true);
 
     connect(okButton, SIGNAL(clicked()), this, SLOT(addProcessor()));
-    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(this, SIGNAL(apply()), this, SLOT(accept()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
     
     QHBoxLayout *buttonsLO = new QHBoxLayout;
@@ -98,9 +98,19 @@ void APDialog::changeLabel(const QString& text){
 
 void APDialog::addProcessor(){
 
-    //add new processor
-    _msc->addProcessor( ACTIVE, le->displayText().toStdString(), cb->currentText().toStdString() );
-    
-    //edit processor
-    emit( editProcessor( (int)_msc->getAProcs().size()-1 ));
+    if( !_msc->existsActiveProcessor(cb->currentText().toStdString(), le->displayText().toStdString() )){
+	//add new processor
+	_msc->addProcessor( ACTIVE, le->displayText().toStdString(), cb->currentText().toStdString() );
+	
+	//edit processor
+	emit( editProcessor( (int)_msc->getAProcs().size()-1 ));
+
+	//aply changes
+	emit( apply() );
+    }
+    else{
+	QMessageBox::warning(this, tr("Add New Processor"),
+		"An active processor with the same name & type already exists...\n"
+		"Please choose another name" );
+    }
 }

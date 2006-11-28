@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.20 2006-11-24 15:10:47 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.21 2006-11-28 11:18:28 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -67,8 +67,8 @@ namespace marlin {
     /** Returns the Inactive Processors */
     ProcVec& getIProcs() { return _iProc; };
 
-    /** Returns true if an Active Processor of the given type already exists */
-    bool existsActiveProcessor( const std::string& type );
+    /** Returns true if an Active Processor of the given type and name already exists */
+    bool existsActiveProcessor( const std::string& type, const std::string& name="" );
     
     /** Returns the collections read from LCIO files */
     ColVec& getLCIOCols() const;

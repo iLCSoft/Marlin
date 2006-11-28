@@ -22,6 +22,7 @@ public:
 
 signals:
     void editProcessor(int);
+    void apply();
     
 private slots:
     void addProcessor();

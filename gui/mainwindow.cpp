@@ -931,10 +931,19 @@ void MainWindow::activateProcessor()
     int pos = iProcTable->currentRow();
     if( pos >= 0 ){
 	if(msc->getIProcs()[pos]->isInstalled()){
-	    msc->activateProcessor( pos );
-	    updateIProcessors(pos);
-	    updateAProcessors();
-	    emit modifiedContent();
+	    if(!msc->existsActiveProcessor( msc->getIProcs()[pos]->getType(), msc->getIProcs()[pos]->getName() )){
+		msc->activateProcessor( pos );
+		updateIProcessors(pos);
+		updateAProcessors();
+		emit modifiedContent();
+	    }
+	    else{
+		QMessageBox::warning(this, tr("Activate Processor"),
+		    tr( "Sorry, you cannot activate this processor because there is already an active processor with the same name & type"
+			"as the one you are trying to activate...\n"
+			"Please change the name of one of them by double-clicking on the name field and then try again...")
+		);
+	    }
 	}
 	else{
 	    QMessageBox::warning(this, tr("Activate Processor"),
