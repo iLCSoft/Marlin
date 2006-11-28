@@ -31,7 +31,7 @@ APDialog::APDialog( MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDia
     procTypes=msc->getMProcs()->getProcDesc();
     
     for( ssMap::const_iterator p=procTypes.begin(); p != procTypes.end(); p++ ){
-	if( (p->first =="AIDAProcessor" && _msc->existsActiveProcessor("AIDAProcessor")) || !_msc->getMProcs()->isInstalled( p->first ) ){
+	if( (p->first =="AIDAProcessor" && _msc->existsProcessor("AIDAProcessor")==1 ) || !_msc->getMProcs()->isInstalled( p->first ) ){
 	    continue;
 	}
         cb->addItem((*p).first.c_str());
@@ -98,7 +98,9 @@ void APDialog::changeLabel(const QString& text){
 
 void APDialog::addProcessor(){
 
-    if( !_msc->existsActiveProcessor(cb->currentText().toStdString(), le->displayText().toStdString() )){
+    int existsProc = _msc->existsProcessor(cb->currentText().toStdString(), le->displayText().toStdString() );
+
+    if( !existsProc ){
 	//add new processor
 	_msc->addProcessor( ACTIVE, le->displayText().toStdString(), cb->currentText().toStdString() );
 	
@@ -109,8 +111,15 @@ void APDialog::addProcessor(){
 	emit( apply() );
     }
     else{
-	QMessageBox::warning(this, tr("Add New Processor"),
-		"An active processor with the same name & type already exists...\n"
-		"Please choose another name" );
+	QString error;
+	if( existsProc == 1 ){
+	    error+="An active";
+	}
+	else{
+	    error+="An inactive";
+	}
+	error+=" processor with the same name & type already exists...\nPlease choose another name";
+	
+	QMessageBox::warning(this, tr("Add New Processor"), error );
     }
 }

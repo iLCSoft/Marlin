@@ -323,17 +323,19 @@ namespace marlin{
     consistencyCheck();
   }
   
-  //returns true if a processor of this type already exists
-  bool MarlinSteerCheck::existsActiveProcessor( const string& type, const string& name ){
-    for(unsigned int i=0; i<_aProc.size(); i++ ){
-	if( name == "" && _aProc[i]->getType() == type ){
-	    return true;
-	}
-	else if( _aProc[i]->getType() == type && _aProc[i]->getName() == name ){
-	    return true;
+  //0 = does not exist ; 1 = exists and is active ; 2 = exists and is inactive
+  int MarlinSteerCheck::existsProcessor( const string& type, const string& name ){
+    for( unsigned int i=0; i<_aProc.size(); i++ ){
+	if(( name == "" && _aProc[i]->getType() == type ) || ( _aProc[i]->getType() == type && _aProc[i]->getName() == name )){
+	    return 1;
 	}
     }
-    return false;
+    for( unsigned int i=0; i<_iProc.size(); i++ ){
+	if(( name == "" && _iProc[i]->getType() == type ) || ( _iProc[i]->getType() == type && _iProc[i]->getName() == name )){
+	    return 2;
+	}
+    }
+    return 0;
   }
 
   // Activate a processor
