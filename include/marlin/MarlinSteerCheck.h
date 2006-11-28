@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.22 2006-11-28 13:23:52 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.23 2006-11-28 15:02:03 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -79,8 +79,8 @@ namespace marlin {
     /** Returns the names of the LCIO files found in the global section*/
     StringVec& getLCIOFiles(){ return _lcioFiles; }
 
-    /** Returns a list of all available Collections for a given type and processor (to use in a ComboBox) */
-    sSet& getColsSet( const std::string& type, CCProcessor* proc );
+    /** Returns a list of all available Collections for a given type, name and processor (to use in a ComboBox) */
+    sSet& getColsSet( const std::string& type, const std::string& name, CCProcessor* proc );
 
     /** Returns the Global Parameters */
     StringParameters* getGlobalParameters(){ return _gparam; }
@@ -162,7 +162,8 @@ namespace marlin {
     CCProcessor* popProc(ProcVec& v, CCProcessor* p);
 
     // Find matching collections of a given type and value in a vector of collections for a given processor
-    ColVec& findMatchingCols( ColVec& v, CCProcessor* srcProc, const std::string& type, const std::string& value="UNDEFINED" );
+    ColVec& findMatchingCols( ColVec& v, CCProcessor* srcProc, 
+	    const std::string& type, const std::string& value="UNDEFINED", const std::string& name="UNDEFINED" );
     
     /////////////////////////////////////////////////////
     //VARIABLES

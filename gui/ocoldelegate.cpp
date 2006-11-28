@@ -25,10 +25,13 @@ void OColDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
 {
     QLineEdit *edit = qobject_cast<QLineEdit *>(editor);
     edit->setText(index.model()->data(index).toString());
-    //set background color
-    _parent->currentItem()->setBackgroundColor(
-                _p->isErrorCol( _parent->item(index.row(),1)->text().toStdString(), edit->text().toStdString() ) ?
-                QColor(184,16,0,180) : QColor(32,140,64,180) );
+    
+    if( _p->isActive() ){
+	//set background color
+	_parent->currentItem()->setBackgroundColor(
+		    _p->isErrorCol( _parent->item(index.row(),1)->text().toStdString(), edit->text().toStdString() ) ?
+		    QColor(184,16,0,180) : QColor(32,140,64,180) );
+    }
 }
 
 void OColDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
@@ -40,9 +43,11 @@ void OColDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
     _p->getCols( OUTPUT, _parent->item(index.row(),0)->text().toStdString() )[ 0 ]->setValue(edit->displayText().toStdString());
     _msc->consistencyCheck();
 
-    //set background color
-    _parent->currentItem()->setBackgroundColor(
-                _p->isErrorCol( _parent->item(index.row(),1)->text().toStdString(), edit->text().toStdString() ) ?
-                QColor(184,16,0,180) : QColor(32,140,64,180) );
+    if( _p->isActive() ){
+	//set background color
+	_parent->currentItem()->setBackgroundColor(
+		    _p->isErrorCol( _parent->item(index.row(),1)->text().toStdString(), edit->text().toStdString() ) ?
+		    QColor(184,16,0,180) : QColor(32,140,64,180) );
+    }
 }
 

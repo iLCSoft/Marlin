@@ -95,8 +95,10 @@ void Dialog::setupViews()
 		    item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
 		    item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);
 		    
-		    item2->setBackgroundColor( _p->isErrorCol( p->second.c_str(), cols[i]->getValue().c_str() ) ?
-			    QColor(184,16,0,180) : QColor(32,140,64,180) );
+		    if( _p->isActive() ){
+			item2->setBackgroundColor( _p->isErrorCol( p->second.c_str(), cols[i]->getValue().c_str() ) ?
+				QColor(184,16,0,180) : QColor(32,140,64,180) );
+		    }
 	   
 		    colTable->setItem(row, 0, item0);
 		    colTable->setItem(row, 1, item1);
@@ -162,8 +164,10 @@ void Dialog::setupViews()
 		    
 		    item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
 		   
-		    item0->setBackgroundColor( _p->isErrorCol( p->second.c_str(), cols[i]->getValue().c_str() ) ? 
-			    QColor(184,16,0,180) : QColor(32,140,64,180) );
+		    if( _p->isActive() ){
+			item0->setBackgroundColor( _p->isErrorCol( p->second.c_str(), cols[i]->getValue().c_str() ) ? 
+				QColor(184,16,0,180) : QColor(32,140,64,180) );
+		    }
 
 		    //item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
 		    colTable->setItem(row, 0, item0);
@@ -279,8 +283,10 @@ void Dialog::setupViews()
 		item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
 		item2->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), (*p).first ).c_str() ) );
 		
-		item2->setBackgroundColor( _p->isErrorCol( p->second.c_str(), cols[i]->getValue().c_str() ) ? 
-			    QColor(184,16,0,180) : QColor(32,140,64,180) );
+		if( _p->isActive() ){
+		    item2->setBackgroundColor( _p->isErrorCol( p->second.c_str(), cols[i]->getValue().c_str() ) ? 
+				QColor(184,16,0,180) : QColor(32,140,64,180) );
+		}
 		
 		item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);	
 		item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);	

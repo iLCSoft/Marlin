@@ -114,26 +114,46 @@ namespace marlin{
 
   // Returns a list of all available Collections of a given Type
   // for a given Processor (to use in a ComboBox)
-  sSet& MarlinSteerCheck::getColsSet( const string& type, CCProcessor* proc ){
+  sSet& MarlinSteerCheck::getColsSet( const string& type, const string& name, CCProcessor* proc ){
     
     _colValues.clear();
-    
-    ColVec v = findMatchingCols( getAllCols(), proc, type );
-    for( unsigned int i=0; i<v.size(); i++ ){
-	//check for duplicates
-	bool found=false;
-	ColVec pv = proc->getCols( INPUT );
-	for( unsigned int j=0; j<pv.size(); j++ ){
-	    //filter collections by type
-	    if( pv[j]->getType() == type ){
-		//if collection value matches it means the collections already exists
-		if( pv[j]->getValue() == v[i]->getValue() ){
-		    found=true;
-		}
+
+    ColVec v;
+    if(!proc->isActive()){
+	
+	v = findMatchingCols( getAllCols(), proc, type );
+	for( unsigned int i=0; i<v.size(); i++ ){
+	    //check if collection already exists
+	    CCProcessor tmp(ACTIVE, "Temporary", "Temporary");
+	    if( findMatchingCols( proc->getCols( INPUT ), &tmp, type, v[i]->getValue(), name ).size() == 0 ){
+		_colValues.insert( v[i]->getValue() );
 	    }
 	}
-	if(!found){
-	    _colValues.insert( v[i]->getValue() );
+    }
+    else{
+	//get LCIO collections
+	v = getLCIOCols();
+	
+	//insert collections from previous active processors
+	for( unsigned int i=0; i<_aProc.size(); i++ ){
+	    
+	    //abort if we reach the processor
+	    if( _aProc[i] == proc ){ break; }
+	    
+	    ColVec av = _aProc[i]->getCols( OUTPUT );
+	    v.insert( v.end(), av.begin(), av.end() );
+	}
+	
+	//create temporary processor to find matching collections
+	CCProcessor tmp(ACTIVE, "Temporary", "Temporary");
+	
+	for( unsigned int i=0; i<v.size(); i++ ){
+	    if( v[i]->getType() == type ){
+		//check if collection already exists
+		if( findMatchingCols( proc->getCols( INPUT ), &tmp, type, v[i]->getValue(), name ).size() == 0 ){
+		    _colValues.insert( v[i]->getValue() );
+		}
+	    }
 	}
     }
 
@@ -581,7 +601,7 @@ namespace marlin{
   }
 
   //find matching collections on the given vector
-  ColVec& MarlinSteerCheck::findMatchingCols( ColVec& v, CCProcessor* srcProc, const string& type, const string& value ){
+  ColVec& MarlinSteerCheck::findMatchingCols( ColVec& v, CCProcessor* srcProc, const string& type, const string& value, const string& name ){
     static ColVec cols;
 
     cols.clear();
@@ -589,7 +609,14 @@ namespace marlin{
       if( v[i]->getSrcProc() != srcProc && v[i]->getType() == type ){
 	if( value != "UNDEFINED" ){
 	  if( v[i]->getValue() == value ){
-	    cols.push_back( v[i] );
+	    if( name != "UNDEFINED" ){
+		if( v[i]->getName() == name ){
+		    cols.push_back( v[i] );
+		}
+	    }
+	    else{
+		cols.push_back( v[i] );
+	    }
 	  }
 	}
 	//if value == "UNDEFINED" it means we want all collections of a given type
