@@ -46,7 +46,11 @@ distribution.
 // or order will break putstring.	
 TiXmlBase::Entity TiXmlBase::entity[ NUM_ENTITY ] = 
 {
-	{ "&amp;",  5, '&' },
+	//FIXME: workaround for processor conditions of type &&
+	//needs to be tested if there are no adverse effects due to this change!!
+	{ "&",  1, '&' },
+	//{ "&amp;",  5, '&' },
+	
 	{ "&lt;",   4, '<' },
 	{ "&gt;",   4, '>' },
 	{ "&quot;", 6, '\"' },

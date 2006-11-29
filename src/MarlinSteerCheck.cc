@@ -526,7 +526,13 @@ namespace marlin{
       _gparam->getStringVals( "ActiveProcessors" , activeProcs );
       _gparam->erase("ActiveProcessors");
     
-      _gparam->erase("ProcessorConditions");
+      StringVec conds;
+      _gparam->getStringVals( "ProcessorConditions" , conds );
+      cout << "Processor conditions:\n";
+      for( unsigned int i=0; i<conds.size(); i++ ){
+	  cout<<conds[i]<<endl;
+      }
+      //_gparam->erase("ProcessorConditions");
 	 
     
       //============================================================

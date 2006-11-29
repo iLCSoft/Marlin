@@ -90,7 +90,7 @@ MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
 	"In order for this application to work correctly you should first check if all processors found in the "
 	"steering file are installed in your Marlin binary.<br>This can easily be check by running \"Marlin -c SteeringFile.xml\"<br><br><br>"
 	"If you have comments or suggestions please take a look at the ILC Forum<br>under the Marlin section at "
-	"<a href=\"http://forum.linearcollider.org/\">http://forum.linearcollider.org</a>. Thanks <br><br>"
+	"<a href=\"http://forum.linearcollider.org\">http://forum.linearcollider.org</a>. Thanks <br><br>"
 	"Author: Jan Engels"
     ));
     
@@ -201,7 +201,11 @@ void MainWindow::help(){
     //Buttons
     QPushButton *forwButton = new QPushButton(tr("->"));
     QPushButton *backButton = new QPushButton(tr("<-"));
-    QPushButton *homeButton = new QPushButton(tr("Home"));
+    QPushButton *homeButton = new QPushButton(tr("TOC"));
+
+    forwButton->setToolTip(tr("Forward"));
+    backButton->setToolTip(tr("Backward"));
+    homeButton->setToolTip(tr("Table of Contents"));
 
     forwButton->setMaximumWidth(50);
     backButton->setMaximumWidth(50);

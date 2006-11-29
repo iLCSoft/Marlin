@@ -2,7 +2,7 @@
 add the variable MARLIN_GUI to your environment and set it to 1 (see line below) and compile Marlin as usual
 export MARLIN_GUI=1
 
-if everything went fine you should have the binary Marlin_GUI in you bin directory.
+if everything went fine you should have the binary MarlinGUI in you bin directory.
 
 NOTE:
 
