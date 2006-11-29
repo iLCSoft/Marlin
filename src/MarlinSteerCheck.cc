@@ -840,19 +840,18 @@ namespace marlin{
 	
       cout << setw(40) << left << _aProc[i]->getName() <<
 	setw(30) << left << _aProc[i]->getType() << 
-	" [ " <<  _aProc[i]->getStatusDesc()
-	;
+	" [ " <<  _aProc[i]->getStatusDesc() << " ] ";
 
       //print processor errors
       if( _aProc[i]->hasErrors() ){
-	cout << " : " << _aProc[i]->getError();
+	cout << " ( " << _aProc[i]->getError() << " )";
 	/* 
 	   for( unsigned int j=0; j<_aProc[i]->getErrors().size(); j++ ){
 	   cout << " : " << _aProc[i]->getErrors()[j];
 	   }
 	*/
       }
-      cout << " ]" << endl;
+      cout << endl;
       endcolor();
     }
 
@@ -866,12 +865,11 @@ namespace marlin{
 	
       cout << setw(40) << left << _iProc[i]->getName() <<
 	setw(30) << left << _iProc[i]->getType() << 
-	" [ " << _iProc[i]->getStatusDesc() 
-	;
+	" [ " << _iProc[i]->getStatusDesc() << " ] ";
 	
       //print processor errors
       if( _iProc[i]->hasErrors() ){
-	cout << " : " << _iProc[i]->getError();
+	cout << " ( " << _iProc[i]->getError() << " )";
 	/*
 	  for( unsigned int j=0; j<_iProc[i]->getErrors().size(); j++ ){
 	  cout << " : " << _iProc[i]->getErrors()[j];
@@ -879,7 +877,7 @@ namespace marlin{
 	*/
       }
 
-      cout << " ]" << endl;
+      cout << endl;
       endcolor();
     }
 

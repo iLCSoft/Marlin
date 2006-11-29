@@ -24,6 +24,8 @@ namespace marlin{
     _error_desc.push_back( "Some Collections have Errors" );
     //}
 
+    setError( NO_PARAMETERS );
+    
     //setup Marlin Processor
     setMarlinProc();
  
