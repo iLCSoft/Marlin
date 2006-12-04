@@ -481,7 +481,7 @@ namespace marlin{
 
     //if file loads with no errors
     if( doc.LoadFile() ){
-      StringVec lcioFiles, gearFile, availableProcs, activeProcs;
+      StringVec lcioFiles, gearFile, availableProcs, activeProcs, conditions;
 
       //============================================================
       //PARSE THE XML FILE
@@ -518,23 +518,19 @@ namespace marlin{
       _gparam->getStringVals( "LCIOInputFiles" , lcioFiles );
       _gparam->erase("LCIOInputFiles");
 	
-      //list of all processors defined in the xml file NOT including the ones in the execute section
+      //list of all processors defined in the body of the xml file
+      //(NOT including the ones in the execute section)
       _gparam->getStringVals( "AvailableProcessors" , availableProcs );
       _gparam->erase("AvailableProcessors");
 	
-      //this gets a name list of all processors defined in the execute section
+      //list of all processors defined in the execute section
       _gparam->getStringVals( "ActiveProcessors" , activeProcs );
       _gparam->erase("ActiveProcessors");
-    
-      StringVec conds;
-      _gparam->getStringVals( "ProcessorConditions" , conds );
-      cout << "Processor conditions:\n";
-      for( unsigned int i=0; i<conds.size(); i++ ){
-	  cout<<conds[i]<<endl;
-      }
-      //_gparam->erase("ProcessorConditions");
-	 
-    
+
+      //get the processor's conditions
+      _gparam->getStringVals( "ProcessorConditions" , conditions );
+      _gparam->erase("ProcessorConditions");
+
       //============================================================
       //ADD LCIO FILES
       //============================================================
@@ -586,6 +582,15 @@ namespace marlin{
       consistencyCheck();
 
       for( unsigned int i=0; i<_aProc.size(); i++ ){
+	  
+	  //add processor conditions
+	  _aProc[i]->setConditions( conditions[i] );
+
+	  for( sSet::const_iterator p=_aProc[i]->getConditions().begin();
+		  p!=_aProc[i]->getConditions().end(); p++ ){
+	    _pConditions.insert( *p );
+	  }
+	  
 	  if( !_aProc[i]->isInstalled() ){
 	      _errors.insert("Some Active Processors are not installed");
 	  }
@@ -665,7 +670,29 @@ namespace marlin{
     return procs;
   }
 
+  const string MarlinSteerCheck::getCondition( unsigned int index ){
+    if( index >= 0 && index < _pConditions.size()){
+	sSet::const_iterator p;
+	advance( p=_pConditions.begin(), index );
+	return *p;
+    }
+    return "";
+  }
 
+  void MarlinSteerCheck::addCondition( const std::string& condition ){
+      _pConditions.insert( condition );
+  }
+
+  void MarlinSteerCheck::remCondition( const std::string& condition ){
+      _pConditions.erase( condition );
+      
+      for( unsigned int i=0; i<_aProc.size(); i++ ){
+	if( _aProc[i]->hasCondition( condition )){
+	    _aProc[i]->getConditions().erase( condition );
+	}
+      }
+  }
+  
   ////////////////////////////////////////////////////////////////////////////////
   // COLLECTIONS RETRIEVAL METHODS
   ////////////////////////////////////////////////////////////////////////////////

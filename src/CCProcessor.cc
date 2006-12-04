@@ -38,7 +38,6 @@ namespace marlin{
     //clears all collections related parameters and the processor type
     clearParameters();
   }
-  
 
   //copy constructor
   CCProcessor::CCProcessor( CCProcessor &p) : _param(0), _proc(p._proc) {
@@ -149,6 +148,61 @@ namespace marlin{
     }
   }
 
+  void CCProcessor::setConditions( const string& conditions ){
+
+      if( conditions == "true" ){
+	  return;
+      }
+
+      int brackets=0;
+      unsigned p = 0;
+      unsigned q = 1;
+    
+      while( q < conditions.size() ){
+	  if( conditions[ p ] == '(' ){
+	      brackets++;
+	      while( brackets ){
+		  if( conditions[ q ] == '(' ){
+		      brackets++;
+		  }
+		  if( conditions[ q ] == ')' ){
+		      brackets--;
+		  }
+		  q++;
+	      }
+	      //skip the white space after the brackets
+	      q++;
+	  }
+	  if( conditions[ q ] == '&' ){
+	     if( conditions[ p ] == '(' ){
+		//skip brackets
+		_conditions.insert( conditions.substr( p+1, (q-p)-3 )); 
+	     }
+	     else{
+		_conditions.insert( conditions.substr( p, q-1 ));
+	     }
+	     p = q+3;
+	     q = p;
+	  }
+	  q++;
+      }
+      //make the last split
+      if( conditions[ p ]== '(' ){
+	//skip brackets
+	_conditions.insert( conditions.substr( p+1, (q-p)-4 ));
+      }
+      else{
+	_conditions.insert( conditions.substr( p, q ));
+      }
+  }
+  
+  bool CCProcessor::hasCondition( const string& condition ){
+      if( _conditions.find( condition) != _conditions.end() ){
+	  return true;
+      }
+      return false;
+  }
+      
   void CCProcessor::setMarlinProc(){
       if( !CMProcessor::instance()->isInstalled( _type )){
 	setError( NOT_INSTALLED );
@@ -225,10 +279,6 @@ namespace marlin{
   void CCProcessor::changeStatus(){
     _status = !_status;
     clearError( COL_ERRORS );
-  }
-
-  void CCProcessor::setName( const string& name ){
-    _name = name;
   }
 
 /////////////////////////////////////////////////////////////
@@ -381,24 +431,7 @@ namespace marlin{
     }
     return false;
   }
-
-  bool CCProcessor::hasParameters(){
-    return !_error[0];
-  }
-
-  bool CCProcessor::isInstalled(){
-    return !_error[1];
-  }
-
-  bool CCProcessor::hasErrorCols(){
-    return _error[2];
-  }
-
-  bool CCProcessor::isActive(){
-    if( _status == true ){ return true; }
-    return false;
-  }
-  
+ 
   bool CCProcessor::isParamOptional( const string& key ){
       if( CMProcessor::instance()->isParamOpt( _type, key )){
 	  if( _optParams.find( key ) == _optParams.end() ){

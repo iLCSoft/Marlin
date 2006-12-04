@@ -48,8 +48,10 @@ private slots:
     void help();
     void madeChanges();
     void selectionChanged(int row);
+    void conditionChanged(int row, int col);
     void hideIProcessors(bool checked);
     void hideAProcErrors(bool checked);
+    void showConditions(bool checked);
     
     void addAProcessor();
     void remAProcessor();
@@ -110,9 +112,13 @@ private:
     
     QPushButton *hideProcs;
     QPushButton *hideErrors;
+    QPushButton *showCond;
+
     QList<int> vSizes;
+    QList<int> hSizes;
     int vSplitterESize;
     int vSplitterISize;
+    int hSplitterSize;
     QSplitter *vSplitter;
     QSplitter *hSplitter;
     

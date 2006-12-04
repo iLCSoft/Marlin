@@ -18,7 +18,7 @@
  * 
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.23 2006-11-28 15:02:03 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.24 2006-12-04 16:44:40 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -137,8 +137,20 @@ namespace marlin {
     /** Dumps collection errors found in the steering file for all active processors */
     void dump_colErrors();
 
+    /** Returns a set with all the errors found after performing a consistency check */
     sSet& getErrors(){ return _errors; };
 
+    /** Returns a set with all the processor's conditions */
+    sSet& getPConditions(){ return _pConditions; };
+
+    /** Returns the condition for a given index */
+    const std::string getCondition( unsigned int index );
+    
+    /** Add a new Condition */
+    void addCondition( const std::string& condition );
+    
+    /** Returns the condition for a given index */
+    void remCondition( const std::string& condition );
     
   private:
     
@@ -191,6 +203,8 @@ namespace marlin {
     StringVec _lcioFiles;		//LCIO filenames
     
     sSet _colValues;			//all available collection values for a given type (use in ComboBox)
+
+    sSet _pConditions;			//all processor's conditions
 
     CMProcessor* _marlinProcs;		//Sigleton class containing all marlin processors
   };

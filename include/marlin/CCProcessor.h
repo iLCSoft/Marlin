@@ -7,7 +7,7 @@
  * needed by MarlinSteerCheck
  *
  * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: CCProcessor.h,v 1.19 2006-11-24 13:03:47 engels Exp $
+ * @version $Id: CCProcessor.h,v 1.20 2006-12-04 16:44:40 engels Exp $
  *
  */
 
@@ -55,25 +55,28 @@ namespace marlin {
     bool hasErrors();
     
     /** Returns true if the processor has parameters */
-    bool hasParameters();
+    bool hasParameters(){ return !_error[ NO_PARAMETERS ]; }
     
     /** Returns true if the processor has collection errors */
-    bool hasErrorCols();
+    bool hasErrorCols(){ return _error[ COL_ERRORS ]; }
 
     /** Returns true if the processor is installed */
-    bool isInstalled();
+    bool isInstalled(){ return !_error[ NOT_INSTALLED ]; }
 
     /** Returns true if the processor is active */
-    bool isActive();
+    bool isActive(){ return _status; }
 
-    /** Returns the Status of the processor ( ACTIVE=true / INACTIVE=false ) */
-    bool getStatus(){ return _status; }
-   
+    /** Returns true if the processor is constrained by the given condition */
+    bool hasCondition( const std::string& condition );
+
     /** Returns the Name of the processor */
     const std::string& getName(){ return _name; }
 
     /** Returns the Type of the processor */
     const std::string& getType(){ return _type; }
+
+    /** Returns the Conditions of the processor */
+    sSet& getConditions(){ return _conditions; }
 
     /** Returns the Description of the processor */
     const std::string getDescription(){	return (isInstalled() ? _proc->description() : 
@@ -91,23 +94,26 @@ namespace marlin {
     
     /** Returns true if the given collection is in the unavailable or duplicate list of this processor */
     bool CCProcessor::isErrorCol( const std::string& type, const std::string& value );
+    
+    /** Returns true if a parameter is optional (optional means the parameter will be written out as a comment) */
+    bool isParamOptional( const std::string& key );
+    
+    /** Returns the string parameters for this processor */
+    StringParameters* getParameters(){ return _param; }
+    
+    /** Returns a map with collection names and their respective types for INPUT/OUTPUT collections of this processor */
+    const ssMap& getColHeaders( const std::string& iotype ){ return _types[iotype]; }
 
     /** Returns collections of a given iotype ( INPUT, OUTPUT, UNAVAILABLE, DUPLICATE ) for a given name or type
      *  If iotype == INPUT/OUTPUT then type_name is the name of the collection
      *  If iotype == UNAVAILABLE/DUPLICATE then type_name is the type of the collection */
     ColVec& getCols( const std::string& iotype, const std::string& type_name="ALL_COLLECTIONS" );
 
-    /** Returns the string parameters for this processor */
-    StringParameters* getParameters(){ return _param; }
-
     /** Returns collection's types/names of a given iotype found in the processor
      *  If iotype == INPUT/OUTPUT then names are returned
      *  If iotype == UNAVAILABLE/DUPLICATE then types are returned */
     sSet& getColTypeNames( const std::string& iotype );
     
-    /** Returns a map with collection names and their respective types for INPUT/OUTPUT collections of this processor */
-    const ssMap& getColHeaders( const std::string& iotype ){ return _types[iotype]; }
-
     /** Adds a collection of the given iotype ( INPUT / OUTPUT ) with the given name, type and value */
     void addCol( const std::string& iotype, const std::string& name, const std::string& type, const std::string& value );
 
@@ -124,7 +130,10 @@ namespace marlin {
     void changeStatus();
 
     /** Sets the processor's name */
-    void setName( const std::string& name );
+    void setName( const std::string& name ){ _name = name; };
+    
+    /** Sets the processor's conditions */
+    void setConditions( const std::string& conditions );
     
     /** Activates an error flag in this processor ( NO_PARAMETERS=0, NOT_INSTALLED=1, COL_ERRORS=2 ) */
     void setError( int error );
@@ -134,9 +143,6 @@ namespace marlin {
 
     /** Sets a parameter as optional (if optional=true parameter is written out as a comment) */
     void setOptionalParam( const std::string& key, bool optional=true );
-    
-    /** Returns true if a parameter is optional (optional means the parameter will be written out as a comment) */
-    bool isParamOptional( const std::string& key );
     
     /** Writes this processor to a stream using the XML format */
     void writeToXML( std::ofstream& stream );
@@ -164,6 +170,8 @@ namespace marlin {
  
     StringVec _error_desc;	    // error descriptions for all processors
     StringVec _errors;		    // list of errors found in a processor
+
+    sSet _conditions;		    // processor's conditions
   
     ssColVecMap _cols;		    // first key for Types INPUT : OUTPUT : UNAVAILABLE : DUPLICATE
 				    // for INPUT/OUPUT the second key is for Collection Names

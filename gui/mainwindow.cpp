@@ -72,7 +72,6 @@ MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
     hSplitter->addWidget(left);
     hSplitter->addWidget(vSplitter);
     
-    QList<int> hSizes;
     hSizes << 600 << 800;
     hSplitter->setSizes( hSizes );
  
@@ -259,6 +258,7 @@ void MainWindow::setupViews()
     aProcTable->setItemDelegate(new AProcDelegate(this));
 
     connect(aProcTable, SIGNAL(cellPressed(int, int)), this, SLOT(selectionChanged(int)));
+    connect(aProcTable, SIGNAL(cellClicked(int, int)), this, SLOT(conditionChanged(int, int)));
     
     //Layout
     QVBoxLayout *aProcLayout = new QVBoxLayout;
@@ -302,6 +302,10 @@ void MainWindow::setupViews()
     QPushButton *deactProc = new QPushButton(tr("Dea&ctivate"));
     QPushButton *mvAProcUp = new QPushButton(tr("Move &Up"));
     QPushButton *mvAProcDn = new QPushButton(tr("Move &Down"));
+    QPushButton *editCond = new QPushButton(tr("Edit Cond."));
+    showCond = new QPushButton(tr("Show Cond."));
+
+    showCond->setCheckable( true );
     
     addAProc->setToolTip(tr("Add New Processor"));
     editAProc->setToolTip(tr("Edit Selected Processor"));
@@ -309,6 +313,8 @@ void MainWindow::setupViews()
     deactProc->setToolTip(tr("Deactivate Selected Processor"));
     mvAProcUp->setToolTip(tr("Move Selected Processor Up"));
     mvAProcDn->setToolTip(tr("Move Selected Processor Down"));
+    editCond->setToolTip(tr("Edit Conditions"));
+    showCond->setToolTip(tr("Show/Hide Conditions"));
     
     connect(addAProc, SIGNAL(clicked()), this, SLOT(addAProcessor()));
     connect(editAProc, SIGNAL(clicked()), this, SLOT(editAProcessor()));
@@ -316,6 +322,7 @@ void MainWindow::setupViews()
     connect(deactProc, SIGNAL(clicked()), this, SLOT(deactivateProcessor()));
     connect(mvAProcUp, SIGNAL(clicked()), this, SLOT(moveProcessorUp()));
     connect(mvAProcDn, SIGNAL(clicked()), this, SLOT(moveProcessorDown()));
+    connect(showCond, SIGNAL(toggled(bool)), this, SLOT(showConditions(bool)));
     
     //Layout
     QVBoxLayout *aProcButtonsLayout = new QVBoxLayout;
@@ -325,6 +332,8 @@ void MainWindow::setupViews()
     aProcButtonsLayout->addWidget(deactProc);
     aProcButtonsLayout->addWidget(mvAProcUp);
     aProcButtonsLayout->addWidget(mvAProcDn);
+    aProcButtonsLayout->addWidget(editCond);
+    aProcButtonsLayout->addWidget(showCond);
     
     //GroupBox
     aProcButtonsGBox = new QGroupBox(tr("Operations"));
@@ -664,6 +673,22 @@ void MainWindow::updateAProcessors( int pos )
     aProcErrors->clear();
     
     //initialize active processors table
+    int numCond = msc->getPConditions().size();
+    aProcTable->setColumnCount( 0 );
+    aProcTable->setColumnCount( numCond+2 );
+    
+    QStringList labels;
+    for( int i=0; i<numCond; i++ ){
+	labels << QString(i+48);
+	aProcTable->horizontalHeader()->resizeSection(i, 40);
+	aProcTable->setColumnHidden(i, !showCond->isChecked() );
+    }
+
+    labels << tr("Name") << tr("Type");
+    aProcTable->setHorizontalHeaderLabels(labels);
+    aProcTable->horizontalHeader()->resizeSection( numCond, 220);
+    aProcTable->horizontalHeader()->resizeSection( numCond+1, 220);
+	
     aProcTable->setRowCount(0);
     for( unsigned int i=0; i<msc->getAProcs().size(); i++ ){
 	int row = aProcTable->rowCount();
@@ -677,11 +702,20 @@ void MainWindow::updateAProcessors( int pos )
 
 	item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);
 	
-	aProcTable->setItem(row, 0, item0);
-	aProcTable->setItem(row, 1, item1);
+	aProcTable->setItem(row, numCond, item0);
+	aProcTable->setItem(row, numCond+1, item1);
 	
 	item0->setBackgroundColor( (msc->getAProcs()[i]->hasErrors() ? QColor(184,16,0,180) : QColor(32,140,64,180)) );
 	item1->setBackgroundColor( (msc->getAProcs()[i]->hasErrors() ? QColor(184,16,0,180) : QColor(32,140,64,180)) );
+	
+	for( int j=0; j<numCond; j++ ){
+	    QTableWidgetItem *item = new QTableWidgetItem;
+	    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+	    
+	    item->setCheckState( msc->getAProcs()[i]->hasCondition( msc->getCondition(j) ) ? Qt::Checked : Qt::Unchecked );
+	    item->setToolTip( msc->getCondition(j).c_str() );
+	    aProcTable->setItem(row, j, item);
+	}
     }
     if( pos == -1 ){
 	selectRow(aProcTable, aProcTable->rowCount(), true);
@@ -723,6 +757,23 @@ void MainWindow::updateIProcessors( int pos )
     }
 }
 
+void MainWindow::conditionChanged( int row, int col ){
+    if( col < aProcTable->columnCount()-2){
+	QTableWidgetItem *item = aProcTable->item(row, col);
+	if(item->checkState() == Qt::Checked){
+	    msc->getAProcs()[row]->getConditions().insert( msc->getCondition( col ));
+	}
+	else{
+	    msc->getAProcs()[row]->getConditions().erase( msc->getCondition( col ));
+	}
+	//debug
+	std::cout<<"Processor conditions\n";
+	for( sSet::const_iterator p=msc->getAProcs()[row]->getConditions().begin(); p!=msc->getAProcs()[row]->getConditions().end(); p++ ){
+	    std::cout<<(*p)<<"\n";
+	}
+    }
+}
+
 void MainWindow::selectRow(QTableWidget* t, int row, bool colors ){
     if( row>=0 && row<=t->rowCount() ){
 	if( row==t->rowCount() ){ row--; }
@@ -753,6 +804,35 @@ void MainWindow::iProcNameChanged(){
 ////////////////////////////////////////////////////////////////////////////////
 //PRIVATE SLOTS
 ////////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::showConditions(bool checked)
+{
+    int numCond = msc->getPConditions().size();
+    
+    //show conditions
+    if(checked){
+	for( int i=0; i<numCond; i++ ){
+	    aProcTable->setColumnHidden(i, false);
+	}
+
+	showCond->setText(tr("Hide Cond."));
+
+	hSizes = hSplitter->sizes();
+	hSplitterSize = hSizes[0];
+	hSizes[0] = 0;
+    }
+    //hide conditions
+    else{
+	for( int i=0; i<numCond; i++ ){
+	    aProcTable->setColumnHidden(i, true);
+	}
+	
+	showCond->setText(tr("Show Cond."));
+	
+	hSizes[0] = hSplitterSize;
+    }
+    hSplitter->setSizes( hSizes );
+}
 
 void MainWindow::hideIProcessors(bool checked)
 {
