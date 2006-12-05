@@ -1,10 +1,53 @@
+--------------------------------------------------------------------------------
+HOW TO INSTALL THE MARLIN GUI:
+--------------------------------------------------------------------------------
 
-add the variable MARLIN_GUI to your environment and set it to 1 (see line below) and compile Marlin as usual
-export MARLIN_GUI=1
+1st: you have to have QT 4 installed on your system (see below...)
+
+2nd: set the environment variable MARLIN_GUI (export MARLIN_GUI=1)
+
+afterwards compile Marlin as usual...
 
 if everything went fine you should have the binary MarlinGUI in you bin directory.
 
 NOTE:
 
-Please take into account that if you build Marlin with new Processors after having compiled the GUI they won't be
-recognized in the GUI until you recompile the GUI again. (Sorry for this inconvenience)
+Please take into account that if you build Marlin with new Processors after having
+compiled the GUI they won't be recognized in the GUI until you recompile the GUI again.
+(Sorry for this inconvenience)
+
+--------------------------------------------------------------------------------
+HOW TO INSTALL QT4:
+--------------------------------------------------------------------------------
+
+
+    -------------------------------------------------------------------------------------
+    OPTION 1 - COMPILE & INSTALL QT FROM SOURCE - WARNING: takes a long time... ~ 3 hours
+    -------------------------------------------------------------------------------------
+    download QT from http://www.trolltech.com
+    
+    follow instructions from the INSTALL file
+
+    TIP 1: configure QT with the flag -fast for less compilation time
+    
+    TIP 2: if you don't have root access on your machine you should configure QT
+    with the flags -prefix-install -prefix "path_to_where_you_want_to_install_qt"
+
+
+    -------------------------------------------------------------------------------------
+    OPTION 2 - USE THE PRECOMPILED VERSION OF QT4 FOR SCIENTIFIC LINUX 3
+    -------------------------------------------------------------------------------------
+    1st: get the qt4 tarball (qt4.tar.gz) located at (...)
+
+    2nd: unpack it: tar -xzvf qt4.tar.gz
+
+    3rd: change directory: cd qt4
+    
+    4th: configure qt: ./configure -prefix-install -prefix $PWD -fast
+	(NOTE: You do NOT need to run make or make install!!)
+
+    5th: set the following environment variables:
+	export QTDIR= "path_to_where_you_previously_unpacked_qt"
+	export LD_LIBRARY_PATH=$QTDIR/lib/:$LD_LIBRARY_PATH
+	export PATH=$QTDIR/bin:$PATH
+	export QMAKESPEC=$QTDIR/mkspecs/linux-g++

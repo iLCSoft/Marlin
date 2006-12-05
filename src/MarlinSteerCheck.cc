@@ -383,6 +383,11 @@ namespace marlin{
     
       //changes the processor status
       _aProc[index]->changeStatus();
+      
+      //clear processor conditions
+      if( _aProc[index]->getConditions().size() != 0 ){
+	  _aProc[index]->getConditions().clear();
+      }
     
       //adds the processor to the inactive processors vector
       _iProc.push_back( popProc( _aProc, _aProc[index] ));
