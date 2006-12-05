@@ -46,6 +46,7 @@ namespace marlin{
       _type=p._type;
       _types=p._types;
       _optParams=p._optParams;
+      _conditions=p._conditions;
       
       for( int i=0; i<MAX_ERRORS; i++ ){
 	_error[i] = false;

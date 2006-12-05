@@ -52,7 +52,9 @@ private slots:
     void hideIProcessors(bool checked);
     void hideAProcErrors(bool checked);
     void showConditions(bool checked);
+    void updateAProcessors( int pos=-1 );
     
+    void editConditions();
     void addAProcessor();
     void remAProcessor();
     void remIProcessor();
@@ -74,7 +76,6 @@ private slots:
 private:
     void setupViews();
     void updateProcessors();
-    void updateAProcessors( int pos=-1 );
     void updateIProcessors( int pos=-1 );
     void updateFiles( int pos=-1 );
     void updateGlobalSection();
@@ -123,6 +124,7 @@ private:
     QSplitter *hSplitter;
     
     QWidget *centralWidget;
+    QWidget *ec;
 
     QActionGroup *styleActionGroup;
 

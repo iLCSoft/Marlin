@@ -487,8 +487,9 @@ void Dialog::setupViews()
     QPushButton *applyButton = new QPushButton(tr("&Apply Changes"));
     QPushButton *cancelButton = new QPushButton(tr("&Cancel"));
 
-    connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+    connect(applyButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    
     applyButton->setAutoDefault( false );
     cancelButton->setAutoDefault( false );
     applyButton->setFixedHeight( 40 );
@@ -523,12 +524,4 @@ void Dialog::optParamChanged(){
 	    _p->setOptionalParam( item0->text().toStdString() );
 	}
     }
-}
-
-void Dialog::apply(){
-    accept();
-}
-
-void Dialog::cancel(){
-    reject();
 }

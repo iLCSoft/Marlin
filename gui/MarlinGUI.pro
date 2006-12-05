@@ -21,6 +21,8 @@ HEADERS	=   mainwindow.h \
 	    ocoldelegate.h \
 	    flowlayout.h \
 	    addprocdialog.h \
+	    editconditions.h \
+	    addcondition.h \
 	    dialog.h
 	      
 SOURCES =   main.cpp \
@@ -34,6 +36,8 @@ SOURCES =   main.cpp \
 	    ocoldelegate.cpp \
 	    flowlayout.cpp \
 	    addprocdialog.cpp \
+	    editconditions.cpp \
+	    addcondition.cpp \
 	    dialog.cpp
 #unix:!mac:LIBS+= -lm
 

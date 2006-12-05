@@ -19,8 +19,6 @@ public:
     Dialog(CCProcessor* p, MarlinSteerCheck* msc, QWidget *parent = 0, Qt::WFlags f = 0);
 
 private slots:
-    void apply();
-    void cancel();
     void optParamChanged();
     
 private:

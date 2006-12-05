@@ -6,6 +6,7 @@
 #include "gparamdelegate.h"
 #include "dialog.h"
 #include "addprocdialog.h"
+#include "editconditions.h"
 
 #include "marlin/CMProcessor.h"
 
@@ -15,6 +16,8 @@
 MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
 {
     browser = new QTextBrowser;
+
+    ec = NULL;
     
     QString path=getenv("MARLIN");
     path+="/gui/help/index.html";
@@ -226,7 +229,7 @@ void MainWindow::help(){
     browserButtons->setMaximumWidth(200);
     browserButtons->setMaximumHeight(70);
     
-    QWidget *helpWidget = new QWidget;
+    QWidget *helpWidget = new QWidget(0, Qt::WindowStaysOnTopHint );
     QVBoxLayout *helpLayout = new QVBoxLayout;
     
       
@@ -323,6 +326,7 @@ void MainWindow::setupViews()
     connect(mvAProcUp, SIGNAL(clicked()), this, SLOT(moveProcessorUp()));
     connect(mvAProcDn, SIGNAL(clicked()), this, SLOT(moveProcessorDown()));
     connect(showCond, SIGNAL(toggled(bool)), this, SLOT(showConditions(bool)));
+    connect(editCond, SIGNAL(clicked()), this, SLOT(editConditions()));
     
     //Layout
     QVBoxLayout *aProcButtonsLayout = new QVBoxLayout;
@@ -679,8 +683,18 @@ void MainWindow::updateAProcessors( int pos )
     
     QStringList labels;
     for( int i=0; i<numCond; i++ ){
-	labels << QString(i+48);
-	aProcTable->horizontalHeader()->resizeSection(i, 40);
+	QString num;
+	
+	if( (i+1) >= 10){
+	    num=((i+1)/10)+48;
+	    num+=((i+1)%10)+48;
+	}
+	else{
+	    num=(i+1)+48;
+	}
+	
+	labels << num;
+	aProcTable->horizontalHeader()->resizeSection(i, 25);
 	aProcTable->setColumnHidden(i, !showCond->isChecked() );
     }
 
@@ -771,6 +785,7 @@ void MainWindow::conditionChanged( int row, int col ){
 	for( sSet::const_iterator p=msc->getAProcs()[row]->getConditions().begin(); p!=msc->getAProcs()[row]->getConditions().end(); p++ ){
 	    std::cout<<(*p)<<"\n";
 	}
+	emit modifiedContent();
     }
 }
 
@@ -896,9 +911,22 @@ void MainWindow::selectionChanged(int row)
     }
 }
 
+void MainWindow::editConditions()
+{
+    if(!ec){
+	ec = new ECWidget( msc, this, Qt::WindowStaysOnTopHint );
+	ec->resize(700,300);
+	ec->show();
+    }
+    else{
+	ec->resize(700,300);
+	ec->show();
+    }
+}
+
 void MainWindow::addAProcessor()
 {
-    APDialog dg( msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
+    APDialog dg( msc, this, Qt::Dialog | Qt::WindowStaysOnTopHint );
     dg.resize(700,300);
     dg.exec();
     emit modifiedContent();
