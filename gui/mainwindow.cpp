@@ -6,7 +6,7 @@
 #include "gparamdelegate.h"
 #include "dialog.h"
 #include "addprocdialog.h"
-#include "editconditions.h"
+#include "addcondition.h"
 
 #include "marlin/CMProcessor.h"
 
@@ -17,8 +17,6 @@ MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
 {
     browser = new QTextBrowser;
 
-    ec = NULL;
-    
     QString path=getenv("MARLIN");
     path+="/gui/help/index.html";
     browser->setSource(QUrl(path));
@@ -36,38 +34,17 @@ MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
     
     QWidget *left = new QWidget;
     left->setLayout(leftLayout);
- 
-    //Right (up)
-    QGridLayout *upLayout = new QGridLayout;
-    upLayout->addWidget(aProcGBox,0,0);
-    upLayout->addWidget(aProcButtonsGBox,0,1,Qt::AlignTop);
-    
-    QWidget *upWidget = new QWidget;
-    upWidget->setLayout(upLayout);
-   
-    //Right (middle)
-    QVBoxLayout *mdLayout = new QVBoxLayout;
-    mdLayout->addWidget(aProcErrorsGBox);
-    
-    QWidget *mdWidget = new QWidget;
-    mdWidget->setLayout(mdLayout);
-    
-    //Right (down)
-    QGridLayout *dnLayout = new QGridLayout;
-    dnLayout->addWidget(iProcGBox,0,0);
-    dnLayout->addWidget(iProcButtonsGBox,0,1,Qt::AlignTop);
-   
-    QWidget *dnWidget = new QWidget;
-    dnWidget->setLayout(dnLayout);
 
     //Vertical Splitter
     vSplitter = new QSplitter;
     vSplitter->setOrientation( Qt::Vertical );
-    vSplitter->addWidget(upWidget);
-    vSplitter->addWidget(mdWidget);
-    vSplitter->addWidget(dnWidget);
-    
-    vSizes << 650 << 450 << 400;
+    vSplitter->addWidget(aProcGBox);
+    vSplitter->addWidget(condGBox);
+    vSplitter->addWidget(aProcErrorsGBox);
+    vSplitter->addWidget(iProcGBox);
+
+    QList<int> vSizes;
+    vSizes << 650 << 500 << 450 << 400;
     vSplitter->setSizes( vSizes );
    
     //Horizontal Splitter
@@ -243,12 +220,58 @@ void MainWindow::help(){
 
 void MainWindow::setupViews()
 {
+
     //////////////////////////////
-    //ACTIVE PROCESSORS TABLE
+    //CONDITIONS TABLE
+    //////////////////////////////
+
+    condTable = new QTableWidget;
+                                                                                                                                                             
+    QStringList labels;
+    labels << tr("Condition");
+    condTable->setColumnCount(1);
+    condTable->setHorizontalHeaderLabels(labels);
+    condTable->horizontalHeader()->resizeSection(0, 500);
+    condTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    condTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    condTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+                                                                                                                                                             
+    //Buttons
+    QPushButton *addCond = new QPushButton(tr("&Add"));
+    QPushButton *remCond = new QPushButton(tr("&Remove"));
+                                                                                                                                                             
+    addCond->setToolTip(tr("Add New Condition"));
+    remCond->setToolTip(tr("Remove Selected Condition"));
+                                                                                                                                                             
+    connect(addCond, SIGNAL(clicked()), this, SLOT(addCondition()));
+    connect(remCond, SIGNAL(clicked()), this, SLOT(remCondition()));
+                                                                                                                                                             
+    //Buttons Layout
+    QVBoxLayout *condButtonsLayout = new QVBoxLayout;
+    condButtonsLayout->addWidget(addCond);
+    condButtonsLayout->addWidget(remCond);
+                                                                                                                                                             
+    QWidget *condButtons = new QWidget;
+    condButtons->setLayout( condButtonsLayout );
+                                                                                                                                                             
+    //Layout
+    QGridLayout *condLayout = new QGridLayout;
+    condLayout->addWidget(condTable,0,0);
+    condLayout->addWidget(condButtons,0,1,Qt::AlignTop);
+                                                                                                                                                             
+    //GroupBox
+    condGBox = new QGroupBox(tr("Conditions List"));
+    condGBox->setLayout(condLayout);
+
+    //hide conditions by default when starting the GUI
+    condGBox->hide();
+                                                                                                                                                             
+    //////////////////////////////
+    //ACTIVE PROCESSORS
     //////////////////////////////
     aProcTable = new QTableWidget;
     
-    QStringList labels;
+    labels.clear();
     labels << tr("Name") << tr("Type");
     aProcTable->setColumnCount(2);
     aProcTable->setHorizontalHeaderLabels(labels);
@@ -263,16 +286,60 @@ void MainWindow::setupViews()
     connect(aProcTable, SIGNAL(cellPressed(int, int)), this, SLOT(selectionChanged(int)));
     connect(aProcTable, SIGNAL(cellClicked(int, int)), this, SLOT(conditionChanged(int, int)));
     
+    //Buttons
+    QPushButton *addAProc = new QPushButton(tr("&Add"));
+    QPushButton *editAProc = new QPushButton(tr("&Edit"));
+    QPushButton *remAProc = new QPushButton(tr("Delete"));
+    QPushButton *deactProc = new QPushButton(tr("Dea&ctivate"));
+    QPushButton *mvAProcUp = new QPushButton(tr("Move &Up"));
+    QPushButton *mvAProcDn = new QPushButton(tr("Move &Down"));
+    showCond = new QPushButton(tr("Show Cond."));
+
+    showCond->setCheckable( true );
+    
+    addAProc->setToolTip(tr("Add New Processor"));
+    editAProc->setToolTip(tr("Edit Selected Processor"));
+    remAProc->setToolTip(tr("Delete Selected Processor"));
+    deactProc->setToolTip(tr("Deactivate Selected Processor"));
+    mvAProcUp->setToolTip(tr("Move Selected Processor Up"));
+    mvAProcDn->setToolTip(tr("Move Selected Processor Down"));
+    showCond->setToolTip(tr("Show/Hide Conditions"));
+    
+    connect(addAProc, SIGNAL(clicked()), this, SLOT(addAProcessor()));
+    connect(editAProc, SIGNAL(clicked()), this, SLOT(editAProcessor()));
+    connect(remAProc, SIGNAL(clicked()), this, SLOT(remAProcessor()));
+    connect(deactProc, SIGNAL(clicked()), this, SLOT(deactivateProcessor()));
+    connect(mvAProcUp, SIGNAL(clicked()), this, SLOT(moveProcessorUp()));
+    connect(mvAProcDn, SIGNAL(clicked()), this, SLOT(moveProcessorDown()));
+    connect(showCond, SIGNAL(toggled(bool)), this, SLOT(showConditions(bool)));
+    
+    //Buttons Layout
+    QVBoxLayout *aProcButtonsLayout = new QVBoxLayout;
+    aProcButtonsLayout->addWidget(addAProc);
+    aProcButtonsLayout->addWidget(editAProc);
+    aProcButtonsLayout->addWidget(remAProc);
+    aProcButtonsLayout->addWidget(deactProc);
+    aProcButtonsLayout->addWidget(mvAProcUp);
+    aProcButtonsLayout->addWidget(mvAProcDn);
+    aProcButtonsLayout->addWidget(showCond);
+    
+    //Buttons GroupBox
+    aProcButtonsGBox = new QGroupBox(tr("Operations"));
+    aProcButtonsGBox->setLayout(aProcButtonsLayout);
+    aProcButtonsGBox->setFixedWidth(120);
+
+   
     //Layout
-    QVBoxLayout *aProcLayout = new QVBoxLayout;
-    aProcLayout->addWidget(aProcTable);
+    QGridLayout *aProcLayout = new QGridLayout;
+    aProcLayout->addWidget(aProcTable,0,0);
+    aProcLayout->addWidget(aProcButtonsGBox,0,1,Qt::AlignTop);
      
     //GroupBox
     aProcGBox = new QGroupBox(tr("Active Processors"));
     aProcGBox->setLayout(aProcLayout);
-
+   
     //////////////////////////////
-    //INACTIVE PROCESSORS TABLE
+    //INACTIVE PROCESSORS
     //////////////////////////////
     iProcTable = new QTableWidget;
     
@@ -287,66 +354,8 @@ void MainWindow::setupViews()
     iProcTable->setSelectionMode(QAbstractItemView::SingleSelection);
     //iProcTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     iProcTable->setItemDelegate(new IProcDelegate(this));
-	
-    //Layout
-    QVBoxLayout *iProcLayout = new QVBoxLayout;
-    iProcLayout->addWidget(iProcTable);
-     
-    //GroupBox
-    iProcGBox = new QGroupBox(tr("Inactive Processors"));
-    iProcGBox->setLayout(iProcLayout);
-
-    //////////////////////////////
-    //ACTIVE PROCESSOR BUTTONS
-    //////////////////////////////
-    QPushButton *addAProc = new QPushButton(tr("&Add"));
-    QPushButton *editAProc = new QPushButton(tr("&Edit"));
-    QPushButton *remAProc = new QPushButton(tr("Delete"));
-    QPushButton *deactProc = new QPushButton(tr("Dea&ctivate"));
-    QPushButton *mvAProcUp = new QPushButton(tr("Move &Up"));
-    QPushButton *mvAProcDn = new QPushButton(tr("Move &Down"));
-    QPushButton *editCond = new QPushButton(tr("Edit Cond."));
-    showCond = new QPushButton(tr("Show Cond."));
-
-    showCond->setCheckable( true );
     
-    addAProc->setToolTip(tr("Add New Processor"));
-    editAProc->setToolTip(tr("Edit Selected Processor"));
-    remAProc->setToolTip(tr("Delete Selected Processor"));
-    deactProc->setToolTip(tr("Deactivate Selected Processor"));
-    mvAProcUp->setToolTip(tr("Move Selected Processor Up"));
-    mvAProcDn->setToolTip(tr("Move Selected Processor Down"));
-    editCond->setToolTip(tr("Edit Conditions"));
-    showCond->setToolTip(tr("Show/Hide Conditions"));
-    
-    connect(addAProc, SIGNAL(clicked()), this, SLOT(addAProcessor()));
-    connect(editAProc, SIGNAL(clicked()), this, SLOT(editAProcessor()));
-    connect(remAProc, SIGNAL(clicked()), this, SLOT(remAProcessor()));
-    connect(deactProc, SIGNAL(clicked()), this, SLOT(deactivateProcessor()));
-    connect(mvAProcUp, SIGNAL(clicked()), this, SLOT(moveProcessorUp()));
-    connect(mvAProcDn, SIGNAL(clicked()), this, SLOT(moveProcessorDown()));
-    connect(showCond, SIGNAL(toggled(bool)), this, SLOT(showConditions(bool)));
-    connect(editCond, SIGNAL(clicked()), this, SLOT(editConditions()));
-    
-    //Layout
-    QVBoxLayout *aProcButtonsLayout = new QVBoxLayout;
-    aProcButtonsLayout->addWidget(addAProc);
-    aProcButtonsLayout->addWidget(editAProc);
-    aProcButtonsLayout->addWidget(remAProc);
-    aProcButtonsLayout->addWidget(deactProc);
-    aProcButtonsLayout->addWidget(mvAProcUp);
-    aProcButtonsLayout->addWidget(mvAProcDn);
-    aProcButtonsLayout->addWidget(editCond);
-    aProcButtonsLayout->addWidget(showCond);
-    
-    //GroupBox
-    aProcButtonsGBox = new QGroupBox(tr("Operations"));
-    aProcButtonsGBox->setLayout(aProcButtonsLayout);
-    aProcButtonsGBox->setFixedWidth(120);
-
-    //////////////////////////////
-    //INACTIVE PROCESSOR BUTTONS
-    //////////////////////////////
+    //Buttons
     QPushButton *editIProc = new QPushButton(tr("Edit"));
     QPushButton *remIProc = new QPushButton(tr("Delete"));
     QPushButton *actProc = new QPushButton(tr("Activate"));
@@ -359,16 +368,25 @@ void MainWindow::setupViews()
     connect(remIProc, SIGNAL(clicked()), this, SLOT(remIProcessor()));
     connect(actProc, SIGNAL(clicked()), this, SLOT(activateProcessor()));
     
-    //Layout
+    //Buttons Layout
     QVBoxLayout *iProcButtonsLayout = new QVBoxLayout;
     iProcButtonsLayout->addWidget(actProc);
     iProcButtonsLayout->addWidget(editIProc);
     iProcButtonsLayout->addWidget(remIProc);
     
-    //GroupBox
+    //Buttons GroupBox
     iProcButtonsGBox = new QGroupBox(tr("Operations"));
     iProcButtonsGBox->setLayout(iProcButtonsLayout);
     iProcButtonsGBox->setFixedWidth(120);
+
+    //Layout
+    QGridLayout *iProcLayout = new QGridLayout;
+    iProcLayout->addWidget(iProcTable,0,0);
+    iProcLayout->addWidget(iProcButtonsGBox,0,1,Qt::AlignTop);
+    
+    //GroupBox
+    iProcGBox = new QGroupBox(tr("Inactive Processors"));
+    iProcGBox->setLayout(iProcLayout);
 
     //////////////////////////////
     //LCIO COLLECTIONS LIST
@@ -521,6 +539,7 @@ void MainWindow::setupViews()
     //GroupBox
     aProcErrorsGBox = new QGroupBox(tr("Error Description for selected Active Processor"));
     aProcErrorsGBox->setLayout(aProcErrorsLayout);
+
 }
 
 void MainWindow::setMarlinSteerCheck( const char* filename )
@@ -580,6 +599,7 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
     updateFiles();
     updateAProcessors();
     updateIProcessors();
+    updateConds();
 
     //Delegate
     GParamDelegate *gpDelegate = new GParamDelegate( msc->getGlobalParameters(), this, globalSectionTable );
@@ -628,6 +648,23 @@ void MainWindow::updateGlobalSection()
         globalSectionTable->setItem(row, 1, item1);
                                                                                                                                                              
         //globalSectionTable->openPersistentEditor(item1);
+    }
+}
+
+void MainWindow::updateConds( int pos ){
+    condTable->setRowCount(0);
+    for( sSet::const_iterator p=msc->getPConditions().begin(); p!=msc->getPConditions().end(); p++ ){
+        int row = condTable->rowCount();
+        condTable->setRowCount(row + 1);
+                                                                                                                                                             
+        QTableWidgetItem *item = new QTableWidgetItem((*p).c_str());
+        condTable->setItem(row, 0, item);
+    }
+    if( pos == -1 ){
+        selectRow(condTable, condTable->rowCount());
+    }
+    else{
+        selectRow(condTable, pos);
     }
 }
 
@@ -830,6 +867,10 @@ void MainWindow::showConditions(bool checked)
 	hSizes = hSplitter->sizes();
 	hSplitterSize = hSizes[0];
 	hSizes[0] = 0;
+	
+	vSplitter->widget(1)->show();
+	vSplitter->widget(2)->hide();
+	vSplitter->widget(3)->hide();
     }
     //hide conditions
     else{
@@ -840,6 +881,14 @@ void MainWindow::showConditions(bool checked)
 	showCond->setText(tr("Show Cond."));
 	
 	hSizes[0] = hSplitterSize;
+
+	vSplitter->widget(1)->hide();
+	if( !hideErrors->isChecked() ){
+	    vSplitter->widget(2)->show();
+	}
+	if( !hideProcs->isChecked() ){
+	    vSplitter->widget(3)->show();
+	}
     }
     hSplitter->setSizes( hSizes );
 }
@@ -849,18 +898,13 @@ void MainWindow::hideIProcessors(bool checked)
     //hide inactive processors
     if(checked){
 	hideProcs->setText(tr("Show Inactive Processors"));
-
-	vSizes = vSplitter->sizes();
-	vSplitterISize = vSizes[2];
-	vSizes[2] = 0;
+	vSplitter->widget(3)->hide();
     }
     //show inactive processors
     else{
 	hideProcs->setText(tr("Hide Inactive Processors"));
-	
-	vSizes[2] = vSplitterISize;
+	vSplitter->widget(3)->show();
     }
-    vSplitter->setSizes( vSizes );
 }
 
 void MainWindow::hideAProcErrors(bool checked)
@@ -868,18 +912,13 @@ void MainWindow::hideAProcErrors(bool checked)
     //hide active processors
     if(checked){
 	hideErrors->setText(tr("Show Active Processor Errors"));
-
-	vSizes = vSplitter->sizes();
-	vSplitterESize = vSizes[1];
-	vSizes[1] = 0;
+	vSplitter->widget(2)->hide();
     }
     //show active processors
     else{
 	hideErrors->setText(tr("Hide Active Processor Errors"));
-	
-	vSizes[1] = vSplitterESize;
+	vSplitter->widget(2)->show();
     }
-    vSplitter->setSizes( vSizes );
 }
 
 void MainWindow::selectionChanged(int row)
@@ -906,16 +945,29 @@ void MainWindow::selectionChanged(int row)
     }
 }
 
-void MainWindow::editConditions()
-{
-    if(!ec){
-	ec = new ECWidget( msc, this, Qt::WindowStaysOnTopHint );
-	ec->resize(700,300);
-	ec->show();
+void MainWindow::addCondition(){
+    ACDialog dg( msc, this, Qt::Dialog | Qt::WindowStaysOnTopHint );
+    dg.resize(400,150);
+    if( dg.exec() ){
+        updateConds();
+        updateAProcessors(aProcTable->currentRow());
+	emit modifiedContent();
     }
-    else{
-	ec->resize(700,300);
-	ec->show();
+}
+                                                                                                                                                             
+void MainWindow::remCondition(){
+    if( msc->getPConditions().size() > 0 ){
+        int ret = QMessageBox::warning(this, tr("Delete Condition"),
+                tr( "Delete selected condition?\nThe condition will also be removed from every processor afected by it!!\n"),
+            QMessageBox::Yes | QMessageBox::Default,
+            QMessageBox::No | QMessageBox::Escape);
+                                                                                                                                                             
+        if( ret == QMessageBox::Yes ){
+            msc->remCondition( condTable->currentItem()->text().toStdString() );
+            updateConds( condTable->currentRow() );
+	    updateAProcessors(aProcTable->currentRow());
+	    emit modifiedContent();
+        }
     }
 }
 

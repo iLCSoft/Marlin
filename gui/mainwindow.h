@@ -52,9 +52,9 @@ private slots:
     void hideIProcessors(bool checked);
     void hideAProcErrors(bool checked);
     void showConditions(bool checked);
-    void updateAProcessors( int pos=-1 );
-    
-    void editConditions();
+   
+    void addCondition();
+    void remCondition();
     void addAProcessor();
     void remAProcessor();
     void remIProcessor();
@@ -77,6 +77,8 @@ private:
     void setupViews();
     void updateProcessors();
     void updateIProcessors( int pos=-1 );
+    void updateAProcessors( int pos=-1 );
+    void updateConds( int pos=-1 );
     void updateFiles( int pos=-1 );
     void updateGlobalSection();
     void selectRow( QTableWidget* t, int row, bool colors=false );
@@ -96,6 +98,7 @@ private:
     QGroupBox *iProcButtonsGBox;
     QGroupBox *aProcGBox;
     QGroupBox *iProcGBox;
+    QGroupBox *condGBox;
     QGroupBox *lcioFilesGBox;
     QGroupBox *lcioColsGBox;
     QGroupBox *globalSectionGBox;
@@ -104,6 +107,7 @@ private:
     QTableWidget *iProcTable;
     QTableWidget *globalSectionTable;
     QTableWidget *lcioColsTable;
+    QTableWidget *condTable;
     QListWidget *lcioFilesList;
 
     QTextEdit *aProcErrors;
@@ -115,16 +119,11 @@ private:
     QPushButton *hideErrors;
     QPushButton *showCond;
 
-    QList<int> vSizes;
-    QList<int> hSizes;
-    int vSplitterESize;
-    int vSplitterISize;
-    int hSplitterSize;
     QSplitter *vSplitter;
     QSplitter *hSplitter;
+    QList<int> hSizes;
+    int hSplitterSize;
     
-    QWidget *ec;
-
     QActionGroup *styleActionGroup;
 
     QTextBrowser *browser;
