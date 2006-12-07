@@ -780,11 +780,6 @@ void MainWindow::conditionChanged( int row, int col ){
 	else{
 	    msc->getAProcs()[row]->getConditions().erase( msc->getCondition( col ));
 	}
-	//debug
-	std::cout<<"Processor conditions\n";
-	for( sSet::const_iterator p=msc->getAProcs()[row]->getConditions().begin(); p!=msc->getAProcs()[row]->getConditions().end(); p++ ){
-	    std::cout<<(*p)<<"\n";
-	}
 	emit modifiedContent();
     }
 }

@@ -97,8 +97,8 @@ namespace marlin{
     }
 */
     _marlinProcs = CMProcessor::instance();
-    
-    }
+
+  }
 
   // Destructor
   MarlinSteerCheck::~MarlinSteerCheck(){
@@ -810,9 +810,82 @@ namespace marlin{
     //============================================================
     
     outfile << "   <execute>\n";
-    
+
+    //Conditions variables
+    vector< pair<sSet, int> > openConditions;
+
     for( unsigned int i=0; i<_aProc.size(); i++ ){
-      outfile << "      <processor name=\"" << _aProc[i]->getName() << "\"/>\n";
+	//if processor has conditions
+	if( _aProc[i]->getConditions().size() != 0 ){
+	    map<int, sSet> condLength;
+	    //get length of conditions
+	    for( sSet::const_iterator p=_aProc[i]->getConditions().begin(); p!=_aProc[i]->getConditions().end(); p++ ){
+		int length=1;
+		//check if processors below have the same condition
+		for( unsigned int j=(i+1); j<_aProc.size(); j++ ){
+		    if( _aProc[j]->hasCondition(*p) ){
+			length++;
+		    }
+		    else{
+			//abort searching if chain is broken
+			break;
+		    }
+		}
+		bool found=false;
+		//check if the condition is already open
+		for( unsigned int j=0; j<openConditions.size(); j++ ){
+		    if( openConditions[j].first.find(*p) != openConditions[j].first.end() ){
+			found=true;
+			break;
+		    }
+		}
+		if(!found){
+		    //add condition length to a map
+		    condLength[length].insert(*p);
+		}
+	    }
+	    //update open conditions
+	    for( unsigned int j=0; j<openConditions.size(); j++ ){
+		openConditions[j].second--;
+	    }
+	    //push new conditions into open conditions and write them to the xml file
+	    for( map<int, sSet>::reverse_iterator p=condLength.rbegin(); p!=condLength.rend(); p++ ){
+		openConditions.push_back( make_pair( p->second, p->first ));
+		
+		outfile << string( (openConditions.size()+1)*3,' ') << "<if condition=\"";
+		unsigned int size=0;
+		if( p->second.size() != 1 ){
+		    for( sSet::const_iterator q=p->second.begin(); q!=p->second.end(); q++ ){
+			outfile << "(" << *q << ")";
+			if( ++size < p->second.size() ){
+			    outfile << " && ";
+			} 
+		    }
+		}
+		else{
+		    outfile << *p->second.begin();
+		}
+		outfile << "\">\n";
+	    }
+	    outfile << string( (openConditions.size()+2)*3,' ') << "<processor name=\"" << _aProc[i]->getName() << "\"/>\n";
+	    
+	    //check if there are final conditions
+	    unsigned int pos;
+	    for( pos=0; pos<openConditions.size(); pos++ ){
+		if( openConditions[pos].second==1 ){
+		    break;
+		}
+	    }
+	    if( pos != openConditions.size() ){
+		for( unsigned int j=openConditions.size(); j>pos; j-- ){
+		    outfile << string( (openConditions.size()+1)*3,' ') << "</if>\n";
+		    openConditions.pop_back();
+		}
+	    }
+	}
+	else{
+	    outfile << "      <processor name=\"" << _aProc[i]->getName() << "\"/>\n";
+	}
     }
     for( unsigned int i=0; i<_iProc.size(); i++ ){
       outfile << "      <Xprocessor name=\"" << _iProc[i]->getName() << "\"/>\n";

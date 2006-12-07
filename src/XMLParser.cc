@@ -184,7 +184,7 @@ namespace marlin{
     globalParameters->add( availableProcs )  ;
     
     // DEBUG:
-    _doc->SaveFile( "debug.xml" ) ;
+    //_doc->SaveFile( "debug.xml" ) ;
     
     
     if( typeCount.first==0 && typeCount.second ==0){

@@ -123,7 +123,6 @@ private:
     QSplitter *vSplitter;
     QSplitter *hSplitter;
     
-    QWidget *centralWidget;
     QWidget *ec;
 
     QActionGroup *styleActionGroup;
