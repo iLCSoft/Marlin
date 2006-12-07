@@ -251,8 +251,9 @@ void MainWindow::setupViews()
     condButtonsLayout->addWidget(addCond);
     condButtonsLayout->addWidget(remCond);
                                                                                                                                                              
-    QWidget *condButtons = new QWidget;
+    QGroupBox *condButtons = new QGroupBox(tr("Operations"));
     condButtons->setLayout( condButtonsLayout );
+    condButtons->setFixedWidth( 120 );
                                                                                                                                                              
     //Layout
     QGridLayout *condLayout = new QGridLayout;
@@ -260,7 +261,7 @@ void MainWindow::setupViews()
     condLayout->addWidget(condButtons,0,1,Qt::AlignTop);
                                                                                                                                                              
     //GroupBox
-    condGBox = new QGroupBox(tr("Conditions List"));
+    condGBox = new QGroupBox(tr("Edit Conditions List"));
     condGBox->setLayout(condLayout);
 
     //hide conditions by default when starting the GUI
@@ -729,9 +730,15 @@ void MainWindow::updateAProcessors( int pos )
 	else{
 	    num=(i+1)+48;
 	}
-	
+	//append condition to the header
+	sSet::const_iterator p=msc->getPConditions().begin();
+	advance(p,i);
+	num+="    ";
+	num+=(*p).c_str();
+
 	labels << num;
 	aProcTable->horizontalHeader()->resizeSection(i, 25);
+	aProcTable->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
 	aProcTable->setColumnHidden(i, !showCond->isChecked() );
     }
 
