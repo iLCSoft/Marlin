@@ -237,10 +237,10 @@ void MainWindow::setupViews()
     condTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
                                                                                                                                                              
     //Buttons
-    QPushButton *addCond = new QPushButton(tr("&Add"));
-    QPushButton *remCond = new QPushButton(tr("&Remove"));
+    QPushButton *addCond = new QPushButton(tr("&Insert"));
+    QPushButton *remCond = new QPushButton(tr("Remove"));
                                                                                                                                                              
-    addCond->setToolTip(tr("Add New Condition"));
+    addCond->setToolTip(tr("Insert New Condition"));
     remCond->setToolTip(tr("Remove Selected Condition"));
                                                                                                                                                              
     connect(addCond, SIGNAL(clicked()), this, SLOT(addCondition()));
@@ -293,7 +293,7 @@ void MainWindow::setupViews()
     QPushButton *deactProc = new QPushButton(tr("Dea&ctivate"));
     QPushButton *mvAProcUp = new QPushButton(tr("Move &Up"));
     QPushButton *mvAProcDn = new QPushButton(tr("Move &Down"));
-    showCond = new QPushButton(tr("Show Cond."));
+    showCond = new QPushButton(tr("&Show Cond."));
 
     showCond->setCheckable( true );
     
@@ -862,7 +862,7 @@ void MainWindow::showConditions(bool checked)
 	    aProcTable->setColumnHidden(i, false);
 	}
 
-	showCond->setText(tr("Hide Cond."));
+	showCond->setText(tr("&Hide Cond."));
 
 	hSizes = hSplitter->sizes();
 	hSplitterSize = hSizes[0];
@@ -878,7 +878,7 @@ void MainWindow::showConditions(bool checked)
 	    aProcTable->setColumnHidden(i, true);
 	}
 	
-	showCond->setText(tr("Show Cond."));
+	showCond->setText(tr("&Show Cond."));
 	
 	hSizes[0] = hSplitterSize;
 

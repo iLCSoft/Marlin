@@ -856,7 +856,12 @@ namespace marlin{
 		unsigned int size=0;
 		if( p->second.size() != 1 ){
 		    for( sSet::const_iterator q=p->second.begin(); q!=p->second.end(); q++ ){
-			outfile << "(" << *q << ")";
+			if( ((*q).find('&',0)!=string::npos) || ((*q).find('|',0)!=string::npos) || ((*q).find('!',0)!=string::npos) ){
+			    outfile << "(" << *q << ")";
+			}
+			else{
+			    outfile << *q;
+			}
 			if( ++size < p->second.size() ){
 			    outfile << " && ";
 			} 
