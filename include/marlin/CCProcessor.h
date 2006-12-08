@@ -6,8 +6,8 @@
  * marlin processors and their collections
  * needed by MarlinSteerCheck
  *
- * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: CCProcessor.h,v 1.20 2006-12-04 16:44:40 engels Exp $
+ * @author Jan Engels, Benjamin Eberhardt, DESY
+ * @version $Id: CCProcessor.h,v 1.21 2006-12-08 15:51:37 engels Exp $
  *
  */
 

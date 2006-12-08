@@ -4,8 +4,8 @@
 /* @class
  * This singleton class contains an instance of every available marlin processor type
  * 
- * @author Jan Engels
- * @version $Id: CMProcessor.h,v 1.5 2006-11-16 17:11:01 engels Exp $
+ * @author Jan Engels, DESY
+ * @version $Id: CMProcessor.h,v 1.6 2006-12-08 15:51:37 engels Exp $
  *
  */
 

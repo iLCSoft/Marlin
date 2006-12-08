@@ -1,6 +1,13 @@
 #ifndef IPROCDELEGATE_H
 #define IPROCDELEGATE_H
 
+/**@ class
+ * Small delegate class for changing inactive processor's names
+ *
+ * @author Jan Engels, DESY
+ * @version $Id: iprocdelegate.h,v 1.2 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QItemDelegate>
 
 class IProcDelegate : public QItemDelegate

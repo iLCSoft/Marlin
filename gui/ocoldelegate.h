@@ -1,6 +1,13 @@
 #ifndef OCOLDELEGATE_H
 #define OCOLDELEGATE_H
 
+/**@ class
+ * Delegate class for managing output collections
+ *
+ * @author Jan Engels, DESY
+ * @version $Id: ocoldelegate.h,v 1.3 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QItemDelegate>
 
 #include "marlin/CCProcessor.h"

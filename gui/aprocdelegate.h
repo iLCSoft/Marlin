@@ -1,6 +1,13 @@
 #ifndef APROCDELEGATE_H
 #define APROCDELEGATE_H
 
+/**@ class
+ * Small delegate class for changing active processor's names
+ * 
+ * @author Jan Engels, DESY
+ * @version $Id: aprocdelegate.h,v 1.2 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QItemDelegate>
 
 class AProcDelegate : public QItemDelegate

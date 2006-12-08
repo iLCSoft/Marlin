@@ -1,6 +1,13 @@
 #ifndef GPARAMDELEGATE_H
 #define GPARAMDELEGATE_H
 
+/**@ class
+ * Small delegate class for changing global parameters
+ *
+ * @author Jan Engels, DESY
+ * @version $Id: gparamdelegate.h,v 1.2 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QItemDelegate>
 
 #include "marlin/StringParameters.h"

@@ -1,23 +1,34 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+/**@class
+ * This class is the main window of Marlin GUI and therefore the most important class.
+ * 
+ * Marlin GUI is just a graphical representation for a model that is set by the function:
+ * void setMarlinSteerCheck( const char* filename=NULL );
+ * 
+ * The model parses the given xml file and creates the needed objects for performing a 
+ * full consistency check of the steering file.
+ *
+ * When the user makes changes in the GUI, the model gets automatically updated and
+ * consistency checks are made if needed.
+ *
+ * @author Jan Engels, DESY
+ * @version $Id: mainwindow.h,v 1.13 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QMainWindow>
 
 #include "marlin/MarlinSteerCheck.h"
 
 class QListWidget;
 class QTableWidget;
-class QTableWidgetItem;
 class QGroupBox;
-class QMenu;
 class QSplitter;
 class QPushButton;
-class QByteArray;
 class QTextEdit;
-class QLabel;
 class QString;
 class QActionGroup;
-class QTextBrowser;
 
 using namespace marlin;
 
@@ -36,13 +47,10 @@ signals:
 public slots:
     void aProcNameChanged();
     void iProcNameChanged();
-
     void editAProcessor(int row=-1);
 
-protected slots:
-    virtual void closeEvent(QCloseEvent *e);
-	
 private slots:
+    virtual void closeEvent(QCloseEvent *e);
     void changeStyle(bool checked);
     void aboutGUI();
     void help();
@@ -53,6 +61,9 @@ private slots:
     void hideAProcErrors(bool checked);
     void showConditions(bool checked);
    
+    //operations
+    void addLCIOFile();
+    void remLCIOFile();
     void addCondition();
     void remCondition();
     void addAProcessor();
@@ -65,25 +76,31 @@ private slots:
     void moveLCIOFileDown();
     void moveProcessorUp();
     void moveProcessorDown();
+
+    //file managing
     void changeGearFile();
-    void addLCIOFile();
-    void remLCIOFile();
     void newXMLFile();
     void openXMLFile();
     void saveXMLFile();
     void saveAsXMLFile();
 
 private:
+    
+    //init functions
     void setupViews();
+    void createMenus();
+    
+    //update functions
     void updateProcessors();
     void updateIProcessors( int pos=-1 );
     void updateAProcessors( int pos=-1 );
     void updateConds( int pos=-1 );
     void updateFiles( int pos=-1 );
     void updateGlobalSection();
+    
+    //selection functions
     void selectRow( QTableWidget* t, int row, bool colors=false );
     void selectLCIORow( QListWidget* t, int row );
-    void createMenus();
     void checkCurrentStyle();
 
     //variables
@@ -92,6 +109,7 @@ private:
     std::string _file;
     MarlinSteerCheck* msc;
 
+    //group boxes
     QGroupBox *aProcErrorsGBox;
     QGroupBox *viewButtonsGBox;
     QGroupBox *aProcButtonsGBox;
@@ -103,6 +121,7 @@ private:
     QGroupBox *lcioColsGBox;
     QGroupBox *globalSectionGBox;
     
+    //tables
     QTableWidget *aProcTable;
     QTableWidget *iProcTable;
     QTableWidget *globalSectionTable;
@@ -110,23 +129,22 @@ private:
     QTableWidget *condTable;
     QListWidget *lcioFilesList;
 
-    QTextEdit *aProcErrors;
-    
-    QString saveChangesMsg;
-    QString aboutGUIMsg;
-    
+    //toggle buttons
     QPushButton *hideProcs;
     QPushButton *hideErrors;
     QPushButton *showCond;
-
+    
+    //splitters
     QSplitter *vSplitter;
     QSplitter *hSplitter;
     QList<int> hSizes;
     int hSplitterSize;
     
+    //other
+    QTextEdit *aProcErrors;
+    QString saveChangesMsg;
+    QString aboutGUIMsg;
     QActionGroup *styleActionGroup;
-
-    QTextBrowser *browser;
 };
 
 #endif

@@ -17,8 +17,8 @@
  * Information about the consistency check can be dumped.
  * 
  *
- * @author Benjamin Eberhardt, Jan Engels
- * @version $Id: MarlinSteerCheck.h,v 1.24 2006-12-04 16:44:40 engels Exp $
+ * @author Jan Engels, Benjamin Eberhardt, DESY
+ * @version $Id: MarlinSteerCheck.h,v 1.25 2006-12-08 15:51:37 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -27,6 +27,10 @@
 #include "marlin/XMLParser.h"
 
 // to make colored output
+#define GUI_COLOR
+
+#ifdef GUI_COLOR
+
 #define clrscr() printf("\033[2J")
 #define dblue() printf("\x1b[34m")
 #define dred() printf("\x1b[31m")
@@ -38,6 +42,22 @@
 #define dhell() printf("\x1b[1m")
 #define dblink() printf("\x1b[5m")
 #define endcolor() printf("\x1b[m")
+
+#else
+
+#define clrscr()
+#define dblue()
+#define dred()
+#define dyellow()
+#define dgreen()
+#define dunderline()
+#define ditalic()
+#define ddunkel()
+#define dhell()
+#define dblink()
+#define endcolor()
+
+#endif
 
 #define MAXEVENTS 30
 
@@ -86,7 +106,7 @@ namespace marlin {
     StringParameters* getGlobalParameters(){ return _gparam; }
     
     /** Returns the Errors for an Active Processor at the given index */
-    const std::string& getErrors( unsigned int index );
+    const std::string getErrors( unsigned int i );
   
     /** Add LCIO file and read all collections inside it */
     int addLCIOFile( const std::string& file );

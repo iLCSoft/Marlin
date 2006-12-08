@@ -1,6 +1,13 @@
 #ifndef PARAMDELEGATE_H
 #define PARAMDELEGATE_H
 
+/**@ class
+ * Small delegate class for managing processor's parameters
+ *
+ * @author Jan Engels, DESY
+ * @version $Id: paramdelegate.h,v 1.2 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QItemDelegate>
 
 #include "marlin/CCProcessor.h"

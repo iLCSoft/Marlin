@@ -1,6 +1,13 @@
 #ifndef ADDCONDITION_H
 #define ADDCONDITION_H
 
+/**@class
+ * This class just shows a small dialog for adding new processor conditions
+ *
+ * @author Jan Engels, DESY
+ * @version $Id: addcondition.h,v 1.2 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QDialog>
 
 #include "marlin/MarlinSteerCheck.h"

@@ -1,6 +1,13 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
+/**@class
+ * This class is responsible for editing a processor
+ * 
+ * @author Jan Engels, DESY
+ * @version $Id: dialog.h,v 1.6 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QDialog>
 
 #include "marlin/CCProcessor.h"
@@ -19,12 +26,14 @@ public:
     Dialog(CCProcessor* p, MarlinSteerCheck* msc, QWidget *parent = 0, Qt::WFlags f = 0);
 
 private slots:
+    void help();
     void optParamChanged();
     
 private:
+    //init view
     void setupViews();
     
-    //Variables
+    //variables
     QVBoxLayout *mainLayout;
     QTableWidget *optParamTable;
     

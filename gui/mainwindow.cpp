@@ -7,6 +7,7 @@
 #include "dialog.h"
 #include "addprocdialog.h"
 #include "addcondition.h"
+#include "guihelp.h"
 
 #include "marlin/CMProcessor.h"
 
@@ -15,12 +16,11 @@
 
 MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
 {
-    browser = new QTextBrowser;
-
-    QString path=getenv("MARLIN");
-    path+="/gui/help/index.html";
-    browser->setSource(QUrl(path));
+    //key shortcut for help
+    QShortcut *helpF1 = new QShortcut(Qt::Key_F1, this);
+    connect(helpF1, SIGNAL(activated()), this, SLOT(help())); 
     
+    //signal if modifications were made
     connect(this, SIGNAL(modifiedContent()), this, SLOT(madeChanges())); 
 
     //init views
@@ -70,7 +70,7 @@ MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
 	"steering file are installed in your Marlin binary.<br>This can easily be check by running \"Marlin -c SteeringFile.xml\"<br><br><br>"
 	"If you have comments or suggestions please take a look at the ILC Forum<br>under the Marlin section at "
 	"<a href=\"http://forum.linearcollider.org\">http://forum.linearcollider.org</a>. Thanks <br><br>"
-	"Author: Jan Engels"
+	"Author: Jan Engels @ DESY -IT-"
     ));
     
     //save changes message
@@ -177,45 +177,8 @@ void MainWindow::aboutGUI(){
 }
 
 void MainWindow::help(){
-    //Buttons
-    QPushButton *forwButton = new QPushButton(tr("->"));
-    QPushButton *backButton = new QPushButton(tr("<-"));
-    QPushButton *homeButton = new QPushButton(tr("TOC"));
-
-    forwButton->setToolTip(tr("Forward"));
-    backButton->setToolTip(tr("Backward"));
-    homeButton->setToolTip(tr("Table of Contents"));
-
-    forwButton->setMaximumWidth(50);
-    backButton->setMaximumWidth(50);
-    homeButton->setMaximumWidth(90);
-
-    connect(forwButton, SIGNAL(clicked()), browser, SLOT(forward()));
-    connect(backButton, SIGNAL(clicked()), browser, SLOT(backward()));
-    connect(homeButton, SIGNAL(clicked()), browser, SLOT(home()));
-    
-    //Layout
-    QHBoxLayout *helpBLayout = new QHBoxLayout;
-    helpBLayout->addWidget(backButton);
-    helpBLayout->addWidget(forwButton);
-    helpBLayout->addWidget(homeButton);
-     
-    //GroupBox
-    QGroupBox *browserButtons = new QGroupBox(tr("Help Browser"));
-    browserButtons->setLayout(helpBLayout);
-    browserButtons->setMaximumWidth(200);
-    browserButtons->setMaximumHeight(70);
-    
-    QWidget *helpWidget = new QWidget(0, Qt::WindowStaysOnTopHint );
-    QVBoxLayout *helpLayout = new QVBoxLayout;
-    
-      
-    helpLayout->addWidget(browserButtons);
-    helpLayout->addWidget(browser);
-    helpWidget->setLayout(helpLayout);
-    helpWidget->resize(800,600);
-    helpWidget->setWindowTitle(tr("Marlin GUI Help"));
-    helpWidget->show();
+    QWidget *help= new GUIHelp;
+    help->show();
 }
 
 void MainWindow::setupViews()

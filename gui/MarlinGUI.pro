@@ -22,6 +22,7 @@ HEADERS	=   mainwindow.h \
 	    flowlayout.h \
 	    addprocdialog.h \
 	    addcondition.h \
+	    guihelp.h \
 	    dialog.h
 	      
 SOURCES =   main.cpp \
@@ -36,6 +37,7 @@ SOURCES =   main.cpp \
 	    flowlayout.cpp \
 	    addprocdialog.cpp \
 	    addcondition.cpp \
+	    guihelp.cpp \
 	    dialog.cpp
 #unix:!mac:LIBS+= -lm
 

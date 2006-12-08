@@ -15,6 +15,7 @@
 ////////////////////////////////
 
 #include <iomanip>
+#include <sstream>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -1122,111 +1123,81 @@ namespace marlin{
   }
   
   // Returns the Errors for an Active Processor at the given index
-  const string& MarlinSteerCheck::getErrors( unsigned int i ){
-    static string errors;
+  const string MarlinSteerCheck::getErrors( unsigned int i ){
+    stringstream errors;
     ColVec avCols, uCols;
     
-    errors.clear();
     //skip if index is not valid or processor has no col errors
     if( i>=0 && i<_aProc.size() && _aProc[i]->hasErrorCols() ){
 	
 	sSet dTypes = _aProc[i]->getColTypeNames( DUPLICATE );
 
 	for( sSet::const_iterator q=dTypes.begin(); q!=dTypes.end(); q++){
-	    errors+= "\n* Following Collections of type [";
-	    errors+= (*q);
-	    errors+= "] were already found in the event:\n";
-	    errors+= "--------------------------------------------------------------------------------";
-	    errors+= "--------------------------------------------------------------------------------\n";
+	    errors << "\n* Following Collections of type [" << *q << "] were already found in the event:\n";
+	    errors << string( 160, '-') << endl;
 
 	    ColVec dCols = _aProc[i]->getCols( DUPLICATE, (*q) );
 	    for( unsigned int j=0; j<dCols.size(); j++ ){
-		errors+= "   -> [";
-		errors+= dCols[j]->getValue();
-		errors+= "]\n";
+		errors << "   -> [" << dCols[j]->getValue() << "]\n";
 	    }
-	    errors+= "\n   * Following collections are in conflict with this collection:\n";
+	    errors << "\n   * Following collections are in conflict with this collection:\n";
 	    for( unsigned int j=0; j<dCols.size(); j++ ){
 
 		ColVec lcioCols = findMatchingCols( getLCIOCols(), _aProc[i], dCols[j]->getType(), dCols[j]->getValue() );
 		if( lcioCols.size() != 0 ){
 		    for( unsigned int k=0; k<lcioCols.size(); k++ ){
-			errors+= "      -> [";
-			errors+= lcioCols[k]->getValue();
-			errors+= "] in LCIO file: [";
-			errors+= lcioCols[k]->getName();
-			errors+= "]\n";
+			errors << "      -> [" << lcioCols[k]->getValue() << "] in LCIO file: [" << lcioCols[k]->getName() << "]\n";
 		    }
 		}
 		ColVec oCols = findMatchingCols( getProcCols(_aProc, OUTPUT), _aProc[i], dCols[j]->getType(), dCols[j]->getValue() );
 		if( oCols.size() != 0 ){
 		    for( unsigned int k=0; k<oCols.size(); k++ ){
-			errors+= "      -> [";
-			errors+= oCols[k]->getValue();
-			errors+= "] in [Active] Processor [";
-			errors+= oCols[k]->getSrcProc()->getName();
-			errors+= "] of Type [";
-			errors+= oCols[k]->getSrcProc()->getType();
-			errors+= "]\n";
+			errors << "      -> [" << oCols[k]->getValue() << "] in [Active] Processor [" << oCols[k]->getSrcProc()->getName();
+			errors << "] of Type [" << oCols[k]->getSrcProc()->getType() << "]\n";
 		    }
 		}
 	    }
-	    errors+= "--------------------------------------------------------------------------------";
-	    errors+= "--------------------------------------------------------------------------------\n";
+	    errors << string( 160, '-') << endl;
 	}
 	
 	sSet uTypes = _aProc[i]->getColTypeNames( UNAVAILABLE);
 
 	for( sSet::const_iterator p=uTypes.begin(); p!=uTypes.end(); p++){
 
-	    errors+= "\n* Following Collections of type [";
-	    errors+= (*p);
-	    errors+= "] are unavailable:\n";
-	    errors+= "--------------------------------------------------------------------------------";
-	    errors+= "--------------------------------------------------------------------------------\n";
-
+	    errors << "\n* Following Collections of type [" << *p << "] are unavailable:\n";
+	    errors << string( 160, '-') << endl;
+	    
 	    ColVec uCols = _aProc[i]->getCols( UNAVAILABLE, (*p) );
 	    for( unsigned int j=0; j<uCols.size(); j++ ){
-	      errors+= "   -> [";
-	      errors+= uCols[j]->getValue();
-	      errors+= "]\n";
+	      errors << "   -> [" << uCols[j]->getValue() << "]\n";
 	    }
-	    errors+= "\n";
+	    errors << endl;
 
 	    //find collections that match the type of the unavailable collection
 	    ColVec avCols = findMatchingCols( getAllCols(), _aProc[i], (*p) );
 	    
 	    if( avCols.size() != 0 ){
-		errors+= "* Following available collections of the same type were found:\n";
+		errors << "* Following available collections of the same type were found:\n";
 		for( unsigned int k=0; k<avCols.size(); k++ ){
-		  errors+= "      -> [";
-		  errors+= avCols[k]->getValue();
+		  errors << "      -> [" << avCols[k]->getValue();
 
 		  if( avCols[k]->getSrcProc() == 0 ){
-		    errors+= "] in LCIO file: [";
-		    errors+= avCols[k]->getName();
-		    errors+= "]\n";
+		    errors << "] in LCIO file: [" << avCols[k]->getName() << "]\n";
 		  }
 		  else{
-		    errors+= "] in [";
-		    errors+= avCols[k]->getSrcProc()->getStatusDesc();
-		    errors+= "] Processor [";
-		    errors+= avCols[k]->getSrcProc()->getName();
-		    errors+= "] of Type [";
-		    errors+= avCols[k]->getSrcProc()->getType();
-		    errors+= "]\n";
+		    errors << "] in [" << avCols[k]->getSrcProc()->getStatusDesc() << "] Processor [" << avCols[k]->getSrcProc()->getName();
+		    errors << "] of Type [" << avCols[k]->getSrcProc()->getType() << "]\n";
 		  }
 		}
 	    }
 	    //no collections that match the unavailable collection were found
 	    else{
-	      errors+= "   * Sorry, no suitable collections were found.\n";
+	      errors << "   * Sorry, no suitable collections were found.\n";
 	    }
-	    errors+= "--------------------------------------------------------------------------------";
-	    errors+= "--------------------------------------------------------------------------------\n";
+	    errors << string( 160, '-') << endl;
 	  }
        }
-    return errors;
+    return errors.str();
   }
 
 } // namespace

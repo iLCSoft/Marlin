@@ -1,6 +1,13 @@
 #ifndef ICOLDELEGATE_H
 #define ICOLDELEGATE_H
 
+/**@ class
+ * Delegate class for managing input collections of type StringVec
+ *
+ * @author Jan Engels, DESY
+ * @version $Id: icoldelegate.h,v 1.2 2006-12-08 15:51:37 engels Exp $
+ */
+
 #include <QItemDelegate>
 
 #include "marlin/CCProcessor.h"

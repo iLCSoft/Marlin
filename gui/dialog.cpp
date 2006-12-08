@@ -9,6 +9,7 @@
 #include "icoldelegate.h"
 #include "icoltdelegate.h"
 #include "ocoldelegate.h"
+#include "guihelp.h"
 
 #include "flowlayout.h"
 
@@ -16,6 +17,9 @@ using namespace std;
 
 Dialog::Dialog( CCProcessor *p, MarlinSteerCheck* msc, QWidget *parent, Qt::WFlags f) : QDialog(parent,f), _p(p), _msc(msc)
 {
+    QShortcut *helpF1 = new QShortcut(Qt::Key_F1, this);
+    connect(helpF1, SIGNAL(activated()), this, SLOT(help()));
+    
     mainLayout = new QVBoxLayout;
     
     setupViews();
@@ -28,6 +32,11 @@ Dialog::Dialog( CCProcessor *p, MarlinSteerCheck* msc, QWidget *parent, Qt::WFla
     title+=tr(" - Type: ");
     title+=p->getType().c_str();
     setWindowTitle(title);
+}
+
+void Dialog::help(){
+    QWidget *help= new GUIHelp("/gui/help/html/editprocessor.html",this, Qt::Dialog );
+    help->show();
 }
 
 void Dialog::setupViews()
@@ -525,3 +534,4 @@ void Dialog::optParamChanged(){
 	}
     }
 }
+
