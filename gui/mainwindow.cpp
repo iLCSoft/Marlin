@@ -13,6 +13,7 @@
 #include "marlin/CMProcessor.h"
 
 #include <string>
+#include <sstream>
 #include <stdlib.h>
 
 MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
@@ -163,7 +164,7 @@ void MainWindow::createMenus()
     foreach( QAction *action, styleActionGroup->actions() )
     viewMenu->addAction(action);
     
-    QMenu *aboutMenu = menuBar()->addMenu(tr("A&bout"));
+    QMenu *aboutMenu = menuBar()->addMenu(tr("&Help"));
     QAction *aboutGUIAction = aboutMenu->addAction(tr("About &Marlin GUI..."));
     QAction *aboutQTAction = aboutMenu->addAction(tr("About &QT..."));
     QAction *helpAction = aboutMenu->addAction(tr("&Help..."));
@@ -836,7 +837,7 @@ void MainWindow::selectRow(QTableWidget* t, int row, bool colors ){
 }
 
 void MainWindow::procTypeDC( int row, int col ){
-    if( col == aProcTable->columnCount() - 1 ){
+    if( row>=0 && col == aProcTable->columnCount() - 1 ){
 	editAProcessor();
     } 
 }
@@ -942,12 +943,14 @@ void MainWindow::selectionChanged(int row)
 
 	//display the error description of active processors
 	if( msc->getAProcs()[row]->hasErrors() ){
-	    QString str(msc->getAProcs()[row]->getError().c_str());
+	    std::ostringstream ss;
+	    ss << msc->getAProcs()[row]->getError();
+	    
 	    if( msc->getAProcs()[row]->hasErrorCols() ){
-		str+= "\n";
-		str+= msc->getErrors(row).c_str();
+		ss << std::endl;
+		msc->dumpColErrors(row, ss, true);
 	    }
-	    aProcErrors->setPlainText( str );
+	    aProcErrors->setPlainText( ss.str().c_str() );
 	}
 	else{
 	    aProcErrors->clear();

@@ -18,7 +18,7 @@
  * 
  *
  * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: MarlinSteerCheck.h,v 1.26 2006-12-11 10:02:30 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.27 2006-12-11 15:05:05 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -26,10 +26,11 @@
 
 #include "marlin/XMLParser.h"
 
-// to make colored output
-#define GUI_COLOR
+//comment out the line below if your terminal
+//doesn't support colored output
+#define TERM_COLOR
 
-#ifdef GUI_COLOR
+#ifdef TERM_COLOR
 
 #define clrscr() printf("\033[2J")
 #define dblue() printf("\x1b[34m")
@@ -105,8 +106,8 @@ namespace marlin {
     /** Returns the Global Parameters */
     StringParameters* getGlobalParameters(){ return _gparam; }
     
-    /** Returns the Errors for an Active Processor at the given index */
-    const std::string getErrors( unsigned int i );
+    /** Writes the collection errors for the active processor with given index to the given stream */
+    void dumpColErrors( unsigned int i, std::ostream& stream, bool separators=false );
   
     /** Add LCIO file and read all collections inside it */
     int addLCIOFile( const std::string& file );
@@ -153,9 +154,6 @@ namespace marlin {
     
     /** Dumps all information read from the steering file to stdout */
     void dump_information();
-
-    /** Dumps collection errors found in the steering file for all active processors */
-    void dump_colErrors();
 
     /** Returns a set with all the errors found after performing a consistency check */
     sSet& getErrors(){ return _errors; };

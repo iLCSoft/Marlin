@@ -7,8 +7,24 @@
     <body>
 	
 	<br><a href="../index.html"> Back to Table of Contents </a><br>
-	<div align=center><h2> GUI Overview </h2></div>
-	
+	<div align=center><h2> GUI Overview </h2></div><br>
+
+	<p>Marlin GUI is a graphical user interface for interactively create or repair Marlin XML steering files.</p>
+	<p>It has various separate sections equivalent to the ones you are already familiarized with from a normal<br>
+	steering file: (global section, execute section, GEAR file, LCIO Input files, etc...)<br>
+	It has an automatic consistency-checking feature that allows you to constantly and instantly check if the<br>
+	steering file contains errors.</p>
+	<p>The consistency check tests if every active processor is installed and has all the required input collections<br>
+	available from previous processors or from the LCIO files declared in the global section.<br>
+	It also checks if there are duplicate collections defined in the event, or if every file or symbolic link specified<br>
+	in the steering is valid.</p>
+	<p>This GUI is based on the MarlinSteeringCheck command line tool which you can check out by running:<br>
+	"Marlin -c steeringFile.xml". Altough this tool is enough for checking the consistency of a steering file, it<br>
+	doesn't give you the chance to modify it and repair the errors found, if any.</p>
+	<p>The GUI also provides you the possibility to create a new steering file from scratch, where you can just with<br>
+	a few clicks add the processors you need and change their default parameter values to the ones you require for your job.</p>
+	<p>Marlin GUI was designed with the main goal of substituting the fastidious and error-prone task of editing Marlin XML<br>
+	steering files by hand with an, as much as possible, productive, error-free and intuitive way for physicists.</p>
 
 	<br><br><hr><br><a name="lciocollections"></a><h3> List of Collections in LCIO Files </h3><br>
 	<div align=center><img src="../images/overview_lciocollections.png" border=2></img></div><br>

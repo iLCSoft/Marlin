@@ -10,12 +10,6 @@ afterwards compile Marlin as usual...
 
 if everything went fine you should have the binary MarlinGUI in you bin directory.
 
-NOTE:
-
-Please take into account that if you build Marlin with new Processors after having
-compiled the GUI they won't be recognized in the GUI until you recompile the GUI again.
-(Sorry for this inconvenience)
-
 --------------------------------------------------------------------------------
 HOW TO INSTALL QT4:
 --------------------------------------------------------------------------------

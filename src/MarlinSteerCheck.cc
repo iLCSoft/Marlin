@@ -1012,8 +1012,10 @@ namespace marlin{
 
     cout << endl;
 
-    dump_colErrors();
-    
+    for( unsigned int i=0; i<_aProc.size(); i++ ){
+	dumpColErrors( i, cout );
+    }
+   
     cout << endl << endl;
     
     for( sSet::const_iterator p=_errors.begin(); p!=_errors.end(); p++){
@@ -1032,15 +1034,14 @@ namespace marlin{
     cout << endl;
   }
 
-  // Dumps collection errors found in the steering file for all active processors
-  void MarlinSteerCheck::dump_colErrors(){
+  // Returns the Errors for an Active Processor at the given index
+  void MarlinSteerCheck::dumpColErrors( unsigned int i, ostream& stream, bool separators ){
     
-    for( unsigned int i=0; i<_aProc.size(); i++ ){
-      //skip processor if it has no col errors
-      if( _aProc[i]->hasErrorCols() ){
-	  
+    //skip if index is not valid or processor has no col errors
+    if( i>=0 && i<_aProc.size() && _aProc[i]->hasErrorCols() ){
+	
 	dred(); dunderline();
-	cout << "\nProcessor [" <<
+	stream << "\nProcessor [" <<
 	  _aProc[i]->getName() << "] of type [" <<
 	  _aProc[i]->getType() << "] has following errors:" <<
 	endl;
@@ -1049,75 +1050,84 @@ namespace marlin{
 	sSet dTypes = _aProc[i]->getColTypeNames( DUPLICATE );
 
 	for( sSet::const_iterator q=dTypes.begin(); q!=dTypes.end(); q++){
-	    cout << "\n* Following Collections of type [";
-	    dhell(); dblue(); cout << (*q); endcolor();
-	    cout << "] were already found in the event:\n";
+	    stream << "\n* Following Collections of type [";
+	    dhell(); dblue(); stream << (*q); endcolor();
+	    stream << "] were already found in the event:\n";
+	    if( separators ){
+		stream << string( 170, '-') << endl;
+	    }
 
 	    ColVec dCols = _aProc[i]->getCols( DUPLICATE, (*q) );
 	    for( unsigned int j=0; j<dCols.size(); j++ ){
-		cout << "   -> [";
-		dyellow(); cout << dCols[j]->getValue(); endcolor();
-		cout << "]\n";
+		stream << "   -> [";
+		dyellow(); stream << dCols[j]->getValue(); endcolor();
+		stream << "]\n";
 	    }
-	    cout << "\n   * Following collections are in conflict with this collection:\n";
+	    stream << "\n   * Following collections are in conflict with this collection:\n";
 	    for( unsigned int j=0; j<dCols.size(); j++ ){
 
 		ColVec lcioCols = findMatchingCols( getLCIOCols(), _aProc[i], dCols[j]->getType(), dCols[j]->getValue() );
 		if( lcioCols.size() != 0 ){
 		    for( unsigned int k=0; k<lcioCols.size(); k++ ){
-			cout << "      -> [";
-			dyellow(); cout << lcioCols[k]->getValue(); endcolor();
-			cout << "] in LCIO file: [" << lcioCols[k]->getName() << "]\n";
+			stream << "      -> [";
+			dyellow(); stream << lcioCols[k]->getValue(); endcolor();
+			stream << "] in LCIO file: [" << lcioCols[k]->getName() << "]\n";
 		    }
 		}
 		ColVec oCols = findMatchingCols( getProcCols(_aProc, OUTPUT), _aProc[i], dCols[j]->getType(), dCols[j]->getValue() );
 		if( oCols.size() != 0 ){
 		    for( unsigned int k=0; k<oCols.size(); k++ ){
-			cout << "      -> [";
-			dyellow(); cout << oCols[k]->getValue(); endcolor();
-			cout << "] in [Active] Processor [" << oCols[k]->getSrcProc()->getName() 
+			stream << "      -> [";
+			dyellow(); stream << oCols[k]->getValue(); endcolor();
+			stream << "] in [Active] Processor [" << oCols[k]->getSrcProc()->getName() 
 			     << "] of Type [" << oCols[k]->getSrcProc()->getType() << "]\n";
 		    }
 		}
+	    }
+	    if( separators ){
+		stream << string( 170, '-') << endl;
 	    }
 	}
 
 	sSet uTypes = _aProc[i]->getColTypeNames( UNAVAILABLE );
 
 	for( sSet::const_iterator p=uTypes.begin(); p!=uTypes.end(); p++){
-	    cout << "\n* Following Collections of type [";
-	    dhell(); dblue(); cout << (*p); endcolor();
-	    cout << "] are unavailable:\n";
+	    stream << "\n* Following Collections of type [";
+	    dhell(); dblue(); stream << (*p); endcolor();
+	    stream << "] are unavailable:\n";
+	    if( separators ){
+		stream << string( 170, '-') << endl;
+	    }
 
 	    ColVec uCols = _aProc[i]->getCols( UNAVAILABLE, (*p) );
 	    for( unsigned int j=0; j<uCols.size(); j++ ){
-	      cout << "   -> [";
-	      dyellow(); cout << uCols[j]->getValue(); endcolor();
-	      cout << "]\n";
+	      stream << "   -> [";
+	      dyellow(); stream << uCols[j]->getValue(); endcolor();
+	      stream << "]\n";
 	    }
-	    cout << endl;
+	    stream << endl;
 
 	    //find collections that match the type of the unavailable collection
 	    ColVec avCols = findMatchingCols( getAllCols(), _aProc[i], (*p) );
 	    
 	    if( avCols.size() != 0 ){
 		dgreen();
-		cout << "   * Following available collections of the same type were found:" << endl;
+		stream << "   * Following available collections of the same type were found:" << endl;
 		endcolor();
 		for( unsigned int k=0; k<avCols.size(); k++ ){
-		  cout << "      -> [";
+		  stream << "      -> [";
 		  
 		  for( unsigned int j=0; j<uCols.size(); j++ ){
 		    if( avCols[k]->getValue() == uCols[j]->getValue() ){ dyellow(); }
 		  }
-		  cout << avCols[k]->getValue();
+		  stream << avCols[k]->getValue();
 		  endcolor();
 
 		  if( avCols[k]->getSrcProc() == 0 ){
-		    cout << "] in LCIO file: [" << avCols[k]->getName() << "]" << endl;
+		    stream << "] in LCIO file: [" << avCols[k]->getName() << "]" << endl;
 		  }
 		  else{
-		    cout << "] in [" <<
+		    stream << "] in [" <<
 		      avCols[k]->getSrcProc()->getStatusDesc() << "] Processor [" <<
 		      avCols[k]->getSrcProc()->getName() << "] of Type [" <<
 		      avCols[k]->getSrcProc()->getType() << "]" <<
@@ -1127,21 +1137,15 @@ namespace marlin{
 	    }
 	    //no collections that match the unavailable collection were found
 	    else{
-	      cout << "   * Sorry, no suitable collections were found." << endl;
+	      stream << "   * Sorry, no suitable collections were found." << endl;
+	    }
+	    if( separators ){
+		stream << string( 170, '-') << endl;
 	    }
 	  }
-       }
-    }
-  }
-  
-  // Returns the Errors for an Active Processor at the given index
-  const string MarlinSteerCheck::getErrors( unsigned int i ){
-    stringstream errors;
-    ColVec avCols, uCols;
-    
-    //skip if index is not valid or processor has no col errors
-    if( i>=0 && i<_aProc.size() && _aProc[i]->hasErrorCols() ){
 	
+	
+	/*
 	sSet dTypes = _aProc[i]->getColTypeNames( DUPLICATE );
 
 	for( sSet::const_iterator q=dTypes.begin(); q!=dTypes.end(); q++){
@@ -1208,8 +1212,9 @@ namespace marlin{
 	    }
 	    errors << string( 160, '-') << endl;
 	  }
+	  */
        }
-    return errors.str();
+    //return errors.str();
   }
 
 } // namespace
