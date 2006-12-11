@@ -688,6 +688,18 @@ namespace marlin{
   void MarlinSteerCheck::addCondition( const std::string& condition ){
       _pConditions.insert( condition );
   }
+  
+  void MarlinSteerCheck::repCondition( const std::string& oldCond, const std::string& newCond ){
+      _pConditions.erase( oldCond );
+      _pConditions.insert( newCond );
+      
+      for( unsigned int i=0; i<_aProc.size(); i++ ){
+	if( _aProc[i]->hasCondition( oldCond )){
+	    _aProc[i]->getConditions().erase( oldCond );
+	    _aProc[i]->getConditions().insert( newCond );
+	}
+      }
+  }
 
   void MarlinSteerCheck::remCondition( const std::string& condition ){
       _pConditions.erase( condition );

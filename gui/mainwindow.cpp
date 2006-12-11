@@ -7,6 +7,7 @@
 #include "dialog.h"
 #include "addprocdialog.h"
 #include "addcondition.h"
+#include "editcondition.h"
 #include "guihelp.h"
 
 #include "marlin/CMProcessor.h"
@@ -177,7 +178,13 @@ void MainWindow::aboutGUI(){
 }
 
 void MainWindow::help(){
-    QWidget *help= new GUIHelp;
+    QWidget *help = NULL;
+    if( !showCond->isChecked() ){
+	help= new GUIHelp;
+    }
+    else{
+	help= new GUIHelp("/gui/help/html/conditions.html",this, Qt::Dialog );
+    }
     help->show();
 }
 
@@ -201,17 +208,21 @@ void MainWindow::setupViews()
                                                                                                                                                              
     //Buttons
     QPushButton *addCond = new QPushButton(tr("&Insert"));
+    QPushButton *editCond = new QPushButton(tr("Edit"));
     QPushButton *remCond = new QPushButton(tr("Remove"));
                                                                                                                                                              
     addCond->setToolTip(tr("Insert New Condition"));
+    editCond->setToolTip(tr("Edit selected Condition"));
     remCond->setToolTip(tr("Remove Selected Condition"));
                                                                                                                                                              
     connect(addCond, SIGNAL(clicked()), this, SLOT(addCondition()));
+    connect(editCond, SIGNAL(clicked()), this, SLOT(editCondition()));
     connect(remCond, SIGNAL(clicked()), this, SLOT(remCondition()));
                                                                                                                                                              
     //Buttons Layout
     QVBoxLayout *condButtonsLayout = new QVBoxLayout;
     condButtonsLayout->addWidget(addCond);
+    condButtonsLayout->addWidget(editCond);
     condButtonsLayout->addWidget(remCond);
                                                                                                                                                              
     QGroupBox *condButtons = new QGroupBox(tr("Operations"));
@@ -924,7 +935,24 @@ void MainWindow::addCondition(){
 	emit modifiedContent();
     }
 }
-                                                                                                                                                             
+
+void MainWindow::editCondition(){
+    int row=condTable->currentRow();
+    if( row >= 0 && row < condTable->rowCount() ){
+	
+	//backup value
+	std::string oldCond = condTable->currentItem()->text().toStdString();
+	
+	ECDialog ec( msc, oldCond, this, Qt::Dialog | Qt::WindowStaysOnTopHint );
+	ec.resize(400,150);
+	if( ec.exec() ){
+	    updateConds();
+	    updateAProcessors(aProcTable->currentRow());
+	    emit modifiedContent();
+	}
+    }
+}                                                                                                                                                            
+
 void MainWindow::remCondition(){
     if( msc->getPConditions().size() > 0 ){
         int ret = QMessageBox::warning(this, tr("Delete Condition"),

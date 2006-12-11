@@ -14,7 +14,7 @@
  * consistency checks are made if needed.
  *
  * @author Jan Engels, DESY
- * @version $Id: mainwindow.h,v 1.13 2006-12-08 15:51:37 engels Exp $
+ * @version $Id: mainwindow.h,v 1.14 2006-12-11 10:02:30 engels Exp $
  */
 
 #include <QMainWindow>
@@ -65,6 +65,7 @@ private slots:
     void addLCIOFile();
     void remLCIOFile();
     void addCondition();
+    void editCondition();
     void remCondition();
     void addAProcessor();
     void remAProcessor();

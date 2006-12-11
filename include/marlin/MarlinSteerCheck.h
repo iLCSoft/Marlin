@@ -18,7 +18,7 @@
  * 
  *
  * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: MarlinSteerCheck.h,v 1.25 2006-12-08 15:51:37 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.26 2006-12-11 10:02:30 engels Exp $
  */
 
 #include "marlin/CCProcessor.h"
@@ -168,6 +168,9 @@ namespace marlin {
     
     /** Add a new Condition */
     void addCondition( const std::string& condition );
+    
+    /** Replace a Condition */
+    void repCondition( const std::string& oldCond, const std::string& newCond );
     
     /** Returns the condition for a given index */
     void remCondition( const std::string& condition );
