@@ -14,7 +14,7 @@
  * consistency checks are made if needed.
  *
  * @author Jan Engels, DESY
- * @version $Id: mainwindow.h,v 1.14 2006-12-11 10:02:30 engels Exp $
+ * @version $Id: mainwindow.h,v 1.15 2006-12-11 10:59:28 engels Exp $
  */
 
 #include <QMainWindow>
@@ -60,6 +60,8 @@ private slots:
     void hideIProcessors(bool checked);
     void hideAProcErrors(bool checked);
     void showConditions(bool checked);
+    void selectColumn(int col);
+    void procTypeDC(int row, int col);
    
     //operations
     void addLCIOFile();

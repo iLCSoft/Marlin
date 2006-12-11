@@ -206,6 +206,8 @@ void MainWindow::setupViews()
     condTable->setSelectionMode(QAbstractItemView::SingleSelection);
     condTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
                                                                                                                                                              
+    connect(condTable, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(editCondition()));
+    
     //Buttons
     QPushButton *addCond = new QPushButton(tr("&Insert"));
     QPushButton *editCond = new QPushButton(tr("Edit"));
@@ -250,6 +252,7 @@ void MainWindow::setupViews()
     labels << tr("Name") << tr("Type");
     aProcTable->setColumnCount(2);
     aProcTable->setHorizontalHeaderLabels(labels);
+    aProcTable->horizontalHeader()->setClickable(true);
     aProcTable->horizontalHeader()->resizeSection(0, 220);
     aProcTable->horizontalHeader()->resizeSection(1, 220);
     aProcTable->verticalHeader()->hide();
@@ -258,6 +261,8 @@ void MainWindow::setupViews()
     //aProcTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     aProcTable->setItemDelegate(new AProcDelegate(this));
 
+    connect(aProcTable->horizontalHeader(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(selectColumn(int)));
+    connect(aProcTable, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(procTypeDC(int, int)));
     connect(aProcTable, SIGNAL(cellPressed(int, int)), this, SLOT(selectionChanged(int)));
     connect(aProcTable, SIGNAL(cellClicked(int, int)), this, SLOT(conditionChanged(int, int)));
     
@@ -802,6 +807,25 @@ void MainWindow::conditionChanged( int row, int col ){
     }
 }
 
+void MainWindow::selectColumn( int col ){
+    if( col < aProcTable->columnCount()-2 && msc->getAProcs().size() > 0 ){
+	//selection based on the select state from the first item in the table
+	bool select=msc->getAProcs()[0]->hasCondition( msc->getCondition( col ));
+	
+	for( unsigned int i=0; i<msc->getAProcs().size(); i++ ){
+	    if( !select ){
+		msc->getAProcs()[i]->getConditions().insert( msc->getCondition( col ));
+	    }
+	    else{
+		msc->getAProcs()[i]->getConditions().erase( msc->getCondition( col ));
+	    }
+	}
+	updateAProcessors( aProcTable->currentRow() );
+	emit modifiedContent();
+    }
+}
+
+
 void MainWindow::selectRow(QTableWidget* t, int row, bool colors ){
     if( row>=0 && row<=t->rowCount() ){
 	if( row==t->rowCount() ){ row--; }
@@ -811,6 +835,11 @@ void MainWindow::selectRow(QTableWidget* t, int row, bool colors ){
     }
 }
 
+void MainWindow::procTypeDC( int row, int col ){
+    if( col == aProcTable->columnCount() - 1 ){
+	editAProcessor();
+    } 
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //PUBLIC SLOTS
