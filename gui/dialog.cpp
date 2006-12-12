@@ -406,13 +406,13 @@ void Dialog::setupViews()
 	optParamTable = new QTableWidget;
 
 	QStringList labels;
-	labels << tr("Parameter Name") << tr("Parameter Value") << tr("Optional");
+	labels << tr("Parameter Name") << tr("Parameter Value") << tr("Active");
 	optParamTable->setColumnCount(3);
 	optParamTable->verticalHeader()->hide();
 	optParamTable->setHorizontalHeaderLabels(labels);
 	optParamTable->horizontalHeader()->resizeSection(0, 400);
 	optParamTable->horizontalHeader()->resizeSection(1, 500);
-	optParamTable->horizontalHeader()->resizeSection(2, 300);
+	optParamTable->horizontalHeader()->resizeSection(2, 50);
 	optParamTable->setSelectionMode(QAbstractItemView::NoSelection);
 	optParamTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
@@ -441,31 +441,24 @@ void Dialog::setupViews()
 		
 		QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
 		QTableWidgetItem *item1 = new QTableWidgetItem( str );
-		QTableWidgetItem *item2 = new QTableWidgetItem((
-			_p->isParamOptional( paramKeys[i] ) ?
-			"Write as a comment" :
-			"Write as a normal parameter"
-			));
+		QTableWidgetItem *item2 = new QTableWidgetItem;
 
 		item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
-            	//item2->setData(Qt::UserRole, "Optional");
             	item2->setFlags(item0->flags() & ~Qt::ItemIsEditable);
 
 		item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ));
 		item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ));
 		item2->setToolTip( QString(
 			    tr( "Activate this checkbox to write the parameter as a normal parameter in the xml file.\n" 
-				"Please take into account that if you don't want to use this parameter and leave this\n"
-				"option unchecked the value of the parameter will still be written as a comment in the\n"
-				"xml file but the next time you open the xml file in the GUI the value will get lost."
+				"Please note that if you don't want to use this parameter and leave this option unchecked\n"
+				"the value of the parameter will still be written as a comment in the xml file but\n"
+				"the next time you open the xml file in the GUI the value will get lost."
 			    )));
 		optParamTable->setItem(row, 0, item0);
 		optParamTable->setItem(row, 1, item1);
 		optParamTable->setItem(row, 2, item2);
 
 		item2->setCheckState( _p->isParamOptional( paramKeys[i] ) ? Qt::Unchecked : Qt::Checked );
-
-		//optParamTable->openPersistentEditor(item2);
 	    }
 	}
 	if(found){
@@ -525,11 +518,9 @@ void Dialog::optParamChanged(){
         QTableWidgetItem *item2 = optParamTable->item(row, 2);
                                                                                                                                                              
         if(item2->checkState() == Qt::Checked){
-	    item2->setText("Write as a normal parameter");
 	    _p->setOptionalParam( item0->text().toStdString(), false );
         }
 	else{
-	    item2->setText("Write as a comment");
 	    _p->setOptionalParam( item0->text().toStdString() );
 	}
     }

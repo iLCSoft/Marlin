@@ -971,11 +971,7 @@ void MainWindow::addCondition(){
 void MainWindow::editCondition(){
     int row=condTable->currentRow();
     if( row >= 0 && row < condTable->rowCount() ){
-	
-	//backup value
-	std::string oldCond = condTable->currentItem()->text().toStdString();
-	
-	ECDialog ec( msc, oldCond, this, Qt::Dialog | Qt::WindowStaysOnTopHint );
+	ECDialog ec( msc, condTable->currentItem()->text().toStdString(), this, Qt::Dialog | Qt::WindowStaysOnTopHint );
 	ec.resize(400,150);
 	if( ec.exec() ){
 	    updateConds();
@@ -1070,7 +1066,7 @@ void MainWindow::editAProcessor(int row)
 	//save the current processor before editing it
 	CCProcessor *p = new CCProcessor( *msc->getAProcs()[pos] );
 	
-	Dialog dg( msc->getAProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
+	Dialog dg( msc->getAProcs()[pos], msc, this, Qt::Window );
 	//dg.resize(1100,900);
 	dg.setWindowState( Qt::WindowMaximized);
 
@@ -1094,7 +1090,7 @@ void MainWindow::editIProcessor()
 	    //save the current processor before editing it
 	    CCProcessor *p = new CCProcessor( *msc->getIProcs()[pos] );
 	    
-	    Dialog dg( msc->getIProcs()[pos], msc, this, Qt::Window | Qt::WindowStaysOnTopHint );
+	    Dialog dg( msc->getIProcs()[pos], msc, this, Qt::Window );
 	    //dg.resize(1100,900);
 	    dg.setWindowState( Qt::WindowMaximized);
 	    
