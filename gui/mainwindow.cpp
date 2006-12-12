@@ -959,7 +959,7 @@ void MainWindow::selectionChanged(int row)
 }
 
 void MainWindow::addCondition(){
-    ACDialog dg( msc, this, Qt::Dialog | Qt::WindowStaysOnTopHint );
+    ACDialog dg( msc, this, Qt::Dialog );
     dg.resize(400,150);
     if( dg.exec() ){
         updateConds();
@@ -971,7 +971,7 @@ void MainWindow::addCondition(){
 void MainWindow::editCondition(){
     int row=condTable->currentRow();
     if( row >= 0 && row < condTable->rowCount() ){
-	ECDialog ec( msc, condTable->currentItem()->text().toStdString(), this, Qt::Dialog | Qt::WindowStaysOnTopHint );
+	ECDialog ec( msc, condTable->currentItem()->text().toStdString(), this, Qt::Dialog );
 	ec.resize(400,150);
 	if( ec.exec() ){
 	    updateConds();
@@ -999,7 +999,7 @@ void MainWindow::remCondition(){
 
 void MainWindow::addAProcessor()
 {
-    APDialog dg( msc, this, Qt::Dialog | Qt::WindowStaysOnTopHint );
+    APDialog dg( msc, this, Qt::Dialog );
     dg.resize(700,300);
     dg.exec();
     emit modifiedContent();
