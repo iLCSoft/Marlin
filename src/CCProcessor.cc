@@ -233,7 +233,7 @@ namespace marlin{
 	  _param->erase( INPUT );
 	  _param->erase( OUTPUT );
 
-	  //if there are any optional parameters set we save the keys into _optParams
+	  //if there are any optional parameters active we save the keys into _optParams
 	  if( _param->isParameterSet( "Opt_Params_Set" )){
 	      StringVec values;
 	      _param->getStringVals( "Opt_Params_Set", values );
@@ -521,71 +521,7 @@ namespace marlin{
 	    stream << ( values.size() == 1 ? "\"/>\n" : " </parameter>\n" );
 	}
     }
-   
-    /*
-    writeColsToParam();
- 
-    StringVec keys;
-    if( hasParameters() ){
-	_param->getStringKeys( keys );
-    }
-    
-    
-    //parameters
-    for( unsigned int i=0; i<keys.size(); i++ ){
-
-	ProcessorParameter* p = CMProcessor::instance()->getParam( _type, keys[i] );
-   
-	//if the parameter is recognized by the marlin processor
-        if( p != NULL ){
-	    
-	    stream << "  <!--" << CMProcessor::instance()->getParamD( _type, keys[i] ) << "-->" << std::endl ;
-	    //stream << "  <" << (p->isOptional() ? "!--" : "") << "parameter name=\"" << p->name() << "\" type=\"" << p->type() ;
-	    stream << "  <parameter name=\"" << p->name() << "\" type=\"" << p->type() << (p->isOptional() ? "\" optional=\"true" : "");
-	    
-	    if( _proc->isInputCollectionName( keys[i] )){
-		//stream << "\" lcioInType=\"" << _types[ INPUT ][ keys[i] ];
-		stream << "\" lcioInType=\"" << _proc->getLCIOInType(keys[i]);
-	    }
-
-	    if( _proc->isOutputCollectionName( keys[i] )){
-		//stream << "\" lcioOutType=\"" << _types[ OUTPUT ][ keys[i] ];
-		stream << "\" lcioOutType=\"" << _proc->getLCIOOutType(keys[i]);
-	    }
-																		 
-	    //stream << "\">" << p->defaultValue() << " </parameter"<< (p->isOptional() ? "--" : "")  << ">\n";
-	    
-	    stream << "\">";
-	    
-	    StringVec values;
-	    _param->getStringVals( keys[i], values );
-	    for( unsigned int j=0; j<values.size(); j++ ){
-		stream << values[j] << " ";
-	    }
-	    stream << " </parameter>\n";
-	}
-	//else it's a parameter from an uninstalled processor or an extra parameter from an installed processor
-	else{
-	    if(isInstalled()){
-		stream << "  <!-- Sorry, this parameter isn't a default parameter for this processor so it's description was lost!  -->" << std::endl ;
-	    }
-	    stream << "  <parameter name=\"" << keys[i] << "\"";
-
-	    StringVec values;
-	    //get the values for the given key
-	    _param->getStringVals( keys[i], values );
-
-	    stream << ( values.size() == 1 ? " value=\"" : ">" );
-																			 
-	    for( unsigned int j=0; j<values.size(); j++ ){
-		stream << ( values.size() == 1 ? "" : " ") << values[j];
-	    }
-	    stream << ( values.size() == 1 ? "\"/>\n" : " </parameter>\n" );
-	}
-    }
-    */
     stream << "</processor>\n\n";
-    //clearParameters();
   }
 
 } // end namespace marlin

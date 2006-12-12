@@ -53,7 +53,7 @@ namespace marlin{
 		    
 		    //set the parameter with the default value
 		    //since the default value is always a string we might have to tokenize it
-		    if( getParamT( (*p), keys[i] )=="StringVec" ||  getParamT( (*p), keys[i] )=="IntVec" ||  getParamT( (*p), keys[i] )=="FloatVec" ){
+		    if( isParamVec( *p, keys[i] )){
 			tokenize( getParam( (*p), keys[i] )->defaultValue(), values );
 		    }
 		    else{
@@ -112,6 +112,12 @@ namespace marlin{
 
 		//for each key
 		for( unsigned i=0; i<keys.size(); i++ ){
+		    //debug
+		    if( getParamSetSize( type, keys[i] ) != 0 ){
+			cout<<"DEBUG: Processor Type: [" << type << "] Parameter Key: [" << keys[i] << "] Set Size: [" 
+			    << getParamSetSize( type, keys[i] ) << "]\n";
+		    }
+		    
 		    //check if the parameter value is already set
 		    if( !sp->isParameterSet( keys[i] )){
 			
@@ -175,6 +181,14 @@ namespace marlin{
 	    return par->type();
 	}
 	return "Undefined!!";
+    }
+
+    int CMProcessor::getParamSetSize( const string& type, const string& key ){
+	ProcessorParameter* par = getParam( type, key );
+	if( par ){
+	    return par->setSize();
+	}
+	return 0;
     }
 
     bool CMProcessor::isParamOpt( const string& type, const string& key ){

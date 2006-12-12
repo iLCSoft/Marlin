@@ -5,7 +5,7 @@
  * This singleton class contains an instance of every available marlin processor type
  * 
  * @author Jan Engels, DESY
- * @version $Id: CMProcessor.h,v 1.6 2006-12-08 15:51:37 engels Exp $
+ * @version $Id: CMProcessor.h,v 1.7 2006-12-12 11:45:38 engels Exp $
  *
  */
 
@@ -52,6 +52,10 @@ namespace marlin{
 	/** returns the type of the parameter with the given key
 	 *  for the processor with the given type */
 	const std::string getParamT( const std::string& type, const std::string& key );
+	
+	/** returns the set_size of the parameter with the given key
+	 *  for the processor with the given type */
+	int getParamSetSize( const std::string& type, const std::string& key );
 	
 	/** returns true if the parameter with the given key
 	 *  for the processor with the given type is a vector */
