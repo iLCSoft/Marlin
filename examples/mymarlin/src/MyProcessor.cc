@@ -27,10 +27,11 @@ MyProcessor::MyProcessor() : Processor("MyProcessor") {
 
   // register steering parameters: name, description, class-variable, default value
 
-  registerProcessorParameter( "CollectionName" , 
-			      "Name of the MCParticle collection"  ,
-			      _colName ,
-			      std::string("MCParticle") ) ;
+  registerInputCollection( LCIO::MCPARTICLE,
+			   "CollectionName" , 
+			   "Name of the MCParticle collection"  ,
+			   _colName ,
+			   std::string("MCParticle") ) ;
 }
 
 
