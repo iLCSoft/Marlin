@@ -31,9 +31,9 @@ HOW TO INSTALL QT4:
     -------------------------------------------------------------------------------------
     OPTION 2 - USE THE PRECOMPILED VERSION OF QT4 FOR SCIENTIFIC LINUX 3
     -------------------------------------------------------------------------------------
-    1st: get the qt4 tarball (qt4.tar.gz) located at (...)
+    1st: get the qt4 tarball located at http://ilcsoft.desy.de/marlin/qt4-bin-sl3.tar.gz
 
-    2nd: unpack it: tar -xzvf qt4.tar.gz
+    2nd: unpack it: tar -xzvf qt4-bin-sl3.tar.gz
 
     3rd: change directory: cd qt4
     
