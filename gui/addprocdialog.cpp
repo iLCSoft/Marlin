@@ -98,6 +98,12 @@ void APDialog::changeLabel(const QString& text){
 
 void APDialog::addProcessor(){
 
+    if( le->displayText().isEmpty() ){
+	QMessageBox::warning(this, tr("Add New Processor"),
+		tr("You cannot add a processor without name!!\nType a name in the appropriate edit box...") );
+	return;
+    }
+
     int existsProc = _msc->existsProcessor(cb->currentText().toStdString(), le->displayText().toStdString() );
 
     if( !existsProc ){

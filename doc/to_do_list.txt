@@ -1,6 +1,8 @@
    To DO for MarlinGUI:
    ====================
   * don't allow to add new processor without a name !
+    done 20061212
+    
   * optionally scan N events for missing collection names ?
  
 
