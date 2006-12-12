@@ -44,6 +44,7 @@ void  createProcessors( const IParser&  parser) ;
 
 void listAvailableProcessors() ;
 void listAvailableProcessorsXML() ;
+void printUsageAndExit() ;
 
 
 /** LCIO framework that can be used to analyse LCIO data files
@@ -65,41 +66,45 @@ int main(int argc, char** argv ){
       listAvailableProcessors() ;
       exit(0) ;
     }
-    if( std::string(argv[1]) == "-x" ){
+    else if( std::string(argv[1]) == "-x" ){
       listAvailableProcessorsXML() ;
       exit(0) ;
     }
-    if( std::string(argv[1]) == "-c" ){
+    else if( std::string(argv[1]) == "-c" ){
       if( argc == 3 ){
 	MarlinSteerCheck msc(argv[2]);
 	msc.dump_information();
         exit(0) ;
       }
       else{
-	std::cout << "usage: Marlin -c steeringFile.xml" << std::endl;
+	std::cout << "  usage: Marlin -c steeringFile.xml" << std::endl << std::endl;
 	exit(1);
       }
     }
-    if( std::string(argv[1]) == "-f" ){
+    else if( std::string(argv[1]) == "-f" ){
       if( argc == 4 ){
 	XMLFixCollTypes fixColTypes(argv[2]);
 	fixColTypes.parse(argv[3] );
         exit(0) ;
       }
       else{
-	std::cout << "usage: Marlin -f oldsteering.xml newsteering.xml" << std::endl;
+	std::cout << "  usage: Marlin -f oldsteering.xml newsteering.xml" << std::endl << std::endl;
 	exit(1);
       }
     }
+    else if( std::string(argv[1]) == "-h"  || std::string(argv[1]) == "-?" ){
+
+      printUsageAndExit() ;
+    }
 
 
-
+    // one argument given: the steering file for normal running :
     steeringFileName = argv[1] ;
 
+
   } else {
-    std::cout << " usage: MyMarlinApp mypersonal.steer" << std::endl 
-	 << std::endl ;
-    exit(1) ;
+
+    printUsageAndExit() ;
   }
   
 
@@ -303,3 +308,33 @@ void listAvailableProcessorsXML() {
 
   ProcessorMgr::instance()->dumpRegisteredProcessorsXML() ;
 }
+
+
+void printUsageAndExit() {
+
+    std::cout << " Usage: Marlin [OPTION] [FILE]..." << std::endl 
+	      << "   runs a Marlin application " << std::endl 
+	      << std::endl 
+	      << " Running the application with a given steering file:" << std::endl 
+	      << "   Marlin steer.xml   " << std::endl 
+	      << std::endl 
+	      << "   Marlin -h                \t print this help information" << std::endl 
+	      << "   Marlin -?                \t print this help information" << std::endl 
+	      << "   Marlin -x                \t print an example steering file to stdout" << std::endl 
+	      << "   Marlin -c steer.xml      \t check the given steering file for consistency" << std::endl 
+	      << "   Marlin -f old.xml new.xml\t convert old files to new files for consistency check" << std::endl 
+	      << "   Marlin -l                \t [deprecated: old format steering file example]" << std::endl 
+	      << std::endl 
+	      << " Example: " << std::endl 
+	      << " To create a new default steering file from any Marlin application, run" << std::endl 
+	      << "     Marlin -x > mysteer.xml" << std::endl 
+	      << " and then use either an editor or the MarlinGUI to modify the created steering file " << std::endl 
+	      << " to configure your application and then run it. e.g. : " << std::endl 
+	      << "     Marlin mysteer.xml > marlin.out 2>&1 &" << std::endl
+	      << std::endl ;
+      exit(1) ;
+
+}
+
+
+
