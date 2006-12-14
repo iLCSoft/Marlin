@@ -5,6 +5,7 @@
 #include "marlin/CCCollection.h"
 
 #include "dialog.h"
+#include "nparamvecset.h"
 #include "paramdelegate.h"
 #include "icoldelegate.h"
 #include "icoltdelegate.h"
@@ -158,7 +159,6 @@ void Dialog::setupViews()
 		colTable->horizontalHeader()->resizeSection(0, 240);
 		colTable->horizontalHeader()->hide();
 		colTable->verticalHeader()->hide();
-		//colTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 		colTable->setSelectionMode(QAbstractItemView::NoSelection);
 		colTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
@@ -216,11 +216,7 @@ void Dialog::setupViews()
 		QGridLayout *colLayout = new QGridLayout;
     		colLayout->addWidget(colTable,0,0);
     		colLayout->addWidget(colButtons,0,1);
-/*
-		QVBoxLayout *colLayout = new QVBoxLayout;
-		colLayout->addWidget(colTable);
-		colLayout->addWidget(colButtons);
-*/
+
 		//set the title for this collection group
 		QString colTitle("Name: [");
 		colTitle+= (*p).first.c_str();
@@ -303,8 +299,6 @@ void Dialog::setupViews()
 		colTable->setItem(row, 0, item0);
 		colTable->setItem(row, 1, item1);
 		colTable->setItem(row, 2, item2);
-		
-		//colTable->openPersistentEditor(item2);
 	    }
 	}
 	if(found){
@@ -331,18 +325,20 @@ void Dialog::setupViews()
     //PARAMETERS TABLE
     //////////////////////////////
     if(_p->hasParameters()){
-	QTableWidget *paramTable = new QTableWidget;
+	paramTable = new QTableWidget;
 																				 
 	QStringList labels;
 	labels << tr("Parameter Name") << tr("Parameter Value");
 	paramTable->setColumnCount(2);
 	paramTable->verticalHeader()->hide();
 	paramTable->setHorizontalHeaderLabels(labels);
-	paramTable->horizontalHeader()->resizeSection(0, 400);
-	paramTable->horizontalHeader()->resizeSection(1, 500);
-	paramTable->setSelectionMode(QAbstractItemView::NoSelection);
+	paramTable->horizontalHeader()->resizeSection(0, 300);
+	paramTable->horizontalHeader()->resizeSection(1, 300);
+	paramTable->setSelectionMode(QAbstractItemView::SingleSelection);
+	paramTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 	paramTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-	
+
+    
 	//initialize table
 	StringVec paramKeys;
 	_p->getParameters()->getStringKeys(paramKeys);
@@ -353,44 +349,22 @@ void Dialog::setupViews()
 	
 	    if( !_msc->getMProcs()->isParamOpt( _p->getType(), paramKeys[i] )){
 		found = true;
-		
-		int row = paramTable->rowCount();
-		paramTable->setRowCount(row + 1);
-																				     
-		StringVec paramValues;
-		_p->getParameters()->getStringVals(paramKeys[i], paramValues);
-		
-		QString str;
-		
-		for( unsigned int j=0; j<paramValues.size(); j++ ){
-		    str+=paramValues[j].c_str();
-		    str+=" ";
-		}
-		
-		QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
-		QTableWidgetItem *item1 = new QTableWidgetItem( str );
-		
-		item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
-
-		item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
-		item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
-		    
-		paramTable->setItem(row, 0, item0);
-		paramTable->setItem(row, 1, item1);
-
-		//paramTable->openPersistentEditor(item1);
-		
+		updateParam();
 	    }
 	}
 	if(found){
 	    //Delegate
-	    ParamDelegate *pDelegate = new ParamDelegate(_p, paramTable);
+	    ParamDelegate *pDelegate = new ParamDelegate( _p, paramTable);
 	    paramTable->setItemDelegate( pDelegate );
-																				     
-	    //Layout
-	    QVBoxLayout *paramLayout = new QVBoxLayout;
-	    paramLayout->addWidget(paramTable);
 
+	    QWidget *nparamvecset = new NParamVecSet( _msc, _p, paramTable, this );
+	    connect(paramTable, SIGNAL(cellPressed(int,int)), nparamvecset, SLOT(updateTable()));
+	    
+	    //Layout
+	    QGridLayout *paramLayout = new QGridLayout;
+	    paramLayout->addWidget(paramTable,0,0);
+	    paramLayout->addWidget(nparamvecset,0,1, Qt::AlignTop | Qt::AlignRight);
+	    
 	    //GroupBox
 	    QGroupBox *paramGroupBox = new QGroupBox(tr("Processor Parameters"));
 	    paramGroupBox->setLayout(paramLayout);
@@ -445,6 +419,10 @@ void Dialog::setupViews()
 
 		item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
             	item2->setFlags(item0->flags() & ~Qt::ItemIsEditable);
+
+		if( _msc->getMProcs()->getParamSetSize( _p->getType(), paramKeys[i] ) > 1 ){
+		    item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);
+		}
 
 		item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ));
 		item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ));
@@ -510,6 +488,47 @@ void Dialog::setupViews()
     mainButtons->setLayout(mainButtonsLayout);
     
     mainLayout->addWidget(mainButtons, Qt::AlignTop);
+}
+
+void Dialog::updateParam(){
+    //initialize table
+    StringVec paramKeys;
+    _p->getParameters()->getStringKeys(paramKeys);
+
+    paramTable->setRowCount(0);    
+    for( unsigned int i=0; i<paramKeys.size(); i++ ){
+    
+	if( !_msc->getMProcs()->isParamOpt( _p->getType(), paramKeys[i] )){
+	    
+	    int row = paramTable->rowCount();
+	    paramTable->setRowCount(row + 1);
+	    
+	    StringVec paramValues;
+	    _p->getParameters()->getStringVals(paramKeys[i], paramValues);
+	    
+	    QString str;
+	    
+	    for( unsigned int j=0; j<paramValues.size(); j++ ){
+		str+=paramValues[j].c_str();
+		str+=" ";
+	    }
+	    
+	    QTableWidgetItem *item0 = new QTableWidgetItem( paramKeys[i].c_str() );
+	    QTableWidgetItem *item1 = new QTableWidgetItem( str );
+	    
+	    item0->setFlags(item0->flags() & ~Qt::ItemIsEditable);
+
+	    if( _msc->getMProcs()->getParamSetSize( _p->getType(), paramKeys[i] ) > 1 ){
+		item1->setFlags(item1->flags() & ~Qt::ItemIsEditable);
+	    }
+
+	    item0->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
+	    item1->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), paramKeys[i] ).c_str() ) );
+		
+	    paramTable->setItem(row, 0, item0);
+	    paramTable->setItem(row, 1, item1);
+	}
+    }
 }
 
 void Dialog::optParamChanged(){

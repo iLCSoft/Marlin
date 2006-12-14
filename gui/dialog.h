@@ -5,7 +5,7 @@
  * This class is responsible for editing a processor
  * 
  * @author Jan Engels, DESY
- * @version $Id: dialog.h,v 1.6 2006-12-08 15:51:37 engels Exp $
+ * @version $Id: dialog.h,v 1.7 2006-12-14 14:39:23 engels Exp $
  */
 
 #include <QDialog>
@@ -25,6 +25,9 @@ class Dialog : public QDialog
 public:
     Dialog(CCProcessor* p, MarlinSteerCheck* msc, QWidget *parent = 0, Qt::WFlags f = 0);
 
+public slots:
+    void updateParam();
+
 private slots:
     void help();
     void optParamChanged();
@@ -35,6 +38,7 @@ private:
     
     //variables
     QVBoxLayout *mainLayout;
+    QTableWidget *paramTable;
     QTableWidget *optParamTable;
     
     CCProcessor* _p;

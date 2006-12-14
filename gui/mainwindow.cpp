@@ -538,7 +538,7 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
 	    errors+=(*p).c_str();
 	    errors+="\n";
 	}
-	QMessageBox::critical(this,
+	QMessageBox::warning(this,
 	    tr("Errors Occured loading Steering File"), 
 	    errors
 	);

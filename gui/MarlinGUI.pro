@@ -12,6 +12,8 @@ DESTDIR = ../bin/
                                                                                                                                                              
 # Input
 HEADERS	=   mainwindow.h \
+	    nparamvecset.h \
+	    nparamvecsetd.h \
 	    aprocdelegate.h \
 	    iprocdelegate.h \
 	    paramdelegate.h \
@@ -28,6 +30,8 @@ HEADERS	=   mainwindow.h \
 	      
 SOURCES =   main.cpp \
 	    mainwindow.cpp \
+	    nparamvecset.cpp \
+	    nparamvecsetd.cpp \
 	    aprocdelegate.cpp \
 	    iprocdelegate.cpp \
 	    paramdelegate.cpp \

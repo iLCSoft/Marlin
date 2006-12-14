@@ -112,11 +112,6 @@ namespace marlin{
 
 		//for each key
 		for( unsigned i=0; i<keys.size(); i++ ){
-		    //debug
-		    if( getParamSetSize( type, keys[i] ) != 0 ){
-			cout<<"DEBUG: Processor Type: [" << type << "] Parameter Key: [" << keys[i] << "] Set Size: [" 
-			    << getParamSetSize( type, keys[i] ) << "]\n";
-		    }
 		    
 		    //check if the parameter value is already set
 		    if( !sp->isParameterSet( keys[i] )){
