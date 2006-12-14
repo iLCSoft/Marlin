@@ -10,6 +10,7 @@
 // MARLIN INCLUDES /////////////
 #include "marlin/ProcessorMgr.h"
 #include "marlin/XMLParser.h"
+#include "marlin/Parser.h"
 #include "marlin/tinyxml.h"
 #include "marlin/Global.h"
 ////////////////////////////////
@@ -50,53 +51,53 @@ namespace marlin{
 	value.push_back("gear_ldc.xml");
 	_gparam->add("GearXMLFile", value);
     }
-/*    
-    _XMLFileAbsPath="/";
-    _XMLFileRelPath="";
 
-    //save the fileName and erase it from the Path
-    StringVec path;
-    CMProcessor::instance()->tokenize(_steeringFile, path, "/");
-    _XMLFileName=path[path.size()-1];
-    path.erase(path.end());
+//     _XMLFileAbsPath="/";
+//     _XMLFileRelPath="";
 
-    //if the path is relative
-    if(_steeringFile[0]!='/'){
-      string absPath=getenv("PWD");
-      StringVec absPathT;
-      CMProcessor::instance()->tokenize(absPath, absPathT, "/");
-      for( unsigned int i=0; i<path.size(); i++ ){
-	  if(path[i]!="."){
-	      _XMLFileRelPath+=path[i];
-	      _XMLFileRelPath+="/";
+//     //save the fileName and erase it from the Path
+//     StringVec path;
+//     CMProcessor::instance()->tokenize(_steeringFile, path, "/");
+//     _XMLFileName=path[path.size()-1];
+//     path.erase(path.end());
+
+//     //if the path is relative
+//     if(_steeringFile[0]!='/'){
+//       string absPath=getenv("PWD");
+//       StringVec absPathT;
+//       CMProcessor::instance()->tokenize(absPath, absPathT, "/");
+//       for( unsigned int i=0; i<path.size(); i++ ){
+// 	  if(path[i]!="."){
+// 	      _XMLFileRelPath+=path[i];
+// 	      _XMLFileRelPath+="/";
 	      
-	      if(path[i]==".."){
-		  absPathT.erase(absPathT.end());
-	      }
-	      else{
-		  absPathT.push_back(path[i]);
-	      }
-	  }
-      }
-      for( unsigned int i=0; i<absPathT.size(); i++ ){
-	  _XMLFileAbsPath+=absPathT[i];
-	  _XMLFileAbsPath+="/";
-      }
-    }
-    else{
-      for( unsigned int i=0; i<path.size(); i++ ){
-	  _XMLFileAbsPath+=path[i];
-	  _XMLFileAbsPath+="/";
-      }
-    }
+// 	      if(path[i]==".."){
+// 		  absPathT.erase(absPathT.end());
+// 	      }
+// 	      else{
+// 		  absPathT.push_back(path[i]);
+// 	      }
+// 	  }
+//       }
+//       for( unsigned int i=0; i<absPathT.size(); i++ ){
+// 	  _XMLFileAbsPath+=absPathT[i];
+// 	  _XMLFileAbsPath+="/";
+//       }
+//     }
+//     else{
+//       for( unsigned int i=0; i<path.size(); i++ ){
+// 	  _XMLFileAbsPath+=path[i];
+// 	  _XMLFileAbsPath+="/";
+//       }
+//     }
 
-    //parse the file
-    if( steeringFile != 0 ){
-	if(!parseXMLFile( steeringFile )){
-	    _errors.insert("XML File parsing error");
-	}
-    }
-*/
+//     //parse the file
+//     if( steeringFile != 0 ){
+// 	if(!parseXMLFile( steeringFile )){
+// 	    _errors.insert("XML File parsing error");
+// 	}
+//     }
+
     _marlinProcs = CMProcessor::instance();
 
   }
@@ -163,33 +164,33 @@ namespace marlin{
  
   // Add LCIO file and read all collections inside it
   int MarlinSteerCheck::addLCIOFile( const string& file ){
-/*
-    string fileName="/";
+
+//     string fileName="/";
     
-    //if path is relative concatenate XMLFileAbsPath with relative path of file
-    if(file[0]!='/'){
-	StringVec LCIOFilePath;
-	//initialize LCIOFilePath with the absolute path of the xml file
-	CMProcessor::instance()->tokenize(_XMLFileAbsPath, LCIOFilePath, "/");
+//     //if path is relative concatenate XMLFileAbsPath with relative path of file
+//     if(file[0]!='/'){
+// 	StringVec LCIOFilePath;
+// 	//initialize LCIOFilePath with the absolute path of the xml file
+// 	CMProcessor::instance()->tokenize(_XMLFileAbsPath, LCIOFilePath, "/");
 	
-	StringVec path;
-	CMProcessor::instance()->tokenize(file, path, "/");
-	for( unsigned int i=0; i<path.size(); i++ ){
-	    if(path[i]!="."){
-		LCIOFilePath.push_back(path[i]);
-	    }
-	}
-	for( unsigned int i=0; i<LCIOFilePath.size()-1; i++ ){
-	    fileName+=LCIOFilePath[i];
-	    fileName+="/";
-	}
-	//add the filename to the path
-	fileName+=LCIOFilePath[LCIOFilePath.size()-1];
-    }
-    else{
-	fileName=file;
-    }
-*/ 
+// 	StringVec path;
+// 	CMProcessor::instance()->tokenize(file, path, "/");
+// 	for( unsigned int i=0; i<path.size(); i++ ){
+// 	    if(path[i]!="."){
+// 		LCIOFilePath.push_back(path[i]);
+// 	    }
+// 	}
+// 	for( unsigned int i=0; i<LCIOFilePath.size()-1; i++ ){
+// 	    fileName+=LCIOFilePath[i];
+// 	    fileName+="/";
+// 	}
+// 	//add the filename to the path
+// 	fileName+=LCIOFilePath[LCIOFilePath.size()-1];
+//     }
+//     else{
+// 	fileName=file;
+//     }
+
     //FIXME: this is to prevent crashing the application if
     //the file doesn't exist (is there a better way to handle this??)
     string cmd= "ls ";
@@ -483,17 +484,32 @@ namespace marlin{
 
   //parse an xml file and initialize data
   bool MarlinSteerCheck::parseXMLFile( const string& file ){
-    TiXmlDocument doc( file );
+//     TiXmlDocument doc( file );
 
     //if file loads with no errors
-    if( doc.LoadFile() ){
+//     if( doc.LoadFile() ){
       StringVec lcioFiles, gearFile, availableProcs, activeProcs, conditions;
 
       //============================================================
       //PARSE THE XML FILE
       //============================================================
 	
-      _parser = new XMLParser( file ) ;
+
+      //fg: allow xml and old steering files 
+      std::string filen(  file ) ;
+
+      if( filen.rfind(".xml") == std::string::npos ||  // .xml not found at all
+	  !(  filen.rfind(".xml")
+	      + strlen(".xml") == filen.length() ) ) {  
+	_parser = new Parser( file ) ;
+	
+      } else {
+    
+	_parser = new XMLParser( file ) ;
+      }
+
+//       _parser = new XMLParser( file ) ;
+
       _parser->parse();
       _gparam = _parser->getParameters( "Global" );
       
@@ -504,8 +520,11 @@ namespace marlin{
       //check GEAR File
       _gparam->getStringVals( "GearXMLFile" , gearFile );
       string cmd= "ls ";
+      if( gearFile.size()==0 )
+	gearFile.push_back("__unknown_gear_file__") ;
       cmd+=gearFile[0];
       cmd+= " >/dev/null 2>/dev/null";
+
       if( system( cmd.c_str() ) ){
 	string error="Error opening GEAR file [";
 	error+=gearFile[0];
@@ -590,8 +609,11 @@ namespace marlin{
       for( unsigned int i=0; i<_aProc.size(); i++ ){
 	  
 	  //add processor conditions
+	if( conditions.size() == _aProc.size() )
 	  _aProc[i]->setConditions( conditions[i] );
-
+	else
+	  _aProc[i]->setConditions( "true" ); // fix for old steering files
+	  
 	  for( sSet::const_iterator p=_aProc[i]->getConditions().begin();
 		  p!=_aProc[i]->getConditions().end(); p++ ){
 	    _pConditions.insert( *p );
@@ -610,11 +632,11 @@ namespace marlin{
 	  }
       }
       return true;
-    }
-    else{
-      cerr << "parseXMLFile: Failed to load file: " << _steeringFile << endl;
-      return false;
-    }
+//     }
+//     else{
+//       cerr << "parseXMLFile: Failed to load file: " << _steeringFile << endl;
+//       return false;
+//     }
   }
 
   //find matching collections on the given vector
