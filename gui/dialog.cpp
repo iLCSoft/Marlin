@@ -358,7 +358,7 @@ void Dialog::setupViews()
 	    paramTable->setItemDelegate( pDelegate );
 
 	    QWidget *nparamvecset = new NParamVecSet( _msc, _p, paramTable, this );
-	    connect(paramTable, SIGNAL(cellPressed(int,int)), nparamvecset, SLOT(updateTable()));
+	    connect(paramTable, SIGNAL(cellClicked(int,int)), nparamvecset, SLOT(updateTable()));
 	    
 	    //Layout
 	    QGridLayout *paramLayout = new QGridLayout;
@@ -384,10 +384,11 @@ void Dialog::setupViews()
 	optParamTable->setColumnCount(3);
 	optParamTable->verticalHeader()->hide();
 	optParamTable->setHorizontalHeaderLabels(labels);
-	optParamTable->horizontalHeader()->resizeSection(0, 400);
-	optParamTable->horizontalHeader()->resizeSection(1, 500);
+	optParamTable->horizontalHeader()->resizeSection(0, 300);
+	optParamTable->horizontalHeader()->resizeSection(1, 300);
 	optParamTable->horizontalHeader()->resizeSection(2, 50);
-	optParamTable->setSelectionMode(QAbstractItemView::NoSelection);
+	optParamTable->setSelectionMode(QAbstractItemView::SingleSelection);
+	optParamTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 	optParamTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
 	
@@ -444,11 +445,15 @@ void Dialog::setupViews()
 	    //Delegate
 	    ParamDelegate *pDelegate = new ParamDelegate(_p, optParamTable);
 	    optParamTable->setItemDelegate( pDelegate );
-																				     
-	    //Layout
-	    QVBoxLayout *paramLayout = new QVBoxLayout;
-	    paramLayout->addWidget(optParamTable);
 
+	    QWidget *nparamvecset = new NParamVecSet( _msc, _p, optParamTable, this );
+	    connect(optParamTable, SIGNAL(cellClicked(int,int)), nparamvecset, SLOT(updateTable()));
+	    
+	    //Layout
+	    QGridLayout *paramLayout = new QGridLayout;
+	    paramLayout->addWidget(optParamTable,0,0);
+	    paramLayout->addWidget(nparamvecset,0,1, Qt::AlignTop | Qt::AlignRight);
+	
 	    //GroupBox
 	    QGroupBox *paramGroupBox = new QGroupBox(tr("Optional Processor Parameters"));
 	    paramGroupBox->setLayout(paramLayout);

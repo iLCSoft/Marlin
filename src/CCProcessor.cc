@@ -491,16 +491,36 @@ namespace marlin{
         if( p != NULL ){
 	    
 	    stream << "  <!--" << CMProcessor::instance()->getParamD( _type, keys[i] ) << "-->" << std::endl ;
-	    stream << "  <" << (isParamOptional( keys[i] ) ? "!--" : "") << "parameter name=\"" << keys[i] << "\" ";
-	    stream << "type=\"" << p->type() << "\"";
-	    
+
 	    StringVec values;
 	    _param->getStringVals( keys[i], values );
-	    stream << (values.size() == 1 ? " value=\"" : "> ");
-	    for( unsigned int j=0; j<values.size(); j++ ){
-		stream << values[j] << (values.size() > 1 ? " " : "");
+	    
+	    int ssize=CMProcessor::instance()->getParamSetSize( _type, keys[i] );
+	    if( ssize > 1 ){
+		for( int j=0; j<((int)values.size())/ssize; j++ ){
+		    
+		    stream << "  <" << (isParamOptional( keys[i] ) ? "!--" : "") << "parameter name=\"" << keys[i] << "\" ";
+		    stream << "type=\"" << p->type() << "\"> ";
+
+		    for( int k=0; k<ssize; k++ ){
+			stream << values[ (j*ssize)+k ] << " ";
+		    }
+		    
+		    stream << "</parameter" << (isParamOptional( keys[i] ) ? "--" : "")  << ">\n";
+		}
 	    }
-	    stream << (values.size() == 1 ? "\"/" : "</parameter") << (isParamOptional( keys[i] ) ? "--" : "")  << ">\n";
+	    else{
+		stream << "  <" << (isParamOptional( keys[i] ) ? "!--" : "") << "parameter name=\"" << keys[i] << "\" ";
+		stream << "type=\"" << p->type() << "\"";
+		
+		StringVec values;
+		_param->getStringVals( keys[i], values );
+		stream << (values.size() == 1 ? " value=\"" : "> ");
+		for( unsigned int j=0; j<values.size(); j++ ){
+		    stream << values[j] << (values.size() > 1 ? " " : "");
+		}
+		stream << (values.size() == 1 ? "\"/" : "</parameter") << (isParamOptional( keys[i] ) ? "--" : "")  << ">\n";
+	    }
 	}
 	//else it's a parameter from an uninstalled processor or an extra parameter from an installed processor
 	else{

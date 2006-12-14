@@ -19,15 +19,16 @@ NParamVecSet::NParamVecSet(
 {
     valTable = new QTableWidget;
 
-    valTable->horizontalHeader()->hide();
     valTable->verticalHeader()->hide();
-    //valTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     valTable->setSelectionMode(QAbstractItemView::NoSelection);
     valTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
     QPushButton *addButton = new QPushButton(tr("Add"));
     QPushButton *remButton = new QPushButton(tr("Rem"));
-																		 
+
+    addButton->setAutoDefault( false );
+    remButton->setAutoDefault( false );
+
     addButton->setToolTip(tr("Add New Row"));
     remButton->setToolTip(tr("Remove Selected Row"));
 																		 
@@ -49,8 +50,8 @@ NParamVecSet::NParamVecSet(
     //group box
     QGroupBox *groupBox = new QGroupBox(tr("Edit Parameter Values"));
     groupBox->setLayout(layout);
-    groupBox->setMaximumWidth(500);
-    groupBox->setMaximumHeight(500);
+    groupBox->setMinimumWidth(550);
+    groupBox->setMaximumHeight(600);
     
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget( groupBox );
@@ -72,7 +73,7 @@ void NParamVecSet::updateTable(){
 	valTable->setColumnCount(_ssize);
 
 	for( int i=0; i<_ssize; i++ ){
-	    valTable->horizontalHeader()->resizeSection(i, 60);
+	    valTable->horizontalHeader()->resizeSection(i, 90);
 	}
     
 
@@ -133,6 +134,17 @@ void NParamVecSet::remValSet(){
 	StringVec vals, newVals;
 	string text;
 	_p->getParameters()->getStringVals( _key, vals );
+
+	//if it is the last parameter being removed just deactivate the optional parameter
+	if( (int)vals.size() == _ssize && _msc->getMProcs()->isParamOpt(_p->getType(), _key) ){
+	    _p->setOptionalParam( _key, true );
+	    _parent->item(_parent->currentRow(), 2)->setCheckState( Qt::Unchecked );
+	    return;
+	}
+	//prevent the last parameter to be removed
+	if( (int)vals.size() == _ssize && !_msc->getMProcs()->isParamOpt(_p->getType(), _key) ){
+	    return;
+	}
 	
 	for( int i=0; i<(int)vals.size(); i++ ){
 	    if( i < (valTable->currentRow()*_ssize) || i > ((valTable->currentRow()*_ssize)+(_ssize-1)) ){
@@ -141,6 +153,7 @@ void NParamVecSet::remValSet(){
 		text+=" ";
 	    }
 	}
+	
 	_p->getParameters()->erase( _key );
 	_p->getParameters()->add( _key, newVals );
 

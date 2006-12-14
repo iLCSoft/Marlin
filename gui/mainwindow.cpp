@@ -381,7 +381,7 @@ void MainWindow::setupViews()
     lcioColsTable->setSelectionMode(QAbstractItemView::NoSelection);
     lcioColsTable->horizontalHeader()->resizeSection(0, 160);
     lcioColsTable->horizontalHeader()->resizeSection(1, 160);
-    lcioColsTable->horizontalHeader()->resizeSection(2, 360);
+    lcioColsTable->horizontalHeader()->resizeSection(2, 160);
     lcioColsTable->verticalHeader()->hide();
     //lcioColsTable->setSortingEnabled( true );
     //lcioColsTable->sortItems( 1 );
