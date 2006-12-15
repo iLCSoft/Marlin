@@ -58,7 +58,21 @@
 	<p>The optional parameters as defined by the processor's authors are written normally as comments in the steering file.<br>
 	If you want to use one of this parameters in Marlin you should check the box in the third column of the table to write<br>
 	the desired parameter out as a normal parameter, instead of writting it as just a comment in the xml format.</p>
+	<p>WARNING: If you don't want to use a certain optional parameter and leave the check box unchecked, the parameter is<br>
+	just written as an XML comment and the next time you open the XML file the values of this parameter are replaced by<br>
+	the default values for this type of parameter. The only way to recover the values is to open the steering file with<br>
+	a normal editor and uncomment the parameters... Sorry, there is at the moment no better way to handle this issue..</p>
 	
+	<br><a href="../index.html"> Back to Table of Contents </a><br>
+
+	<br><br><hr><a name="ssize"></a><h3> Processor Parameters with SetSize greater than 1 </h3><br>
+	<div align=center><img src="../images/edit_params_ssize.png" border=2></img></div><br>
+	<p>These are special parameters that are registered with a set size value.</p>
+	<p>For these parameters a special dialog is placed at the right side of the parameters table<br>
+	for editing these parameters. (see image above)<br></p>
+	<p>Note that the Remove button removes an entire row, i.o.w. the set of values where the mouse cursor is currently placed.<br>
+	The Add button adds a new set of values.</p>
+
 	<br><a href="../index.html"> Back to Table of Contents </a><br>
     </body>
 </html>

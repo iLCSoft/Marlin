@@ -32,8 +32,10 @@
         editing Marlin XML<br>
 	steering files by hand with a productive, error-free and intuitive way for physicists.</p>
 
+	<br><a href="../index.html"> Back to Table of Contents </a><br>
+
 	<br><br><hr><br><a name="requirements"></a><h3>Requirements</h3><br>
-	The MarlinGUI is available starting from Marlin v00-09-06.
+	<p>The MarlinGUI is available starting from Marlin v00-09-06.
 	The consistency check works for all processors that use the new methods:<br>
         &nbsp;&nbsp;&nbsp;registerInputCollection(LCIO::_TYPE_,...), <br>
         &nbsp;&nbsp;&nbsp;registerInputCollections(LCIO::_TYPE_,...) and <br>
@@ -44,14 +46,45 @@
         In order to use the new checking feature in your own processors simply replace all calls to 
         registerParameter(...) for collection parameters with the corresponding call to one of the above functions.<br>
         All processors that use these functions will be taken into account for checking the consistency of collection 
-        names and type by the MarlinGUI and command line version.<br>
+	names and type by the MarlinGUI and command line version.<br></p>
         <p>
 	You can convert older steering files to the new format with:<br>
         "Marlin -f old.xml steer.xml"<br>
 	This will automatically add the collection type information needed for all processors that properly define the 
-	input and output collections with the above functions.<br>
+	input and output collections with the above functions.<br></p>
 
-	
+	<br><a href="../index.html"> Back to Table of Contents </a><br>
+
+	<br><br><hr><br><a name="working"></a><h3>Working with the GUI</h3><br>
+	<p>There are some useful tips you should take into account for better working with Marlin GUI:</p>
+	<ul>
+	    <li> 1st: compile Marlin with all the processors you need to work with. (The fastest and easiest<br>
+	    way to check if a steering file has all processors installed is to run "Marlin -c steerFile.xml")</li><br>
+	    
+	    <li> 2nd: If you want to create a new steering file from scratch you can do it in 2 ways:</li>
+		<ul>
+		    <li>In the GUI, under File->New...</li>
+		    <li>Create an example file with all processors by running "Marlin -x >mysteer.xml" and<br>
+		    afterwards edit this file with "MarlinGUI mysteer.xml" (This way you save the work of having to add<br>
+		    each processor one-by-one in the GUI</li>
+		</ul><br>
+		
+	    <li> 3rd: For getting the most out of the automatic checking done by the GUI you should always do things in this order:</li>
+		<ol>
+		    <li>Add/Remove LCIO files</li>
+		    <li>Activate the inactive processors you need / Deactivate the active processors you don't need</li>
+		    <li>Move the active processors to the desired execution order</li>
+		    <li>Edit the processors: if the processor you want to edit has errors, check the error output before editing it</li>
+		    <li>Edit the processor's conditions</li>
+		</ol><br>Tip: Try to avoid editing inactive processors, whenever possible!<br>
+
+	    <li> 4th: Whenever you edit a steering file with Marlin GUI, a backup copy is created with a ~ appended to the file<br>
+	    extension. This file can help you out in the case you have lost some important comments or optional parameter values by<br>
+	    editing a steering file with Marlin GUI.</li>
+	</ul>
+
+	<br><a href="../index.html"> Back to Table of Contents </a><br>
+
 	<br><br><hr><br><a name="lciocollections"></a><h3> List of Collections in LCIO Files </h3><br>
 	<div align=center><img src="../images/overview_lciocollections.png" border=2></img></div><br>
 	
