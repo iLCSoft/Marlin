@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
     //set the selection color to blue instead of black ;)
     QPalette pal = QApplication::palette();
-    pal.setColor(QPalette::Highlight, QColor(0,90,126) );
+    pal.setColor(QPalette::Highlight, QColor(0,90,126, 128) );
     QApplication::setPalette(pal);
 
     MainWindow window;
