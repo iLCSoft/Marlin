@@ -91,7 +91,8 @@ void NParamVecSet::updateTable(){
 	    valTable->setRowCount(row + 1);
 	    for( int j=0; j<_ssize; j++ ){
 		QTableWidgetItem *item = new QTableWidgetItem( tokens[ (i*_ssize)+j ].c_str() );
-																			 
+
+		item->setToolTip( QString( _msc->getMProcs()->getParamD( _p->getType(), _key ).c_str() ));
 		valTable->setItem(row, j, item);
 	    }
 	}
