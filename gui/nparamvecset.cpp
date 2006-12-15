@@ -145,7 +145,16 @@ void NParamVecSet::remValSet(){
 	if( (int)vals.size() == _ssize && !_msc->getMProcs()->isParamOpt(_p->getType(), _key) ){
 	    return;
 	}
-	
+
+	int ret = QMessageBox::warning(this, tr("Remove Row"),
+		tr("Do you want to delete the entire row?"),
+            QMessageBox::Yes | QMessageBox::Default,
+            QMessageBox::No);
+                                                                                                                                                             
+	if( ret == QMessageBox::No ){
+	    return;
+	}
+
 	for( int i=0; i<(int)vals.size(); i++ ){
 	    if( i < (valTable->currentRow()*_ssize) || i > ((valTable->currentRow()*_ssize)+(_ssize-1)) ){
 		newVals.push_back(vals[i]);

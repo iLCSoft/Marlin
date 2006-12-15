@@ -193,14 +193,11 @@ namespace marlin{
 
     //FIXME: this is to prevent crashing the application if
     //the file doesn't exist (is there a better way to handle this??)
-    string cmd= "ls ";
-    cmd+=file;
-    cmd+= " >/dev/null 2>/dev/null";
-    if( system( cmd.c_str() ) ){
-	string error="Error opening LCIO file [";
-	error+=file;
-	error+="]. File doesn't exist, or link is not valid!!";
-	_errors.insert(error);
+    stringstream cmd, error;
+    cmd << "ls " << file << " >/dev/null 2>/dev/null";
+    if( system( cmd.str().c_str() ) ){
+	error << "Error opening LCIO file [" << file << "]. File doesn't exist, or link is not valid!!";
+	_errors.insert(error.str());
 	return 0;
     }
 
@@ -484,17 +481,20 @@ namespace marlin{
 
   //parse an xml file and initialize data
   bool MarlinSteerCheck::parseXMLFile( const string& file ){
-//     TiXmlDocument doc( file );
 
-    //if file loads with no errors
-//     if( doc.LoadFile() ){
-      StringVec lcioFiles, gearFile, availableProcs, activeProcs, conditions;
+      stringstream cmd;
+      cmd << "ls " << file << " >/dev/null 2>/dev/null";
+      if( system( cmd.str().c_str() ) ){
+	 cerr << "parseXMLFile: Failed to load file: " << _steeringFile << endl;
+	 return false;
+      }
+      
+      StringVec lcioFiles, availableProcs, activeProcs, conditions;
 
       //============================================================
       //PARSE THE XML FILE
       //============================================================
 	
-
       //fg: allow xml and old steering files 
       std::string filen(  file ) ;
 
@@ -504,11 +504,14 @@ namespace marlin{
 	_parser = new Parser( file ) ;
 	
       } else {
-    
+	//test if file is valid
+	TiXmlDocument doc( file );
+	if( !doc.LoadFile() ){
+	    cerr << "parseXMLFile: Failed to load file: " << _steeringFile << endl;
+	    return false;
+	}
 	_parser = new XMLParser( file ) ;
       }
-
-//       _parser = new XMLParser( file ) ;
 
       _parser->parse();
       _gparam = _parser->getParameters( "Global" );
@@ -516,29 +519,52 @@ namespace marlin{
       //============================================================
       //READ PARAMETERS
       //============================================================
+	
+      //add default values if there are none
+	StringVec value;
+	_gparam->getStringVals( "MaxRecordNumber" , value );
+	if( value.size() == 0 ){
+	    value.push_back("5001");
+	    _gparam->add("MaxRecordNumber", value);
+	}
+	value.clear();
+	_gparam->getStringVals( "SkipNEvents" , value );
+	if( value.size() == 0 ){
+	    value.push_back("0");
+	    _gparam->add("SkipNEvents", value);
+	}
+	value.clear();
+	_gparam->getStringVals( "SupressCheck" , value );
+	if( value.size() == 0 ){
+	    value.push_back("false");
+	    _gparam->add("SupressCheck", value);
+	}
+	value.clear();
 
-      //check GEAR File
-      _gparam->getStringVals( "GearXMLFile" , gearFile );
-      string cmd= "ls ";
-      if( gearFile.size()==0 )
-	gearFile.push_back("__unknown_gear_file__") ;
-      cmd+=gearFile[0];
-      cmd+= " >/dev/null 2>/dev/null";
+        //check GEAR File
+	_gparam->getStringVals( "GearXMLFile" , value );
+	if( value.size() == 0 ){
+	    value.push_back("__unknown_gear_file__");
+	    _gparam->add("GearXMLFile", value);
+	}
+	//remove other files if there are any
+	if( value.size() > 1 ){
+	    string gfile=value[0];
+	    value.clear();
+	    value.push_back(gfile);
+	    _gparam->erase( "GearXMLFile" );
+	    _gparam->add( "GearXMLFile", value );
+	}
 
-      if( system( cmd.c_str() ) ){
-	string error="Error opening GEAR file [";
-	error+=gearFile[0];
-	error+="]. File doesn't exist, or link is not valid!!";
-	_errors.insert(error);
+      cmd.str("");
+      cmd << "ls " << value[0] << " >/dev/null 2>/dev/null";
+
+      if( system( cmd.str().c_str() )){
+	stringstream error;
+	error << "Error opening GEAR file [" << value[0] << "]. File doesn't exist, or link is not valid!!";
+	_errors.insert(error.str());
       }
       
-      //remove other files if there are any
-      string gfile=gearFile[0];
-      gearFile.clear();
-      gearFile.push_back(gfile);
-      _gparam->erase( "GearXMLFile" );
-      _gparam->add( "GearXMLFile", gearFile );
-
       //list of lcio files defined in the global section
       _gparam->getStringVals( "LCIOInputFiles" , lcioFiles );
       _gparam->erase("LCIOInputFiles");
@@ -632,11 +658,6 @@ namespace marlin{
 	  }
       }
       return true;
-//     }
-//     else{
-//       cerr << "parseXMLFile: Failed to load file: " << _steeringFile << endl;
-//       return false;
-//     }
   }
 
   //find matching collections on the given vector
