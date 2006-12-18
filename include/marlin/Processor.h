@@ -42,7 +42,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.21 2006-11-14 16:01:41 engels Exp $ 
+   *  @version $Id: Processor.h,v 1.22 2006-12-18 16:11:49 gaede Exp $ 
    */
   
   class Processor {
@@ -76,17 +76,17 @@ namespace marlin{
     /** Called for every run, e.g. overwrite to initialize run dependent 
      *  histograms.
      */
-    virtual void processRunHeader( LCRunHeader* run) { } 
+    virtual void processRunHeader( LCRunHeader* ) { } 
 
     /** Called for every event - the working horse. 
      */
-    virtual void processEvent( LCEvent * evt ) { }
+    virtual void processEvent( LCEvent * ) { }
 
     /** Called for every event - right after processEvent()
      *  has been called for all processors.
      *  Use to check processing and/or produce check plots.
      */
-    virtual void check( LCEvent * evt ) { }
+    virtual void check( LCEvent* ) { }
 
 
     /** Called after data processing for clean up in the inverse order of the init()
