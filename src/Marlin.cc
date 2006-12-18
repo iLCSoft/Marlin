@@ -81,6 +81,17 @@ int main(int argc, char** argv ){
 	exit(1);
       }
     }
+    else if( std::string(argv[1]) == "-o" ){
+      if( argc == 4 ){
+	MarlinSteerCheck msc(argv[2]);
+	msc.saveAsXMLFile(argv[3]) ;
+        exit(0) ;
+      }
+      else{
+	std::cout << "  usage: Marlin -o old.steer new.xml" << std::endl << std::endl;
+	exit(1);
+      }
+    }
     else if( std::string(argv[1]) == "-f" ){
       if( argc == 4 ){
 	XMLFixCollTypes fixColTypes(argv[2]);
@@ -318,12 +329,14 @@ void printUsageAndExit() {
 	      << " Running the application with a given steering file:" << std::endl 
 	      << "   Marlin steer.xml   " << std::endl 
 	      << std::endl 
-	      << "   Marlin -h                \t print this help information" << std::endl 
-	      << "   Marlin -?                \t print this help information" << std::endl 
-	      << "   Marlin -x                \t print an example steering file to stdout" << std::endl 
-	      << "   Marlin -c steer.xml      \t check the given steering file for consistency" << std::endl 
-	      << "   Marlin -f old.xml new.xml\t convert old files to new files for consistency check" << std::endl 
-	      << "   Marlin -l                \t [deprecated: old format steering file example]" << std::endl 
+	      << "   Marlin -h                  \t print this help information" << std::endl 
+	      << "   Marlin -?                  \t print this help information" << std::endl 
+	      << "   Marlin -x                  \t print an example steering file to stdout" << std::endl 
+	      << "   Marlin -c steer.xml        \t check the given steering file for consistency" << std::endl 
+	      << "   Marlin -f old.xml new.xml  \t convert old xml files to new xml files for consistency check" 
+	      << std::endl 
+	      << "   Marlin -o old.steer new.xml\t convert old steering file to xml steering file" << std::endl 
+	      << "   Marlin -l                  \t [deprecated: old format steering file example]" << std::endl 
 	      << std::endl 
 	      << " Example: " << std::endl 
 	      << " To create a new default steering file from any Marlin application, run" << std::endl 

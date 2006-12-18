@@ -74,6 +74,39 @@ namespace marlin{
 
       }
     }
+
+
+    // do some postprocessing ( create global entry with available processors ) 
+
+    std::vector<std::string> availableProcs ;
+    availableProcs.push_back("AvailableProcessors") ;
+
+    StringParameters* global = 0 ;
+
+    for( StringParametersMap::const_iterator iter = _map.begin() ; iter != _map.end() ; iter++){
+
+      std::string name = iter->first ; 
+
+      StringParameters* p = iter->second ;
+
+      std::string type = p->getStringVal("ProcessorType") ;
+
+      if( type.size() > 0 ) {
+
+	availableProcs.push_back( name ) ;
+      }
+
+      if( name == "Global" ) 
+	global = p ;
+
+      //     std::cout << " parameter section " << iter->first 
+      // 	      << std::endl 
+      // 	      << *iter->second 
+      // 	      << std::endl ;
+
+    }
+    if( global != 0 ) 
+      global->add( availableProcs ) ;
   }
 
 

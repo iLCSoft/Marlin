@@ -1,22 +1,31 @@
 
+
+ ======================
   Marlin release notes
  ======================
+
   
  -----------
-| 
+| v00-09-06 |
  -----------
-
- - switched to  latest version of tinyxml:  2.5.2
-
- - new features 'Marlin -c steer.xml' checks steering file
-   for consistency (names and types of LCIO collections (author J.Engels) 
-
- - new features 'Marlin -f old.xml steer.xml ' adds LCIO collection
-   type information to old xml steering file for usage with Marlin -c
+ - first release of MarlinGUI that helps to create/modify xml steering files
+   interactively -> see $MARLIN/gui/README for details
 
  - new methods Processor::registerInput/OutputCollections() 
    for checking consistency 
 
+ - new feature 'Marlin -c steer.xml' checks steering file
+   for consistency (names and types of LCIO collections (author J.Engels) 
+
+ - new feature 'Marlin -f old.xml steer.xml ' adds LCIO collection
+   type information to old xml steering file for usage with Marlin -c
+
+ - new feature 'Marlin -o old.steer steer.xml ' 
+   convert old (deprecated!) steering file to xml steering file
+     (you can also use the GUI to read in old steering files)
+
+
+ - switched to  latest version of tinyxml:  2.5.2
 
  -----------
 | v00-09-05 |
