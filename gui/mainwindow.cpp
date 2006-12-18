@@ -546,14 +546,21 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
 	    return;
 	}
     }
+
+    std::string filen(filename);
+
+    //if it is an old steering file append .xml at the end
+    if( filen.find(".xml",0) == std::string::npos ){
+	filen+=".xml";
+    }
  
-    _file=filename;
+    _file=filen;
     _modified=false;
     _saved=false;
-    std::cout << "Marlin steering file [" << filename << "] loaded successfully into the GUI\n";
+    std::cout << "Marlin steering file [" << filen << "] loaded successfully into the GUI\n";
     //set the window title
     QString title= "Marlin GUI - ";
-    QFileInfo xmlFile(filename);
+    QFileInfo xmlFile(filen.c_str());
     title+=xmlFile.absoluteFilePath();
     setWindowTitle(title);
 
@@ -1295,7 +1302,7 @@ void MainWindow::openXMLFile()
     QString fileName = QFileDialog::getOpenFileName(this,
 	    tr("Choose a Marlin Steering File to open..."),
 	    QDir::currentPath(),
-	    "*.xml"
+	    "*.xml *.steer"
     );
     
     if( !fileName.isEmpty() ){
@@ -1333,6 +1340,7 @@ void MainWindow::newXMLFile(){
 
 void MainWindow::saveXMLFile()
 {
+    
     //create backup file
     std::string cmd= "ls ";
     cmd+=_file;
@@ -1385,18 +1393,35 @@ void MainWindow::saveAsXMLFile()
     }
 
     if( !fileName.isEmpty() ){
-	
+
+	//if it is an old steering file append .xml at the end
+	if( !fileName.contains(".xml", Qt::CaseInsensitive ) ){
+	    QString error;
+	    error="Sorry, you have tried to save the file with an extension different than \".xml\"\n"
+		    "Marlin GUI does not support other extensions than the xml one.. \nThe filename you've chosen (";
+	    error+=fileName;
+	    error+=") was therefore renamed to (";
+	    error+=fileName;
+	    error+=".xml)";
+	    
+	    QMessageBox::critical(this,
+                     tr( "Error Saving File"),
+                     error
+             );
+	    fileName+=".xml";
+	    _saved=false;
+	}
+	else{
+	    _saved=true;
+	}
+     
 	//update the window title bar
 	QString title= "Marlin GUI - ";
 	title+=fileName;
 	setWindowTitle(title);
 
 	_file=fileName.toStdString();
-	_saved=true;
 	saveXMLFile();
-	
-	//msc->saveAsXMLFile(fileName.toStdString());
-	statusBar()->showMessage(tr("Saved %1").arg(fileName), 2000);
     }
 }
 
