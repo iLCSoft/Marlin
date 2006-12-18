@@ -18,12 +18,12 @@
  * 
  *
  * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: MarlinSteerCheck.h,v 1.27 2006-12-11 15:05:05 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.28 2006-12-18 15:19:15 gaede Exp $
  */
 
 #include "marlin/CCProcessor.h"
 #include "marlin/CCCollection.h"
-
+#include "marlin/CMProcessor.h"
 #include "marlin/XMLParser.h"
 
 //comment out the line below if your terminal

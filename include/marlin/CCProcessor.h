@@ -7,7 +7,7 @@
  * needed by MarlinSteerCheck
  *
  * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: CCProcessor.h,v 1.21 2006-12-08 15:51:37 engels Exp $
+ * @version $Id: CCProcessor.h,v 1.22 2006-12-18 15:19:15 gaede Exp $
  *
  */
 
@@ -93,7 +93,7 @@ namespace marlin {
     const std::string getStatusDesc(){ return ( isActive() ? "Active" : "Inactive" ); }
     
     /** Returns true if the given collection is in the unavailable or duplicate list of this processor */
-    bool CCProcessor::isErrorCol( const std::string& type, const std::string& value );
+    bool isErrorCol( const std::string& type, const std::string& value );
     
     /** Returns true if a parameter is optional (optional means the parameter will be written out as a comment) */
     bool isParamOptional( const std::string& key );
