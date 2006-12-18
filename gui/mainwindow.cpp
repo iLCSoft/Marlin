@@ -1302,7 +1302,7 @@ void MainWindow::openXMLFile()
     QString fileName = QFileDialog::getOpenFileName(this,
 	    tr("Choose a Marlin Steering File to open..."),
 	    QDir::currentPath(),
-	    "*.xml *.steer"
+	    "*.xml\n*.steer"
     );
     
     if( !fileName.isEmpty() ){
