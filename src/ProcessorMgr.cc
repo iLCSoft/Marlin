@@ -77,6 +77,8 @@ namespace marlin{
 	       << "  # limit the number of processed records (run+evt):" << std::endl
 	       << "   MaxRecordNumber 5001" << std::endl
 	       << std::endl
+	       << "  # skip the first  n events  " << std::endl
+	       << "  SkipNEvents  0 " << std::endl
 	       << "  # don't call the check method of the processors if \"true\"" << std::endl
 	       << "   SupressCheck false" << std::endl
 	       << ".end   -----------------------------------------------" << std::endl
