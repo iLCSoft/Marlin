@@ -16,7 +16,7 @@
 #  
 #
 # @author Frank Gaede, DESY
-# @version $Id: GNUmakefile,v 1.10 2006-12-04 14:11:59 gaede Exp $
+# @version $Id: GNUmakefile,v 1.11 2006-12-18 15:32:44 gaede Exp $
 #
 #########################################################
 
@@ -100,7 +100,7 @@ clean:
 	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) clean); fi ; done ; \
 	if [ -f "gui/Makefile" ] ; then \
 	echo "Clearing in gui..."; \
-	(cd $(MARLIN)/gui; $(MAKE) clean); rm -f Makefile; fi
+	(cd $(MARLIN)/gui; $(MAKE) distclean); rm -f Makefile; fi
 
 test:
 	@echo $(subdirs)
