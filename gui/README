@@ -1,3 +1,14 @@
+************************************************************************ 
+*
+* The MarlinGUI  is a simple program that allows you to easily create
+* and modify Marlin steering files interactively in a consistent way.
+*
+*
+* J. Engels, DESY-IT
+* $Id: README,v 1.6 2006-12-18 11:10:45 gaede Exp $
+************************************************************************
+
+
 --------------------------------------------------------------------------------
 HOW TO INSTALL THE MARLIN GUI:
 --------------------------------------------------------------------------------
