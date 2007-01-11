@@ -1,14 +1,6 @@
 #ifndef CMPROCESSOR_H
 #define CMPROCESSOR_H
 
-/* @class
- * This singleton class contains an instance of every available marlin processor type
- * 
- * @author Jan Engels, DESY
- * @version $Id: CMProcessor.h,v 1.7 2006-12-12 11:45:38 engels Exp $
- *
- */
-
 #include "marlin/Processor.h"
 #include "marlin/ProcessorMgr.h"
 
@@ -18,7 +10,14 @@ namespace marlin{
     typedef std::map< std::string, std::string > ssMap;
     typedef std::map< std::string, StringParameters* > sSPMap;
     
-    
+ /**
+ * This singleton class contains an instance
+ * of every available marlin processor type
+ * 
+ * @author Jan Engels, DESY
+ * @version $Id: CMProcessor.h,v 1.8 2007-01-11 16:56:37 engels Exp $
+ */
+   
     class CMProcessor{
 
     public:

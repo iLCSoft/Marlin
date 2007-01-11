@@ -1,137 +1,217 @@
 ######################################################
 #
-# GNUmakefile to build Marlin
+# Makefile to build Marlin
 #
 # @author Frank Gaede
+# @author Jan Engels
 # @date   Jun,07 2004
 # 20050223 fg: added MARLINDEBUG, LCCD, CondDBMySQL
 ######################################################
 
-# name of the program
+ifndef MARLINWORKDIR
+ MARLINWORKDIR=$(MARLIN)
+ export MARLINWORKDIR
+endif
 
+# name of the program
 PROGNAME = Marlin
 
-BASEDIR := $(MARLIN)
+# name of the gui program
+GUIPROGNAME = MarlinGUI
 
-# check for private compiler definition
+# directories
+INCDIR = $(MARLIN)/include
+LIBDIR = $(MARLINWORKDIR)/lib
+BINDIR = $(MARLINWORKDIR)/bin
+DOCDIR = $(MARLINWORKDIR)/doc/$(PROGNAME)
+TMPDIR = $(MARLINWORKDIR)/tmp/$(PROGNAME)
+GUIDIR = $(MARLINWORKDIR)/tmp/$(GUIPROGNAME)
+OBJDIR = $(TMPDIR)/obj
+DEPDIR = $(TMPDIR)/dep
+
+# source file for the binary
+BINSRCS = $(PROGNAME).cc
+
+# library file without path
+LIBNAME = lib$(PROGNAME).a
+
+# library file with path
+LIB = $(LIBDIR)/$(LIBNAME)
+
+# binary files with path
+BIN = $(patsubst %.cc,$(BINDIR)/%,$(BINSRCS))
+                                                                                                                                                             
+# object files for the binaries without path
+BINOBJS = $(patsubst %.cc,%.o,$(BINSRCS))
+                                                                                                                                                             
+# object files for the binaries with path
+BINOBJ = $(patsubst %,$(OBJDIR)/%,$(BINOBJS))
+
+# source files without path
+SRCS = $(filter-out $(BINSRCS),$(wildcard *.cc))
+
+# object files without path
+OBJS = $(patsubst %.cc,%.o,$(SRCS))
+
+# object files with path
+OBJ = $(patsubst %,$(OBJDIR)/%,$(OBJS))
+
+# dependency files without path
+DEPS = $(patsubst %.o,%.d,$(OBJS) $(BINOBJS))
+
+# dependency files with path
+DEP = $(patsubst %,$(DEPDIR)/%,$(DEPS))
+
+# package libraries with path
+PKGLIBS = $(filter-out $(LIB),$(wildcard $(LIBDIR)/*.a))
+
+# package names (MarlinUtil MarlinReco CEDViewer...)
+PKGNAMES = $(patsubst $(LIBDIR)/lib%.a,%, $(filter-out $(LIB),$(PKGLIBS)))
+
+# package library flags (-lMarlinUtil -lMarlinReco -lCEDViewer...)
+PKGLIBFLAGS = $(foreach package,$(PKGNAMES), -l$(package))
+
+# c++ compiler
 ifdef MY_CXX
-  CXX = $(MY_CXX)
+ CXX = $(MY_CXX)
 else
-  CXX = g++
+ CXX = g++
 endif
 
-# debug/optimization level
-ifdef MARLINDEBUG
- CPPFLAGS = -g -Wall -ansi
+# compiler flags
+ifeq ($(MARLINDEBUG),1)
+ CXXFLAGS = -g -Wall -ansi
 else
- CPPFLAGS = -O3 -Wall -ansi
+ CXXFLAGS = -O3 -Wall -ansi
 endif
 
+# pre-processor flags
+CPPFLAGS := -I $(INCDIR) -I $(LCIO)/src/cpp/include 
+CPPFLAGS += $(USERINCLUDES)
 
-
-AR = ar
-
-INSTALL = $(BASEDIR)/lib
-BINDIR = $(BASEDIR)/bin
-
-INCLUDE =  -I $(LCIO)/src/cpp/include
-INCLUDE +=  -I $(BASEDIR)/include
-#INCLUDE +=  -D TIXML_USE_STL=1 -I $(BASEDIR)/tinyxml
+# libraries
+LIBS += -Wl,-whole-archive -L $(LIBDIR) -l$(PROGNAME) $(PKGLIBFLAGS) -Wl,-no-whole-archive
+LIBS += -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
+LIBS += $(USERLIBS)
 
 ifdef CLHEP
- INCLUDE += -D USE_CLHEP -I $(CLHEP)/include
-endif
-
-ifdef LCCD
- INCLUDE += -D USE_LCCD -I $(LCCD)/source/include
- ifdef CondDBMySQL
-   INCLUDE += -D USE_CONDDB
- endif
+ CPPFLAGS += -D USE_CLHEP -I $(CLHEP)/include
+ LIBS += -L $(CLHEP)/lib -lCLHEP
 endif
 
 ifdef GEAR
- INCLUDE += -D USE_GEAR -I $(GEAR)/src/cpp/include
-endif
-
-
-INCLUDE += $(USERINCLUDES)
-
-CPPFLAGS += $(INCLUDE)
-
-
-LIBS =
-LIBS +=   -Wl,-whole-archive  -L $(INSTALL)  -l$(PROGNAME) -Wl,-no-whole-archive
-LIBS += $(MARLINLIB)
-
-ifdef GEAR
+ CPPFLAGS += -D USE_GEAR -I $(GEAR)/src/cpp/include
  LIBS += -L $(GEAR)/lib -lgearxml -lgear
 endif
 
 ifdef LCCD
+ CPPFLAGS += -D USE_LCCD -I $(LCCD)/source/include
  LIBS += -L $(LCCD)/lib -llccd
  ifdef CondDBMySQL
-   LIBS += -L $(CondDBMySQL)/lib -lconddb    
+  CPPFLAGS += -D USE_CONDDB
+  LIBS += -L $(CondDBMySQL)/lib -lconddb
  endif
 endif
 
-
-ifdef CLHEP
-   LIBS += -L $(CLHEP)/lib -lCLHEP
+ifeq ($(MARLIN_USE_AIDA),1)
+ CPPFLAGS += -D MARLIN_USE_AIDA `aida-config --include`
+ LIBS += `aida-config --lib`
 endif
 
+# linker
+LD = $(CXX)
 
-LIBS += $(USERLIBS)
-LIBS +=    -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
-LIBS +=  -Wl,--demangle
+# linker flags
+LDFLAGS = -Wl,--demangle
 
-ifdef MARLIN_USE_AIDA
- ifneq ($(MARLIN_USE_AIDA),0) 
-   CPPFLAGS += -D MARLIN_USE_AIDA `aida-config --include`
-   LIBS += `aida-config --lib`
- endif
+# archiever
+AR = ar cru
+
+# check if a directory exists
+DIR_EXISTS = test -d
+
+.PHONY: all bin lib gui doc conf clean distclean
+
+all: lib bin gui
+
+ifeq ($(MARLIN_GUI),1)
+ifndef QTDIR
+gui:
+	@echo "Warning: $(GUIPROGNAME) will not be built!!" ;
+	@echo "Problems were found with the installation of QT, see $(MARLIN)/gui/README for details on how to install QT..." ;
+else
+gui: lib $(BINDIR)/$(GUIPROGNAME)
+endif
+else
+gui:
+	@echo "Warning: $(GUIPROGNAME) will not be built!!" ;
+	@echo "To build $(GUIPROGNAME) set the environment variable MARLIN_GUI to 1" ;
 endif
 
-#LIBS += -L $(BASEDIR)/tinyxml/lib -ltinyxml
+bin: lib $(BINOBJ) $(BIN) conf
 
-BINS = $(PROGNAME).cc
+lib: $(LIB) conf
 
-LDFLAGS += --demangle
-
-
-.PHONY: bin rebuild lib clean 
-
-bin:  lib $(patsubst %.cc,$(BINDIR)/%,$(BINS))
-
-
-rebuild:
-	mkdir -p $(BINDIR)
-	$(CXX) -o $(BINDIR)/$(PROGNAME) $(CPPFLAGS) $(PROGNAME).cc  $(LIBS) 
-
-$(BINDIR)/$(PROGNAME): $(PROGNAME).cc $(INSTALL)/lib$(PROGNAME).a
-	mkdir -p $(BINDIR)
-	$(CXX) -o $(BINDIR)/$(PROGNAME) $(CPPFLAGS) $(PROGNAME).cc  $(LIBS) 
-
-
-objects = $(patsubst %.cc,%.o,$(filter-out $(BINS), $(wildcard *.cc))  )
-
-
-$(INSTALL)/lib$(PROGNAME).a: $(objects)
-	mkdir -p $(INSTALL)
-	$(AR) cr $(INSTALL)/lib$(PROGNAME).a  $?
-
-lib: $(INSTALL)/lib$(PROGNAME).a conf
-
-
-clean:
-	rm -f *.o $(INSTALL)/lib$(PROGNAME).a $(BINDIR)/$(PROGNAME)
-
-
-doc:	
-	cd ../doc/ ; doxygen ;
-
+doc:
+	@$(DIR_EXISTS) $(DOCDIR) || mkdir -p $(DOCDIR) ; \
+	cp -rf $(MARLIN)/doc/* $(DOCDIR)
+	export DOX_PROGNAME=$(PROGNAME) ; \
+	export DOX_DOCDIR=$(DOCDIR) ; \
+	cd ../doc ; doxygen ;
 
 conf:
-	mkdir -p $(BINDIR)
+	@$(DIR_EXISTS) $(BINDIR) || mkdir -p $(BINDIR)
 	@echo "echo \""$(CPPFLAGS)"\"" > $(BINDIR)/marlin_includes.sh
 	@echo "echo \""$(LIBS)"\"" > $(BINDIR)/marlin_libs.sh
+	@chmod 755 $(BINDIR)/marlin_includes.sh $(BINDIR)/marlin_libs.sh
 
+clean:
+	@if [ -f "$(GUIDIR)/gui/Makefile" ] ; then \
+	echo "Clearing $(GUIPROGNAME)..."; \
+	(cd $(GUIDIR)/gui; $(MAKE) distclean); fi ;
+	rm -f $(OBJ) $(BINOBJ) $(BIN) $(LIB)
+
+distclean:
+	@if [ -f "$(GUIDIR)/gui/Makefile" ] ; then \
+	echo "Clearing $(GUIPROGNAME)..."; \
+	(cd $(GUIDIR)/gui; $(MAKE) distclean); fi ;
+	rm -rf $(BIN) $(LIB) $(TMPDIR) $(BINDIR)/marlin_includes.sh $(BINDIR)/marlin_libs.sh $(DOCDIR)
+
+# tell make to include dependencies
+-include $(DEP)
+
+# marlin gui rule
+$(BINDIR)/$(GUIPROGNAME): $(BIN)
+	@if [ -f "$(QTDIR)/bin/qmake" ] ; then \
+	if [ ! -d "$(GUIDIR)/gui" ] ; then \
+	echo "Copying $(GUIPROGNAME) sources from [$(MARLIN)/gui] to [$(GUIDIR)/gui]" ; \
+	$(DIR_EXISTS) $(GUIDIR) || mkdir -p $(GUIDIR) ; \
+	cp -rf $(MARLIN)/gui $(GUIDIR) ; fi ; \
+	echo "Building $(GUIPROGNAME)..."; \
+	rm -f $(BINDIR)/$(GUIPROGNAME) ; \
+	cd "$(GUIDIR)/gui"; qmake ; $(MAKE) ; fi
+
+# binary rule
+$(BIN) : $(OBJ) $(BINOBJ) $(PKGLIBS)
+	@$(DIR_EXISTS) $(BINDIR) || mkdir -p $(BINDIR)
+	$(LD) $(OBJDIR)/$(notdir $@).o $(LDFLAGS) $(LIBS) -o $@
+
+# objects rule
+$(OBJDIR)/%.o: %.cc
+	@$(DIR_EXISTS) $(OBJDIR) || mkdir -p $(OBJDIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+
+# library rule
+$(LIB) : $(OBJ)
+	@$(DIR_EXISTS) $(LIBDIR) || mkdir -p $(LIBDIR)
+	$(AR) $@ $?
+
+# dependency rule
+$(DEPDIR)/%.d : %.cc
+	@$(DIR_EXISTS) $(DEPDIR) || mkdir -p $(DEPDIR)
+	@echo "Creating dependencies for $<" ; \
+	set -e; $(CXX) -MM $(CPPFLAGS) $< \
+	| sed 's|\($*\)\.o[ :]*|$(OBJDIR)/\1.o $(DEPDIR)/$*.d : |g'\
+	> $@; [ -s $@ ] || rm -f $@
+
+# end

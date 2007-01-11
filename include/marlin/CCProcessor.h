@@ -1,16 +1,6 @@
 #ifndef CCPROCESSOR_H
 #define CCPROCESSOR_H
 
-/* @class
- * This class handles information about
- * marlin processors and their collections
- * needed by MarlinSteerCheck
- *
- * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: CCProcessor.h,v 1.22 2006-12-18 15:19:15 gaede Exp $
- *
- */
-
 #include "marlin/Processor.h"
 
 #include <set>
@@ -37,6 +27,14 @@ namespace marlin {
   typedef std::map< std::string, ssMap > sssMap;
   typedef std::map< std::string, ColVec > sColVecMap;
   typedef std::map< std::string, sColVecMap > ssColVecMap;
+
+/**
+ * handles information about marlin processors and 
+ * their collections needed by MarlinSteerCheck
+ *
+ * @author Jan Engels, Benjamin Eberhardt, DESY
+ * @version $Id: CCProcessor.h,v 1.23 2007-01-11 16:56:37 engels Exp $
+ */
 
   class CCProcessor{
 

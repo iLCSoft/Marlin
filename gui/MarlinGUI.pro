@@ -6,9 +6,11 @@ TEMPLATE = app
 CONFIG -= moc
 CONFIG += create_prl link_prl
 INCLUDEPATH += $(MARLIN)/include $(LCIO)/src/cpp/include
-DEFINES += MARLIN_QT
-unix:LIBS += `. $(MARLIN)/bin/marlin_libs.sh` -lMarlin -L$(MARLIN)/lib
-DESTDIR = ../bin/
+#DEFINES += MARLIN_QT
+unix:LIBS += `. $(MARLINWORKDIR)/bin/marlin_libs.sh` -L$(MARLINWORKDIR)/lib -lMarlin
+DESTDIR = $(MARLINWORKDIR)/bin/
+
+OBJECTS_DIR = $(MARLINWORKDIR)/tmp/MarlinGUI/obj
                                                                                                                                                              
 # Input
 HEADERS	=   mainwindow.h \

@@ -1,26 +1,6 @@
 #ifndef MARLINSTEERCHECK_H
 #define MARLINSTEERCHECK_H
 
-/**@class
- * this class is a Marlin Steering File consistency check Tool.
- * It can parse XML steering files using the marlin parser and search
- * the lcio file(s) specified at the global section for available collections.
- * Together with the active and inactive processors specified in the steering file
- * and their respective collections it can perform a full consistency check and
- * check for inavailable collections.  The Program checks if an adequate
- * available collection exists for every input collection of a processor.
- * 
- * (where input collection means a collection the processor requires as input, 
- * and output collections mean a collection that is created in the processor and
- * marked as available for the upcoming processors)
- *
- * Information about the consistency check can be dumped.
- * 
- *
- * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: MarlinSteerCheck.h,v 1.28 2006-12-18 15:19:15 gaede Exp $
- */
-
 #include "marlin/CCProcessor.h"
 #include "marlin/CCCollection.h"
 #include "marlin/CMProcessor.h"
@@ -68,6 +48,26 @@ namespace marlin {
   class CCProcessor;
 
   typedef std::vector< CCProcessor* > ProcVec;
+
+/**
+ * this class is a Marlin Steering File consistency check Tool.
+ * It can parse XML steering files using the marlin parser and search
+ * the lcio file(s) specified at the global section for available collections.
+ * Together with the active and inactive processors specified in the steering file
+ * and their respective collections it can perform a full consistency check and
+ * check for inavailable collections.  The Program checks if an adequate
+ * available collection exists for every input collection of a processor.
+ * 
+ * (where input collection means a collection the processor requires as input, 
+ * and output collections mean a collection that is created in the processor and
+ * marked as available for the upcoming processors)
+ *
+ * Information about the consistency check can be dumped.
+ * 
+ *
+ * @author Jan Engels, Benjamin Eberhardt, DESY
+ * @version $Id: MarlinSteerCheck.h,v 1.29 2007-01-11 16:56:37 engels Exp $
+ */
 
   class MarlinSteerCheck{
 

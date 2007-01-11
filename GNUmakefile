@@ -1,113 +1,78 @@
 #########################################################
 #
-# top level GNUmakefile to build Marlin with addtional 
+# top level GNUmakefile to build Marlin with additional
 # user packages containing processors
 #
-#  usage: all additional packages are expected to live 
-#  in the packages subdirectory with the following structure:
-#         ./packages/MyPackage/include
-#                             ./src/
-#                             ./src/GNUmakefile
-#                             ./lib
+# usage: all additional packages are expected to live
+# in the packages subdirectory with the following structure:
+#         $(MARLINWORKDIR)/packages/MyPackage/include
+#         $(MARLINWORKDIR)/packages/MyPackage/src
+#         $(MARLINWORKDIR)/packages/MyPackage/src/GNUmakefile
 #
-#  where the GNUmakefile has a target 'lib; that creates
-#  a library   ./packages/MyPackage/lib/libMyPackage.a  
-#  see e.g.:  $MARLIN/examples/mymarlin
-#  
+# see e.g.: $MARLIN/examples/mymarlin
+#
 #
 # @author Frank Gaede, DESY
-# @version $Id: GNUmakefile,v 1.11 2006-12-18 15:32:44 gaede Exp $
+# @author Jan Engels, DESY
+# @version $Id: GNUmakefile,v 1.12 2007-01-11 16:56:37 engels Exp $
 #
 #########################################################
 
+# marlin working directory
+ifndef MARLINWORKDIR
+ MARLINWORKDIR=$(MARLIN)
+ export MARLINWORKDIR
+endif
 
-#
-# ---------------- additional user libs are defined in userlibs.gmk  ------------------- 
-#
-USERINCLUDES =  
-USERLIBS = 
+# directories
+PKGDIR = $(MARLINWORKDIR)/packages
 
-include ./userlib.gmk
+# ---------------- additional user libs are defined in userlibs.gmk  -------------------
+USERINCLUDES =
+USERLIBS =
+
+# if there is a userlib.gmk file in $MARLINWORKDIR include this one instead of the one in $MARLIN
+USERLIBFILE = $(shell if [ -e $(MARLINWORKDIR)/userlib.gmk ] ; then echo ${MARLINWORKDIR}/userlib.gmk ; else echo ${MARLIN}/userlib.gmk ; fi)
+
+-include $(USERLIBFILE)
 
 export USERINCLUDES
 export USERLIBS
-
-#
 #-------------------------------------------------------------------
-#
 
+# packages subdirs
+subdirs := $(patsubst $(PKGDIR)/%/src/GNUmakefile,$(PKGDIR)/%, $(wildcard $(PKGDIR)/*/src/GNUmakefile))
 
-subdirs := $(patsubst packages/%/src/GNUmakefile,packages/%, $(wildcard packages/*/src/GNUmakefile) )
+.PHONY: all lib bin doc gui clean distclean
 
-
-packages := $(patsubst packages/%,%,$(subdirs)) 
-
-MARLINLIB := -Wl,-whole-archive $(foreach package,$(packages),  -L $(MARLIN)/packages/$(package)/lib -l$(package) ) -Wl,-no-whole-archive
-export MARLINLIB
-
-packagelibs := $(foreach package,$(packages), packages/$(package)/lib/lib$(package).a )
-export packagelibs
-
-
-.PHONY: lib clean bin doc $(subdirs) test
-
-
-
-ifdef MARLIN_GUI
 all: lib bin gui
-else
-all: lib bin
-endif
-
-
-ifdef MARLIN_GUI
-.PHONY: gui
-
-gui: ./bin/MarlinGUI
-
-./bin/MarlinGUI: ./bin/Marlin
-	@if [ $(MARLIN_GUI) ] ; then \
-	if [ -f "${QTDIR}/bin/qmake" ] ; then \
-	echo "Building Marlin GUI..."; \
-	rm ./bin/MarlinGUI ; \
-	cd "${MARLIN}/gui"; qmake ; $(MAKE) ; fi ; fi
-
-
-endif
 
 lib:
-	$(MAKE) -C src lib
+	@$(MAKE) -C src lib
 	@for i in $(subdirs); do \
-	if [ -f "$$i/src/GNUmakefile" ] ; then \
 	echo "Building library for $$i..."; \
-	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) lib); fi ; done
+	$(MAKE) $(MFLAGS) $(MYMAKEFLAGS) -C $$i/src lib; done;
 
-bin: lib ./bin/Marlin
+bin: lib
+	@$(MAKE) -C src bin
 
-./bin/Marlin: ./lib/libMarlin.a $(packagelibs)
-	$(MAKE) -C src rebuild
-
+gui: lib
+	@$(MAKE) -C src gui
 
 doc:
-	$(MAKE) -C src doc
-
+	@$(MAKE) -C src doc
 
 clean:
-	$(MAKE) -C src clean
+	@$(MAKE) -C src clean
 	@for i in $(subdirs); do \
-	if [ -f "$$i/src/GNUmakefile" ] ; then \
-	echo "Clearing in $$i..."; \
-	(cd $$i/src; $(MAKE) $(MFLAGS) $(MYMAKEFLAGS) clean); fi ; done ; \
-	if [ -f "gui/Makefile" ] ; then \
-	echo "Clearing in gui..."; \
-	(cd $(MARLIN)/gui; $(MAKE) distclean); rm -f Makefile; fi
+	echo "Clearing $$i..."; \
+	$(MAKE) -C $$i/src clean; done;
 
-test:
-	@echo $(subdirs)
-	@echo $(packages)
-	@echo $(packagelibs)
-	@ls -l $(MARLIN)/bin/Marlin
+distclean:
+	@$(MAKE) -C src distclean
 	@for i in $(subdirs); do \
-	echo "ls -l $$i" ; \
-	ls -l $$i/lib ; done
+	echo "Clearing $$i..."; \
+	$(MAKE) -C $$i/src distclean; done;
+	rm -rf $(MARLINWORKDIR)/tmp
 
+#end

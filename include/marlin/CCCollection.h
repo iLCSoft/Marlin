@@ -1,13 +1,3 @@
-
-/* @class
- * this class handles information about LCIO collections
- * needed by MarlinSteerCheck
- *
- * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: CCCollection.h,v 1.7 2006-12-08 15:51:37 engels Exp $
- *
- */
-
 #ifndef CCCOLLECTION_H
 #define CCCOLLECTION_H
 
@@ -16,7 +6,14 @@
 namespace marlin {
 
   class CCProcessor;
-  
+ 
+/**handles information about LCIO collections
+ * needed by MarlinSteerCheck
+ *
+ * @author Jan Engels, Benjamin Eberhardt, DESY
+ * @version $Id: CCCollection.h,v 1.8 2007-01-11 16:56:37 engels Exp $
+ */
+
   class CCCollection{
     
   public:

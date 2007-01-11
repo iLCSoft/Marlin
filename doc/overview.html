@@ -22,17 +22,17 @@ the LCEvent as container for input and output data in terms of LCCollections:
 
 <h2>Installation</h2>
 
-The installation of Marlin is described in the <a href="../../README">README</a>.
+The installation of Marlin is described in the <a href="../README">README</a>.
 
 <h2>Running Marlin</h2>
 After having installed Marlin you have to write your own marlin::Processor(s) subclass 
 that performs the computation. This is fairly straight forward and Marlin provides 
-an example in <a href="../../examples/mymarlin/">./examples/mymarlin</a> that can serve as a 
-template for your own projects.
+an example in "$MARLIN/examples/mymarlin" that can serve as a template for your own
+projects.
 <p>
 Note: there is no need to write a main program as this is provided by Marlin. Existing 
 Processors are automatically registered with Marlin provided one instance exists in the
-library as described in the <a href="../../README">README</a>.
+library as described in the <a href="../README">README</a>.
 
 
 <h3>Steering files</h3>
@@ -49,7 +49,6 @@ for  all available processors by typing:
   <b>./bin/MyMarlinApplication -l > example.steer</b>
 </li>
 </ul> 
-This creates a file similar to <a href="../../test.steer">./test.steer</a>.
 After editing your steering file you can run the application simply by:
 <ul>
 <li>
