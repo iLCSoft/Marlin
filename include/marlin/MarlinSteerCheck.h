@@ -66,7 +66,7 @@ namespace marlin {
  * 
  *
  * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: MarlinSteerCheck.h,v 1.29 2007-01-11 16:56:37 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.30 2007-01-12 10:21:02 engels Exp $
  */
 
   class MarlinSteerCheck{
@@ -170,7 +170,7 @@ namespace marlin {
     /** Replace a Condition */
     void repCondition( const std::string& oldCond, const std::string& newCond );
     
-    /** Returns the condition for a given index */
+    /** Removes the given condition */
     void remCondition( const std::string& condition );
     
   private:
