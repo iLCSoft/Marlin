@@ -55,7 +55,7 @@ namespace marlin {
  * the lcio file(s) specified at the global section for available collections.
  * Together with the active and inactive processors specified in the steering file
  * and their respective collections it can perform a full consistency check and
- * check for inavailable collections.  The Program checks if an adequate
+ * check for unavailable collections.  The Program checks if an adequate
  * available collection exists for every input collection of a processor.
  * 
  * (where input collection means a collection the processor requires as input, 
@@ -66,7 +66,7 @@ namespace marlin {
  * 
  *
  * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: MarlinSteerCheck.h,v 1.30 2007-01-12 10:21:02 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.31 2007-01-12 12:48:46 engels Exp $
  */
 
   class MarlinSteerCheck{
