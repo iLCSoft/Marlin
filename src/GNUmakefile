@@ -153,9 +153,10 @@ bin: lib $(BINOBJ) $(BIN) conf
 lib: $(LIB) conf
 
 doc:
-	@$(DIR_EXISTS) $(DOCDIR) || mkdir -p $(DOCDIR) ; \
-	cp -rf $(MARLIN)/doc/* $(DOCDIR)
-	export DOX_PROGNAME=$(PROGNAME) ; \
+	@$(DIR_EXISTS) $(DOCDIR) || mkdir -p $(DOCDIR) ;
+	@cp -f $(MARLIN)/README $(MARLIN)/doc/release.notes \
+	$(MARLIN)/doc/overview.html $(MARLIN)/doc/marlin_overview.gif $(DOCDIR) ;
+	@export DOX_PROGNAME=$(PROGNAME) ; \
 	export DOX_DOCDIR=$(DOCDIR) ; \
 	cd ../doc ; doxygen ;
 
