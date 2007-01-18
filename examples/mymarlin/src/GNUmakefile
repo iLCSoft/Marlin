@@ -4,7 +4,7 @@
 #
 # @author Frank Gaede
 # @author Jan Engels
-# @version $Id: GNUmakefile,v 1.8 2007-01-11 16:56:37 engels Exp $
+# @version $Id: GNUmakefile,v 1.9 2007-01-18 12:56:39 engels Exp $
 #
 ###########################################################
 
@@ -28,11 +28,11 @@ endif
 
 # additional user include/libraries
 ifndef USERINCLUDES
- USERINCLUDES =
+ USERINCLUDES +=
 endif
 
 ifndef USERLIBS
- USERLIBS =
+ USERLIBS +=
 endif
 
 #----------------------------------------------------------------------------
