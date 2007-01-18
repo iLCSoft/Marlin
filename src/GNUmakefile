@@ -91,13 +91,7 @@ CPPFLAGS += $(USERINCLUDES)
 
 # libraries
 LIBS += -Wl,-whole-archive -L $(LIBDIR) -l$(PROGNAME) $(PKGLIBFLAGS) -Wl,-no-whole-archive
-LIBS += -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 LIBS += $(USERLIBS)
-
-ifdef CLHEP
- CPPFLAGS += -D USE_CLHEP -I $(CLHEP)/include
- LIBS += -L $(CLHEP)/lib -lCLHEP
-endif
 
 ifdef GEAR
  CPPFLAGS += -D USE_GEAR -I $(GEAR)/src/cpp/include
@@ -113,10 +107,17 @@ ifdef LCCD
  endif
 endif
 
+ifdef CLHEP
+ CPPFLAGS += -D USE_CLHEP -I $(CLHEP)/include
+ LIBS += -L $(CLHEP)/lib -lCLHEP
+endif
+
 ifeq ($(MARLIN_USE_AIDA),1)
  CPPFLAGS += -D MARLIN_USE_AIDA `aida-config --include`
  LIBS += `aida-config --lib`
 endif
+
+LIBS += -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
 
 # linker
 LD = $(CXX)
