@@ -200,52 +200,82 @@ int main(int argc, char** argv ){
     lcReader->registerLCRunListener( ProcessorMgr::instance() ) ; 
     lcReader->registerLCEventListener( ProcessorMgr::instance() ) ; 
     
-    
-    // process the data
-    lcReader->open( lcioInputFiles  ) ; 
-    
     ProcessorMgr::instance()->init() ; 
-    
-    if( skipNEvents > 0 ){
 
-      std::cout << " --- Marlin.cc - will skip first " << skipNEvents << " event(s)" 
-		<< std::endl << std::endl ;
+    bool rewind = true ;
 
-      lcReader->skipNEvents(  skipNEvents ) ;
-    }
-
-    try{ 
-      if( maxRecord > 0 ){
-	
-	try{
-	  lcReader->readStream( maxRecord ) ;
-	}
-	catch( lcio::EndOfDataException& e){
-	  
-	  std::cout << "Warning: " << e.what() << std::endl ;
-	}
-	
-      } else {
-	
-	lcReader->readStream() ;
-      }
-    } catch( StopProcessingException &e) {
+    while( rewind ) {
       
-      std::cout << std::endl
-		<< " **********************************************************" << std::endl
-		<< " *                                                        *" << std::endl
-		<< " *   Stop of EventProcessiong requested by processor :    *" << std::endl
-		<< " *                  "  << e.what()                           << std::endl
-		<< " *     will call end() method of all processors !         *" << std::endl
-		<< " *                                                        *" << std::endl
-		<< " **********************************************************" << std::endl
-		<< std::endl ;
-    }
+      rewind = false ;
+
+      // process the data
+      lcReader->open( lcioInputFiles  ) ; 
+      
+      
+      if( skipNEvents > 0 ){
+	
+	std::cout << " --- Marlin.cc - will skip first " << skipNEvents << " event(s)" 
+		  << std::endl << std::endl ;
+	
+	lcReader->skipNEvents(  skipNEvents ) ;
+      }
+      
+      try{ 
+	if( maxRecord > 0 ){
+	  
+	  try{
+	    lcReader->readStream( maxRecord ) ;
+	  }
+	  catch( lcio::EndOfDataException& e){
+	    
+	    std::cout << "Warning: " << e.what() << std::endl ;
+	  }
+	  
+	} else {
+	  
+	  lcReader->readStream() ;
+	}
 
 
-    ProcessorMgr::instance()->end() ; 
-    lcReader->close() ;
-    delete lcReader ;
+      } catch( StopProcessingException &e) {
+	
+	std::cout << std::endl
+		  << " **********************************************************" << std::endl
+		  << " *                                                        *" << std::endl
+		  << " *   Stop of EventProcessiong requested by processor :    *" << std::endl
+		  << " *                  "  << e.what()                           << std::endl
+		  << " *     will call end() method of all processors !         *" << std::endl
+		  << " *                                                        *" << std::endl
+		  << " **********************************************************" << std::endl
+		  << std::endl ;
+
+      } catch( RewindDataFilesException &e) {
+	
+	rewind = true ;
+
+	std::cout << std::endl
+		  << " **********************************************************" << std::endl
+		  << " *                                                        *" << std::endl
+		  << " *   Rewind data files requested by processor :    *" << std::endl
+		  << " *                  "  << e.what()                           << std::endl
+		  << " *     will rewind to beginning !         *" << std::endl
+		  << " *                                                        *" << std::endl
+		  << " **********************************************************" << std::endl
+		  << std::endl ;
+      }
+
+      
+      lcReader->close() ;
+
+      if( !rewind ) {
+
+	ProcessorMgr::instance()->end() ; 
+
+	delete lcReader ;
+      }
+
+    } // end rewind
+
   }
   
   return 0 ;

@@ -11,7 +11,7 @@ namespace marlin{
   /**ParseException used for parse errors, e.g. when reading the steering file.
    * 
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.4 2005-10-11 12:56:28 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.5 2007-02-02 17:15:25 gaede Exp $
    */
   class ParseException : public lcio::Exception{
     
@@ -29,7 +29,7 @@ namespace marlin{
 
   /**SkipEventException used to skip the current event in Processor::processEvent.
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.4 2005-10-11 12:56:28 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.5 2007-02-02 17:15:25 gaede Exp $
    */
   class SkipEventException : public lcio::Exception{
 
@@ -47,7 +47,7 @@ namespace marlin{
   /** StopProcessingException used to stop the current proccessing of events and 
    *  call Processor::end().
    * @author gaede
-   * @version $Id: Exceptions.h,v 1.4 2005-10-11 12:56:28 gaede Exp $
+   * @version $Id: Exceptions.h,v 1.5 2007-02-02 17:15:25 gaede Exp $
    */
   class StopProcessingException : public lcio::Exception{
 
@@ -59,6 +59,24 @@ namespace marlin{
       message = proc->name()  ;
     }
     virtual ~StopProcessingException() throw() { /*no_op*/; } 
+
+  }; 
+
+  /** RewindDataFilesException used to stop the current proccessing of events, 
+   *  rewind to the first event and restart the processing.
+   * @author gaede
+   * @version $Id: Exceptions.h,v 1.5 2007-02-02 17:15:25 gaede Exp $
+   */
+  class RewindDataFilesException : public lcio::Exception{
+
+  protected:
+    RewindDataFilesException() {  /*no_op*/ ; } 
+
+  public: 
+    RewindDataFilesException(Processor* proc){
+      message = proc->name()  ;
+    }
+    virtual ~RewindDataFilesException() throw() { /*no_op*/; } 
 
   }; 
 

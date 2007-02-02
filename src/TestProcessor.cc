@@ -34,21 +34,70 @@ void TestProcessor::processRunHeader( LCRunHeader* run) {
 } 
 
 void TestProcessor::processEvent( LCEvent * evt ) { 
+
+
+  _nEvt ++ ;
+
+  //------------ example code that tests/demonstrates ------------
+  //------------ the usage of Exceptions to steer program flow ------------
+  //   
+  //  --- skip every 7th event --------------
+
+  //if( !(  _nEvt % 7 )  )
+  //      throw SkipEventException( this ) ;
+  
+  //  ---  stop afteer processing 80 events -----
+
+  //     if( _nEvt == 80   )
+  //      throw StopProcessingException( this ) ;
+
+  // --- loop 3 times over the first 3 events and do a 'calibration' ) ------
+
+  if( isFirstEvent() ){
+    _doCalibration = true ;
+    _nLoops = 0 ;
+  }
+  
+  if( _doCalibration ) {
+
+    std::cout << "TestProcessor::processEvent()  ---CALIBRATING ------ " << name() 
+	      << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "	      << std::endl ;
+
+    // your calibration goes here ....
+
+
+
+
+
+    // --------------- 
+    if( _nEvt == 3 ){  
+      
+      _nEvt = 0 ;
+      ++_nLoops ;
+      
+      if( _nLoops == 3 ){
+	
+	_doCalibration = false ;
+	setReturnValue( "Calibration" , false ) ;
+	
+      }else{
+	
+	setReturnValue( "Calibration" , true ) ;
+	throw RewindDataFilesException( this ) ;
+      }
+    }
+  }
+
+  //---------end example code  ----------------------------------------
+  
+
+
+
+
   std::cout << "TestProcessor::processEvent()  " << name() 
 	    << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "
 	    << std::endl ;
-  _nEvt ++ ;
 
-  // FIXME: Testing:
-//     if( !(  _nEvt % 7 )  )
-//     //if( !(  evt->getEventNumber() % 7 )  )
-//      throw SkipEventException( this ) ;
-
-//     if( !(  _nEvt % 80 )  )
-//     //if( !(  evt->getEventNumber() % 7 )  )
-//      throw StopProcessingException( this ) ;
-    
-    
 
   // always return true  for ProcessorName
   setReturnValue( true ) ;
