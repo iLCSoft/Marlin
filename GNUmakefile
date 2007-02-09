@@ -14,7 +14,7 @@
 #
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-# @version $Id: GNUmakefile,v 1.12 2007-01-11 16:56:37 engels Exp $
+# @version $Id: GNUmakefile,v 1.13 2007-02-09 14:54:30 engels Exp $
 #
 #########################################################
 
@@ -50,7 +50,9 @@ all: lib bin gui
 lib:
 	@$(MAKE) -C src lib
 	@for i in $(subdirs); do \
-	echo "Building library for $$i..."; \
+	echo "********************************************************************************"; \
+	echo "*   Building Marlin Package $$i ..."; \
+	echo "********************************************************************************"; \
 	$(MAKE) $(MFLAGS) $(MYMAKEFLAGS) -C $$i/src lib; done;
 
 bin: lib
@@ -65,13 +67,17 @@ doc:
 clean:
 	@$(MAKE) -C src clean
 	@for i in $(subdirs); do \
-	echo "Clearing $$i..."; \
+	echo "********************************************************************************"; \
+	echo "*   clearing $$i ..."; \
+	echo "********************************************************************************"; \
 	$(MAKE) -C $$i/src clean; done;
 
 distclean:
 	@$(MAKE) -C src distclean
 	@for i in $(subdirs); do \
-	echo "Clearing $$i..."; \
+	echo "********************************************************************************"; \
+	echo "*   clearing $$i ..."; \
+	echo "********************************************************************************"; \
 	$(MAKE) -C $$i/src distclean; done;
 	rm -rf $(MARLINWORKDIR)/tmp
 
