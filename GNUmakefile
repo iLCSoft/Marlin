@@ -14,7 +14,7 @@
 #
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-# @version $Id: GNUmakefile,v 1.14 2007-02-15 14:49:38 engels Exp $
+# @version $Id: GNUmakefile,v 1.15 2007-02-16 15:45:44 engels Exp $
 #
 #########################################################
 
@@ -30,9 +30,12 @@ PKGDIR = $(MARLINWORKDIR)/packages
 # ---------------- additional user libs are defined in userlibs.gmk  -------------------
 
 # if there is a userlib.gmk file in $MARLINWORKDIR include this one instead of the one in $MARLIN
-USERLIBFILE = $(shell if [ -e $(MARLINWORKDIR)/userlib.gmk ] ; then echo ${MARLINWORKDIR}/userlib.gmk ; else echo ${MARLIN}/userlib.gmk ; fi)
+USERLIBFILE = $(shell if [ -e ${MARLINWORKDIR}/userlib.gmk ] ; then echo ${MARLINWORKDIR}/userlib.gmk ; else echo ${MARLIN}/userlib.gmk ; fi)
 
 -include $(USERLIBFILE)
+
+export USERINCLUDES
+export USERLIBS
 
 #-------------------------------------------------------------------
 

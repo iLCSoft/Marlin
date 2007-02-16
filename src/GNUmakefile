@@ -23,6 +23,7 @@ GUIPROGNAME = MarlinGUI
 INCDIR = $(MARLIN)/include
 LIBDIR = $(MARLINWORKDIR)/lib
 BINDIR = $(MARLINWORKDIR)/bin
+PKGDIR = $(MARLINWORKDIR)/packages
 DOCDIR = $(MARLINWORKDIR)/doc/$(PROGNAME)
 TMPDIR = $(MARLINWORKDIR)/tmp/$(PROGNAME)
 GUIDIR = $(MARLINWORKDIR)/tmp/$(GUIPROGNAME)
@@ -40,10 +41,10 @@ LIB = $(LIBDIR)/$(LIBNAME)
 
 # binary files with path
 BIN = $(patsubst %.cc,$(BINDIR)/%,$(BINSRCS))
-                                                                                                                                                             
+
 # object files for the binaries without path
 BINOBJS = $(patsubst %.cc,%.o,$(BINSRCS))
-                                                                                                                                                             
+
 # object files for the binaries with path
 BINOBJ = $(patsubst %,$(OBJDIR)/%,$(BINOBJS))
 
@@ -62,11 +63,11 @@ DEPS = $(patsubst %.o,%.d,$(OBJS) $(BINOBJS))
 # dependency files with path
 DEP = $(patsubst %,$(DEPDIR)/%,$(DEPS))
 
-# package libraries with path
-PKGLIBS = $(filter-out $(LIB),$(wildcard $(LIBDIR)/*.a))
-
 # package names (MarlinUtil MarlinReco CEDViewer...)
-PKGNAMES = $(patsubst $(LIBDIR)/lib%.a,%, $(filter-out $(LIB),$(PKGLIBS)))
+PKGNAMES = $(filter-out " CVS ", $(patsubst $(PKGDIR)/%,%,$(wildcard $(PKGDIR)/*)))
+
+# package libraries with path
+PKGLIBS = $(patsubst %,$(LIBDIR)/lib%.a,$(PKGNAMES))
 
 # package library flags (-lMarlinUtil -lMarlinReco -lCEDViewer...)
 PKGLIBFLAGS = $(foreach package,$(PKGNAMES), -l$(package))
