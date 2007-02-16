@@ -87,30 +87,30 @@ else
 endif
 
 # pre-processor flags
-CPPFLAGS := -I $(INCDIR) -I $(LCIO)/src/cpp/include 
+CPPFLAGS := -I$(INCDIR) -I$(LCIO)/src/cpp/include 
 CPPFLAGS += $(USERINCLUDES)
 
 # libraries
-LIBS += -Wl,-whole-archive -L $(LIBDIR) -l$(PROGNAME) $(PKGLIBFLAGS) -Wl,-no-whole-archive
+LIBS += -Wl,-whole-archive -L$(LIBDIR) -l$(PROGNAME) $(PKGLIBFLAGS) -Wl,-no-whole-archive
 LIBS += $(USERLIBS)
 
 ifdef GEAR
- CPPFLAGS += -D USE_GEAR -I $(GEAR)/src/cpp/include
- LIBS += -L $(GEAR)/lib -lgearxml -lgear
+ CPPFLAGS += -D USE_GEAR -I$(GEAR)/src/cpp/include
+ LIBS += -L$(GEAR)/lib -lgearxml -lgear
 endif
 
 ifdef LCCD
- CPPFLAGS += -D USE_LCCD -I $(LCCD)/source/include
- LIBS += -L $(LCCD)/lib -llccd
+ CPPFLAGS += -D USE_LCCD -I$(LCCD)/source/include
+ LIBS += -L$(LCCD)/lib -llccd
  ifdef CondDBMySQL
   CPPFLAGS += -D USE_CONDDB
-  LIBS += -L $(CondDBMySQL)/lib -lconddb
+  LIBS += -L$(CondDBMySQL)/lib -lconddb
  endif
 endif
 
 ifdef CLHEP
- CPPFLAGS += -D USE_CLHEP -I $(CLHEP)/include
- LIBS += -L $(CLHEP)/lib -lCLHEP
+ CPPFLAGS += -D USE_CLHEP -I$(CLHEP)/include
+ LIBS += -L$(CLHEP)/lib -lCLHEP
 endif
 
 ifeq ($(MARLIN_USE_AIDA),1)
@@ -118,7 +118,7 @@ ifeq ($(MARLIN_USE_AIDA),1)
  LIBS += `aida-config --lib`
 endif
 
-LIBS += -L $(LCIO)/lib -llcio -L $(LCIO)/sio/lib -lsio -lz
+LIBS += -L$(LCIO)/lib -llcio -L$(LCIO)/sio/lib -lsio -lz
 
 # linker
 LD = $(CXX)
