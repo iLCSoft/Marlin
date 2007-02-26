@@ -182,6 +182,11 @@ namespace marlin {
   
   AIDA::ITree* AIDAProcessor::tree( const Processor* proc ) {
     
+    if( !_me ) {
+      throw Exception(" AIDA is not properly initialized - you need to have the AIDAProcessor as"
+		      " first processor in your execute section !" ) ; 
+    }
+
     if( !_me->_tree->cd( "/" + proc->name() ) ) {
       _me->_tree->mkdir( "/" + proc->name() ) ; 
       _me->_tree->cd(    "/" + proc->name() ) ;
