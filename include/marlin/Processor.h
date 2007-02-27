@@ -42,16 +42,22 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.22 2006-12-18 16:11:49 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.23 2007-02-27 13:19:47 engels Exp $ 
    */
   
   class Processor {
-  
+    
     friend class ProcessorMgr ;
     friend class CMProcessor ;
     friend class XMLFixCollTypes ;
 
   public:
+
+	/** Possible verbosity levels */
+    enum{ VERBOSE = 0, DEBUG = 0, MESSAGE = 1, WARNING = 2, ERROR = 3, SILENT = 4 };
+ 
+	/** Global variable used to set the verbosity level */
+    static int Verbosity;
   
     /** Default constructor - subclasses need to call this in their
      * default constructor.
@@ -120,6 +126,9 @@ namespace marlin{
     /** Print the parameters and its values.
      */
     virtual void printParameters() ;
+
+    /** Print message to stream according to a verbosity level */
+    void message( int verbosity, const std::string& message, std::ostream& stream=std::cout ) ;
 
     /** Description of processor.
      */

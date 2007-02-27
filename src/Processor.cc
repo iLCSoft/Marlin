@@ -7,6 +7,8 @@ using namespace lcio ;
 
 namespace marlin{
 
+// set default verbosity level to MESSAGE
+int Processor::Verbosity=Processor::MESSAGE;
 
 Processor::Processor(const std::string& typeName) :
   _description(" description not set by author ") ,
@@ -41,6 +43,11 @@ void Processor::setParameters( StringParameters* parameters) {
   
 }
 
+void Processor::message( int verbosity, const std::string& message, std::ostream& stream ){
+  if( verbosity >= Verbosity ){
+    stream << message;
+  }
+}
 
 //   template<class T>
 //   export void Processor::registerProcessorParameter(const std::string& name, 
@@ -123,7 +130,7 @@ void Processor::setParameters( StringParameters* parameters) {
   }
 
   void Processor::printDescriptionXML(std::ostream& stream) {
-    
+
     if(stream == std::cout){
     stream << " <processor name=\"My" <<  type()  << "\"" 
 	      << " type=\"" <<  type() << "\">" 
