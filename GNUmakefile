@@ -6,6 +6,7 @@
 # usage: all additional packages are expected to live
 # in the packages subdirectory with the following structure:
 #         $(MARLINWORKDIR)/packages/MyPackage/include
+#         $(MARLINWORKDIR)/packages/MyPackage/lib
 #         $(MARLINWORKDIR)/packages/MyPackage/src
 #         $(MARLINWORKDIR)/packages/MyPackage/src/GNUmakefile
 #
@@ -14,7 +15,7 @@
 #
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-# @version $Id: GNUmakefile,v 1.15 2007-02-16 15:45:44 engels Exp $
+# @version $Id: GNUmakefile,v 1.16 2007-03-01 15:52:59 engels Exp $
 #
 #########################################################
 
@@ -29,8 +30,10 @@ PKGDIR = $(MARLINWORKDIR)/packages
 
 # ---------------- additional user libs are defined in userlibs.gmk  -------------------
 
-# if there is a userlib.gmk file in $MARLINWORKDIR include this one instead of the one in $MARLIN
-USERLIBFILE = $(shell if [ -e ${MARLINWORKDIR}/userlib.gmk ] ; then echo ${MARLINWORKDIR}/userlib.gmk ; else echo ${MARLIN}/userlib.gmk ; fi)
+# if there is a userlib.gmk file in $MARLINWORKDIR include it instead of the one in $MARLIN
+USERLIBFILE = $(shell if [ -e ${MARLINWORKDIR}/userlib.gmk ] ; then \
+			  echo ${MARLINWORKDIR}/userlib.gmk ; else \
+			  echo ${MARLIN}/userlib.gmk ; fi)
 
 -include $(USERLIBFILE)
 
@@ -42,13 +45,16 @@ export USERLIBS
 # packages subdirs
 subdirs := $(patsubst $(PKGDIR)/%/src/GNUmakefile,$(PKGDIR)/%, $(wildcard $(PKGDIR)/*/src/GNUmakefile))
 
-.PHONY: all lib bin doc gui clean distclean
+.PHONY: all lib bin doc gui clean distclean conf
 
-all: lib bin gui
+all: conf lib bin gui
 
-lib:
-	@$(MAKE) -C src lib
-	@for i in $(subdirs); do \
+lib: conf
+	@echo "********************************************************************************"; \
+	echo "*   Building Marlin ..."; \
+	echo "********************************************************************************"; \
+	$(MAKE) -C src lib ; \
+	for i in $(subdirs); do \
 	echo "********************************************************************************"; \
 	echo "*   Building Marlin Package $$i ..."; \
 	echo "********************************************************************************"; \
@@ -64,20 +70,29 @@ doc:
 	@$(MAKE) -C src doc
 
 clean:
-	@$(MAKE) -C src clean
-	@for i in $(subdirs); do \
+	@echo "********************************************************************************"; \
+	echo "*   Cleaning Marlin ..."; \
 	echo "********************************************************************************"; \
-	echo "*   clearing $$i ..."; \
+	$(MAKE) -C src clean ; \
+	for i in $(subdirs); do \
+	echo "********************************************************************************"; \
+	echo "*   Cleaning Marlin Package $$i ..."; \
 	echo "********************************************************************************"; \
 	$(MAKE) -C $$i/src clean; done;
 
 distclean:
-	@$(MAKE) -C src distclean
-	@for i in $(subdirs); do \
+	@echo "********************************************************************************"; \
+	echo "*   Dist Cleaning Marlin ..."; \
 	echo "********************************************************************************"; \
-	echo "*   clearing $$i ..."; \
+	$(MAKE) -C src distclean ; \
+	for i in $(subdirs); do \
+	echo "********************************************************************************"; \
+	echo "*   Dist Cleaning Marlin Package $$i ..."; \
 	echo "********************************************************************************"; \
 	$(MAKE) -C $$i/src distclean; done;
 	rm -rf $(MARLINWORKDIR)/tmp
+
+conf:
+	@$(MAKE) -C src conf
 
 #end

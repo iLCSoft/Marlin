@@ -21,7 +21,7 @@ GUIPROGNAME = MarlinGUI
 
 # directories
 INCDIR = $(MARLIN)/include
-LIBDIR = $(MARLINWORKDIR)/lib
+LIBDIR = $(MARLIN)/lib
 BINDIR = $(MARLINWORKDIR)/bin
 PKGDIR = $(MARLINWORKDIR)/packages
 DOCDIR = $(MARLINWORKDIR)/doc/$(PROGNAME)
@@ -67,10 +67,13 @@ DEP = $(patsubst %,$(DEPDIR)/%,$(DEPS))
 PKGNAMES = $(filter-out " CVS ", $(patsubst $(PKGDIR)/%,%,$(wildcard $(PKGDIR)/*)))
 
 # package libraries with path
-PKGLIBS = $(patsubst %,$(LIBDIR)/lib%.a,$(PKGNAMES))
+PKGLIBS = $(foreach pkg,$(PKGNAMES),$(PKGDIR)/$(pkg)/lib/lib$(pkg).a)
 
-# package library flags (-lMarlinUtil -lMarlinReco -lCEDViewer...)
-PKGLIBFLAGS = $(foreach package,$(PKGNAMES), -l$(package))
+# package library flags (-LMarlinUtilLibPath -lMarlinUtil -LMarlinRecoLibPath -lMarlinReco ...)
+PKGLIBFLAGS = $(foreach pkg,$(PKGNAMES), -L$(PKGDIR)/$(pkg)/lib -l$(pkg))
+
+# package include flags (-IMarlinUtilPath/include -ICEDViewerPath/include)
+PKGCPPFLAGS = $(foreach pkg,$(filter-out " MarlinReco ",$(PKGNAMES)), -I$(PKGDIR)/$(pkg)/include)
 
 # c++ compiler
 ifdef MY_CXX
@@ -87,11 +90,15 @@ else
 endif
 
 # pre-processor flags
-CPPFLAGS := -I$(INCDIR) -I$(LCIO)/src/cpp/include 
+CPPFLAGS := -I$(INCDIR) -I$(LCIO)/src/cpp/include
+CPPFLAGS += $(PKGCPPFLAGS)
 CPPFLAGS += $(USERINCLUDES)
 
 # libraries
-LIBS += -Wl,-whole-archive -L$(LIBDIR) -l$(PROGNAME) $(PKGLIBFLAGS) -Wl,-no-whole-archive
+LIBS = -Wl,-whole-archive
+LIBS += -L$(LIBDIR) -l$(PROGNAME)
+LIBS += $(PKGLIBFLAGS)
+LIBS += -Wl,-no-whole-archive
 LIBS += $(USERLIBS)
 
 ifdef GEAR
