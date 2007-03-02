@@ -15,7 +15,7 @@
 #
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-# @version $Id: GNUmakefile,v 1.16 2007-03-01 15:52:59 engels Exp $
+# @version $Id: GNUmakefile,v 1.17 2007-03-02 14:37:20 engels Exp $
 #
 #########################################################
 
@@ -24,9 +24,6 @@ ifndef MARLINWORKDIR
  MARLINWORKDIR=$(MARLIN)
  export MARLINWORKDIR
 endif
-
-# directories
-PKGDIR = $(MARLINWORKDIR)/packages
 
 # ---------------- additional user libs are defined in userlibs.gmk  -------------------
 
@@ -43,9 +40,10 @@ export USERLIBS
 #-------------------------------------------------------------------
 
 # packages subdirs
+PKGDIR = $(MARLINWORKDIR)/packages
 subdirs := $(patsubst $(PKGDIR)/%/src/GNUmakefile,$(PKGDIR)/%, $(wildcard $(PKGDIR)/*/src/GNUmakefile))
 
-.PHONY: all lib bin doc gui clean distclean conf
+.PHONY: all lib bin doc gui binonly packages clean distclean conf
 
 all: conf lib bin gui
 
@@ -53,17 +51,22 @@ lib: conf
 	@echo "********************************************************************************"; \
 	echo "*   Building Marlin ..."; \
 	echo "********************************************************************************"; \
-	$(MAKE) -C src lib ; \
-	for i in $(subdirs); do \
+	$(MAKE) -C src lib ;
+
+packages: conf
+	@for i in $(subdirs); do \
 	echo "********************************************************************************"; \
 	echo "*   Building Marlin Package $$i ..."; \
 	echo "********************************************************************************"; \
 	$(MAKE) $(MFLAGS) $(MYMAKEFLAGS) -C $$i/src lib; done;
 
-bin: lib
+bin: lib packages
 	@$(MAKE) -C src bin
 
-gui: lib
+binonly: packages
+	@$(MAKE) -C src binonly
+
+gui: lib packages
 	@$(MAKE) -C src gui
 
 doc:

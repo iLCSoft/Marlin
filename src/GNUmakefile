@@ -157,9 +157,13 @@ gui:
 	@echo "To build $(GUIPROGNAME) set the environment variable MARLIN_GUI to 1" ;
 endif
 
-bin: lib $(BINOBJ) $(BIN) conf
+bin: conf lib $(BINOBJ) $(BIN)
+	
+binonly: conf $(BINOBJ)
+	@$(DIR_EXISTS) $(BINDIR) || mkdir -p $(BINDIR)
+	$(LD) $(BINOBJ) $(LDFLAGS) $(LIBS) -o $(BIN)
 
-lib: $(LIB) conf
+lib: conf $(LIB)
 
 doc:
 	@$(DIR_EXISTS) $(DOCDIR) || mkdir -p $(DOCDIR) ;
