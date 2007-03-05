@@ -428,15 +428,22 @@ void MainWindow::setupViews()
     lcioButtons->setLayout( lcioButtonsLayout );
     
     //Label
-    QString currDirL = "CWD: ";
-    currDirL += QDir::currentPath();
-    QLabel *currDir = new QLabel(currDirL);
+	QLabel *cwdl = new QLabel( "CWD: " );
+    QLineEdit *cwdle = new QLineEdit(QDir::currentPath());
+	cwdle->setReadOnly( true );
+	QWidget *cwdWdg = new QWidget;
+	
+	QHBoxLayout *cwdLayout = new QHBoxLayout;
+	cwdLayout->addWidget(cwdl);
+	cwdLayout->addWidget(cwdle);
 
-    currDir->setToolTip(tr("Current Working Directory: LCIO Files in the same directory branch of this path are added with relative paths"));
+	cwdWdg->setLayout( cwdLayout );
+
+    cwdWdg->setToolTip(tr("Current Working Directory: LCIO Files in the same directory branch of this path are added with relative paths"));
     
     //Layout
     QGridLayout *lcioFilesLayout = new QGridLayout;
-    lcioFilesLayout->addWidget(currDir,0,0);
+    lcioFilesLayout->addWidget(cwdWdg,0,0);
     lcioFilesLayout->addWidget(lcioFilesList,1,0);
     lcioFilesLayout->addWidget(lcioButtons,1,1,Qt::AlignTop);
  
