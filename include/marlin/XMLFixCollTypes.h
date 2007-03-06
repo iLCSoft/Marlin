@@ -19,7 +19,7 @@ namespace marlin{
    *   This is used by Marlin -f.
    *
    * @author F. Gaede, DESY
-   * @version $Id: XMLFixCollTypes.h,v 1.1 2006-10-17 16:17:30 gaede Exp $ 
+   * @version $Id: XMLFixCollTypes.h,v 1.2 2007-03-06 08:05:07 gaede Exp $ 
    */
 
   class XMLFixCollTypes {
@@ -40,7 +40,7 @@ namespace marlin{
 
 
     /** Return named attribute - throws ParseException if attribute doesn't exist */
-    const char* XMLFixCollTypes::getAttribute( TiXmlNode* node , const std::string& name ) ;
+    const char* getAttribute( TiXmlNode* node , const std::string& name ) ;
 
     
     /** Helper method - finds child element of node with given type and attribute value. */
