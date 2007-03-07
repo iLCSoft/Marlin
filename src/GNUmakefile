@@ -141,18 +141,29 @@ DIR_EXISTS = test -d
 
 .PHONY: all bin lib gui doc conf clean distclean
 
-all: lib bin gui
+all: lib bin gui binonly guionly
 
 ifeq ($(MARLIN_GUI),1)
 ifndef QTDIR
 gui:
+guionly:
 	@echo "Warning: $(GUIPROGNAME) will not be built!!" ;
 	@echo "Problems were found with the installation of QT, see $(MARLIN)/gui/README for details on how to install QT..." ;
 else
 gui: lib $(BINDIR)/$(GUIPROGNAME)
+guionly:
+	@if [ -f "$(QTDIR)/bin/qmake" ] ; then \
+	if [ ! -d "$(GUIDIR)/gui" ] ; then \
+	echo "Copying $(GUIPROGNAME) sources from [$(MARLIN)/gui] to [$(GUIDIR)/gui]" ; \
+	$(DIR_EXISTS) $(GUIDIR) || mkdir -p $(GUIDIR) ; \
+	cp -rf $(MARLIN)/gui $(GUIDIR) ; fi ; \
+	echo "Building $(GUIPROGNAME)..."; \
+	rm -f $(BINDIR)/$(GUIPROGNAME) ; \
+	cd "$(GUIDIR)/gui"; qmake ; $(MAKE) ; fi
 endif
 else
 gui:
+guionly:
 	@echo "Warning: $(GUIPROGNAME) will not be built!!" ;
 	@echo "To build $(GUIPROGNAME) set the environment variable MARLIN_GUI to 1" ;
 endif

@@ -15,7 +15,7 @@
 #
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-# @version $Id: GNUmakefile,v 1.17 2007-03-02 14:37:20 engels Exp $
+# @version $Id: GNUmakefile,v 1.18 2007-03-07 15:49:11 engels Exp $
 #
 #########################################################
 
@@ -65,6 +65,9 @@ bin: lib packages
 
 binonly: packages
 	@$(MAKE) -C src binonly
+
+guionly: packages
+	@$(MAKE) -C src guionly
 
 gui: lib packages
 	@$(MAKE) -C src gui
