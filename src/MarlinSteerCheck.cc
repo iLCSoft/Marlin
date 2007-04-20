@@ -50,6 +50,9 @@ namespace marlin{
 	value.clear();
 	value.push_back("gear_ldc.xml");
 	_gparam->add("GearXMLFile", value);
+	value.clear();
+	value.push_back("MESSAGE");
+	_gparam->add("Verbosity", value);
     }
 
 //     _XMLFileAbsPath="/";
