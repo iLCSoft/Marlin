@@ -10,6 +10,10 @@
   #include "MarlinLCIOSTLTypes.h"
 #endif
 
+#ifdef MARLIN_USE_DLL
+#include "marlin/ProcessorLoader.h"
+#endif
+
 #include "marlin/ProcessorMgr.h"
 #include "marlin/Processor.h"
 #include "marlin/Exceptions.h"
@@ -58,6 +62,32 @@ int main(int argc, char** argv ){
   HANDLE_LCIO_EXCEPTIONS
   
   const char* steeringFileName ;
+ 
+#ifdef MARLIN_USE_DLL
+
+  //------ load shared libraries with processors ------
+                                                                                                                                                            
+  StringVec libs ;
+  LCTokenizer t( libs, ':' ) ;
+                                                                                                                                                            
+  std::string marlinProcs("") ;
+                                                                                                                                                            
+  char * var =  getenv("MARLIN_PROCESSOR_LIBS" ) ;
+                                                                                                                                                            
+  if( var != 0 ) {
+    marlinProcs = var ;
+  } else {
+    std::cout << std::endl << " You have no MARLIN_PROCESSOR_LIBS variable in your environment "
+      " - so no processors will be loaded. ! " << std::endl << std::endl ;
+  }
+                                                                                                                                                            
+  std::for_each( marlinProcs.begin(), marlinProcs.end(), t ) ;
+                                                                                                                                                            
+  ProcessorLoader loader( libs.begin() , libs.end()  ) ;
+                                                                                                                                                            
+  //------- end processor libs -------------------------
+
+#endif
   
   // read file name from command line
   if( argc > 1 ){

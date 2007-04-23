@@ -51,6 +51,11 @@ BINOBJ = $(patsubst %,$(OBJDIR)/%,$(BINOBJS))
 # source files without path
 SRCS = $(filter-out $(BINSRCS),$(wildcard *.cc))
 
+ifndef MARLIN_USE_DLL
+SRCS_NO_DLL = $(filter-out ProcessorLoader.cc $(BINSRCS),$(wildcard *.cc))
+SRCS = $(SRCS_NO_DLL)
+endif
+
 # object files without path
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
