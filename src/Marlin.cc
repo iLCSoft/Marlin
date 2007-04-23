@@ -10,10 +10,6 @@
   #include "MarlinLCIOSTLTypes.h"
 #endif
 
-#ifdef MARLIN_USE_DLL
-#include "marlin/ProcessorLoader.h"
-#endif
-
 #include "marlin/ProcessorMgr.h"
 #include "marlin/Processor.h"
 #include "marlin/Exceptions.h"
@@ -36,6 +32,10 @@
 #include "gearimpl/Util.h"
 #include "gearxml/GearXML.h"
 #include "gearimpl/GearMgrImpl.h"
+#endif
+
+#ifdef MARLIN_USE_DLL
+#include "marlin/ProcessorLoader.h"
 #endif
 
 using namespace lcio ;
@@ -61,33 +61,35 @@ int main(int argc, char** argv ){
   // this macro enables printout of uncaught exceptions
   HANDLE_LCIO_EXCEPTIONS
   
-  const char* steeringFileName ;
- 
-#ifdef MARLIN_USE_DLL
 
+#ifdef MARLIN_USE_DLL
+    
   //------ load shared libraries with processors ------
-                                                                                                                                                            
+    
   StringVec libs ;
   LCTokenizer t( libs, ':' ) ;
-                                                                                                                                                            
+  
   std::string marlinProcs("") ;
-                                                                                                                                                            
+  
   char * var =  getenv("MARLIN_PROCESSOR_LIBS" ) ;
-                                                                                                                                                            
+  
   if( var != 0 ) {
     marlinProcs = var ;
   } else {
     std::cout << std::endl << " You have no MARLIN_PROCESSOR_LIBS variable in your environment "
       " - so no processors will be loaded. ! " << std::endl << std::endl ;
   }
-                                                                                                                                                            
+  
   std::for_each( marlinProcs.begin(), marlinProcs.end(), t ) ;
-                                                                                                                                                            
+  
   ProcessorLoader loader( libs.begin() , libs.end()  ) ;
-                                                                                                                                                            
+  
   //------- end processor libs -------------------------
-
+  
 #endif
+
+
+  const char* steeringFileName ;
   
   // read file name from command line
   if( argc > 1 ){
@@ -130,6 +132,17 @@ int main(int argc, char** argv ){
       }
       else{
 	std::cout << "  usage: Marlin -f oldsteering.xml newsteering.xml" << std::endl << std::endl;
+	exit(1);
+      }
+    }
+    else if( std::string(argv[1]) == "-d" ){
+      if( argc == 4 ){
+	MarlinSteerCheck msc(argv[2]);
+	msc.saveAsDOTFile(argv[3]);
+	exit(0) ;
+      }
+      else{
+	std::cout << "  usage: Marlin -d steer.xml diagram.dot" << std::endl << std::endl;
 	exit(1);
       }
     }
@@ -410,6 +423,7 @@ void printUsageAndExit() {
 	      << std::endl 
 	      << "   Marlin -o old.steer new.xml\t convert old steering file to xml steering file" << std::endl 
 	      << "   Marlin -l                  \t [deprecated: old format steering file example]" << std::endl 
+	      << "   Marlin -d steer.xml flow.dot\t create a program flow diagram (see: http://www.graphviz.org)" << std::endl 
 	      << std::endl 
 	      << " Example: " << std::endl 
 	      << " To create a new default steering file from any Marlin application, run" << std::endl 
@@ -421,6 +435,4 @@ void printUsageAndExit() {
       exit(1) ;
 
 }
-
-
 

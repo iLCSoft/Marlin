@@ -4,6 +4,16 @@
   Marlin release notes
  ======================
 
+ -----------
+| v00-09-?? |
+ -----------
+  - optionally create a .dot file with a flow chart that shows processors 
+    with their input and output collections (author: Ben Jeffrery, Oxford)
+    
+  - new method Processor::message( int verbosity, const std::string& message, 
+                                   std::ostream& stream=std::cout ) 
+    to display a message depending on the Verbosity level
+
   
  -----------
 | v00-09-06 |

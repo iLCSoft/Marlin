@@ -66,7 +66,7 @@ namespace marlin {
  * 
  *
  * @author Jan Engels, Benjamin Eberhardt, DESY
- * @version $Id: MarlinSteerCheck.h,v 1.31 2007-01-12 12:48:46 engels Exp $
+ * @version $Id: MarlinSteerCheck.h,v 1.32 2007-04-23 16:21:01 gaede Exp $
  */
 
   class MarlinSteerCheck{
@@ -172,6 +172,9 @@ namespace marlin {
     
     /** Removes the given condition */
     void remCondition( const std::string& condition );
+    
+    /** Saves steering file in dot format */
+    bool saveAsDOTFile(const std::string& file);
     
   private:
     

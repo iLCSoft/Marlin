@@ -121,9 +121,9 @@ namespace marlin{
 #ifdef USE_GEAR
 	       <<  "  <parameter name=\"GearXMLFile\"> gear_ldc.xml </parameter>  " << std::endl
 #endif
+	       <<  "  <parameter name=\"Verbosity\" options=\"VERBOSE,DEBUG,MESSAGE,WARNING,ERROR,SILENT\"> VERBOSE  </parameter> " << std::endl
 	       <<  " </global>" << std::endl
 	       << std::endl ;
-
 
     for(MI i=_map.begin() ; i!= _map.end() ; i++) {
       i->second->printDescriptionXML() ;

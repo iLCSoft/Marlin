@@ -969,6 +969,99 @@ namespace marlin{
     return true;
   }
 
+  // Saves steering file in dot format
+  bool MarlinSteerCheck::saveAsDOTFile(const std::string& file){
+    
+    if( _errors.find("XML File parsing error") != _errors.end() ){
+	return false;
+    }
+    
+    if( file.size() == 0 ){ return false; }
+    
+    ofstream dotfile;
+    dotfile.open( file.c_str() );
+
+    //abort if file cannot be created or modified
+    if( !dotfile ){
+	cerr << "MarlinSteerCheck::saveAsDOTFile: Error creating or modifying DOT File [" << file << "]\n";
+	return false;
+    }
+    
+    //Header of dot file
+    dotfile << "digraph MarlinSteering {\n"
+            << "node [ fontname = \"Helvetica\","
+	    << "style = filled ];\n";
+    
+    //LCIO File (just the first one)
+    if (!getLCIOFiles().empty())
+	dotfile << "LCIOFile [color=darkgreen, fontcolor=white, label=\"" << getLCIOFiles()[0] << "\"]\n";
+    else
+	dotfile << "LCIOFile [color=darkgreen, fontcolor=white, label=\"LCIO File\"]\n";
+    
+    //This map holds the last processor to output a collection with this name
+    map<string,string> producer_of;
+    map<string,string> type_of;
+    
+    //Keep track of used outputs (we don't display the unused ones)
+    vector<string> used_outputs;
+    
+    //We start with the collections produced by the LCIO file
+    ColVec lcioCols = getLCIOCols();
+    for( unsigned int i=0; i<lcioCols.size(); i++ ){
+	producer_of[lcioCols[i]->getValue()] = "LCIOFile";
+	type_of[lcioCols[i]->getValue()] = lcioCols[i]->getType();
+    }
+    
+    //Loop over the processors finding where their inputs come from and
+    //adding their outputs to the list of producers
+    for( unsigned int i=0; i<_aProc.size(); i++ ){
+	ColVec inputCols,outputCols;
+	inputCols = _aProc[i]->getCols( INPUT );
+	outputCols = _aProc[i]->getCols( OUTPUT );
+	for( unsigned int j=0; j<inputCols.size(); j++ ){
+		string producer = producer_of[inputCols[j]->getValue()];
+		if (producer.size() > 0){
+			//Producer found, create link
+			dotfile << inputCols[j]->getValue() << " -> " << _aProc[i]->getName() << ";\n";
+			//Note that this collection was used
+			used_outputs.push_back(inputCols[j]->getValue());
+		}
+		else
+			cout << inputCols[j]->getValue() << " not found for " << _aProc[i]->getName() << "\n";
+	}
+	for( unsigned int j=0; j<outputCols.size(); j++ ){
+		producer_of[outputCols[j]->getValue()] = _aProc[i]->getName();
+		type_of[outputCols[j]->getValue()] = outputCols[j]->getType();
+	}
+    }
+    
+    //Nodes for used collections and links from producers to output collections
+    sort(used_outputs.begin(), used_outputs.end());
+    vector<string>::iterator new_end  = unique(used_outputs.begin(), used_outputs.end());
+    for(int i=0; i<new_end-used_outputs.begin(); i++ ){
+	dotfile << used_outputs[i] << " [color=lightsteelblue2, label=<<TABLE BORDER=\"0\"><TR><TD>"
+	<< used_outputs[i] << "</TD></TR><TR><TD><FONT POINT-SIZE=\"11.0\">"
+	<< type_of[used_outputs[i]] << "</FONT></TD></TR></TABLE>>];\n";
+	dotfile << producer_of[used_outputs[i]] << " -> " << used_outputs[i] << ";\n";	
+    }
+    
+    //Processor Nodes
+    for( unsigned int i=0; i<_aProc.size(); i++ ){
+	if (_aProc[i]->getType() != "LCIOOutputProcessor")
+		dotfile << _aProc[i]->getName() << " [color=navyblue, fontcolor=white, label=\"" 
+		<< _aProc[i]->getName() << "\"shape=rectangle];\n";
+    }
+    
+    //Footer
+    dotfile << "};\n";
+    
+    dotfile.close();
+    cout << "DOT File written...\n";
+    cout << "Now run dot eg: dot -Tps " << file << " > "<< file << ".ps\n";
+    return true;
+  }
+  
+
   ////////////////////////////////////////////////////////////////////////////////
   // DUMP METHODS
   ////////////////////////////////////////////////////////////////////////////////
