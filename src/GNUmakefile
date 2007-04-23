@@ -105,6 +105,10 @@ LIBS += -L$(LIBDIR) -l$(PROGNAME)
 LIBS += $(PKGLIBFLAGS)
 LIBS += -Wl,-no-whole-archive
 LIBS += $(USERLIBS)
+ifdef MARLIN_USE_DLL
+ LIBS += -ldl
+ CPPFLAGS += -DMARLIN_USE_DLL
+endif
 
 ifdef GEAR
  CPPFLAGS += -D USE_GEAR -I$(GEAR)/src/cpp/include
