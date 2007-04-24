@@ -23,7 +23,7 @@ INSTALL( DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/include/marlin" DESTINATION in
 # require proper c++
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 
-IF( BUILD_SHARED_LIBS )
+IF( MARLIN_USE_DLL )
 	ADD_DEFINITIONS( "-DMARLIN_USE_DLL" )
 ENDIF()
 
@@ -31,7 +31,7 @@ ENDIF()
 SET( bin_srcs Marlin.cc )
 
 # sources needed for binaries that do not belong to the library
-SET( ext_bin_srcs MarlinSteerCheck.cc CCCollection.cc CCProcessor.cc CMProcessor.cc ProcessorLoader.cc )
+SET( ext_bin_srcs ProcessorLoader.cc )
 
 # get list of all source files in this directory
 AUX_SOURCE_DIRECTORY( . all_srcs )
@@ -90,13 +90,22 @@ IF( bin_srcs )
 	# loop through list of binaries
 	FOREACH( bin ${bins} )
 		# create target for binary
-		ADD_EXECUTABLE( bin_${bin} EXCLUDE_FROM_ALL ${bin}.cc ${ext_bin_srcs} )
+		IF( MARLIN_USE_DLL )
+			ADD_EXECUTABLE( bin_${bin} EXCLUDE_FROM_ALL ${bin}.cc ${ext_bin_srcs} )
+		ELSE()
+			ADD_EXECUTABLE( bin_${bin} EXCLUDE_FROM_ALL ${bin}.cc )
+		ENDIF()
 		# tell bin target to call this bin_XXX target
 		ADD_DEPENDENCIES( bin bin_${bin} )
 		# avoid conflicts between library and binary target names
 		SET_TARGET_PROPERTIES( bin_${bin} PROPERTIES OUTPUT_NAME ${bin} )
-		# link against project library and DLL lib
-		TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} ${CMAKE_DL_LIBS} )
+		IF( MARLIN_USE_DLL )
+			# link against project library and DLL lib
+			TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} ${CMAKE_DL_LIBS} )
+		ELSE()
+			# link against project library
+			TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} )
+		ENDIF()
 		#IF( BUILD_SHARED_LIBS )
 		#	TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} ${CMAKE_DL_LIBS} )
 		#ELSE()

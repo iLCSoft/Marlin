@@ -23,9 +23,17 @@ SET( ${PROJECT_NAME}_VERSION
 SET( ${PROJECT_NAME}_SOVERSION
 	"${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}" )
 
+
 # build shared libraries per default
 IF( NOT DEFINED BUILD_SHARED_LIBS )
-	SET( BUILD_SHARED_LIBS ON )
+	SET( BUILD_SHARED_LIBS ON )	
+ENDIF()
+
+# option for using DLL
+IF( BUILD_SHARED_LIBS )
+	OPTION( MARLIN_USE_DLL "option for using DLL" ON )
+ELSE()
+	OPTION( MARLIN_USE_DLL "option for using DLL" OFF )
 ENDIF()
 
 # set default cmake build type to RelWithDebInfo
@@ -79,6 +87,7 @@ MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
+MESSAGE( STATUS "MARLIN_USE_DLL = ${MARLIN_USE_DLL}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
@@ -93,6 +102,8 @@ SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
 	"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
 	"Path to custom CMake Modules" FORCE )
+SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
+	"Set to ON to support DLL in ${PROJECT_NAME}" FORCE )
 
 # export library dependencies (keep this as the last line in the file)
 EXPORT_LIBRARY_DEPENDENCIES( "${PROJECT_NAME}LibDeps.cmake" )
