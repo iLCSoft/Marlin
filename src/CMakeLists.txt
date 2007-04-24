@@ -23,6 +23,10 @@ INSTALL( DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/include/marlin" DESTINATION in
 # require proper c++
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 
+IF( BUILD_SHARED_LIBS )
+	ADD_DEFINITIONS( "-DMARLIN_USE_DLL" )
+ENDIF()
+
 # binary sources: list of all sources from which you want to create a binary
 SET( bin_srcs Marlin.cc )
 
