@@ -17,6 +17,9 @@ PROJECT( Marlin )
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "LCIO" )
 
+# project options
+OPTION( MARLIN_USE_DLL "Set to ON to build Marlin with DLL support" OFF )
+
 # project version
 SET( ${PROJECT_NAME}_MAJOR_VERSION 1 )
 SET( ${PROJECT_NAME}_MINOR_VERSION 0 )
@@ -29,13 +32,6 @@ SET( ${PROJECT_NAME}_SOVERSION
 # build shared libraries per default
 IF( NOT DEFINED BUILD_SHARED_LIBS )
 	SET( BUILD_SHARED_LIBS ON )	
-ENDIF()
-
-# option for using DLL
-IF( BUILD_SHARED_LIBS )
-	OPTION( MARLIN_USE_DLL "option for using DLL" ON )
-ELSE()
-	OPTION( MARLIN_USE_DLL "option for using DLL" OFF )
 ENDIF()
 
 # set default cmake build type to RelWithDebInfo
