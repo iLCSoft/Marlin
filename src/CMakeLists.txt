@@ -47,6 +47,53 @@ ENDIF()
 # library sources
 SET( lib_srcs ${all_srcs} )
 
+# gui stuff
+IF( MARLIN_GUI )
+
+	FIND_PACKAGE( Qt4 REQUIRED )
+	INCLUDE(${QT_USE_FILE})
+
+	SET( cpp_srcs
+		../gui/addcondition.cpp
+		../gui/addprocdialog.cpp
+		../gui/aprocdelegate.cpp
+		../gui/dialog.cpp
+		../gui/editcondition.cpp
+		../gui/flowlayout.cpp
+		../gui/gparamdelegate.cpp
+		../gui/guihelp.cpp
+		../gui/icoldelegate.cpp
+		../gui/icoltdelegate.cpp
+		../gui/iprocdelegate.cpp
+		../gui/mainwindow.cpp
+		../gui/nparamvecset.cpp
+		../gui/nparamvecsetd.cpp
+		../gui/ocoldelegate.cpp
+		../gui/paramdelegate.cpp
+	)
+	SET( moc_hdrs
+		../gui/addcondition.h
+		../gui/addprocdialog.h
+		../gui/aprocdelegate.h
+		../gui/dialog.h
+		../gui/editcondition.h
+		../gui/gparamdelegate.h
+		../gui/guihelp.h
+		../gui/icoldelegate.h
+		../gui/icoltdelegate.h
+		../gui/iprocdelegate.h
+		../gui/mainwindow.h
+		../gui/nparamvecset.h
+		../gui/nparamvecsetd.h
+		../gui/ocoldelegate.h
+		../gui/paramdelegate.h
+	)
+
+	# generate moc files
+	QT4_WRAP_CPP( cpp_moc_srcs ${moc_hdrs} )
+	
+ENDIF()
+
 
 ####################################################################################################
 ### LIBRARY
@@ -120,6 +167,30 @@ IF( bin_srcs )
 		# install binary commando
 		INSTALL( TARGETS bin_${bin} DESTINATION bin )
 	ENDFOREACH()
+
+	IF( MARLIN_GUI )
+		# create target for binary
+		IF( MARLIN_USE_DLL )
+			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ${ext_bin_srcs} )
+		ELSE()
+			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
+		ENDIF()
+		# tell bin target to call this bin_XXX target
+		ADD_DEPENDENCIES( bin bin_${PROJECT_NAME}_GUI )
+		# avoid conflicts between library and binary target names
+		SET_TARGET_PROPERTIES( bin_${PROJECT_NAME}_GUI PROPERTIES OUTPUT_NAME ${PROJECT_NAME}GUI )
+		
+		IF( MARLIN_USE_DLL )
+			# link against project library and DLL lib
+			TARGET_LINK_LIBRARIES( bin_${PROJECT_NAME}_GUI lib_${PROJECT_NAME} ${QT_LIBRARIES} ${CMAKE_DL_LIBS} )
+		ELSE()
+			# link against project library
+			TARGET_LINK_LIBRARIES( bin_${PROJECT_NAME}_GUI lib_${PROJECT_NAME} ${QT_LIBRARIES} )
+		ENDIF()
+		
+		INSTALL( TARGETS bin_${PROJECT_NAME}_GUI DESTINATION bin )
+	ENDIF()
+
 ENDIF()
 
 

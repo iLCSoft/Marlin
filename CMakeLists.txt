@@ -5,7 +5,7 @@
 
 # cmake minimum required version
 CMAKE_MINIMUM_REQUIRED( VERSION 2.4 )
-SET( CMAKE_BACKWARDS_COMPATIBILITY 2.2 )
+#SET( CMAKE_BACKWARDS_COMPATIBILITY 2.2 )
 MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
 
 # allow more human readable "if then else" constructs
@@ -17,6 +17,7 @@ PROJECT( Marlin )
 # project options
 OPTION( BUILD_SHARED_LIBS "Set this to OFF to build static libraries " ON )
 OPTION( MARLIN_USE_DLL "Set to ON to build Marlin with DLL support" OFF )
+OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
 
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "LCIO" )
@@ -88,6 +89,7 @@ MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
 MESSAGE( STATUS "MARLIN_USE_DLL = ${MARLIN_USE_DLL}" )
+MESSAGE( STATUS "MARLIN_GUI = ${MARLIN_GUI}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
@@ -104,8 +106,10 @@ SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
 	"Path to custom CMake Modules" FORCE )
 SET( ${PROJECT_NAME}_DEPENDS "${${PROJECT_NAME}_DEPENDS}" CACHE STRING
 	"${PROJECT_NAME} dependencies" FORCE )
-SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
+SET( ${PROJECT_NAME}_USE_DLL "${${PROJECT_NAME}_USE_DLL}" CACHE BOOL
 	"Set to ON to support DLL in ${PROJECT_NAME}" FORCE )
+SET( ${PROJECT_NAME}_GUI "${${PROJECT_NAME}_GUI}" CACHE BOOL
+	"Set to ON to build ${PROJECT_NAME} GUI" FORCE )
 
 # export library dependencies (keep this as the last line in the file)
 EXPORT_LIBRARY_DEPENDENCIES( "${PROJECT_NAME}LibDeps.cmake" )
