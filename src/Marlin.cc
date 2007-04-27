@@ -76,8 +76,8 @@ int main(int argc, char** argv ){
   if( var != 0 ) {
     marlinProcs = var ;
   } else {
-    std::cout << std::endl << "<!--You have no MARLIN_PROCESSOR_LIBS variable in your environment "
-      " - so no processors will be loaded. !--> " << std::endl << std::endl ;
+    std::cout << std::endl << "<!-- You have no MARLIN_PROCESSOR_LIBS variable in your environment "
+      " - so no processors will be loaded. ! --> " << std::endl << std::endl ;
   }
   
   std::for_each( marlinProcs.begin(), marlinProcs.end(), t ) ;

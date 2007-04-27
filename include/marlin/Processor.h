@@ -42,7 +42,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.23 2007-02-27 13:19:47 engels Exp $ 
+   *  @version $Id: Processor.h,v 1.24 2007-04-27 14:12:43 engels Exp $ 
    */
   
   class Processor {
@@ -127,8 +127,8 @@ namespace marlin{
      */
     virtual void printParameters() ;
 
-    /** Print message to stream according to a verbosity level */
-    void message( int verbosity, const std::string& message, std::ostream& stream=std::cout ) ;
+    /** Print message according to a verbosity level */
+    void message( int verbosity, const std::string& message ) ;
 
     /** Description of processor.
      */

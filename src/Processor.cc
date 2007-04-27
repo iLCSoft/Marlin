@@ -43,9 +43,9 @@ void Processor::setParameters( StringParameters* parameters) {
   
 }
 
-void Processor::message( int verbosity, const std::string& message, std::ostream& stream ){
+void Processor::message( int verbosity, const std::string& message ){
   if( verbosity >= Verbosity ){
-    stream << message;
+	  std::cout << message;
   }
 }
 
