@@ -4,7 +4,7 @@
 #
 # @author Frank Gaede
 # @author Jan Engels
-# @version $Id: GNUmakefile,v 1.10 2007-03-01 15:52:59 engels Exp $
+# @version $Id: GNUmakefile,v 1.11 2007-04-27 13:51:01 gaede Exp $
 #
 ###########################################################
 
@@ -14,7 +14,7 @@
 #----------------------------------------------------------------------------
 
 # name of the program
-PROGNAME = MyMarlin
+PROGNAME = mymarlin
 
 # source files for the binary
 # leave this commented out if your Application does not produce binary files
