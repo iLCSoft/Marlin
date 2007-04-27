@@ -32,32 +32,6 @@ namespace marlin{
   // Constructor
   MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) : _parser(NULL), _gparam(NULL), _steeringFile("Untitled.xml") {
 
-#ifdef MARLIN_USE_DLL
-                                                                                                                                                            
-  //------ load shared libraries with processors ------
-                                                                                                                                                            
-  StringVec libs ;
-  LCTokenizer t( libs, ':' ) ;
-                                                                                                                                                            
-  std::string marlinProcs("") ;
-                                                                                                                                                            
-  char * var =  getenv("MARLIN_PROCESSOR_LIBS" ) ;
-                                                                                                                                                            
-  if( var != 0 ) {
-    marlinProcs = var ;
-  } else {
-    std::cout << std::endl << " You have no MARLIN_PROCESSOR_LIBS variable in your environment "
-      " - so no processors will be loaded. ! " << std::endl << std::endl ;
-  }
-                                                                                                                                                            
-  std::for_each( marlinProcs.begin(), marlinProcs.end(), t ) ;
-                                                                                                                                                            
-  ProcessorLoader loader( libs.begin() , libs.end()  ) ;
-                                                                                                                                                            
-  //------- end processor libs -------------------------
-                                                                                                                                                            
-#endif
-
     if( steeringFile != 0 ){
       _steeringFile=steeringFile;
 
