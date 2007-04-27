@@ -13,7 +13,8 @@ namespace marlin{
     
     while( current != last ){
       
-      std::string libName( "lib" + *current + ".so" ) ;
+      //std::string libName( "lib" + *current + ".so" ) ;
+      std::string libName( *current ) ;
       
 //       void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY ) ;
 //       void* libPointer  = dlopen( libName.c_str() , RTLD_NOW) ;
