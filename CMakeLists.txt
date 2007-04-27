@@ -22,6 +22,11 @@ OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "LCIO" )
 
+# project optional dependencies
+IF( NOT DEFINED BUILD_WITH )
+	SET( BUILD_WITH "GEAR;LCCD;CLHEP;RAIDA" )
+ENDIF()
+
 # project version
 SET( ${PROJECT_NAME}_MAJOR_VERSION 1 )
 SET( ${PROJECT_NAME}_MINOR_VERSION 0 )

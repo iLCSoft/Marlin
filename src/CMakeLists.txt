@@ -171,9 +171,9 @@ IF( bin_srcs )
 	IF( MARLIN_GUI )
 		# create target for binary
 		IF( MARLIN_USE_DLL )
-			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ${ext_bin_srcs} )
+			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI EXCLUDE_FROM_ALL ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ${ext_bin_srcs} )
 		ELSE()
-			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
+			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI EXCLUDE_FROM_ALL ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
 		ENDIF()
 		# tell bin target to call this bin_XXX target
 		ADD_DEPENDENCIES( bin bin_${PROJECT_NAME}_GUI )
