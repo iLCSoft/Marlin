@@ -24,14 +24,14 @@ namespace marlin{
        if( libPointer == 0 ){
 
 	 std::cout  << std::endl 
-		 << "ProcessorLoader::ProcessorLoader: ERROR loading shared library : " 
-		 << libName << std::endl << "    ->    "   << dlerror() << std::endl ;
+		 << "<!--ERROR loading shared library : " 
+		 << libName << std::endl << "    ->    "   << dlerror() << "-->" << std::endl ;
 	 
 
        }else{
 
-	 std::cout << "ProcessorLoader::ProcessorLoader: loading shared library : " 
-		   << libName << std::endl ;
+	 std::cout << "<!-- Loading shared library : " 
+		   << libName << "-->" << std::endl ;
 
 	 _libs.push_back( libPointer ) ;
        }
