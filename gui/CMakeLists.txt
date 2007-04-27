@@ -15,8 +15,7 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 PROJECT( MarlinGUI )
 
 # project options
-# FIXME not supported on this makefile yet
-#OPTION( MARLIN_USE_DLL "Set to ON to build Marlin with DLL support" OFF )
+OPTION( MARLIN_USE_DLL "Set to ON to build Marlin with DLL support" OFF )
 
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "Marlin;LCIO" )
@@ -82,9 +81,16 @@ QT4_WRAP_CPP( cpp_moc_srcs ${moc_hdrs} )
 # create symbolic bin target for calling targets bin_XXX
 ADD_CUSTOM_TARGET( bin )
 
+IF( MARLIN_USE_DLL )
+    ADD_DEFINITIONS( "-DMARLIN_USE_DLL" )
+ENDIF()
+
 # FIXME has to be calles lib_XXX due to LOAD_PACKAGE Macro
-ADD_EXECUTABLE( lib_${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs}
-../src/ProcessorLoader )
+IF( MARLIN_USE_DLL )
+	ADD_EXECUTABLE( lib_${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} ../src/ProcessorLoader )
+ELSE()
+	ADD_EXECUTABLE( lib_${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
+ENDIF()
 
 # tell bin target to call this bin_XXX target
 ADD_DEPENDENCIES( bin lib_${PROJECT_NAME} )
@@ -162,7 +168,7 @@ MESSAGE( STATUS )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
-#MESSAGE( STATUS "MARLIN_USE_DLL = ${MARLIN_USE_DLL}" )
+MESSAGE( STATUS "MARLIN_USE_DLL = ${MARLIN_USE_DLL}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
@@ -175,5 +181,5 @@ SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
 	"Path to custom CMake Modules" FORCE )
 SET( ${PROJECT_NAME}_DEPENDS "${${PROJECT_NAME}_DEPENDS}" CACHE STRING
 	"${PROJECT_NAME} dependencies" FORCE )
-#SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
-#	"Set to ON to support DLL in ${PROJECT_NAME}" FORCE )
+SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
+	"Set to ON to support DLL in ${PROJECT_NAME}" FORCE )
