@@ -19,8 +19,8 @@ namespace marlin{
 //       void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY ) ;
 //       void* libPointer  = dlopen( libName.c_str() , RTLD_NOW) ;
 
-       //void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY | RTLD_GLOBAL) ;
-       void* libPointer  = dlopen( libName.c_str() , RTLD_NOW | RTLD_GLOBAL) ;
+       void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY | RTLD_GLOBAL) ;
+       //void* libPointer  = dlopen( libName.c_str() , RTLD_NOW | RTLD_GLOBAL) ;
 
        if( libPointer == 0 ){
 
