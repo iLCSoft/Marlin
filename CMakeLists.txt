@@ -117,9 +117,9 @@ SET( ${PROJECT_NAME}_DEPENDS "${${PROJECT_NAME}_DEPENDS}" CACHE STRING
 	"${PROJECT_NAME} dependencies" FORCE )
 SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
 	"Set this to ON to try building with supported ILCSoftware" FORCE )
-SET( MARLIN_USE_DLL "MARLIN_USE_DLL}" CACHE BOOL
+SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
 	"Set to ON to build Marlin with DLL support" FORCE )
-SET( MARLIN_GUI "MARLIN_GUI}" CACHE BOOL
+SET( MARLIN_GUI "${MARLIN_GUI}" CACHE BOOL
 	"Set to ON to build Marlin GUI" FORCE )
 
 # export library dependencies (keep this as the last line in the file)
