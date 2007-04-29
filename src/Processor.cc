@@ -1,6 +1,6 @@
 #include "marlin/Processor.h"
 #include "marlin/ProcessorMgr.h" 
-
+#include "marlin/Global.h"
 
 using namespace lcio ;
 
@@ -8,13 +8,14 @@ using namespace lcio ;
 namespace marlin{
 
 // set default verbosity level to MESSAGE
-int Processor::Verbosity=Processor::MESSAGE;
+//int Processor::Verbosity=Processor::MESSAGE;
 
 Processor::Processor(const std::string& typeName) :
   _description(" description not set by author ") ,
   _typeName( typeName ) ,
   _parameters(0) ,
-  _isFirstEvent( true )
+  _isFirstEvent( true ),
+  _log(0)
 {
   
   //register processor in map
@@ -43,11 +44,14 @@ void Processor::setParameters( StringParameters* parameters) {
   
 }
 
-void Processor::message( int verbosity, const std::string& message ){
-  if( verbosity >= Verbosity ){
-	  std::cout << message;
-  }
-}
+// void Processor::message( int verbosity, const std::string& message ){
+//   if( verbosity >= Verbosity ){
+// 	  std::cout << message;
+//   }
+// }
+
+
+
 
 //   template<class T>
 //   export void Processor::registerProcessorParameter(const std::string& name, 
@@ -211,7 +215,21 @@ void Processor::message( int verbosity, const std::string& message ){
   void Processor::baseInit() {
     
     updateParameters();
-    
+
+    std::string verbosity = Global::parameters->getStringVal("Verbosity" ) ;
+
+    int level = DEBUG::level ;    // default - DEBUG/VERBOSE
+    if( verbosity == "MESSAGE" )
+      level = MESSAGE::level ;
+    else if( verbosity == "WARNING" )
+      level = WARNING::level ;
+    else if( verbosity == "ERROR" )
+      level = ERROR::level ;
+    else if( verbosity == "SILENT" )
+      level = ERROR::level + 1 ;  // is the meaningfull in case of errors ?
+
+    _log = new LogStream( name() , level ) ;
+
     init() ;
 
   }

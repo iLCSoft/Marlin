@@ -18,7 +18,7 @@ echo "  MARLIN set to:" $MARLIN
 # modify the following pathes as needed
 
 # path to LCIO is required
-export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-08
+export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-08-02
 
 
 #-- comment out for production 
@@ -29,25 +29,25 @@ export MARLINDEBUG=1
 # out before compiling what you don't need/want
 
 #---- CLHEP ---------
-export CLHEP=/opt/products/CLHEP/2.0.2.2
+export CLHEP=/afs/desy.de/group/it/ilcsoft/CLHEP/2.0.2.2
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLHEP/lib
 
 #---- LCCD -----------
 
 # use LCCD for conditions data (ConditionsProcessor) 
-export LCCD=/afs/desy.de/group/it/ilcsoft/lccd/v00-03
+export LCCD=/afs/desy.de/group/it/ilcsoft/lccd/v00-03-05
 
 # to make full use of LCCD also use the conditions data base
 # Note: if you don't want to use CondDBMySQL you also need a LCCD library that
 # has been build without CondDBMySQL !
 
-export CondDBMySQL=/afs/desy.de/group/it/ilcsoft/CondDBMySQL
+export CondDBMySQL=/afs/desy.de/group/it/ilcsoft/CondDBMySQL/CondDBMySQL_ILC-0-5-10
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CondDBMySQL/lib
 
 
 #---- GEAR ---------------
-export GEAR=/afs/desy.de/group/it/ilcsoft/gear/v00-03
+export GEAR=/afs/desy.de/group/it/ilcsoft/gear/v00-04-01
 
 
 #---- AIDA setup ---------
@@ -59,8 +59,8 @@ export MARLIN_USE_AIDA=1
 
 #----------- use RAIDA  -------------------------
 
-export ROOTSYS=/opt/products/root/5.08.00
-export RAIDA_HOME=/afs/desy.de/group/it/ilcsoft/RAIDA/v00-03
+export ROOTSYS=/afs/desy.de/group/it/ilcsoft/root/5.08.00
+export RAIDA_HOME=/afs/desy.de/group/it/ilcsoft/RAIDA/v01-01
 #
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
@@ -79,7 +79,7 @@ export PATH=$ROOTSYS/bin:$PATH
 
 
 # ------ stuff for new MarlinGUI (QT4)
-export QTDIR=/data/gaede/QT/qt4
+export QTDIR=/afs/desy.de/group/it/ilcsoft/QT/4.2.2
 export LD_LIBRARY_PATH=$QTDIR/lib/:$LD_LIBRARY_PATH
 export PATH=$QTDIR/bin:$PATH
 export QMAKESPEC=$QTDIR/mkspecs/linux-g++

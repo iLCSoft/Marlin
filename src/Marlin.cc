@@ -198,18 +198,18 @@ int main(int argc, char** argv ){
 
   assert( ( Global::parameters = parser->getParameters("Global") ) != 0 ) ;
 
-  std::map<std::string, int> verbosity_levels;
-  verbosity_levels[std::string("VERBOSE")]=Processor::VERBOSE;
-  verbosity_levels[std::string("DEBUG")]=Processor::DEBUG;
-  verbosity_levels[std::string("MESSAGE")]=Processor::MESSAGE;
-  verbosity_levels[std::string("WARNING")]=Processor::WARNING;
-  verbosity_levels[std::string("ERROR")]=Processor::ERROR;
-  verbosity_levels[std::string("SILENT")]=Processor::SILENT;
+//   std::map<std::string, int> verbosity_levels;
+//   verbosity_levels[std::string("VERBOSE")]=Processor::VERBOSE;
+//   verbosity_levels[std::string("DEBUG")]=Processor::DEBUG;
+//   verbosity_levels[std::string("MESSAGE")]=Processor::MESSAGE;
+//   verbosity_levels[std::string("WARNING")]=Processor::WARNING;
+//   verbosity_levels[std::string("ERROR")]=Processor::ERROR;
+//   verbosity_levels[std::string("SILENT")]=Processor::SILENT;
 
-  std::string verbosity = Global::parameters->getStringVal("Verbosity" ) ;
-  if( verbosity.size() > 0 ){
-	  Processor::Verbosity=verbosity_levels[verbosity];
-  }
+//   std::string verbosity = Global::parameters->getStringVal("Verbosity" ) ;
+//   if( verbosity.size() > 0 ){
+// 	  Processor::Verbosity=verbosity_levels[verbosity];
+//   }
 
   createProcessors( *parser ) ;
 

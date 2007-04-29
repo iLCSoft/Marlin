@@ -1,6 +1,7 @@
 #include "marlin/TestProcessor.h"
 #include "marlin/Exceptions.h"
 #include <iostream>
+#include <sstream>
 
 namespace marlin{
 
@@ -15,10 +16,13 @@ TestProcessor::TestProcessor() : Processor("TestProcessor") {
 
 void TestProcessor::init() { 
 
-  std::cout << "TestProcessor::init()  " << name() 
-	    << std::endl 
-	    << "  parameters: " << std::endl 
-	    << *parameters()  ;
+  std::stringstream s ;
+  s << "TestProcessor::init()  " << name() 
+    << std::endl 
+    << "  parameters: " << std::endl 
+    << *parameters()  ;
+
+  message<MESSAGE>( s.str() ) ;
 
   _nRun = 0 ;
   _nEvt = 0 ;
@@ -26,9 +30,12 @@ void TestProcessor::init() {
 }
 
 void TestProcessor::processRunHeader( LCRunHeader* run) { 
-  std::cout << "TestProcessor::processRun()  " << name() 
-	    << " in run " << run->getRunNumber() 
-	    << std::endl ;
+
+  std::stringstream s ;
+  s << " processRun() : " << run->getRunNumber() 
+    << std::endl ;
+
+  message<MESSAGE>( s.str() ) ;
 
   _nRun++ ;
 } 
@@ -60,15 +67,17 @@ void TestProcessor::processEvent( LCEvent * evt ) {
   
   if( _doCalibration ) {
 
-    std::cout << "TestProcessor::processEvent()  ---CALIBRATING ------ " << name() 
-	      << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "	      << std::endl ;
+    std::stringstream s ;
+    s  << "processEvent()  ---CALIBRATING ------ "  
+       << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "	      
+       << std::endl ;
+
+    message<MESSAGE>( s.str() ) ;
 
     // your calibration goes here ....
+    
 
-
-
-
-
+    
     // --------------- 
     if( _nEvt == 3 ){  
       
@@ -87,17 +96,16 @@ void TestProcessor::processEvent( LCEvent * evt ) {
       }
     }
   }
-
-  //---------end example code  ----------------------------------------
   
+  //---------end example code  ----------------------------------------
 
+  std::stringstream s ;
+  s << " processEvent() "  
+    << evt->getEventNumber() 
+    << " (run " << evt->getRunNumber() << ") "
+    << std::endl ;
 
-
-
-  std::cout << "TestProcessor::processEvent()  " << name() 
-	    << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "
-	    << std::endl ;
-
+  message<MESSAGE>( s.str() ) ;
 
   // always return true  for ProcessorName
   setReturnValue( true ) ;
@@ -109,15 +117,22 @@ void TestProcessor::processEvent( LCEvent * evt ) {
 }
 
 void TestProcessor::check( LCEvent * evt ) { 
-  std::cout << "TestProcessor::check()  " << name() 
-	    << " in event " << evt->getEventNumber() << " (run " << evt->getRunNumber() << ") "
-	    << std::endl ;
+
+  std::stringstream s ;
+  s << " check() "  
+    << evt->getEventNumber() 
+    << " (run " << evt->getRunNumber() << ") "
+    << std::endl ;
+  
+  message<MESSAGE>( s.str() ) ;
 }
 
 void TestProcessor::end(){ 
-  std::cout << "TestProcessor::end()  " << name() 
-	    << " processed " << _nEvt << " events in " << _nRun << " runs "
-	    << std::endl ;
+
+  std::stringstream s ;
+  s << " end() "  
+    << " processed " << _nEvt << " events in " << _nRun << " runs "
+    << std::endl ;
   
 }
 

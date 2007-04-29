@@ -12,6 +12,7 @@
 
 #include "StringParameters.h"
 #include "ProcessorParameter.h"
+#include "LogStream.h"
 #include <map>
 
 using namespace lcio ;
@@ -42,7 +43,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.24 2007-04-27 14:12:43 engels Exp $ 
+   *  @version $Id: Processor.h,v 1.25 2007-04-29 14:29:17 gaede Exp $ 
    */
   
   class Processor {
@@ -53,11 +54,11 @@ namespace marlin{
 
   public:
 
-	/** Possible verbosity levels */
-    enum{ VERBOSE = 0, DEBUG = 0, MESSAGE = 1, WARNING = 2, ERROR = 3, SILENT = 4 };
+// 	/** Possible verbosity levels */
+//     enum{ VERBOSE = 0, DEBUG = 0, MESSAGE = 1, WARNING = 2, ERROR = 3, SILENT = 4 };
  
-	/** Global variable used to set the verbosity level */
-    static int Verbosity;
+// 	/** Global variable used to set the verbosity level */
+//     static int Verbosity;
   
     /** Default constructor - subclasses need to call this in their
      * default constructor.
@@ -127,8 +128,16 @@ namespace marlin{
      */
     virtual void printParameters() ;
 
-    /** Print message according to a verbosity level */
-    void message( int verbosity, const std::string& message ) ;
+    /** Print message according to  verbosity level of the templated parameter */
+    //    void message( int verbosity, const std::string& message ) ;
+    template <class T>
+    void message(  const std::string& message ){
+      
+     if( T::active ){  // allow the compiler to optimize this away ...
+	_log->template message<T>( message ) ; 
+      }
+    }
+
 
     /** Description of processor.
      */
@@ -321,6 +330,8 @@ namespace marlin{
     bool _isFirstEvent ;
     LCIOTypeMap   _inTypeMap ;
     LCIOTypeMap   _outTypeMap ;
+
+    LogStream* _log ; 
 
   private:
     Processor() ; 
