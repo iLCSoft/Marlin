@@ -5,16 +5,28 @@
  ======================
 
  -----------
-| v00-09-?? |
+| v00-09-07 |
  -----------
   - optionally create a .dot file with a flow chart that shows processors 
     with their input and output collections (author: Ben Jeffrery, Oxford)
     
-  - new method Processor::message( int verbosity, const std::string& message, 
-                                   std::ostream& stream=std::cout ) 
-    to display a message depending on the Verbosity level
+  - new methods
+    Processor::message<VERBOSITY_LEVEL>(  const std::string& mess) 
+    to display a message depending on the Verbosity 
+    level, one of DEBUG, MESSAGE, WARNING, ERROR 
 
-  
+  - optionaly a working directory ($MARLINWORKDIR) can be used to build
+    Marlin and dependend packages (in packages directory) 
+    if not set $MARLIN will be used
+
+  - added support for cmake (experimental) 
+
+  - support for runtime plugins (experimental) 
+    shared libraries with processors that are specified in	
+    $MARLIN_PROCESSOR_LIBS (comma separated list of full-paths to libs) 
+    are loaded at program start up	
+
+
  -----------
 | v00-09-06 |
  -----------
