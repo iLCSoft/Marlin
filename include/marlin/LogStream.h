@@ -5,10 +5,10 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef MARLIN_DEBUG
+#ifdef MARLINDEBUG
  #define MARLIN_SILENCE_LEVEL 0
 #else
- #define MARLIN_SILENCE_LEVEL 1
+ #define MARLIN_SILENCE_LEVEL 1  // turns of DEBUG output
 #endif
 
 namespace marlin{
@@ -44,7 +44,7 @@ namespace marlin{
    * overhead is created for calls to message<DEBUG>("...") and message<MESSAGE>("..."). 
    *
    * @author F.Gaede, DESY
-   * @version $Id: LogStream.h,v 1.1 2007-04-29 14:29:17 gaede Exp $
+   * @version $Id: LogStream.h,v 1.2 2007-04-30 10:55:45 gaede Exp $
    */
  
   class LogStream {

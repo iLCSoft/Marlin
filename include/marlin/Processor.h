@@ -43,7 +43,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.25 2007-04-29 14:29:17 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.26 2007-04-30 10:55:45 gaede Exp $ 
    */
   
   class Processor {
@@ -127,16 +127,6 @@ namespace marlin{
     /** Print the parameters and its values.
      */
     virtual void printParameters() ;
-
-    /** Print message according to  verbosity level of the templated parameter */
-    //    void message( int verbosity, const std::string& message ) ;
-    template <class T>
-    void message(  const std::string& message ){
-      
-     if( T::active ){  // allow the compiler to optimize this away ...
-	_log->template message<T>( message ) ; 
-      }
-    }
 
 
     /** Description of processor.
@@ -273,6 +263,64 @@ namespace marlin{
     
     
 
+    /** Print message according to  verbosity level of the templated parameter (one of
+     *  DEBUG, MESSAGE, WARNING, ERROR ) and the global parameter "Verbosity".
+     *  If Marlin is compiled w/o debug mode ($MARLINDEBUG not set) then DEBUG messages
+     *  will be ignored completely at compile time, i.e. no output (and code!) will be
+     *  generated, regardless of the value of the "Verbosity" parameter.
+     *  This is useful in order to save CPU time in production mode.<br>
+     *  Every line of the output string will be prepended by the verbosity level of the 
+     *  message and the processor name, e.g:
+     *  <pre>
+     *    [ MESSAGE "MyTestProcessor" ]  processing event 42 in run 4711
+     *  </pre>
+     *  Use this method for simple strings. In order to use more complex messages, including
+     *  numbers, use:
+     *  @see  void message( const std::basic_ostream<char, std::char_traits<char> >& m)
+     */
+    template <class T>
+    void message(  const std::string& message ){
+      
+     if( T::active ){  // allow the compiler to optimize this away ...
+	_log->template message<T>( message ) ; 
+      }
+    }
+    
+
+    /** Same as  message(const std::string& message) except that it allows the output of 
+     *  more complex messages in the argument using the log() method, e.g.:
+     * <pre>
+     * message<MESSAGE>( log() 
+     *                   << " processing event " << evt->getEventNumber() 
+     *                   << "  in run "          << evt->getRunNumber() 
+     *                   ) ;
+     * </pre>
+     * 
+     * 
+     * @see void message(  const std::string& message )
+     * @see std::stringstream& log()
+     */
+
+    template <class T>
+    void message( const std::basic_ostream<char, std::char_traits<char> >& m) {
+
+     if( T::active ){  // allow the compiler to optimize this away ...
+
+       try{
+	 const std::stringstream& mess = dynamic_cast<const std::stringstream&>( m ) ; 
+
+	 this->template message<T>( mess.str() ) ;
+
+       }
+       catch( std::bad_cast ) {}
+     }
+    }
+
+
+    /** return an empty stringstream that can be used for the message method.
+     */
+    std::stringstream& log() ;
+
 
   private: // called by ProcessorMgr
     
@@ -317,6 +365,8 @@ namespace marlin{
     /** Helper function for fixing old steering files */
     const ProcParamMap& procMap() { return _map ; }  
 
+
+    
   protected:
 
     /**Describes what the processor does. Set in constructor.
@@ -334,6 +384,8 @@ namespace marlin{
     LogStream* _log ; 
 
   private:
+    std::stringstream* _str ;
+
     Processor() ; 
   
   };

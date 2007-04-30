@@ -15,8 +15,8 @@ Processor::Processor(const std::string& typeName) :
   _typeName( typeName ) ,
   _parameters(0) ,
   _isFirstEvent( true ),
-  _log(0)
-{
+  _log(0),
+  _str(0) {
   
   //register processor in map
   ProcessorMgr::instance()->registerProcessor( this ) ;
@@ -30,6 +30,8 @@ Processor::~Processor() {
   if( _parameters != 0 ){
     delete _parameters ;
   }
+  if( _str !=0 )
+    delete _str ;
   
 }
 
@@ -43,6 +45,17 @@ void Processor::setParameters( StringParameters* parameters) {
   _parameters = parameters ;
   
 }
+
+  std::stringstream& Processor::log() {
+
+    if( _str !=0 )
+      delete _str ;
+
+    _str = new std::stringstream ;
+
+    return *_str ;
+  }
+
 
 // void Processor::message( int verbosity, const std::string& message ){
 //   if( verbosity >= Verbosity ){

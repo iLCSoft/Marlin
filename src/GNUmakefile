@@ -89,7 +89,7 @@ endif
 
 # compiler flags
 ifeq ($(MARLINDEBUG),1)
- CXXFLAGS = -g -Wall -ansi
+ CXXFLAGS = -g -Wall -ansi -DMARLINDEBUG
 else
  CXXFLAGS = -O3 -Wall -ansi
 endif
@@ -178,7 +178,7 @@ guionly:
 endif
 
 bin: conf lib $(BINOBJ) $(BIN)
-	
+
 binonly: conf $(BINOBJ)
 	@$(DIR_EXISTS) $(BINDIR) || mkdir -p $(BINDIR)
 	$(LD) $(BINOBJ) $(LDFLAGS) $(LIBS) -o $(BIN)
