@@ -15,14 +15,25 @@ fi
 echo "  MARLIN set to:" $MARLIN
 
 
+#-- comment out as neded 
+#debug mode (needed for message<DEBUG>( str ); )
+export MARLINDEBUG=1
+
+#support plugins 
+export MARLIN_USE_DLL=1
+
+# build with the gui
+export MARLIN_GUI=1
+
+#-----------------------------------------------------------
+
 # modify the following pathes as needed
+
+#  (the provided pathes should work on any SL3/SL4 system )
+#-----------------------------------------------------------
 
 # path to LCIO is required
 export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-08-02
-
-
-#-- comment out for production 
-export MARLINDEBUG=1
 
 
 # the following is optional (but recommended) comment 
@@ -47,7 +58,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CondDBMySQL/lib
 
 
 #---- GEAR ---------------
-export GEAR=/afs/desy.de/group/it/ilcsoft/gear/v00-04-01
+export GEAR=/afs/desy.de/group/it/ilcsoft/gear/v00-05
 
 
 #---- AIDA setup ---------
@@ -60,7 +71,7 @@ export MARLIN_USE_AIDA=1
 #----------- use RAIDA  -------------------------
 
 export ROOTSYS=/afs/desy.de/group/it/ilcsoft/root/5.08.00
-export RAIDA_HOME=/afs/desy.de/group/it/ilcsoft/RAIDA/v01-01
+export RAIDA_HOME=/afs/desy.de/group/it/ilcsoft/RAIDA/v01-02
 #
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
@@ -79,9 +90,11 @@ export PATH=$ROOTSYS/bin:$PATH
 
 
 # ------ stuff for new MarlinGUI (QT4)
+
 export QTDIR=/afs/desy.de/group/it/ilcsoft/QT/4.2.2
 export LD_LIBRARY_PATH=$QTDIR/lib/:$LD_LIBRARY_PATH
 export PATH=$QTDIR/bin:$PATH
 export QMAKESPEC=$QTDIR/mkspecs/linux-g++
-export MARLIN_GUI=1
+
+
 
