@@ -5,7 +5,7 @@
 
 # cmake minimum required version
 CMAKE_MINIMUM_REQUIRED( VERSION 2.4 )
-#SET( CMAKE_BACKWARDS_COMPATIBILITY 2.2 )
+#SET( CMAKE_BACKWARDS_COMPATIBILITY 2.4 )
 MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
 
 # allow more human readable "if then else" constructs
@@ -106,8 +106,6 @@ SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
 	"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
 	"Path to custom CMake Modules" FORCE )
-SET( ${PROJECT_NAME}_DEPENDS "${${PROJECT_NAME}_DEPENDS}" CACHE STRING
-	"${PROJECT_NAME} dependencies" FORCE )
 SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
 	"Set this to ON to try building with supported ILCSoftware" FORCE )
 

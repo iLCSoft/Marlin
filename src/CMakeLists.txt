@@ -96,6 +96,23 @@ ENDIF()
 
 
 ####################################################################################################
+### DEPENDENCIES
+####################################################################################################
+
+# load macro
+IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
+    # load macro
+    IF( NOT EXISTS "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
+        MESSAGE( FATAL_ERROR "\nSorry, could not find MacroCheckDeps.cmake...\n"
+            "Please set CMAKE_MODULE_PATH correctly with: "
+            "cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
+    ENDIF()
+    INCLUDE( "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
+    CHECK_DEPS()
+ENDIF()
+
+
+####################################################################################################
 ### LIBRARY
 ####################################################################################################
 
@@ -121,7 +138,6 @@ INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
 		GROUP_READ GROUP_EXECUTE
 		WORLD_READ WORLD_EXECUTE )
 
-
 ####################################################################################################
 ### BINS
 ####################################################################################################
@@ -136,29 +152,28 @@ IF( bin_srcs )
 		LIST( APPEND bins ${bin} )
 	ENDFOREACH()
 
+	IF( MARLIN_USE_DLL )
+		LINK_LIBRARIES( ${CMAKE_DL_LIBS} )
+	ENDIF()
+
 	# loop through list of binaries
 	FOREACH( bin ${bins} )
 		# create target for binary
 		IF( MARLIN_USE_DLL )
-			ADD_EXECUTABLE( bin_${bin} EXCLUDE_FROM_ALL ${bin}.cc ${ext_bin_srcs} )
+			ADD_EXECUTABLE( bin_${bin} ${bin}.cc ${ext_bin_srcs} )
 		ELSE()
-			ADD_EXECUTABLE( bin_${bin} EXCLUDE_FROM_ALL ${bin}.cc )
+			ADD_EXECUTABLE( bin_${bin} ${bin}.cc )
 		ENDIF()
 		# tell bin target to call this bin_XXX target
 		ADD_DEPENDENCIES( bin bin_${bin} )
 		# avoid conflicts between library and binary target names
 		SET_TARGET_PROPERTIES( bin_${bin} PROPERTIES OUTPUT_NAME ${bin} )
-		IF( MARLIN_USE_DLL )
-			# link against project library and DLL lib
-			TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} ${CMAKE_DL_LIBS} )
-		ELSE()
-			# link against project library
-			TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} )
-		ENDIF()
+		# link against project library
+		TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} )
 		#IF( BUILD_SHARED_LIBS )
-		#	TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} ${CMAKE_DL_LIBS} )
+		#	TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} )
 		#ELSE()
-		#	TARGET_LINK_LIBRARIES( bin_${bin} -Wl,--whole-archive lib_${PROJECT_NAME} -Wl,--no-whole-archive ${CMAKE_DL_LIBS} )
+		#	TARGET_LINK_LIBRARIES( bin_${bin} -Wl,--whole-archive lib_${PROJECT_NAME} -Wl,--no-whole-archive )
 		#	# whole archive libraries
 		#	FOREACH( lib ${WHOLE_ARCHIVE} )
 		#		TARGET_LINK_LIBRARIES( bin_${bin} -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
@@ -171,80 +186,21 @@ IF( bin_srcs )
 	IF( MARLIN_GUI )
 		# create target for binary
 		IF( MARLIN_USE_DLL )
-			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI EXCLUDE_FROM_ALL ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ${ext_bin_srcs} )
+			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ${ext_bin_srcs} )
 		ELSE()
-			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI EXCLUDE_FROM_ALL ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
+			ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
 		ENDIF()
 		# tell bin target to call this bin_XXX target
 		ADD_DEPENDENCIES( bin bin_${PROJECT_NAME}_GUI )
 		# avoid conflicts between library and binary target names
 		SET_TARGET_PROPERTIES( bin_${PROJECT_NAME}_GUI PROPERTIES OUTPUT_NAME ${PROJECT_NAME}GUI )
-		
-		IF( MARLIN_USE_DLL )
-			# link against project library and DLL lib
-			TARGET_LINK_LIBRARIES( bin_${PROJECT_NAME}_GUI lib_${PROJECT_NAME} ${QT_LIBRARIES} ${CMAKE_DL_LIBS} )
-		ELSE()
-			# link against project library
-			TARGET_LINK_LIBRARIES( bin_${PROJECT_NAME}_GUI lib_${PROJECT_NAME} ${QT_LIBRARIES} )
-		ENDIF()
-		
+		# link against project library
+		TARGET_LINK_LIBRARIES( bin_${PROJECT_NAME}_GUI lib_${PROJECT_NAME} ${QT_LIBRARIES} )
+		# install binary commando
 		INSTALL( TARGETS bin_${PROJECT_NAME}_GUI DESTINATION bin )
 	ENDIF()
 
 ENDIF()
 
 
-####################################################################################################
-### DEPENDENCIES
-####################################################################################################
-
-# load macro
-IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
-	MESSAGE( STATUS "-------------------------------------------------------------------------------" )
-	MESSAGE( STATUS "Change a module with: cmake -D<ModuleName>_HOME=<Path_to_Module>" )
-	MESSAGE( STATUS )
-
-	# load macro
-	IF( NOT EXISTS "${CMAKE_MODULE_PATH}/LoadPackageMacro.cmake" )
-		MESSAGE( FATAL_ERROR "\nSorry, could not find LoadPackageMacro.cmake...\n" 
-			"Please set CMAKE_MODULE_PATH correctly with: "
-			"cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
-	ENDIF()
-	INCLUDE( "${CMAKE_MODULE_PATH}/LoadPackageMacro.cmake" )
-ENDIF()
-
-# project dependencies
-IF( DEFINED ${PROJECT_NAME}_DEPENDS )
-	SEPARATE_ARGUMENTS( ${PROJECT_NAME}_DEPENDS )
-	MARK_AS_ADVANCED( ${PROJECT_NAME}_DEPENDS )
-	FOREACH( req_pkg ${${PROJECT_NAME}_DEPENDS} )
-		LOAD_PACKAGE( ${req_pkg} REQUIRED )
-	ENDFOREACH()
-ENDIF()
-
-# user defined dependencies
-IF( DEFINED BUILD_WITH )
-	SEPARATE_ARGUMENTS( BUILD_WITH )
-	MARK_AS_ADVANCED( BUILD_WITH )
-	FOREACH( opt_pkg ${BUILD_WITH} )
-		LOAD_PACKAGE( ${opt_pkg} )
-	ENDFOREACH()
-	SET( BUILD_WITH "${BUILD_WITH}" CACHE STRING
-		"Build ${PROJECT_NAME} with these optional packages" FORCE )
-ENDIF()
-
-# user defined dependencies
-IF( DEFINED LINK_WITH )
-	SEPARATE_ARGUMENTS( LINK_WITH )
-	MARK_AS_ADVANCED( LINK_WITH )
-	FOREACH( lnk_pkg ${LINK_WITH} )
-		LOAD_PACKAGE( ${lnk_pkg} LINK_ONLY )
-	ENDFOREACH()
-	SET( LINK_WITH "${LINK_WITH}" CACHE STRING
-		"Link ${PROJECT_NAME} with these optional packages" FORCE )
-ENDIF()
-
-IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
-	MESSAGE( STATUS "-------------------------------------------------------------------------------" )
-ENDIF()
 

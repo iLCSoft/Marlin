@@ -17,7 +17,7 @@ PROJECT( Marlin )
 # project options
 OPTION( BUILD_SHARED_LIBS "Set this to OFF to build static libraries " ON )
 OPTION( TRY_DEF_ILC "Set this to ON to try building with supported ILCSoftware" OFF )
-OPTION( MARLIN_USE_DLL "Set to ON to build Marlin with DLL support" OFF )
+OPTION( MARLIN_USE_DLL "Set to ON to build Marlin with DLL support" ON )
 OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
 
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
@@ -108,8 +108,6 @@ SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
 	"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
 	"Path to custom CMake Modules" FORCE )
-SET( ${PROJECT_NAME}_DEPENDS "${${PROJECT_NAME}_DEPENDS}" CACHE STRING
-	"${PROJECT_NAME} dependencies" FORCE )
 SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
 	"Set this to ON to try building with supported ILCSoftware" FORCE )
 SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
