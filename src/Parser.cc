@@ -141,8 +141,8 @@ namespace marlin{
 
       for(unsigned int i=0; i < str.length() ; i ++){
 
-	// replace tabs with whitespace
-	if( str[i] == '\t' )  str[i] = ' ' ; 
+	// replace tabs and cariage returns with whitespace
+	if( (str[i] == '\t') || (str[i] == '\r') )  str[i] = ' ' ; 
      
 	// get first non whitespace character
 	if( ! haveFirst &&  str[i] != ' ' ){
