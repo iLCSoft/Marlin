@@ -194,7 +194,7 @@ namespace marlin {
     return _me->_tree ;
   }
   
-}; // namespace
+} // namespace
 
 #endif
 

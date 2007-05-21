@@ -13,7 +13,7 @@ namespace AIDA{
   class IHistogramFactory ;
   class ITupleFactory ;
   class IDataPointSetFactory ;
-} ;
+}
 
 class HistoManager ;
 
@@ -38,7 +38,7 @@ namespace marlin {
  * @param FileType  type of output file xml (default) or root ( only OpenScientist)
  *
  *  @author F. Gaede, DESY
- *  @version $Id: AIDAProcessor.h,v 1.5 2005-10-11 12:56:28 gaede Exp $ 
+ *  @version $Id: AIDAProcessor.h,v 1.6 2007-05-21 10:41:24 engels Exp $ 
  */
 
 class AIDAProcessor : public marlin::Processor {
