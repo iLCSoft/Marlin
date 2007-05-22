@@ -23,7 +23,7 @@ SET( ${PROJECT_NAME}_DEPENDS "Marlin;LCIO" )
 # set default install prefix to project root directory
 #IF( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
 IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
-	SET( CMAKE_INSTALL_PREFIX "${${PROJECT_NAME}_SOURCE_DIR}/../bin" )
+	SET( CMAKE_INSTALL_PREFIX "${${PROJECT_NAME}_SOURCE_DIR}/.." )
 ENDIF()
 
 ## append link pathes to rpath list
