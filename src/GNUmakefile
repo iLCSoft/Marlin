@@ -111,26 +111,26 @@ ifdef MARLIN_USE_DLL
 endif
 
 ifdef GEAR
- CPPFLAGS += -D USE_GEAR -I$(GEAR)/src/cpp/include
+ CPPFLAGS += -DUSE_GEAR -I$(GEAR)/src/cpp/include
  LIBS += -L$(GEAR)/lib -lgearxml -lgear
 endif
 
 ifdef LCCD
- CPPFLAGS += -D USE_LCCD -I$(LCCD)/source/include
+ CPPFLAGS += -DUSE_LCCD -I$(LCCD)/source/include
  LIBS += -L$(LCCD)/lib -llccd
  ifdef CondDBMySQL
-  CPPFLAGS += -D USE_CONDDB
+  CPPFLAGS += -DUSE_CONDDB
   LIBS += -L$(CondDBMySQL)/lib -lconddb
  endif
 endif
 
 ifdef CLHEP
- CPPFLAGS += -D USE_CLHEP -I$(CLHEP)/include
+ CPPFLAGS += -DUSE_CLHEP -I$(CLHEP)/include
  LIBS += -L$(CLHEP)/lib -lCLHEP
 endif
 
 ifeq ($(MARLIN_USE_AIDA),1)
- CPPFLAGS += -D MARLIN_USE_AIDA `aida-config --include`
+ CPPFLAGS += -DMARLIN_USE_AIDA `aida-config --include`
  LIBS += `aida-config --lib`
 endif
 
