@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[])
 {
-    std::cout << "\nPlease be patient, loading GUI...\n";
+    std::cout << "\nLoading GUI...\n";
 
 #ifdef MARLIN_USE_DLL
 
@@ -20,12 +20,12 @@ int main(int argc, char *argv[])
                                                                                                                                                             
   std::string marlinProcs("") ;
                                                                                                                                                             
-  char * var =  getenv("MARLIN_PROCESSOR_LIBS" ) ;
+  char * var =  getenv("MARLIN_DLL" ) ;
                                                                                                                                                             
   if( var != 0 ) {
     marlinProcs = var ;
   } else {
-    std::cout << std::endl << " You have no MARLIN_PROCESSOR_LIBS variable in your environment "
+    std::cout << std::endl << " You have no MARLIN_DLL variable in your environment "
       " - so no processors will be loaded. ! " << std::endl << std::endl ;
   }
                                                                                                                                                             
