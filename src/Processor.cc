@@ -46,7 +46,7 @@ void Processor::setParameters( StringParameters* parameters) {
   
 }
 
-  std::stringstream& Processor::log() {
+  std::stringstream& Processor::log() const {
 
     if( _str !=0 )
       delete _str ;

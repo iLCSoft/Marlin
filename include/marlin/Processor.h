@@ -43,7 +43,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.27 2007-05-23 12:32:46 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.28 2007-05-23 13:12:21 gaede Exp $ 
    */
   
   class Processor {
@@ -302,7 +302,7 @@ namespace marlin{
      */
 
     template <class T>
-    void message( const std::basic_ostream<char, std::char_traits<char> >& m) {
+    void message( const std::basic_ostream<char, std::char_traits<char> >& m) const {
 
      if( T::active ){  // allow the compiler to optimize this away ...
 
@@ -319,7 +319,7 @@ namespace marlin{
 
     /** return an empty stringstream that can be used for the message method.
      */
-    std::stringstream& log() ;
+    std::stringstream& log() const ;
 
 
   private: // called by ProcessorMgr
@@ -384,7 +384,7 @@ namespace marlin{
     mutable LogStream* _log ; 
 
   private:
-    std::stringstream* _str ;
+    mutable std::stringstream* _str ;
 
     Processor() ; 
   

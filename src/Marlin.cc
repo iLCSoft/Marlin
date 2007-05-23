@@ -89,7 +89,7 @@ int main(int argc, char** argv ){
 #endif
 
 
-  const char* steeringFileName ;
+  const char* steeringFileName = "none"  ;
   
   // read file name from command line
   if( argc > 1 ){

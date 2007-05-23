@@ -20,7 +20,7 @@ namespace marlin {
    *  none
    * 
    * @author F. Gaede, DESY
-   * @version $Id: TestProcessor.h,v 1.6 2007-02-02 17:15:25 gaede Exp $ 
+   * @version $Id: TestProcessor.h,v 1.7 2007-05-23 13:12:21 gaede Exp $ 
    */
 
   class TestProcessor : public Processor {
@@ -55,6 +55,9 @@ namespace marlin {
     
     
   protected:
+
+    /**Test method for const.*/
+    void printEndMessage() const ;
 
     int _nRun ;
     int _nEvt ;

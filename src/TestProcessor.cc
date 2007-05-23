@@ -130,6 +130,19 @@ namespace marlin{
 
   void TestProcessor::end(){ 
     
+    printEndMessage() ;
+
+//     message<MESSAGE>( log() 
+// 		      << " end() "  
+// 		      << " processed " << _nEvt << " events in " 
+// 		      << _nRun << " runs "
+// 		      << std::endl 
+// 		      ) ;
+
+  }
+
+  void TestProcessor::printEndMessage() const {
+
     message<MESSAGE>( log() 
 		      << " end() "  
 		      << " processed " << _nEvt << " events in " 
@@ -138,5 +151,7 @@ namespace marlin{
 		      ) ;
 
   }
+
+
 
 }// namespace marlin
