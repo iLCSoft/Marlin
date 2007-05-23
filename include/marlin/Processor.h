@@ -43,7 +43,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.26 2007-04-30 10:55:45 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.27 2007-05-23 12:32:46 gaede Exp $ 
    */
   
   class Processor {
@@ -279,7 +279,7 @@ namespace marlin{
      *  @see  void message( const std::basic_ostream<char, std::char_traits<char> >& m)
      */
     template <class T>
-    void message(  const std::string& message ){
+    void message(  const std::string& message ) const {
       
      if( T::active ){  // allow the compiler to optimize this away ...
 	_log->template message<T>( message ) ; 
@@ -381,7 +381,7 @@ namespace marlin{
     LCIOTypeMap   _inTypeMap ;
     LCIOTypeMap   _outTypeMap ;
 
-    LogStream* _log ; 
+    mutable LogStream* _log ; 
 
   private:
     std::stringstream* _str ;
