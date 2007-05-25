@@ -15,6 +15,19 @@
 #include "LogStream.h"
 #include <map>
 
+/** Define convenient macros for using message efficiently, use m_out(VERBOSITY) for std::cout
+ *  and m_endl for std::endl (allways needed ! ), e.g.:
+ *  <pre>
+ *    m_out( DEBUG ) << " processing event: " << evt->getEventNumber() 
+ *                   << " in run:           " << evt->getRunNumber()  
+ *                   <<  m_endl ;  // <-- NEEDED !!!
+ *  </pre>
+ */
+#define m_out( VERBOSITY ) message<VERBOSITY>( VERBOSITY::active && log() 
+
+#define m_endl "" ) 
+
+
 using namespace lcio ;
 
 
@@ -43,7 +56,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.28 2007-05-23 13:12:21 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.29 2007-05-25 13:09:03 gaede Exp $ 
    */
   
   class Processor {
@@ -302,7 +315,7 @@ namespace marlin{
      */
 
     template <class T>
-    void message( const std::basic_ostream<char, std::char_traits<char> >& m) const {
+    inline void message( const std::basic_ostream<char, std::char_traits<char> >& m) const {
 
      if( T::active ){  // allow the compiler to optimize this away ...
 
@@ -317,7 +330,26 @@ namespace marlin{
     }
 
 
-    /** return an empty stringstream that can be used for the message method.
+
+    /** Helper method used with macros m_out(VERBOSITY) and m_endl - do not call this method directly.
+     *  Use m_out(VERBOSITY) for std::cout and m_endl for std::endl (allways needed ! ), e.g.:
+     *  <pre>
+     *    m_out( DEBUG ) << " processing event: " << evt->getEventNumber() 
+     *                   << " in run:           " << evt->getRunNumber()  
+     *                   <<  m_endl ;  // <-- NEEDED !!!
+     *  </pre>
+     */
+    template <class T>
+    inline void message( bool b ) const {
+      
+      if( b ) {
+	
+	this->template message<T>( _str->str() ) ;
+	
+      }
+    }
+    
+    /** Returns an empty stringstream that is used for by the message method.
      */
     std::stringstream& log() const ;
 

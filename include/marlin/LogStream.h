@@ -5,38 +5,39 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef MARLINDEBUG
- #define MARLIN_SILENCE_LEVEL 0
-#else
- #define MARLIN_SILENCE_LEVEL 1  // turns of DEBUG output
-#endif
-
 namespace marlin{
-  struct DEBUG{
-    static const int level = 0 ;
-    static const bool active = ( DEBUG::level >= MARLIN_SILENCE_LEVEL ) ;
-    static const char* level_name() { return "DEBUG" ; }
+
+  template <int LEVEL, bool ON>
+  struct Verbosity{
+    static const int level = LEVEL ; 
+    static const bool active = ON ;
+  } ;
+
+  template <bool ON>
+  struct DEBUG_on : public Verbosity< 0, ON >{ 
+    
+    static const char* name() { return "DEBUG" ; } 
   };
   
-  struct MESSAGE{
-    static const int level = 1 ;
-    static const bool active = ( MESSAGE::level >= MARLIN_SILENCE_LEVEL ) ;
-    static const char* level_name() { return "MESSAGE" ; }
+  template <bool ON>
+  struct MESSAGE_on : public Verbosity< 1, ON >{ 
+
+    static const char* name() { return "MESSAGE" ; } 
+  };
+
+  template <bool ON>
+  struct WARNING_on : public Verbosity< 2, ON >{ 
+    
+    static const char* name() { return "WARNING" ; } 
   };
   
-  struct WARNING{
-    static const int level = 2 ;
-    static const bool active = ( WARNING::level >= MARLIN_SILENCE_LEVEL ) ;
-    static const char* level_name() { return "WARNING" ; }
+  template <bool ON>
+  struct ERROR_on : public Verbosity< 3, ON >{ 
+    
+    static const char* name() { return "ERROR" ; } 
   };
   
-  struct ERROR{
-    static const int level = 3 ;
-    static const bool active = ( ERROR::level >= MARLIN_SILENCE_LEVEL ) ;
-    static const char* level_name() { return "ERROR" ; }
-  };
-  
-  
+
   /** Helper class for log streams - used by Processor. Prints VERBOSITY level of message
    * and processor name at every line. Template parameter of message method has to be one of DEBUG, MESSAGE, WARNING, ERROR.
    * All messages with a lower verbosity level then the one given at construction are not printed by this logger.. 
@@ -44,7 +45,7 @@ namespace marlin{
    * overhead is created for calls to message<DEBUG>("...") and message<MESSAGE>("..."). 
    *
    * @author F.Gaede, DESY
-   * @version $Id: LogStream.h,v 1.2 2007-04-30 10:55:45 gaede Exp $
+   * @version $Id: LogStream.h,v 1.3 2007-05-25 13:09:03 gaede Exp $
    */
  
   class LogStream {
@@ -90,33 +91,24 @@ namespace marlin{
     
     template<class T>
     void lineHeader() {
-      std::cout << "  [ " << T::level_name() << " \"" << _name << "\" ] "  ;
+      std::cout << "  [ " << T::name() << " \"" << _name << "\" ] "  ;
     }
     
   };
 }
 #endif
+
+
 // int main() {
-
-
 //   LogStream<DEBUG> log( "AProcessor" )  ;
 // //   LogStream<ERROR> log ;
-
-
 //   if( DEBUG::active ) {
-
 //     std::stringstream str ;
 //     str <<   " helloworld ! " << std::endl 
 // 	<<  42  << "   is a number "  
 // 	<< std::endl 
 // 	<< std::endl ;
-  
 //     log.message<DEBUG>( str.str()  ) ;
 //   }
-
-
 //   log.message<MESSAGE>( " just discoverd pi to be 3.141592... " ) ;
-
-
-
 // } 

@@ -1,6 +1,7 @@
 #include "marlin/Processor.h"
 #include "marlin/ProcessorMgr.h" 
 #include "marlin/Global.h"
+#include "marlin/VerbosityLevels.h"
 
 using namespace lcio ;
 
@@ -47,7 +48,7 @@ void Processor::setParameters( StringParameters* parameters) {
 }
 
   std::stringstream& Processor::log() const {
-
+    
     if( _str !=0 )
       delete _str ;
 
@@ -239,7 +240,7 @@ void Processor::setParameters( StringParameters* parameters) {
     else if( verbosity == "ERROR" )
       level = ERROR::level ;
     else if( verbosity == "SILENT" )
-      level = ERROR::level + 1 ;  // is the meaningfull in case of errors ?
+      level = ERROR::level + 1 ;  // is this really meaningfull in case of errors
 
     _log = new LogStream( name() , level ) ;
 

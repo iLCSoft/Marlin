@@ -3,7 +3,13 @@
 #include <iostream>
 #include <sstream>
 
+#include "marlin/VerbosityLevels.h"
+
+
+
 namespace marlin{
+
+
 
   TestProcessor aTestProcessor ;
 
@@ -14,30 +20,28 @@ namespace marlin{
       " Prints run and event number." ;
   }
 
-
   void TestProcessor::init() { 
 
-    std::stringstream s ;
-    s << "TestProcessor::init()  " << name() 
-      << std::endl 
-      << "  parameters: " << std::endl 
-      << *parameters()  ;
-
-    message<MESSAGE>( s.str() ) ;
+    m_out( MESSAGE ) << "TestProcessor::init()  " << name() 
+		     << std::endl 
+		     << "  parameters: " << std::endl 
+		     << *parameters()  
+		     << m_endl ;
+    
 
     _nRun = 0 ;
     _nEvt = 0 ;
   
+
   }
 
   void TestProcessor::processRunHeader( LCRunHeader* run) { 
 
 
-    message<MESSAGE>(  log() 
-		     << " processRun() " 
+    m_out( MESSAGE ) << " processRun() " 
 		     << run->getRunNumber() 		  
-		     ) ;
-
+		     << m_endl ;
+    
     _nRun++ ;
   } 
 
@@ -76,8 +80,6 @@ namespace marlin{
 			 ) ;
 
 
-
-
       // your calibration goes here ....
     
 
@@ -103,55 +105,43 @@ namespace marlin{
   
     //---------end example code  ----------------------------------------
 
-    message<MESSAGE>( log() 
-		      << " processing event " << evt->getEventNumber() 
-		      << "  in run "          << evt->getRunNumber() 
-		      ) ;
+    m_out(MESSAGE) << " processing event " << evt->getEventNumber() 
+		   << "  in run "          << evt->getRunNumber() 
+		   << m_endl ;
     
-
+    
     // always return true  for ProcessorName
     setReturnValue( true ) ;
-  
+    
     // set ProcessorName.EvenNumberOfEvents == true if this processor has been called 2n (n=0,1,2,...) times 
     if( !( _nEvt % 2 )  )  
       setReturnValue("EvenNumberOfEvents", true ) ;
+    
+  }
   
-  }
-
   void TestProcessor::check( LCEvent * evt ) { 
-
-    message<DEBUG>( log() 
-		    << " check() "  
-		    << evt->getEventNumber() 
-		    << " (run " << evt->getRunNumber() << ") "
-		    ) ;  
-
+    
+    m_out(DEBUG) << " check() "  // << dummy_method() 
+		 << evt->getEventNumber() 
+		 << " (run " << evt->getRunNumber() << ") "
+		 << m_endl ;
+    
+    
   }
-
+  
   void TestProcessor::end(){ 
     
     printEndMessage() ;
-
-//     message<MESSAGE>( log() 
-// 		      << " end() "  
-// 		      << " processed " << _nEvt << " events in " 
-// 		      << _nRun << " runs "
-// 		      << std::endl 
-// 		      ) ;
 
   }
 
   void TestProcessor::printEndMessage() const {
 
-    message<MESSAGE>( log() 
-		      << " end() "  
-		      << " processed " << _nEvt << " events in " 
-		      << _nRun << " runs "
-		      << std::endl 
-		      ) ;
-
+    m_out(MESSAGE) << " end() "  
+		   << " processed " << _nEvt << " events in " 
+		   << _nRun << " runs " << std::endl 
+		   << m_endl ;
+    
   }
-
-
-
+  
 }// namespace marlin

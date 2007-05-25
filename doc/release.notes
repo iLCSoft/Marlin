@@ -5,8 +5,21 @@
  ======================
 
  -----------
+| v00-09-08 |
+ -----------
+
+  - improved cmake support - see Readme
+
+  - improved logging mechanism - see TestProcessor.cc as example:
+
+    m_out( MESSAGE) << " processing event " << evt->getEventNumber() 
+                    << m_endl ;
+    
+   
+ -----------
 | v00-09-07 |
  -----------
+
   - optionally create a .dot file with a flow chart that shows processors 
     with their input and output collections (author: Ben Jeffrery, Oxford)
     
