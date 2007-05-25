@@ -12,6 +12,8 @@
 
   - improved logging mechanism - see TestProcessor.cc as example:
 
+    #include "marlin/VerbosityLevels.h"
+    // ...
     m_out( MESSAGE) << " processing event " << evt->getEventNumber() 
                     << m_endl ;
     
