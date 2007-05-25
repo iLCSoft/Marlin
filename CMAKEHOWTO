@@ -1,0 +1,422 @@
+###########################################################
+#
+# How to use the CMake building tool for the ILC Software
+#
+# @author Jan Engels, DESY-IT
+#
+###########################################################
+
+-----------------------------------------------------------
+Conventions in this document:
+
+When you find a number between [ ], e.g. [3] look
+at the end of the document for the reference.
+
+-----------------------------------------------------------
+
+Note:
+If you are interested in learning more about CMake read the
+book Mastering CMake [1] or check the CMake Homepage [2]
+
+
+################################################################################
+# ILC SOFTWARE PACKAGES WITH CMAKE SUPPORT:
+################################################################################
+
+Following packages can (at the moment) be built with CMake:
+	+ Marlin
+	+ MarlinUtil
+	+ MarlinReco
+	+ CEDViewer
+	+ CED
+	+ LCIO
+	+ GEAR
+	+ LCCD
+	+ RAIDA
+	+ PandoraPFA
+
+
+Additionally, there are CMake modules written for finding following packages:
+	+ CLHEP
+	+ CERNLIB
+	+ CondDBMySQL
+	+ GSL
+	+ ROOT
+
+
+################################################################################
+# BASIC CONCEPTS
+################################################################################
+
+#===========================================
+# SOME BASIC CONCEPTS OF CMAKE:
+#===========================================
+
+Source-tree directory:
+	Top level directory where the sources of the project are located.
+
+Binary-tree:
+	Top level directory where CMake puts the objects, libraries, executables
+    and other files	resulting from the build process.
+    (see: Out-of-source-build below)
+
+Out-of-source-build:
+	CMake offers the possibility to build a software project in a directory
+    tree completely separate from the source-tree directory. For this you have
+    to call cmake from the binary-tree with the source-tree	as an argument,
+    for example:
+	$ cd /var/tmp			# cd to binary-tree
+	$ cmake /data/myproject # call cmake with the source-tree to build
+	
+CMakeLists.txt:
+	Text files that contain the project description and flow control of the
+    build process in simple	CMake language.
+
+CMake Module:
+	Special cmake file written for the purpose of finding a certain piece of
+    software and to get it's libraries, include files or even definitions in
+    appropriate variables so that they can be used in the build process of
+    some other project. (e.g. FindJava.cmake, FindZLIB.cmake, FindQt4.cmake)
+	There are also CMake Modules specific for the ILC Software [3]
+    (FindROOT.cmake, FindCLHEP.cmake, ...)
+
+#===========================================
+# SPECIAL CMAKE VARIABLES:
+#===========================================
+
+CMAKE_MODULE_PATH:
+	specifies where the CMake Modules described above are located.
+
+CMAKE_INSTALL_PREFIX:
+	where to put files when calling make install.
+
+CMAKE_BUILD_TYPE:
+	what type of build to perform. options are:
+	None Debug Release RelWithDebInfo MinSizeRel
+
+BUILD_SHARED_LIBS:
+	switch between shared and static libs.
+
+CMAKE_VERBOSE_MAKEFILE:
+	see full compile and link commands during the build. Alternatively to
+    setting this option you can just call start the build with:
+	$ make VERBOSE=1
+
+
+################################################################################
+# HOW TO BUILD ILC SOFTWARE WITH CMAKE
+################################################################################
+
+Supposing a new download of RAIDA was placed into /data/ilcsoft/RAIDA/v01-03
+
+We can build it with the following steps:
+
+# cd into the source-tree directory (see CONCEPTS)
+$ cd /data/ilcsoft/RAIDA/v01-03
+# create a new binary-tree (see CONCEPTS)
+$ mkdir build
+# change into binary-tree
+$ cd build
+# call cmake with the relative path to the source-tree directory
+$ cmake ..
+
+# ok, at this point you should get the following error:
+Sorry, could not find MacroCheckDeps.cmake...
+Please set CMAKE_MODULE_PATH correctly with:
+cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>
+
+# this means that cmake needs to know the path to the CMake modules written
+# for the ILC Software [3]. Suppose you download them to:
+# /data/ilcsoft/CMakeModules/v01-00
+# Then you should call cmake again with this information:
+# (use -D to define variables)
+$ cmake -DCMAKE_MODULE_PATH=/data/ilcsoft/CMakeModules/v01-00 ..
+
+# now another error shows up:
+CMake Error: Check for ROOT: ROOT_HOME not set!!
+Please call cmake with -DROOT_HOME=<path_to_ROOT>
+
+# this happens because RAIDA needs ROOT to compile, so you need to tell
+# CMake where ROOT is located:
+$ cmake -DCMAKE_MODULE_PATH=/data/ilcsoft/CMakeModules/v01-00
+        -DROOT_HOME=/afs/desy.de/group/it/ilcsoft/root/5.08.00 ..
+
+# now you should get the following output:
+-- ----------------------------------------------------------------------------
+-- Change a module with: cmake -D<ModuleName>_HOME=<Path_to_Module>
+--
+-- Check for ROOT: /afs/desy.de/group/it/ilcsoft/root/5.08.00
+-- Check for ROOT: /afs/desy.de/group/it/ilcsoft/root/5.08.00 -- works
+-- ----------------------------------------------------------------------------
+--
+-- ----------------------------------------------------------------------------
+-- BUILD_SHARED_LIBS = ON
+-- CMAKE_INSTALL_PREFIX = /data/ilcsoft/RAIDA/v01-03
+-- CMAKE_BUILD_TYPE = RelWithDebInfo
+-- CMAKE_MODULE_PATH = /data/ilcsoft/CMakeModules/v01-00
+-- BUILD_RAIDA_EXAMPLE = OFF
+-- RAIDA_DEBUG_VERBOSE_FACTORY = OFF
+-- Change a value with: cmake -D<Variable>=<Value>
+-- ----------------------------------------------------------------------------
+--
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /data/ilcsoft/RAIDA/v01-03/build
+
+# this means cmake has configured correctly
+# in the output you can also see some other CMake variables:
+# BUILD_SHARED_LIBS, CMAKE_INSTALL_PREFIX, CMAKE_BUILD_TYPE, ....
+# you can change these variables in the same way you defined
+# CMAKE_MODULE_PATH and ROOT_HOME for example, you could now type:
+$ cmake -DBUILD_RAIDA_EXAMPLE=ON ..
+# you don't need to specify CMAKE_MODULE_PATH and ROOT_HOME anymore because
+# after cmake has configured correctly they are written to cache
+
+# there is also another way to change variables after having configured
+# the project: ccmake
+# this cursed based GUI allows you to easily change variables
+$ ccmake ..
+
+# build RAIDA and install it to /data/ilcsoft/RAIDA/v01-03
+$ make install
+
+# list all files that were installed
+$ cat install_manifest
+
+# in the output the first line should be:
+[1] /data/ilcsoft/RAIDA/v01-03/./RAIDAConfig.cmake
+# This is the CMake configuration file for this RAIDA installation.
+# Other ILC software packages that have cmake support and
+# need to link or build itself with RAIDA will use this file
+
+# on *nix you can type the next line to remove all installed files
+$ xargs rm < install.manifest
+
+# but there is also another easier way:
+$ make uninstall
+
+
+If you tried out this example you probably noticed the fact of having to type
+that long command to build RAIDA :(
+
+Well, if you do this for 3 or 4 more packages with each of them having 2 or 3
+other dependencies you might end up smashing the keyboard on your monitor :)
+
+So this is not a good solution, it would be nice if we could have some file
+were we define all HOME directories and for example the CMAKE_MODULE_PATH
+variable globally.
+
+In fact, this is possible, we just need to create a file, for example 
+called ILCSoftware.cmake and set all these variables in it:
+
+
+#===============================================================================
+# Example script to populate the CMake cache for the ILC Software
+#===============================================================================
+
+# Base directories
+SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft" CACHE
+        PATH "Path to ILC Software" FORCE )
+
+SET( ILC_CMAKE "/data/ilcsoft" CACHE
+        PATH "Path to ILC Software" FORCE )
+
+# ILC Software
+SET( MarlinUtil_HOME "${ILC_CMAKE}/MarlinUtil/HEAD" CACHE
+        PATH "Path to MarlinUtil" FORCE )
+
+SET( MarlinReco_HOME "${ILC_CMAKE}/MarlinReco/HEAD" CACHE
+        PATH "Path to MarlinUtil" FORCE )
+
+SET( CEDViewer_HOME "${ILC_CMAKE}/CEDViewer/HEAD" CACHE
+        PATH "Path to CEDViewer" FORCE )
+
+SET( LCIO_HOME "${ILC_CMAKE}/lcio/HEAD" CACHE
+        PATH "Path to LCIO" FORCE )
+
+SET( GEAR_HOME "${ILC_CMAKE}/gear/HEAD" CACHE
+        PATH "Path to GEAR" FORCE )
+
+SET( LCCD_HOME "${ILC_CMAKE}/lccd/HEAD" CACHE
+        PATH "Path to LCCD" FORCE )
+
+SET( RAIDA_HOME "${ILC_CMAKE}/RAIDA/HEAD" CACHE
+        PATH "Path to RAIDA" FORCE )
+
+# External Software
+SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2" CACHE
+        PATH "Path to CLHEP" FORCE )
+
+SET( CERNLIB_HOME "${ILC_HOME}/cernlib/2006" CACHE
+        PATH "Path to CERNLIB" FORCE )
+
+SET( GSL_HOME "${ILC_HOME}/gsl/1.8" CACHE
+        PATH "Path to GSL" FORCE )
+
+SET( CondDBMySQL_HOME "${ILC_HOME}/CondDBMySQL/CondDBMySQL_ILC-0-5-10" CACHE
+        PATH "Path to CondDBMySQL" FORCE )
+
+SET( ROOT_HOME "${ILC_HOME}/root/5.08.00"  CACHE
+        PATH "Path to ROOT" FORCE )
+
+# CMake Modules for the ILC Software
+SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-00" CACHE
+        PATH "Path to CMake Modules" FORCE )
+
+# End of script
+
+
+Now we could just place this script in /data/ilcsoft and every time we need
+to configure some project we just call cmake with:
+
+$ cmake -C /data/ilcsoft/ILCSoftware.cmake ..
+
+The ILCInstall [4] generates such a file automatically for you.
+
+
+################################################################################
+# USE ILCINSTALL TO BUILD ILC SOFTWARE WITH CMAKE
+################################################################################
+
+If you are a Scientific Linux 3 or 4 user with access to /afs/desy.de you could
+install RAIDA using the ILCInstall script [4] by creataing a config file
+(e.g. RAIDA.cfg) with the following contents:
+
+#===============================================================================
+# Simple configuration file for installing RAIDA with CMake
+# For SL3 or SL4 users only
+#===============================================================================
+
+ilcsoft = ILCSoft("/data/ilcsoft")
+
+ilcsoft.useCMake = True
+
+# python variable for referring the ILC Home directory
+ilcPath = "/afs/desy.de/group/it/ilcsoft/"
+
+# install RAIDA v01-03
+ilcsoft.install( RAIDA( "v01-03" ))
+
+# use ROOT at: /afs/desy.de/group/it/ilcsoft/root/5.08.00
+ilcsoft.link( ROOT( ilcPath + "root/5.08.00" ))
+
+# use CMakeModules at: /afs/desy.de/group/it/ilcsoft/CMakeModules/v01-00
+ilcsoft.use( CMakeModules( ilcPath + "CMakeModules/v01-00" ))
+
+# use CMake at: /afs/desy.de/group/it/ilcsoft/CMake/2.4.6
+ilcsoft.use( CMake( ilcPath + "CMake/2.4.6" ))
+
+# End of configuration file
+
+
+after creating the file just call the script with:
+$ ilcsoft-install RAIDA.cfg			# display an install summary
+$ ilcsoft-install RAIDA.cfg -i		# install RAIDA
+
+
+Of course, if you are not a SL3 or 4 user and you don't have access to
+/afs/desy.de you should have your own copy of ROOT somewhere and your config
+file should look something like this:
+
+#===============================================================================
+# Simple configuration file for installing RAIDA with CMake
+#===============================================================================
+
+ilcsoft = ILCSoft("/data/ilcsoft")
+
+ilcsoft.useCMake = True
+
+# install RAIDA v01-03
+ilcsoft.install( RAIDA( "v01-03" ))
+
+# install CMakeModules v01-00
+ilcsoft.install( CMakeModules( "v01-00" ))
+
+# if you already have CMake installed somewhere and cmake is in your $PATH
+# environment you can comment out the next line, so CMake can be autodetected
+# or you can modify the path to point to your local CMake installation, for ex:
+# ilcsoft.use( CMake( "/data/mySoftware/CMake/2.4.6" ))
+ilcsoft.install( CMake( "2.4.6" ))
+
+# use ROOT at: /data/myILCSoftware/root/5.08.00
+ilcsoft.link( ROOT( "/data/myILCSoftware/root/5.08.00" ))
+
+# End of configuration file
+
+
+################################################################################
+# SOME TECHNICAL INFO ON USING CMAKE FOR THE ILC SOFTWARE
+################################################################################
+
+There are still some things that need to be mentioned:
+
+CMake also supports Macros and there are 2 important macros
+contained in the CMake modules for the ILC Software:
+
+ + LOAD_PACKAGE( Package_Name [REQUIRED] [LINK_ONLY] [NOACTION] )
+ + CHECK_DEPS()
+
+The first one is the more important one, it takes as the first argument the
+package name to be "loaded" and other 3 optional arguments:
+	REQUIRED  throws a fatal error if the package is not found
+	LINK_ONLY just links against the package libraries
+	NOACTION  use this if you don't want the macro to automatically
+			  incude dirs, add definitions and link against libraries.
+			  If you use this option the variables set by the macro that
+			  you need to know are:
+			  <Package_Name>_INCLUDE_DIR
+			  <Package_Name>_LIBRARIES
+			  <Package_Name>_DEFINITIONS
+
+The macro assumes that a <Package_Name>_HOME variable is
+set and that it points to the location of the package
+you want to load!! If this variable is not set the macro
+will send an error or abort the configuration depending
+on the REQUIRED argument.
+
+The CHECK_DEPS() macro uses the LOAD_PACKAGE macro to automatically
+load all packages that are defined in following variables:
+
+${PROJECT_NAME}_DEPENDS		# calls LOAD_PACKAGE with REQUIRED argument
+BUILD_WITH					# calls LOAD_PACKAGE with no arguments
+LINK_WITH					# calls LOAD_PACKAGE with LINK_ONLY argument
+
+Let's take Marlin as an example for using this macros:
+Marlin only depends on LCIO, so it should have the variable Marlin_DEPENDS
+set to "LCIO".
+Marlin can be built with GEAR, LCCD, CLHEP and RAIDA, so this ones are
+optional but not required!
+
+We could compile Marlin with the command line:
+
+cmake -DCMAKE_MODULE_PATH="/data/ilcsoft/CMakeModules/v01-00"
+        -DLCIO_HOME="/data/ilcsoft/lcio/v01-08-03"
+		-DRAIDA_HOME="/data/ilcsoft/RAIDA/v01-03"
+        -DCLHEP_HOME="/data/ilcsoft/CLHEP/2.0.2.2"
+        -DBUILD_WITH="RAIDA CLHEP" ..
+
+Suppose, for example, the RAIDA installation at /data/ilcsoft/RAIDA/v01-03
+is corrupted.. In this case CMake will send an error telling that RAIDA has
+some problem, but the configuration will continue as normal. If instead the
+LCIO installation would be corrupted, CMake would stop the configuration
+immediately, because Marlin depends on LCIO and cannot be built without it.
+
+
+################################################################################
+# RESOURCES:
+################################################################################
+
+[1] Mastering CMake
+	Ken Martin, Bill Hoffman
+	Published by Kitware, Inc.
+	ISBN: 1-930934-16-5
+
+[2] CMake Homepage:
+	http://www.cmake.org
+
+[3] CMakeModules for the ILC Software:
+	http://www-zeuthen.desy.de/lc-cgi-bin/cvsweb.cgi/CMakeModules/?cvsroot=ilctools
+
+[4] ILCInstall
+	http://www-zeuthen.desy.de/lc-cgi-bin/cvsweb.cgi/ilcinstall/?cvsroot=ilctools
+
