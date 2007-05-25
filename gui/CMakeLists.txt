@@ -20,6 +20,13 @@ OPTION( MARLIN_USE_DLL "Set to OFF to build MarlinGUI without DLL support" ON )
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "Marlin;LCIO" )
 
+# project optional dependencies
+IF( TRY_DEF_ILC )
+	IF( NOT DEFINED LINK_WITH )
+		SET( LINK_WITH "GEAR;LCCD;CLHEP;RAIDA" )
+	ENDIF()
+ENDIF()
+
 # set default install prefix to project root directory
 #IF( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
 IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
@@ -112,6 +119,23 @@ ENDIF()
 # tell bin target to call this bin_XXX target
 ADD_DEPENDENCIES( bin ${PROJECT_NAME} )
 
+# whole archive libraries
+IF( DEFINED LINK_STATIC_WHOLE_LIBS )
+	IF( UNIX )
+		SEPARATE_ARGUMENTS( LINK_STATIC_WHOLE_LIBS )
+		SET( LINK_STATIC_WHOLE_LIBS "${LINK_STATIC_WHOLE_LIBS}" CACHE STRING
+				"Link ${PROJECT_NAME} with these static libs" FORCE )
+		MESSAGE( STATUS "Following static libraries are going to be linked to ${PROJECT_NAME} with the" )
+		MESSAGE( STATUS "-Wl,--whole-archive linker flag:" )
+		FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
+			MESSAGE( STATUS "${lib}" )
+			TARGET_LINK_LIBRARIES( ${PROJECT_NAME} -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
+		ENDFOREACH()
+	ELSE()
+		MESSAGE( FATAL_ERROR "The LINK_STATIC_WHOLE_LIBS option is only avaliabe for *nix systems" )
+	ENDIF()
+ENDIF()
+
 # link against qt libraries
 TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${QT_LIBRARIES} )
 
@@ -145,7 +169,7 @@ SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
 	"Where to install ${PROJECT_NAME}" FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
 	"Path to custom CMake Modules" FORCE )
-SET( ${PROJECT_NAME}_DEPENDS "${${PROJECT_NAME}_DEPENDS}" CACHE STRING
-	"${PROJECT_NAME} dependencies" FORCE )
 SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
 	"Set to ON to support DLL in ${PROJECT_NAME}" FORCE )
+SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
+	"Set this to ON to try building with supported ILCSoftware" FORCE )
