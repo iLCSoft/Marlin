@@ -6,7 +6,7 @@
 *
 *
 * F. Gaede, DESY-IT
-* $Id: README,v 1.13 2005-11-10 13:25:50 gaede Exp $
+* $Id: README,v 1.14 2007-05-25 13:57:25 engels Exp $
 ************************************************************************
 
 
@@ -19,6 +19,84 @@ for every processor as well as for the global scope.
 By using the framework users don't have to write any code that deals with the IO they simply 
 write processors with defined callbacks, i.e. init(), processRunHeader(), processEvent(), end().
 
+
+  +++ (NEW since v00-09-08) +++
+
+CMake support has been added to Marlin, for more information
+on this tool read the file CMAKEHOWTO.
+
+Instructions for building Marlin with CMake:
+
+first you have to make sure cmake is in your PATH environment! (for SL3 and SL4
+users check /afs/desy.de/group/it/ilcsoft/CMake
+
+$ cd <Marlin directory>
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_MODULE_PATH="Path_to_CMake_ILC_Modules" (1)
+		-DLCIO_HOME="Path_to_LCIO" ..
+
+(1) (for SL3 and SL4 users check /afs/desy.de/group/it/ilcsoft/CMakeModules
+
+$ make install
+
+example for dynamic loading of processors:
+
+$ cd examples/mymarlin
+$ mkdir build
+$ cmake -DCMAKE_MODULE_PATH="Path_to_CMake_ILC_Modules"
+		-DLCIO_HOME="Path_to_LCIO"
+		-DMarlin_HOME=../../.. ..
+$ make install
+$ cd ..
+$ MARLIN_DLL=./lib/libmymarlin.so ../../bin/Marlin -x
+
+instead of typing the last command: [ MARLIN_DLL="./lib/libmymarlin.so" ../../bin/Marlin -x ]
+you can also type:
+$ export MARLIN_DLL="$PWD/lib/libmymarlin.so"
+$ ../../bin/Marlin -x
+
+If you want to adapt your processor to be built with CMake just copy the following files
+from the mymarlin example in your Marlin/examples/mymarlin directory:
+
+CMakeLists.txt
+cmake_uninstall.cmake.in
+mymarlinConfig.cmake.in
+src/CMakeLists.txt
+
+and adapt the following files:
+
+CMakeLists.txt -> change 2 lines:
+	project name and add missing project dependencies (default are Marlin;LCIO)
+	if you don't know which dependencies your project has, set OPTION TRY_DEF_ILC to ON
+
+mymarlinConfig.cmake -> rename to MyPackageNameConfig.cmake
+
+
+However, if you have one processor that for some reason doesn't want to compile with CMake
+and it's library is a static one (libMyProcessor.a) you can try to compile Marlin with it by
+following the steps above and adding the option:
+
+-DLINK_STATIC_WHOLE_LIBS="path_to_library/libMyprocessor.a"
+
+so the cmake command to build marlin would look like:
+$ cmake -DCMAKE_MODULE_PATH="Path_to_CMake_ILC_Modules"
+		-DLCIO_HOME="Path_to_LCIO"
+		-DLINK_STATIC_WHOLE_LIBS="path_to_library/libMyprocessor.a" ..
+
+this way your static library gets linked into the Marlin binary.
+
+To build Marlin with, for example, GEAR and CLHEP the cmake build command should look like:
+$ cmake -DCMAKE_MODULE_PATH="Path_to_CMake_ILC_Modules"
+		-DLCIO_HOME="Path_to_LCIO"
+		-DGEAR_HOME="Path_to_GEAR"
+		-DCLHEP_HOME="Path_to_CLHEP"
+		-DBUILD_WITH="GEAR CLHEP" ..
+
+
+  +++++++++++++++++++++++++++
+
+
 To build the marlin library without any existing packages:
 
    #-- modify env.sh according to your system  and requirements
@@ -28,8 +106,7 @@ To build the marlin library without any existing packages:
 To build the API documentation with doxygen
    gmake -C ./src doc
 
-
-  +++ (NEW since v00-09) +++
+  +++ (since v00-09) +++
 You can also build Marlin together with existing packages that contain Marlin processors. Simply 
 create a subdirectory packages in your Marlin directory and
 copy the corresponding packages to the ./packages subdirectory (or use a symbolic link to reference
@@ -106,7 +183,7 @@ To develop your own processors and create applications:
     renaming the files source files, e.g.
 
       mv include/MyProcessor.h include/ChooseAReasonableNameForThisClass.h
-      mv src/MyProcessor.cc src/ChooseAReasonableNameForThisClass.h
+      mv src/MyProcessor.cc src/ChooseAReasonableNameForThisClass.cc
 
     edit the makefile src/GNUmakefile:
 
