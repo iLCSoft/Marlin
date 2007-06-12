@@ -6,7 +6,9 @@ TEMPLATE = app
 CONFIG -= moc
 CONFIG += create_prl link_prl
 INCLUDEPATH += $(MARLIN)/include $(LCIO)/src/cpp/include
-DEFINES += MARLIN_USE_DLL
+!isEmpty(MARLIN_USE_DLL) {
+    DEFINES += MARLIN_USE_DLL
+}
 unix:LIBS += `. $(MARLINWORKDIR)/bin/marlin_libs.sh` -L$(MARLINWORKDIR)/lib -lMarlin
 DESTDIR = $(MARLINWORKDIR)/bin/
 
