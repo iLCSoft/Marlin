@@ -32,8 +32,8 @@ SET( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 ### SETTINGS #################################################################
 
 # project options
-OPTION( BUILD_SHARED_LIBS "Set this to OFF to build static libraries " ON )
-OPTION( TRY_DEF_ILC "Set this to ON to try building with supported ILCSoftware" OFF )
+OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
+OPTION( TRY_DEF_ILC "Set to ON to try building with supported ILCSoftware" OFF )
 OPTION( INSTALL_DOC "Set to ON to install Documentation" ON )
 
 # project dependencies
@@ -70,7 +70,8 @@ INSTALL( DIRECTORY "${CMAKE_SOURCE_DIR}/include"
         PATTERN "*~" EXCLUDE
         PATTERN "*CVS*" EXCLUDE )
 
-### SOURCES #################################################################
+
+### SOURCES ##################################################################
 
 # require proper c++
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
@@ -83,6 +84,39 @@ ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 
 # get list of all source files
 AUX_SOURCE_DIRECTORY( src library_sources )
+
+
+### DOCUMENTATION ############################################################
+FIND_PACKAGE( Doxygen )
+IF( DOXYGEN_FOUND )
+
+    ADD_CUSTOM_COMMAND(
+        OUTPUT  "${CMAKE_SOURCE_DIR}/doc/html"
+        COMMAND "${DOXYGEN_EXECUTABLE}"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
+        COMMENT "Building API Documentation..."
+        VERBATIM )
+
+    # add doc target
+    ADD_CUSTOM_TARGET( doc DEPENDS
+        "${CMAKE_SOURCE_DIR}/doc/html" )
+ELSE()
+    MESSAGE( SEND_ERROR "Doxygen not found in your system!!" )
+    IF( INSTALL_DOC )
+        MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
+        SET( INSTALL_DOC OFF )
+    ENDIF()
+ENDIF()
+
+# install documentation
+IF( INSTALL_DOC )
+    # make sure doxygen is executed (make doc) before make install
+    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${CMAKE_BINARY_DIR} ARGS doc)" )
+    # install documentation
+    INSTALL( DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
+            DESTINATION .
+            PATTERN "*CVS*" EXCLUDE )
+ENDIF()
 
 
 ##########################################################################################
@@ -145,46 +179,14 @@ INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE )
 
-# DOCUMENTATION
-FIND_PACKAGE( Doxygen )
-IF( DOXYGEN_FOUND )
-
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  "${CMAKE_SOURCE_DIR}/doc/html"
-        COMMAND "${DOXYGEN_EXECUTABLE}"
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
-        COMMENT "Building API Documentation..."
-        VERBATIM )
-
-    # add doc target
-    ADD_CUSTOM_TARGET( doc DEPENDS
-        "${CMAKE_SOURCE_DIR}/doc/html" )
-ELSE()
-    MESSAGE( SEND_ERROR "Doxygen not found in your system!!" )
-    IF( INSTALL_DOC )
-        MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
-        SET( INSTALL_DOC OFF )
-    ENDIF()
-ENDIF()
-
-# install documentation
-IF( INSTALL_DOC )
-    # make sure doxygen is executed (make doc) before make install
-    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${CMAKE_BINARY_DIR} ARGS doc)" )
-    # install documentation
-    INSTALL( DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
-            DESTINATION .
-            PATTERN "*CVS*" EXCLUDE )
-ENDIF()
-
 # create uninstall configuration file 
-CONFIGURE_FILE( "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-                "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/cmake_uninstall.cmake.in"
+                "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
                 IMMEDIATE @ONLY )
 
 # create uninstall target
 ADD_CUSTOM_TARGET( uninstall
-  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" )
+  "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake" )
 
 # create configuration file from .in file
 CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in"
@@ -211,7 +213,7 @@ MESSAGE( STATUS )
 # force some variables that could be defined in the command line
 # to be written to cache
 SET( BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}" CACHE BOOL
-    "Build shared libraries flag" FORCE )
+    "Set to OFF to build static libraries" FORCE )
 SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
     "Where to install ${PROJECT_NAME}" FORCE )
 SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
@@ -219,7 +221,7 @@ SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
     "Path to custom CMake Modules" FORCE )
 SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
-    "Set this to ON to try building with supported ILCSoftware" FORCE )
+    "Set to ON to try building with supported ILCSoftware" FORCE )
 SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
     "Set to ON to install Documentation" FORCE )
 
