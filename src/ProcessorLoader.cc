@@ -19,6 +19,8 @@ namespace marlin{
 //       void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY ) ;
 //       void* libPointer  = dlopen( libName.c_str() , RTLD_NOW) ;
 
+	 std::cout << "<!-- Loading shared library : " 
+		   << libName << " -->" << std::endl ;
        void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY | RTLD_GLOBAL) ;
        //void* libPointer  = dlopen( libName.c_str() , RTLD_NOW | RTLD_GLOBAL) ;
 
@@ -31,8 +33,6 @@ namespace marlin{
 
        }else{
 
-	 std::cout << "<!-- Loading shared library : " 
-		   << libName << " -->" << std::endl ;
 
 	 _libs.push_back( libPointer ) ;
        }
