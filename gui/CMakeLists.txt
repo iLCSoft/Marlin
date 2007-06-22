@@ -3,34 +3,35 @@
 # @author Jan Engels, DESY
 #####################################
 
-# cmake minimum required version
-CMAKE_MINIMUM_REQUIRED( VERSION 2.4 )
-#SET( CMAKE_BACKWARDS_COMPATIBILITY 2.2 )
+########################################################
+# CMake compatibility issues: don't modify this, please!
+CMAKE_MINIMUM_REQUIRED( VERSION 2.4.6 )
+#SET( CMAKE_BACKWARDS_COMPATIBILITY 2.4.6 )
 MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
-
 # allow more human readable "if then else" constructs
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
+########################################################
 
 # project name
 PROJECT( MarlinGUI )
 
 # project options
 OPTION( MARLIN_USE_DLL "Set to OFF to build MarlinGUI without DLL support" ON )
+OPTION( TRY_DEF_ILC "Set to ON to try building with supported ILCSoftware" ON )
 
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "Marlin;LCIO" )
 
 # project optional dependencies
 IF( TRY_DEF_ILC )
-	IF( NOT DEFINED LINK_WITH )
-		SET( LINK_WITH "GEAR;LCCD;CLHEP;RAIDA" )
-	ENDIF()
+    IF( NOT DEFINED LINK_WITH )
+        SET( LINK_WITH "GEAR;LCCD;CLHEP;RAIDA" )
+    ENDIF()
 ENDIF()
 
 # set default install prefix to project root directory
-#IF( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
 IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
-	SET( CMAKE_INSTALL_PREFIX "${${PROJECT_NAME}_SOURCE_DIR}/.." )
+    SET( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/.." )
 ENDIF()
 
 ## append link pathes to rpath list
@@ -46,40 +47,40 @@ FIND_PACKAGE( Qt4 REQUIRED )
 INCLUDE(${QT_USE_FILE})
 
 SET( cpp_srcs
-	addcondition.cpp
-	addprocdialog.cpp
-	aprocdelegate.cpp
-	dialog.cpp
-	editcondition.cpp
-	flowlayout.cpp
-	gparamdelegate.cpp
-	guihelp.cpp
-	icoldelegate.cpp
-	icoltdelegate.cpp
-	iprocdelegate.cpp
-	mainwindow.cpp
-	nparamvecset.cpp
-	nparamvecsetd.cpp
-	ocoldelegate.cpp
-	paramdelegate.cpp
+    addcondition.cpp
+    addprocdialog.cpp
+    aprocdelegate.cpp
+    dialog.cpp
+    editcondition.cpp
+    flowlayout.cpp
+    gparamdelegate.cpp
+    guihelp.cpp
+    icoldelegate.cpp
+    icoltdelegate.cpp
+    iprocdelegate.cpp
+    mainwindow.cpp
+    nparamvecset.cpp
+    nparamvecsetd.cpp
+    ocoldelegate.cpp
+    paramdelegate.cpp
 )
 
 SET( moc_hdrs
-	addcondition.h
-	addprocdialog.h
-	aprocdelegate.h
-	dialog.h
-	editcondition.h
-	gparamdelegate.h
-	guihelp.h
-	icoldelegate.h
-	icoltdelegate.h
-	iprocdelegate.h
-	mainwindow.h
-	nparamvecset.h
-	nparamvecsetd.h
-	ocoldelegate.h
-	paramdelegate.h
+    addcondition.h
+    addprocdialog.h
+    aprocdelegate.h
+    dialog.h
+    editcondition.h
+    gparamdelegate.h
+    guihelp.h
+    icoldelegate.h
+    icoltdelegate.h
+    iprocdelegate.h
+    mainwindow.h
+    nparamvecset.h
+    nparamvecsetd.h
+    ocoldelegate.h
+    paramdelegate.h
 )
 
 #QT4_AUTOMOC(${cpp_srcs})
@@ -111,9 +112,9 @@ ENDIF()
 ADD_CUSTOM_TARGET( bin )
 
 IF( MARLIN_USE_DLL )
-	ADD_EXECUTABLE( ${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} ../src/ProcessorLoader )
+    ADD_EXECUTABLE( ${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} ../src/ProcessorLoader )
 ELSE()
-	ADD_EXECUTABLE( ${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
+    ADD_EXECUTABLE( ${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
 ENDIF()
 
 # tell bin target to call this bin_XXX target
@@ -121,19 +122,19 @@ ADD_DEPENDENCIES( bin ${PROJECT_NAME} )
 
 # whole archive libraries
 IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-	IF( UNIX )
-		SEPARATE_ARGUMENTS( LINK_STATIC_WHOLE_LIBS )
-		SET( LINK_STATIC_WHOLE_LIBS "${LINK_STATIC_WHOLE_LIBS}" CACHE STRING
-				"Link ${PROJECT_NAME} with these static libs" FORCE )
-		MESSAGE( STATUS "Following static libraries are going to be linked to ${PROJECT_NAME} with the" )
-		MESSAGE( STATUS "-Wl,--whole-archive linker flag:" )
-		FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
-			MESSAGE( STATUS "${lib}" )
-			TARGET_LINK_LIBRARIES( ${PROJECT_NAME} -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
-		ENDFOREACH()
-	ELSE()
-		MESSAGE( FATAL_ERROR "The LINK_STATIC_WHOLE_LIBS option is only avaliabe for *nix systems" )
-	ENDIF()
+    IF( UNIX )
+        SEPARATE_ARGUMENTS( LINK_STATIC_WHOLE_LIBS )
+        SET( LINK_STATIC_WHOLE_LIBS "${LINK_STATIC_WHOLE_LIBS}" CACHE STRING
+                "Link ${PROJECT_NAME} with these static libs" FORCE )
+        MESSAGE( STATUS "Following static libraries are going to be linked to ${PROJECT_NAME} with the" )
+        MESSAGE( STATUS "-Wl,--whole-archive linker flag:" )
+        FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
+            MESSAGE( STATUS "${lib}" )
+            TARGET_LINK_LIBRARIES( ${PROJECT_NAME} -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
+        ENDFOREACH()
+    ELSE()
+        MESSAGE( FATAL_ERROR "The LINK_STATIC_WHOLE_LIBS option is only avaliabe for *nix systems" )
+    ENDIF()
 ENDIF()
 
 # link against qt libraries
@@ -145,13 +146,12 @@ INSTALL( TARGETS ${PROJECT_NAME} DESTINATION bin )
 ###########################################################################################################
 
 ## create uninstall configuration file 
-CONFIGURE_FILE( "${CMAKE_CURRENT_SOURCE_DIR}/../cmake_uninstall.cmake.in"
-				"${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-				IMMEDIATE @ONLY )
+CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/../cmake_uninstall.cmake.in"
+                "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+                IMMEDIATE @ONLY )
 
 # create uninstall target
-ADD_CUSTOM_TARGET( uninstall
-  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" )
+ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake" )
 
 # display status message for important variables
 MESSAGE( STATUS )
@@ -166,10 +166,10 @@ MESSAGE( STATUS )
 # force some variables that could be defined in the command line
 # to be written to cache
 SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
-	"Where to install ${PROJECT_NAME}" FORCE )
+    "Where to install ${PROJECT_NAME}" FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
-	"Path to custom CMake Modules" FORCE )
+    "Path to custom CMake Modules" FORCE )
 SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
-	"Set to ON to support DLL in ${PROJECT_NAME}" FORCE )
+    "Set to OFF to build MarlinGUI without DLL support" FORCE )
 SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
-	"Set this to ON to try building with supported ILCSoftware" FORCE )
+    "Set to ON to try building with supported ILCSoftware" FORCE )
