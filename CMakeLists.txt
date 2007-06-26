@@ -25,6 +25,7 @@ OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
 OPTION( TRY_DEF_ILC "Set to ON to try building with supported ILCSoftware" OFF )
 OPTION( MARLIN_USE_DLL "Set to ON to build Marlin with DLL support" ON )
 OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
+OPTION( INSTALL_DOC "Set to ON to install Documentation" ON )
 
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "LCIO" )
@@ -45,6 +46,38 @@ ENDIF()
 #IF( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
 IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
     SET( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}" )
+ENDIF()
+
+# DOCUMENTATION
+FIND_PACKAGE( Doxygen )
+IF( DOXYGEN_FOUND )
+                                                                                                                                                            
+    ADD_CUSTOM_COMMAND(
+        OUTPUT  "${CMAKE_SOURCE_DIR}/doc/html"
+        COMMAND "${DOXYGEN_EXECUTABLE}" ARGS "Doxyfile_cmake"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
+        COMMENT "Building API Documentation..."
+        VERBATIM )
+                                                                                                                                                            
+    # add doc target
+    ADD_CUSTOM_TARGET( doc DEPENDS
+        "${CMAKE_SOURCE_DIR}/doc/html" )
+ELSE()
+    MESSAGE( SEND_ERROR "Doxygen not found in your system!!" )
+    IF( INSTALL_DOC )
+        MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
+        SET( INSTALL_DOC OFF )
+    ENDIF()
+ENDIF()
+
+# install documentation
+IF( INSTALL_DOC )
+    # make sure doxygen is executed (make doc) before make install
+    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${CMAKE_BINARY_DIR} ARGS doc)" )
+    # install documentation
+    INSTALL( DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
+            DESTINATION .
+            PATTERN "*CVS*" EXCLUDE )
 ENDIF()
 
 ##########################################################################################
@@ -113,6 +146,7 @@ MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
 MESSAGE( STATUS "TRY_DEF_ILC = ${TRY_DEF_ILC}" )
 MESSAGE( STATUS "MARLIN_USE_DLL = ${MARLIN_USE_DLL}" )
 MESSAGE( STATUS "MARLIN_GUI = ${MARLIN_GUI}" )
+MESSAGE( STATUS "INSTALL_DOC = ${INSTALL_DOC}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
@@ -133,6 +167,8 @@ SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
     "Set to ON to build Marlin with DLL support" FORCE )
 SET( MARLIN_GUI "${MARLIN_GUI}" CACHE BOOL
     "Set to ON to build Marlin GUI" FORCE )
+SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
+    "Set to ON to install Documentation" FORCE )
 
 # export library dependencies (keep this as the last line in the file)
 EXPORT_LIBRARY_DEPENDENCIES( "${PROJECT_NAME}LibDeps.cmake" )
