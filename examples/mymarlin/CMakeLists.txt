@@ -101,7 +101,7 @@ IF( DOXYGEN_FOUND )
     ADD_CUSTOM_TARGET( doc DEPENDS
         "${CMAKE_SOURCE_DIR}/doc/html" )
 ELSE()
-    MESSAGE( SEND_ERROR "Doxygen not found in your system!!" )
+    MESSAGE( STATUS "Doxygen not found in your system!!" )
     IF( INSTALL_DOC )
         MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
         SET( INSTALL_DOC OFF )
