@@ -34,7 +34,7 @@ SET( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
 OPTION( TRY_DEF_ILC "Set to ON to try building with supported ILCSoftware" OFF )
-OPTION( INSTALL_DOC "Set to ON to install Documentation" ON )
+OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
 
 # project dependencies
 # e.g. SET( ${PROJECT_NAME}_DEPENDS "Marlin MarlinUtil LCIO GEAR CLHEP GSL RAIDA ROOT" )
@@ -125,10 +125,10 @@ ENDIF()
 
 
 # library *nix style versioning
-SET( ${PROJECT_NAME}_VERSION
-    "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
 SET( ${PROJECT_NAME}_SOVERSION
     "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}" )
+SET( ${PROJECT_NAME}_VERSION
+    "${${PROJECT_NAME}_SOVERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
 
 # add library install path to the rpath list
 SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
@@ -223,7 +223,11 @@ SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
 SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
     "Set to ON to try building with supported ILCSoftware" FORCE )
 SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
-    "Set to ON to install Documentation" FORCE )
+    "Set to OFF to skip build/install Documentation" FORCE )
+
+# export build settings
+INCLUDE( CMakeExportBuildSettings )
+CMAKE_EXPORT_BUILD_SETTINGS( "${PROJECT_NAME}BuildSettings.cmake" )
 
 # export library dependencies (keep this as the last line in the file)
 EXPORT_LIBRARY_DEPENDENCIES( "${PROJECT_NAME}LibDeps.cmake" )
