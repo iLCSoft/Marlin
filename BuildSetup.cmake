@@ -39,6 +39,12 @@ SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
 SET( RAIDA_HOME "${ILC_HOME}/RAIDA/HEAD"
     CACHE PATH "Path to RAIDA" FORCE )
 
+# You need to set QT4_HOME path if you want to build the GUI
+SET( MARLIN_GUI ON CACHE BOOL "Set to ON to build Marlin GUI" FORCE )
+# Path to QT4 (needed for MARLIN_GUI)
+SET( QT4_HOME "/afs/desy.de/group/it/ilcsoft/QT/4.2.2"
+    CACHE PATH "Path to QT4" FORCE )
+ 
 # CMake Modules Path
 SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-00"
     CACHE PATH "Path to CMake Modules" FORCE )
@@ -54,7 +60,6 @@ SET( BUILD_WITH "GEAR;LCCD;CLHEP;RAIDA"
 #SET( BUILD_SHARED_LIBS OFF CACHE BOOL "Set to OFF to build static libraries" FORCE )
 #SET( INSTALL_DOC OFF CACHE BOOL "Set to OFF to skip build/install Documentation" FORCE )
 #SET( MARLIN_USE_DLL OFF CACHE BOOL "Set to OFF to build Marlin without DLL support" FORCE )
-SET( MARLIN_GUI ON CACHE BOOL "Set to ON to build Marlin GUI" FORCE )
 
 # set cmake build type, default value is: RelWithDebInfo
 # possible options are: None Debug Release RelWithDebInfo MinSizeRel

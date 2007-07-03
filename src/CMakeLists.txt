@@ -56,6 +56,7 @@ SET( lib_srcs ${all_srcs} )
 # gui stuff
 IF( MARLIN_GUI )
 
+    SET( ENV{PATH} "${QT4_HOME}/bin:$ENV{PATH}" )
     FIND_PACKAGE( Qt4 REQUIRED )
     INCLUDE(${QT_USE_FILE})
 
