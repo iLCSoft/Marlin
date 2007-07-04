@@ -20,8 +20,18 @@ namespace marlin{
   
   LCIOOutputProcessor anLCIOOutputProcessor ;
   
+  LCIOOutputProcessor::~LCIOOutputProcessor() {
+  } 
+
+  LCIOOutputProcessor::LCIOOutputProcessor(const std::string& typeName) : Processor(typeName)  {
+    myConstruct() ;
+  }
   LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
-    
+    myConstruct() ;
+  }
+
+  void LCIOOutputProcessor::myConstruct(){
+
     _description = "Writes the current event to the specified LCIO outputfile."
       " Needs to be the last ActiveProcessor." ;
     
