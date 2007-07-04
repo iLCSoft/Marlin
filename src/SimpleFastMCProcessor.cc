@@ -1,4 +1,4 @@
-#undef MARLIN_USE_AIDA    // fix problem wit RAIDA for now: don't make any plots
+//#undef MARLIN_USE_AIDA    // fix problem wit RAIDA for now: don't make any plots
 
 #include "marlin/SimpleFastMCProcessor.h"
 
@@ -57,6 +57,19 @@ namespace marlin{
 			     std::string("MCParticle") ) ;
     
     
+    registerOutputCollection( LCIO::RECONSTRUCTEDPARTICLE,
+			     "RecoParticleCollectionName" , 
+			     "Name of the ReconstructedParticles output collection"  ,
+			     _recoParticleCollectionName ,
+			     std::string("ReconstructedParticles") ) ;
+
+    registerOutputCollection( LCIO::LCRELATION,
+			     "MCTruthMappingCollectionName" , 
+			     "Name of the MCTruthMapping output collection"  ,
+			     _mcTruthCollectionName ,
+			     std::string("MCTruthMapping") ) ;
+
+
     registerProcessorParameter( "MomentumCut" , 
 				"No reconstructed particles are produced for smaller momenta (in [GeV])"  ,
 				_momentumCut ,
@@ -165,8 +178,9 @@ namespace marlin{
     }
     recVec->setDefault( true ) ;
 
-    evt->addCollection( recVec, "ReconstructedParticles" ) ;
-    evt->addCollection( relNav.createLCCollection() , "MCTruthMapping" ) ;
+    evt->addCollection( recVec, _recoParticleCollectionName ) ;
+    evt->addCollection( relNav.createLCCollection() , _mcTruthCollectionName ) ;
+
 
     _nEvt ++ ;
   }
@@ -220,18 +234,18 @@ namespace marlin{
       
       
       hGamHelperP1 = AIDAProcessor::histogramFactory(this)->
-       	createProfile1D( "hGamHelperP1", " helper profile of energy spread", 20, 1.,21. ) ; 
+	 createProfile1D( "hGamHelperP1", " helper profile of energy spread", 10, 0.,20. ) ; 
       
       hHadHelperP1 = AIDAProcessor::histogramFactory(this)->
-       	createProfile1D( "hHadHelperP1", " helper profile of energy spread",  20, 1.,21. ) ; 
+	createProfile1D( "hHadHelperP1", " helper profile of energy spread",  10, 0.,20. ) ; 
     }
     
     
     // fill histogram from LCIO data :
     
-    LCCollection* recCol = evt->getCollection("ReconstructedParticles") ;
+    LCCollection* recCol = evt->getCollection(_recoParticleCollectionName ) ;
     
-    LCCollection* relCol = evt->getCollection( "MCTruthMapping") ;
+    LCCollection* relCol = evt->getCollection( _mcTruthCollectionName ) ;
     
     if( relCol == 0 ) {
       std::cout << "SimpleFastMCProcessor::check no collection found: MCTruthMapping" << std::endl ;
@@ -271,24 +285,27 @@ namespace marlin{
 	  
 	  double rE =  rec->getEnergy() ;
 	  double mE =  mcp->getEnergy() ;
-	  double dEoverE = ( rE - mE ) /  mE  ;
+
+ 	  double dEoverE = ( rE - mE ) /  mE  ;
 	  
 	  if( rec->getType() == PHOTON) { 
 	    
-	    hPhotonEnergy->fill( rE ) ;
-	    
-	    hGamHelperP1->fill(  rE  ,   dEoverE  ) ;
-	    
-	    hPhotonRes->fill(  dEoverE , rE    ) ;
+	    hPhotonEnergy->fill( mE ) ;
+	    hGamHelperP1->fill(  mE  ,   dEoverE  ) ;
+	    hPhotonRes->fill(  dEoverE , mE    ) ;
 	    
 	  }
 	  else if( rec->getType() == NEUTRAL_HADRON ) { 
 	    
-	    hHadronEnergy->fill( rE ) ;
+	    // 	    if( mE > 0.9 && mE < 1.1 ){ 
+
+	    hHadronRes->fill(  dEoverE , mE   ) ;
+	    hHadronEnergy->fill( mE ) ;
+	    hHadHelperP1->fill(  mE , dEoverE  ) ;
 	    
-	    hHadHelperP1->fill(  rE  ,   dEoverE  ) ;
-	    
-	    hHadronRes->fill(   dEoverE , rE    ) ;
+	      // 	    }
+
+
 	  }	  
 
 	} // not charged
@@ -309,16 +326,20 @@ namespace marlin{
 	      << " processed " << _nEvt << " events in " << _nRun << " runs "
 	      << std::endl ;
     
-#ifdef MARLIN_USE_AIDA
+#ifdef MARLIN_USE_AIDA_IGNORE_FOR_NOW
+    // FIXME:
+    // RAIDA does not support DataPoint sets and AIDA in generall does not allow to create a histogramm 
+    // with 'faked' entries from another source (i.e. bin mean, bin error, ...)
+
     // create data sets for the energy resolution in the calorimeter
     
-    AIDA::IProfile1D* hGamHelperP1 ;
-    AIDA::IManagedObject* obj = AIDAProcessor::tree(this)->find("hGamHelperP1") ;
-    if( obj != 0 )  hGamHelperP1 = static_cast<AIDA::IProfile1D*>( obj->cast("AIDA::IProfile1D") ) ;
+     AIDA::IProfile1D* hGamHelperP1 = 0 ;
+     AIDA::IManagedObject* obj = AIDAProcessor::tree(this)->find("hGamHelperP1") ;
+     if( obj != 0 )  hGamHelperP1 = static_cast<AIDA::IProfile1D*>( obj->cast("AIDA::IProfile1D") ) ;
     
-    AIDA::IProfile1D* hHadHelperP1 ; 
-    obj =  AIDAProcessor::tree(this)->find("hHadHelperP1");    
-    if( obj != 0 )  hHadHelperP1 = static_cast<AIDA::IProfile1D*>( obj->cast("AIDA::IProfile1D") ) ;
+     AIDA::IProfile1D* hHadHelperP1 = 0 ; 
+     obj =  AIDAProcessor::tree(this)->find("hHadHelperP1");    
+     if( obj != 0 )  hHadHelperP1 = static_cast<AIDA::IProfile1D*>( obj->cast("AIDA::IProfile1D") ) ;
     
     
     AIDA::IDataPointSet* dPhotonRes =  AIDAProcessor::dataPointSetFactory(this)->
@@ -395,4 +416,4 @@ namespace marlin{
   
   
 
-#define MARLIN_USE_AIDA 1 
+//#define MARLIN_USE_AIDA 1 

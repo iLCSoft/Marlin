@@ -60,8 +60,11 @@ namespace marlin{
    * @param NeutralHadronResolution Resolution dE/E=A+B/sqrt(E/GeV) of neutral hadrons in polar angle range: A  B th_min  th_max
    * @param PhotonResolution   Resolution dE/E=A+B/sqrt(E/GeV) of photons in polar angle range: A  B th_min  th_max
    *
+   * @param RecoParticleCollectionName    default is "ReconstructedParticles"
+   * @param MCTruthMappingCollectionName  default is "MCTruthMapping"
+   * 
    *  @author F. Gaede, DESY
-   *  @version $Id: SimpleFastMCProcessor.h,v 1.3 2005-10-11 12:56:28 gaede Exp $ 
+   *  @version $Id: SimpleFastMCProcessor.h,v 1.4 2007-07-04 12:13:06 gaede Exp $ 
    */
   
   class SimpleFastMCProcessor : public Processor {
@@ -100,6 +103,10 @@ namespace marlin{
     
     /**  Input collection name */
     std::string _inputCollectionName ;
+
+    /**  Ouput collection names */
+    std::string _recoParticleCollectionName ;
+    std::string _mcTruthCollectionName ;
 
     /** Momentum cut in GeV */
     float _momentumCut ;
