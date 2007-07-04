@@ -52,8 +52,8 @@ namespace marlin{
       
       type = PHOTON ;
       
-    } else if(  mcp->getPDG() == 12 || mcp->getPDG() == 14 ||
-		mcp->getPDG() == 16 || mcp->getPDG() == 18 )  { // neutrinos
+    } else if(  std::abs( mcp->getPDG() ) == 12 || std::abs( mcp->getPDG() ) == 14 ||
+		std::abs( mcp->getPDG() ) == 16 || std::abs( mcp->getPDG() ) == 18 )  { // neutrinos - 18 is tau-prime
 
       type = NEUTRINO ;
 
@@ -95,10 +95,14 @@ namespace marlin{
 
     HepLorentzVector reco4v(0.,0.,0.,0.)  ;
     
-    if( sm != 0 ){
-
-      reco4v = sm->smearedFourVector( mc4V , mcp->getPDG() ) ;
+    if( sm == 0 ){
+      // if we don't have a smearer registered we don't reconstruct the particle, e.g for neutrinos
+      
+      return 0 ;
     }
+
+    reco4v = sm->smearedFourVector( mc4V , mcp->getPDG() ) ;
+   
     
     ReconstructedParticleImpl* rec = 0 ;
     
