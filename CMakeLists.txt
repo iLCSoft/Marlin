@@ -88,20 +88,26 @@ SET( ${PROJECT_NAME}_SOVERSION
 SET( ${PROJECT_NAME}_VERSION
     "${${PROJECT_NAME}_SOVERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
 
-# add library install path to the rpath list
-SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
-MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH )
-
-# append link pathes to rpath list
-SET( CMAKE_INSTALL_RPATH_USE_LINK_PATH 1 )
-MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH_USE_LINK_PATH )
-
 # output directories
 SET( EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin" CACHE PATH
     "EXECUTABLE_OUTPUT_PATH" FORCE )
 SET( LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib" CACHE PATH
     "LIBRARY_OUTPUT_PATH" FORCE )
 MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
+
+# add install path to the rpath list
+SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
+MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH )
+
+# add install path to the rpath list (apple)
+IF( APPLE )
+    SET( CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib" )
+    MARK_AS_ADVANCED( CMAKE_INSTALL_NAME_DIR )
+ENDIF()
+
+# append link pathes to rpath list
+SET( CMAKE_INSTALL_RPATH_USE_LINK_PATH 1 )
+MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH_USE_LINK_PATH )
 
 # DEPENDENCIES: this code has to be placed before adding any library or
 # executable so that these are linked properly against the dependencies
