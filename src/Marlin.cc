@@ -177,27 +177,18 @@ int main(int argc, char** argv ){
     parser = new XMLParser( steeringFileName ) ;
   }
   
-  
-  //     Parser  parser( steeringFileName ) ;
-  //     assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
-  
-  //     createProcessors( parser ) ;
-  
-  // //     std::cout <<  "---- Global parameters : " << std::endl 
-  // // 	      << *Global::parameters  <<  std::endl ;
-  
-  //   } else {
-  
-  //     XMLParser  parser( steeringFileName ) ;
-  //     assert( ( Global::parameters = parser.getParameters("Global") ) != 0 ) ;
-  
-  //     createProcessors( parser ) ;
-  //   }
-
   parser->parse() ;
 
-  assert( ( Global::parameters = parser->getParameters("Global") ) != 0 ) ;
+  Global::parameters = parser->getParameters("Global")  ;
 
+  //fg: can't use assert, as this generates no code when compiled with NDEBUG
+  if( Global::parameters  == 0 ) {
+    std::cout << "  Could not get global parameters from steering file ! " << std::endl  
+	      << "   The program has to exit - sorry ! " 
+	      << std::endl ;
+    exit(1) ;
+  }
+  
 //   std::map<std::string, int> verbosity_levels;
 //   verbosity_levels[std::string("VERBOSE")]=Processor::VERBOSE;
 //   verbosity_levels[std::string("DEBUG")]=Processor::DEBUG;
