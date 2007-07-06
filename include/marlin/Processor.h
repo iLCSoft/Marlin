@@ -13,6 +13,7 @@
 #include "StringParameters.h"
 #include "ProcessorParameter.h"
 #include "LogStream.h"
+#include "marlin/VerbosityLevels.h"
 #include <map>
 
 /** Define convenient macros for using message efficiently, use m_out(VERBOSITY) for std::cout
@@ -23,7 +24,8 @@
  *                   <<  m_endl ;  // <-- NEEDED !!!
  *  </pre>
  */
-#define m_out( VERBOSITY ) message<VERBOSITY>( VERBOSITY::active && log() 
+//#define m_out( VERBOSITY ) message<VERBOSITY>( VERBOSITY::active && log() 
+#define m_out( VERBOSITY ) message<VERBOSITY>( log() 
 
 #define m_endl "" ) 
 
@@ -56,7 +58,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.29 2007-05-25 13:09:03 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.30 2007-07-06 08:32:59 gaede Exp $ 
    */
   
   class Processor {
@@ -339,15 +341,15 @@ namespace marlin{
      *                   <<  m_endl ;  // <-- NEEDED !!!
      *  </pre>
      */
-    template <class T>
-    inline void message( bool b ) const {
-      
-      if( b ) {
-	
-	this->template message<T>( _str->str() ) ;
-	
-      }
-    }
+    //fg: this causesa a strange bug when message(string ) is used in another package -
+    //    it seems like const char* is resolved by bool rather than const std::string& !?
+    //    FIXME ! 
+//     template <class T>
+//     inline void message( bool b ) const {
+//       if( b ) {
+// 	this->template message<T>( _str->str() ) ;
+//       }
+//     }
     
     /** Returns an empty stringstream that is used for by the message method.
      */

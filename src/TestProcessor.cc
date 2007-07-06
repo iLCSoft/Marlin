@@ -142,6 +142,8 @@ namespace marlin{
 		   << _nRun << " runs " << std::endl 
 		   << m_endl ;
     
+
+    message<DEBUG>( " and this is really the final DEBUG message ....") ;
   }
   
 }// namespace marlin
