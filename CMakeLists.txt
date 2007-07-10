@@ -22,20 +22,12 @@ SET( ${PROJECT_NAME}_PATCH_LEVEL 8 )
 
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
-OPTION( TRY_DEF_ILC "Set to ON to try building with supported ILCSoftware" OFF )
 OPTION( MARLIN_USE_DLL "Set to OFF to build Marlin without DLL support" ON )
 OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
 
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "LCIO" )
-
-# project optional dependencies
-IF( TRY_DEF_ILC )
-    IF( NOT DEFINED BUILD_WITH )
-        SET( BUILD_WITH "GEAR;LCCD;CLHEP;RAIDA" )
-    ENDIF()
-ENDIF()
 
 # set default cmake build type to RelWithDebInfo
 IF( NOT CMAKE_BUILD_TYPE )
@@ -149,7 +141,6 @@ MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
-MESSAGE( STATUS "TRY_DEF_ILC = ${TRY_DEF_ILC}" )
 MESSAGE( STATUS "MARLIN_USE_DLL = ${MARLIN_USE_DLL}" )
 MESSAGE( STATUS "MARLIN_GUI = ${MARLIN_GUI}" )
 MESSAGE( STATUS "INSTALL_DOC = ${INSTALL_DOC}" )
@@ -167,8 +158,6 @@ SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
     "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
     "Path to custom CMake Modules" FORCE )
-SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
-    "Set to ON to try building with supported ILCSoftware" FORCE )
 SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
     "Set to OFF to build Marlin without DLL support" FORCE )
 SET( MARLIN_GUI "${MARLIN_GUI}" CACHE BOOL
