@@ -33,19 +33,11 @@ SET( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
-OPTION( TRY_DEF_ILC "Set to ON to try building with supported ILCSoftware" OFF )
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
 
 # project dependencies
 # e.g. SET( ${PROJECT_NAME}_DEPENDS "Marlin MarlinUtil LCIO GEAR CLHEP GSL RAIDA ROOT" )
 SET( ${PROJECT_NAME}_DEPENDS "Marlin LCIO" )
-
-# project optional dependencies
-IF( TRY_DEF_ILC )
-    IF( NOT DEFINED BUILD_WITH )
-        SET( BUILD_WITH "MarlinUtil GEAR LCCD RAIDA CLHEP GSL" )
-    ENDIF()
-ENDIF()
 
 # set default cmake build type to RelWithDebInfo
 # possible options are: None Debug Release RelWithDebInfo MinSizeRel
@@ -202,7 +194,6 @@ MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
-MESSAGE( STATUS "TRY_DEF_ILC = ${TRY_DEF_ILC}" )
 MESSAGE( STATUS "${PROJECT_NAME}_DEPENDS = \"${${PROJECT_NAME}_DEPENDS}\"" )
 MESSAGE( STATUS "BUILD_WITH = \"${BUILD_WITH}\"" )
 MESSAGE( STATUS "INSTALL_DOC = ${INSTALL_DOC}" )
@@ -220,8 +211,6 @@ SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
     "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
     "Path to custom CMake Modules" FORCE )
-SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
-    "Set to ON to try building with supported ILCSoftware" FORCE )
 SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
     "Set to OFF to skip build/install Documentation" FORCE )
 
