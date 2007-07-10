@@ -64,11 +64,42 @@ SET( RAIDA_HOME "${ILC_HOME}/RAIDA/HEAD"
     CACHE PATH "Path to RAIDA" FORCE )
 
 #############################################################################
+# Link Marlin binary with Processor libraries
+#############################################################################
+
+# If you don't want to load processor libraries dynamically at run time with
+# the environment variable MARLIN_DLL you can instead link the Marlin binary
+# at compile time with these libraries.
+
+# Define here what packages you want Marlin to be linked with
+#SET( LINK_WITH "MarlinReco CEDViewer PandoraPFA SiliconDigi LCFIVertex"
+#    CACHE STRING "Link Marlin with these optional packages" FORCE )
+#
+## Path to MarlinReco
+#SET( MarlinReco_HOME "${ILC_HOME}/MarlinReco/HEAD"
+#    CACHE PATH "Path to MarlinReco" FORCE )
+#
+## Path to CEDViewer
+#SET( CEDViewer_HOME "${ILC_HOME}/CEDViewer/HEAD"
+#    CACHE PATH "Path to CEDViewer" FORCE )
+#
+## Path to PandoraPFA
+#SET( PandoraPFA_HOME "${ILC_HOME}/PandoraPFA/HEAD"
+#    CACHE PATH "Path to PandoraPFA" FORCE )
+#
+## Path to SiliconDigi
+#SET( SiliconDigi_HOME "${ILC_HOME}/SiliconDigi/HEAD"
+#    CACHE PATH "Path to SiliconDigi" FORCE )
+#
+## Path to LCFIVertex
+#SET( LCFIVertex_HOME "${ILC_HOME}/LCFIVertex/HEAD"
+#    CACHE PATH "Path to LCFIVertex" FORCE )
+
+#############################################################################
 # Project options
 #############################################################################
 
 #SET( INSTALL_DOC OFF CACHE BOOL "Set to OFF to skip build/install Documentation" FORCE )
-#SET( MARLIN_USE_DLL OFF CACHE BOOL "Set to OFF to build Marlin without DLL support" FORCE )
 
 # set cmake build type, default value is: RelWithDebInfo
 # possible options are: None Debug Release RelWithDebInfo MinSizeRel
@@ -78,7 +109,10 @@ SET( RAIDA_HOME "${ILC_HOME}/RAIDA/HEAD"
 # Advanced options
 #############################################################################
 
+# You can only a static Marlin binary under Linux!!!
 #SET( BUILD_SHARED_LIBS OFF CACHE BOOL "Set to OFF to build static libraries" FORCE )
+
+#SET( MARLIN_NO_DLL ON CACHE BOOL "Set to ON to build Marlin without DLL support" FORCE )
 
 # installation path for Marlin
 #SET( CMAKE_INSTALL_PREFIX "/foo/bar" CACHE STRING "Where to install Marlin" FORCE )
