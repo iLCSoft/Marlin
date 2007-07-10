@@ -19,8 +19,8 @@ echo "  MARLIN set to:" $MARLIN
 #debug mode (needed for message<DEBUG>( str ); )
 export MARLINDEBUG=1
 
-#support plugins 
-export MARLIN_USE_DLL=1
+# disable plugins support
+#export MARLIN_NO_DLL=1
 
 # build with the gui
 export MARLIN_GUI=1

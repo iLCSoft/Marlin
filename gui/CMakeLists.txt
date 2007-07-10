@@ -16,18 +16,10 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 PROJECT( MarlinGUI )
 
 # project options
-OPTION( MARLIN_USE_DLL "Set to OFF to build MarlinGUI without DLL support" ON )
-OPTION( TRY_DEF_ILC "Set to ON to try building with supported ILCSoftware" ON )
+OPTION( MARLIN_NO_DLL "Set to ON to build MarlinGUI without DLL support" OFF )
 
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "Marlin;LCIO" )
-
-# project optional dependencies
-IF( TRY_DEF_ILC )
-    IF( NOT DEFINED LINK_WITH )
-        SET( LINK_WITH "GEAR;LCCD;CLHEP;RAIDA" )
-    ENDIF()
-ENDIF()
 
 # set default install prefix to project root directory
 IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
@@ -86,8 +78,8 @@ SET( moc_hdrs
 #QT4_AUTOMOC(${cpp_srcs})
 QT4_WRAP_CPP( cpp_moc_srcs ${moc_hdrs} )
 
-IF( MARLIN_USE_DLL )
-    ADD_DEFINITIONS( "-DMARLIN_USE_DLL" )
+IF( MARLIN_NO_DLL )
+    ADD_DEFINITIONS( "-DMARLIN_NO_DLL" )
 ENDIF()
 
 ####################################################################################################
@@ -111,11 +103,7 @@ ENDIF()
 # create symbolic bin target for calling targets bin_XXX
 ADD_CUSTOM_TARGET( bin )
 
-IF( MARLIN_USE_DLL )
-    ADD_EXECUTABLE( ${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} ../src/ProcessorLoader )
-ELSE()
-    ADD_EXECUTABLE( ${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
-ENDIF()
+ADD_EXECUTABLE( ${PROJECT_NAME} main.cpp ${cpp_srcs} ${cpp_moc_srcs} ../src/ProcessorLoader )
 
 # tell bin target to call this bin_XXX target
 ADD_DEPENDENCIES( bin ${PROJECT_NAME} )
@@ -158,7 +146,7 @@ MESSAGE( STATUS )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
-MESSAGE( STATUS "MARLIN_USE_DLL = ${MARLIN_USE_DLL}" )
+MESSAGE( STATUS "MARLIN_NO_DLL = ${MARLIN_NO_DLL}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
@@ -169,7 +157,5 @@ SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
     "Where to install ${PROJECT_NAME}" FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
     "Path to custom CMake Modules" FORCE )
-SET( MARLIN_USE_DLL "${MARLIN_USE_DLL}" CACHE BOOL
-    "Set to OFF to build MarlinGUI without DLL support" FORCE )
-SET( TRY_DEF_ILC "${TRY_DEF_ILC}" CACHE BOOL
-    "Set to ON to try building with supported ILCSoftware" FORCE )
+SET( MARLIN_NO_DLL "${MARLIN_NO_DLL}" CACHE BOOL
+    "Set to ON to build MarlinGUI without DLL support" FORCE )

@@ -1,3 +1,4 @@
+#ifndef MARLIN_NO_DLL
 #include "marlin/ProcessorLoader.h"
 
 #include <dlfcn.h>
@@ -50,3 +51,4 @@ namespace marlin{
     }
   }
 } // namespace marlin
+#endif //MARLIN_NO_DLL

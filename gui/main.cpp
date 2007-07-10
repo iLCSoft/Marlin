@@ -1,9 +1,7 @@
 #include <QApplication>
 
-#ifdef MARLIN_USE_DLL
 #include "marlin/Parser.h"
 #include "marlin/ProcessorLoader.h"
-#endif
 
 #include "mainwindow.h"
 
@@ -11,7 +9,7 @@ int main(int argc, char *argv[])
 {
     std::cout << "\nLoading GUI...\n";
 
-#ifdef MARLIN_USE_DLL
+#ifndef MARLIN_NO_DLL
 
   //------ load shared libraries with processors ------
                                                                                                                                                             

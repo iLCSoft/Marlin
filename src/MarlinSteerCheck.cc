@@ -8,9 +8,7 @@
 ///////////////////////////////
 
 // MARLIN INCLUDES /////////////
-#ifdef MARLIN_USE_DLL
-#include "marlin/ProcessorLoader.h"
-#endif
+//#include "marlin/ProcessorLoader.h"
 #include "marlin/ProcessorMgr.h"
 #include "marlin/XMLParser.h"
 #include "marlin/Parser.h"

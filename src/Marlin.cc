@@ -34,9 +34,7 @@
 #include "gearimpl/GearMgrImpl.h"
 #endif
 
-#ifdef MARLIN_USE_DLL
 #include "marlin/ProcessorLoader.h"
-#endif
 
 using namespace lcio ;
 using namespace marlin ;
@@ -62,7 +60,7 @@ int main(int argc, char** argv ){
   HANDLE_LCIO_EXCEPTIONS
   
 
-#ifdef MARLIN_USE_DLL
+#ifndef MARLIN_NO_DLL
     
   //------ load shared libraries with processors ------
     

@@ -51,11 +51,6 @@ BINOBJ = $(patsubst %,$(OBJDIR)/%,$(BINOBJS))
 # source files without path
 SRCS = $(filter-out $(BINSRCS),$(wildcard *.cc))
 
-ifndef MARLIN_USE_DLL
-SRCS_NO_DLL = $(filter-out ProcessorLoader.cc $(BINSRCS),$(wildcard *.cc))
-SRCS = $(SRCS_NO_DLL)
-endif
-
 # object files without path
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
@@ -105,9 +100,9 @@ LIBS += -L$(LIBDIR) -l$(PROGNAME)
 LIBS += $(PKGLIBFLAGS)
 LIBS += -Wl,-no-whole-archive
 LIBS += $(USERLIBS)
-ifdef MARLIN_USE_DLL
+ifndef MARLIN_NO_DLL
  LIBS += -ldl
- CPPFLAGS += -DMARLIN_USE_DLL
+ CPPFLAGS += -DMARLIN_NO_DLL
 endif
 
 ifdef GEAR

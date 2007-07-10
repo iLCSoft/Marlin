@@ -29,8 +29,8 @@ IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
     ADD_DEFINITIONS( "-DMARLINDEBUG" )
 ENDIF()
 
-IF( MARLIN_USE_DLL )
-    ADD_DEFINITIONS( "-DMARLIN_USE_DLL" )
+IF( MARLIN_NO_DLL )
+    ADD_DEFINITIONS( "-DMARLIN_NO_DLL" )
 ENDIF()
 
 # binary sources: list of all sources from which you want to create a binary
@@ -133,6 +133,17 @@ INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
 ####################################################################################################
 
 IF( bin_srcs )
+
+    # check if we are on a *nix system
+    IF( NOT UNIX OR APPLE )
+        IF( DEFINED LINK_STATIC_WHOLE_LIBS )
+            MESSAGE( FATAL_ERROR "The LINK_STATIC_WHOLE_LIBS option is only avaliabe for *nix systems" )
+        ENDIF()
+        IF( NOT BUILD_SHARED_LIBS )
+            MESSAGE( FATAL_ERROR "You can only build Marlin statically under *nix systems" )
+        ENDIF()
+    ENDIF()
+    
     # create symbolic bin target for calling targets bin_XXX
     ADD_CUSTOM_TARGET( bin )
 
@@ -142,24 +153,20 @@ IF( bin_srcs )
         LIST( APPEND bins ${bin} )
     ENDFOREACH()
 
-    IF( MARLIN_USE_DLL )
+    IF( NOT MARLIN_NO_DLL )
         LINK_LIBRARIES( ${CMAKE_DL_LIBS} )
     ENDIF()
 
     # whole archive libraries
     IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-        IF( UNIX )
-            SEPARATE_ARGUMENTS( LINK_STATIC_WHOLE_LIBS )
-            SET( LINK_STATIC_WHOLE_LIBS "${LINK_STATIC_WHOLE_LIBS}" CACHE STRING
-                    "Link ${PROJECT_NAME} with these static libs" FORCE )
-            MESSAGE( STATUS "Following static libraries are going to be linked to the binaries with the" )
-            MESSAGE( STATUS "-Wl,--whole-archive linker flag:" )
-            FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
-                 MESSAGE( STATUS "${lib}" )
-            ENDFOREACH()
-        ELSE()
-            MESSAGE( FATAL_ERROR "The LINK_STATIC_WHOLE_LIBS option is only avaliabe for *nix systems" )
-        ENDIF()
+        SEPARATE_ARGUMENTS( LINK_STATIC_WHOLE_LIBS )
+        SET( LINK_STATIC_WHOLE_LIBS "${LINK_STATIC_WHOLE_LIBS}" CACHE STRING
+                "Link ${PROJECT_NAME} with these static libs" FORCE )
+        MESSAGE( STATUS "Following static libraries are going to be linked to the binaries with the" )
+        MESSAGE( STATUS "-Wl,--whole-archive linker flag:" )
+        FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
+             MESSAGE( STATUS "${lib}" )
+        ENDFOREACH()
     ENDIF()
 
 
@@ -167,11 +174,7 @@ IF( bin_srcs )
     FOREACH( bin ${bins} )
         
         # create target for binary
-        IF( MARLIN_USE_DLL )
-            ADD_EXECUTABLE( bin_${bin} ${bin}.cc ${ext_bin_srcs} )
-        ELSE()
-            ADD_EXECUTABLE( bin_${bin} ${bin}.cc )
-        ENDIF()
+        ADD_EXECUTABLE( bin_${bin} ${bin}.cc ${ext_bin_srcs} )
         
         # tell bin target to call this bin_XXX target
         ADD_DEPENDENCIES( bin bin_${bin} )
@@ -200,11 +203,7 @@ IF( bin_srcs )
     IF( MARLIN_GUI )
         
         # create target for binary
-        IF( MARLIN_USE_DLL )
-            ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ${ext_bin_srcs} )
-        ELSE()
-            ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} )
-        ENDIF()
+        ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ${ext_bin_srcs} )
         
         # tell bin target to call this bin_XXX target
         ADD_DEPENDENCIES( bin bin_${PROJECT_NAME}_GUI )
@@ -231,6 +230,4 @@ IF( bin_srcs )
     ENDIF()
 
 ENDIF()
-
-
 

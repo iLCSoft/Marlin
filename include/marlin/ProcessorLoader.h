@@ -1,7 +1,6 @@
 #ifndef ProcessorLoader_h
 #define ProcessorLoader_h 1
-
-//#include "Processor.h"
+#ifndef MARLIN_NO_DLL
 
 #include "lcio.h"
 
@@ -20,7 +19,7 @@ namespace marlin{
    *  of the ProcessorLoader instance.
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: ProcessorLoader.h,v 1.1 2007-04-23 16:08:02 engels Exp $ 
+   *  @version $Id: ProcessorLoader.h,v 1.2 2007-07-10 15:11:55 engels Exp $ 
    */
   class ProcessorLoader {
     
@@ -41,4 +40,5 @@ namespace marlin{
   };
 
 } // end namespace marlin 
+#endif
 #endif
