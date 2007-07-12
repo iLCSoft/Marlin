@@ -16,15 +16,15 @@
 #############################################################################
 
 # ILC_HOME
-SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-01_beta"
+SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-00"
     CACHE PATH "Path to ILC Software" FORCE )
 
 # Path to LCIO
-SET( LCIO_HOME "${ILC_HOME}/lcio/HEAD"
+SET( LCIO_HOME "${ILC_HOME}/lcio/v01-08-02"
     CACHE PATH "Path to LCIO" FORCE )
 
 # CMake Modules Path
-SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-00"
+SET( CMAKE_MODULE_PATH "/afs/desy.de/group/it/ilcsoft/CMakeModules/HEAD"
     CACHE PATH "Path to CMake Modules" FORCE )
 
 #############################################################################
@@ -32,7 +32,7 @@ SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-00"
 #############################################################################
 
 # You need to set QT4_HOME path if you want to build the GUI
-SET( MARLIN_GUI ON CACHE BOOL "Set to ON to build Marlin GUI" FORCE )
+SET( MARLIN_GUI OFF CACHE BOOL "Set to ON to build Marlin GUI" FORCE )
 
 # Path to QT4 (needed for MARLIN_GUI)
 SET( QT4_HOME "/afs/desy.de/group/it/ilcsoft/QT/4.2.2"
@@ -44,15 +44,15 @@ SET( QT4_HOME "/afs/desy.de/group/it/ilcsoft/QT/4.2.2"
 
 # if you want to build and link Marlin with one or more of these additional
 # tools you also have to define the corresponding "home" paths
-SET( BUILD_WITH "GEAR LCCD CLHEP RAIDA"
+SET( BUILD_WITH "GEAR CLHEP RAIDA ROOT"
     CACHE STRING "Build Marlin with these optional packages" FORCE )
 
 # Path to GEAR
-SET( GEAR_HOME "${ILC_HOME}/gear/HEAD"
+SET( GEAR_HOME "${ILC_HOME}/gear/v00-05"
     CACHE PATH "Path to GEAR" FORCE )
 
 # Path to LCCD
-SET( LCCD_HOME "${ILC_HOME}/lccd/HEAD"
+SET( LCCD_HOME "${ILC_HOME}/lccd/v00-03-05"
     CACHE PATH "Path to LCCD" FORCE )
 
 # Path to CLHEP
@@ -60,8 +60,11 @@ SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
     CACHE PATH "Path to CLHEP" FORCE )
 
 # Path to RAIDA
-SET( RAIDA_HOME "${ILC_HOME}/RAIDA/HEAD"
+SET( RAIDA_HOME "${ILC_HOME}/RAIDA/v01-02"
     CACHE PATH "Path to RAIDA" FORCE )
+
+SET( ROOT_HOME "${ILC_HOME}/root/5.08.00"
+    CACHE PATH "Path to ROOT" FORCE )
 
 #############################################################################
 # Link Marlin binary with Processor libraries
