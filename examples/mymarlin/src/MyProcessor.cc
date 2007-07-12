@@ -40,8 +40,10 @@ MyProcessor::MyProcessor() : Processor("MyProcessor") {
 
 void MyProcessor::init() { 
 
-  m_out(MESSAGE) << "   init called  " 
-		 << m_endl ;
+//  m_out(MESSAGE) << "   init called  " 
+//		 << m_endl ;
+
+	message<DEBUG>( "     MyProcessor::init()  " ) ;
 
   // usually a good idea to
   printParameters() ;

@@ -116,6 +116,7 @@ IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
 ENDIF()
 
 # input directories
+ADD_SUBDIRECTORY( streamlog )
 ADD_SUBDIRECTORY( src )
 
 # create uninstall configuration file 

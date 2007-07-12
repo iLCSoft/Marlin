@@ -6,6 +6,7 @@
 #include "marlin/VerbosityLevels.h"
 
 
+#include "streamlog/streamlog.h"
 
 namespace marlin{
 
@@ -22,11 +23,11 @@ namespace marlin{
 
   void TestProcessor::init() { 
 
-    m_out( MESSAGE ) << "TestProcessor::init()  " << name() 
-		     << std::endl 
-		     << "  parameters: " << std::endl 
-		     << *parameters()  
-		     << m_endl ;
+    streamlog_out( MESSAGE ) << "TestProcessor::init()  " << name() 
+			     << std::endl 
+			     << "  parameters: " << std::endl 
+			     << *parameters()  
+			     << std::endl ;
     
 
     _nRun = 0 ;
@@ -38,9 +39,9 @@ namespace marlin{
   void TestProcessor::processRunHeader( LCRunHeader* run) { 
 
 
-    m_out( MESSAGE ) << " processRun() " 
-		     << run->getRunNumber() 		  
-		     << m_endl ;
+   streamlog_out( MESSAGE ) << " processRun() " 
+			    << run->getRunNumber() 		  
+			    << std::endl ;
     
     _nRun++ ;
   } 
@@ -72,12 +73,13 @@ namespace marlin{
   
     if( _doCalibration ) {
 
-      message<MESSAGE>(  log()
-			 << "processEvent()  ---CALIBRATING ------ "  
-			 << " in event " << evt->getEventNumber() << " (run " 
-			 << evt->getRunNumber() << ") "
-
-			 ) ;
+      //      message<MESSAGE>(  log()
+      streamlog_out( MESSAGE) << "processEvent()  ---CALIBRATING ------ "  
+			      << " in event " << evt->getEventNumber() << " (run " 
+			      << evt->getRunNumber() << ") " 
+			      << std::endl ;
+      
+// 	) ;
 
 
       // your calibration goes here ....
@@ -105,9 +107,9 @@ namespace marlin{
   
     //---------end example code  ----------------------------------------
 
-    m_out(MESSAGE) << " processing event " << evt->getEventNumber() 
-		   << "  in run "          << evt->getRunNumber() 
-		   << m_endl ;
+    streamlog_out(MESSAGE) << " processing event " << evt->getEventNumber() 
+			   << "  in run "          << evt->getRunNumber() 
+			   << std::endl ;
     
     
     // always return true  for ProcessorName
@@ -121,10 +123,10 @@ namespace marlin{
   
   void TestProcessor::check( LCEvent * evt ) { 
     
-    m_out(DEBUG) << " check() "  // << dummy_method() 
-		 << evt->getEventNumber() 
-		 << " (run " << evt->getRunNumber() << ") "
-		 << m_endl ;
+    streamlog_out(DEBUG) << " check() "  // << dummy_method() 
+			 << evt->getEventNumber() 
+			 << " (run " << evt->getRunNumber() << ") "
+			 << std::endl ;
     
     
   }
@@ -137,12 +139,13 @@ namespace marlin{
 
   void TestProcessor::printEndMessage() const {
 
-    m_out(MESSAGE) << " end() "  
-		   << " processed " << _nEvt << " events in " 
-		   << _nRun << " runs " << std::endl 
-		   << m_endl ;
+    streamlog_out(MESSAGE) << " end() "  
+			   << " processed "     << _nEvt << " events in " 
+			   << _nRun << " runs " << std::endl 
+			   << std::endl ;
     
-
+    
+    // test deprecated method message 
     message<DEBUG>( " and this is really the final DEBUG message ....") ;
   }
   

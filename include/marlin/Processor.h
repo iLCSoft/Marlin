@@ -12,8 +12,12 @@
 
 #include "StringParameters.h"
 #include "ProcessorParameter.h"
-#include "LogStream.h"
+//#include "LogStream.h"
 #include "marlin/VerbosityLevels.h"
+#include "streamlog/streamlog.h"
+#define m_out( VERBOSITY ) streamlog_out( VERBOSITY )  
+#define m_endl std::endl 
+
 #include <map>
 
 /** Define convenient macros for using message efficiently, use m_out(VERBOSITY) for std::cout
@@ -25,10 +29,12 @@
  *  </pre>
  */
 //#define m_out( VERBOSITY ) message<VERBOSITY>( VERBOSITY::active && log() 
-#define m_out( VERBOSITY ) message<VERBOSITY>( log() 
+//#define m_out( VERBOSITY ) message<VERBOSITY>( log() 
 
-#define m_endl "" ) 
+//#define m_endl "" ) 
 
+
+//#define m_endl "" ) 
 
 using namespace lcio ;
 
@@ -58,7 +64,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.30 2007-07-06 08:32:59 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.31 2007-07-12 18:05:46 gaede Exp $ 
    */
   
   class Processor {
@@ -296,9 +302,12 @@ namespace marlin{
     template <class T>
     void message(  const std::string& message ) const {
       
-     if( T::active ){  // allow the compiler to optimize this away ...
-	_log->template message<T>( message ) ; 
-      }
+      //      if( T::active ){  // allow the compiler to optimize this away ...
+      // 	_log->template message<T>( message ) ; 
+      //       }
+      if( streamlog::out.write<T>() ) 
+	streamlog::out() << message << std::endl ;
+      
     }
     
 
@@ -415,7 +424,7 @@ namespace marlin{
     LCIOTypeMap   _inTypeMap ;
     LCIOTypeMap   _outTypeMap ;
 
-    mutable LogStream* _log ; 
+    //    mutable LogStream* _log ; 
 
   private:
     mutable std::stringstream* _str ;

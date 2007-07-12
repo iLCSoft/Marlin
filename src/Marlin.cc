@@ -36,6 +36,9 @@
 
 #include "marlin/ProcessorLoader.h"
 
+#include "marlin/VerbosityLevels.h"
+#include "streamlog/streamlog.h"
+
 using namespace lcio ;
 using namespace marlin ;
 
@@ -46,7 +49,7 @@ void  createProcessors( const IParser&  parser) ;
 
 void listAvailableProcessors() ;
 void listAvailableProcessorsXML() ;
-void printUsageAndExit() ;
+int printUsage() ;
 
 
 /** LCIO framework that can be used to analyse LCIO data files
@@ -58,6 +61,12 @@ int main(int argc, char** argv ){
 
   // this macro enables printout of uncaught exceptions
   HANDLE_LCIO_EXCEPTIONS
+  
+
+  //###### init streamlog ######
+  std::string binname = argv[0]  ;
+  binname = binname.substr( binname.find_last_of("/") + 1 , binname.size() ) ;
+  streamlog::out.init( std::cout , binname ) ;
   
 
 #ifndef MARLIN_NO_DLL
@@ -94,71 +103,73 @@ int main(int argc, char** argv ){
 
     if( std::string(argv[1]) == "-l" ){
       listAvailableProcessors() ;
-      exit(0) ;
+      return(0) ;
     }
     else if( std::string(argv[1]) == "-x" ){
       listAvailableProcessorsXML() ;
-      exit(0) ;
+      return(0) ;
     }
     else if( std::string(argv[1]) == "-c" ){
       if( argc == 3 ){
 	MarlinSteerCheck msc(argv[2]);
 	msc.dump_information();
-        exit(0) ;
+        return(0) ;
       }
       else{
 	std::cout << "  usage: Marlin -c steeringFile.xml" << std::endl << std::endl;
-	exit(1);
+	return(1);
       }
     }
     else if( std::string(argv[1]) == "-o" ){
       if( argc == 4 ){
 	MarlinSteerCheck msc(argv[2]);
 	msc.saveAsXMLFile(argv[3]) ;
-        exit(0) ;
+        return(0) ;
       }
       else{
 	std::cout << "  usage: Marlin -o old.steer new.xml" << std::endl << std::endl;
-	exit(1);
+	return(1);
       }
     }
     else if( std::string(argv[1]) == "-f" ){
       if( argc == 4 ){
 	XMLFixCollTypes fixColTypes(argv[2]);
 	fixColTypes.parse(argv[3] );
-        exit(0) ;
+        return(0) ;
       }
       else{
 	std::cout << "  usage: Marlin -f oldsteering.xml newsteering.xml" << std::endl << std::endl;
-	exit(1);
+	return(1);
       }
     }
     else if( std::string(argv[1]) == "-d" ){
       if( argc == 4 ){
 	MarlinSteerCheck msc(argv[2]);
 	msc.saveAsDOTFile(argv[3]);
-	exit(0) ;
+	return(0) ;
       }
       else{
 	std::cout << "  usage: Marlin -d steer.xml diagram.dot" << std::endl << std::endl;
-	exit(1);
+	return(1);
       }
     }
     else if( std::string(argv[1]) == "-h"  || std::string(argv[1]) == "-?" ){
 
-      printUsageAndExit() ;
+      return printUsage() ;
     }
 
 
     // one argument given: the steering file for normal running :
     steeringFileName = argv[1] ;
 
-
   } else {
 
-    printUsageAndExit() ;
+    return printUsage() ;
   }
   
+
+
+
 
   IParser* parser ;
 
@@ -184,9 +195,44 @@ int main(int argc, char** argv ){
     std::cout << "  Could not get global parameters from steering file ! " << std::endl  
 	      << "   The program has to exit - sorry ! " 
 	      << std::endl ;
-    exit(1) ;
+    return(1) ;
   }
   
+
+  //-----  register log level names with the logstream ---------
+  streamlog::out.addLevelName<DEBUG>() ;
+  streamlog::out.addLevelName<DEBUG0>() ;
+  streamlog::out.addLevelName<DEBUG1>() ;
+  streamlog::out.addLevelName<DEBUG2>() ;
+  streamlog::out.addLevelName<DEBUG3>() ;
+  streamlog::out.addLevelName<DEBUG4>() ;
+  streamlog::out.addLevelName<MESSAGE>() ;
+  streamlog::out.addLevelName<MESSAGE0>() ;
+  streamlog::out.addLevelName<MESSAGE1>() ;
+  streamlog::out.addLevelName<MESSAGE2>() ;
+  streamlog::out.addLevelName<MESSAGE3>() ;
+  streamlog::out.addLevelName<MESSAGE4>() ;
+  streamlog::out.addLevelName<WARNING>() ;
+  streamlog::out.addLevelName<WARNING0>() ;
+  streamlog::out.addLevelName<WARNING1>() ;
+  streamlog::out.addLevelName<WARNING2>() ;
+  streamlog::out.addLevelName<WARNING3>() ;
+  streamlog::out.addLevelName<WARNING4>() ;
+  streamlog::out.addLevelName<ERROR>() ;
+  streamlog::out.addLevelName<ERROR0>() ;
+  streamlog::out.addLevelName<ERROR1>() ;
+  streamlog::out.addLevelName<ERROR2>() ;
+  streamlog::out.addLevelName<ERROR3>() ;
+  streamlog::out.addLevelName<ERROR4>() ;
+
+
+  //-------- init logging level ------------
+  std::string verbosity = Global::parameters->getStringVal("Verbosity" ) ;
+  streamlog::logscope scope( streamlog::out ) ;
+
+  scope.setLevel( verbosity ) ;
+
+
 //   std::map<std::string, int> verbosity_levels;
 //   verbosity_levels[std::string("VERBOSE")]=Processor::VERBOSE;
 //   verbosity_levels[std::string("DEBUG")]=Processor::DEBUG;
@@ -212,12 +258,12 @@ int main(int argc, char** argv ){
     
     Global::GEAR = gearXML.createGearMgr() ;
 
-    std::cout << " ---- instantiated  GEAR from file  " << gearFile  << std::endl ;
-    std::cout << *Global::GEAR << std::endl ;
+    streamlog_out( MESSAGE )  << " ---- instantiated  GEAR from file  " << gearFile  << std::endl 
+			<< *Global::GEAR << std::endl ;
 
   } else {
 
-    std::cout << " ---- no GEAR XML file given  --------- " << std::endl ;
+    streamlog_out( WARNING ) << " ---- no GEAR XML file given  --------- " << std::endl ;
     Global::GEAR = new gear::GearMgrImpl ;
   }
 
@@ -259,8 +305,8 @@ int main(int argc, char** argv ){
       
       if( skipNEvents > 0 ){
 	
-	std::cout << " --- Marlin.cc - will skip first " << skipNEvents << " event(s)" 
-		  << std::endl << std::endl ;
+	streamlog_out( WARNING ) << " --- Marlin.cc - will skip first " << skipNEvents << " event(s)" 
+			   << std::endl << std::endl ;
 	
 	lcReader->skipNEvents(  skipNEvents ) ;
       }
@@ -273,7 +319,7 @@ int main(int argc, char** argv ){
 	  }
 	  catch( lcio::EndOfDataException& e){
 	    
-	    std::cout << "Warning: " << e.what() << std::endl ;
+	    streamlog_out( WARNING ) << e.what() << std::endl ;
 	  }
 	  
 	} else {
@@ -301,9 +347,9 @@ int main(int argc, char** argv ){
 	std::cout << std::endl
 		  << " **********************************************************" << std::endl
 		  << " *                                                        *" << std::endl
-		  << " *   Rewind data files requested by processor :    *" << std::endl
+		  << " *   Rewind data files requested by processor :           *" << std::endl
 		  << " *                  "  << e.what()                           << std::endl
-		  << " *     will rewind to beginning !         *" << std::endl
+		  << " *     will rewind to beginning !                         *" << std::endl
 		  << " *                                                        *" << std::endl
 		  << " **********************************************************" << std::endl
 		  << std::endl ;
@@ -353,7 +399,7 @@ int main(int argc, char** argv ){
 
       } else{
 
-	std::cout << " Undefined processor : " << activeProcessors[i] << std::endl ;	
+	streamlog_out( WARNING )  << " Undefined processor : " << activeProcessors[i] << std::endl ;	
       }
     }
   }
@@ -368,9 +414,9 @@ int main(int argc, char** argv ){
     StringParameters* p = parser.getParameters( *m )  ;
     
 
-     std::cout << " Parameters for processor " << *m 
- 	      << std::endl 
- 	      << *p ; ;
+     streamlog_out( MESSAGE ) << " Parameters for processor " << *m 
+			<< std::endl 
+			<< *p ; 
 
     if( p!=0 ){
       std::string type = p->getStringVal("ProcessorType") ;
@@ -396,7 +442,7 @@ void listAvailableProcessorsXML() {
 }
 
 
-void printUsageAndExit() {
+int printUsage() {
 
     std::cout << " Usage: Marlin [OPTION] [FILE]..." << std::endl 
 	      << "   runs a Marlin application " << std::endl 
@@ -421,7 +467,8 @@ void printUsageAndExit() {
 	      << " to configure your application and then run it. e.g. : " << std::endl 
 	      << "     Marlin mysteer.xml > marlin.out 2>&1 &" << std::endl
 	      << std::endl ;
-      exit(1) ;
+
+      return(0) ;
 
 }
 

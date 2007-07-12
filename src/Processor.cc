@@ -16,7 +16,7 @@ Processor::Processor(const std::string& typeName) :
   _typeName( typeName ) ,
   _parameters(0) ,
   _isFirstEvent( true ),
-  _log(0),
+//   _log(0),
   _str(0) {
   
   //register processor in map
@@ -242,7 +242,7 @@ void Processor::setParameters( StringParameters* parameters) {
     else if( verbosity == "SILENT" )
       level = ERROR::level + 1 ;  // is this really meaningfull in case of errors
 
-    _log = new LogStream( name() , level ) ;
+//     _log = new LogStream( name() , level ) ;
 
     init() ;
 

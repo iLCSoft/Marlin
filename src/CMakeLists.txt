@@ -9,6 +9,7 @@
 
 # include directories
 INCLUDE_DIRECTORIES( "${${PROJECT_NAME}_SOURCE_DIR}/include" )
+INCLUDE_DIRECTORIES( "${${PROJECT_NAME}_SOURCE_DIR}/streamlog/source/include" )
 
 # install include files
 INSTALL( DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/include/marlin" DESTINATION include
@@ -108,6 +109,9 @@ ENDIF()
 
 # create library
 ADD_LIBRARY( lib_${PROJECT_NAME} ${lib_srcs} )
+
+# link to libstreamlog
+TARGET_LINK_LIBRARIES( lib_${PROJECT_NAME}  lib_streamlog )
 
 # create symbolic lib target for calling target lib_XXX
 ADD_CUSTOM_TARGET( lib DEPENDS lib_${PROJECT_NAME} )

@@ -7,7 +7,7 @@
 #include <set>
 
 #include "marlin/DataSourceProcessor.h"
-
+#include "streamlog/streamlog.h"
 
 namespace marlin{
 
@@ -207,12 +207,26 @@ namespace marlin{
 
   void ProcessorMgr::init(){ 
 
-    for_each( _list.begin() , _list.end() , std::mem_fun( &Processor::baseInit ) ) ;
+//     for_each( _list.begin() , _list.end() , std::mem_fun( &Processor::baseInit ) ) ;
+    
+    for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
+
+      streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+
+      (*it)->baseInit() ;
+    }
+
   }
 
   void ProcessorMgr::processRunHeader( LCRunHeader* run){ 
 
-    for_each( _list.begin() , _list.end() ,  std::bind2nd(  std::mem_fun( &Processor::processRunHeader ) , run ) ) ;
+//     for_each( _list.begin() , _list.end() ,  std::bind2nd(  std::mem_fun( &Processor::processRunHeader ) , run ) ) ;
+    for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
+
+      streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      
+      (*it)->processRunHeader( run ) ;
+    }
   }   
 
 
@@ -251,6 +265,8 @@ namespace marlin{
 	
 	if( _conditions.conditionIsTrue( (*it)->name() ) ) {
 	  
+	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+
 	  (*it)->processEvent( evt ) ; 
 	  
 	  if( check )  (*it)->check( evt ) ;
@@ -281,8 +297,14 @@ namespace marlin{
 
 //     for_each( _list.begin() , _list.end() ,  std::mem_fun( &Processor::end ) ) ;
 
-    for_each( _list.rbegin() , _list.rend() ,  std::mem_fun( &Processor::end ) ) ;
+//    for_each( _list.rbegin() , _list.rend() ,  std::mem_fun( &Processor::end ) ) ;
 
+    for( ProcessorList::reverse_iterator it = _list.rbegin() ; it != _list.rend() ; ++it ) {
+
+      streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      
+      (*it)->end() ;
+    }
 //     if( _skipMap.size() > 0 ) {
       std::cout  << " --------------------------------------------------------- " << std::endl
 		 << "  Events skipped by processors : " << std::endl ;
