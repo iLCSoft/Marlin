@@ -5,7 +5,7 @@
 TEMPLATE = app
 CONFIG -= moc
 CONFIG += create_prl link_prl
-INCLUDEPATH += $(MARLIN)/include $(LCIO)/src/cpp/include
+INCLUDEPATH += $(MARLIN)/include $(MARLIN)/streamlog/source/include $(LCIO)/src/cpp/include
 !isEmpty(MARLIN_NO_DLL) {
     DEFINES += MARLIN_NO_DLL
 }
