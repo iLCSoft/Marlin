@@ -113,6 +113,7 @@ LIBS += -Wl,-no-whole-archive
 LIBS += $(USERLIBS)
 ifndef MARLIN_NO_DLL
  LIBS += -ldl
+else
  CPPFLAGS += -DMARLIN_NO_DLL
 endif
 
