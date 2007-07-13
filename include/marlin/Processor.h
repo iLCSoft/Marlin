@@ -64,7 +64,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.31 2007-07-12 18:05:46 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.32 2007-07-13 07:38:41 gaede Exp $ 
    */
   
   class Processor {
@@ -305,7 +305,7 @@ namespace marlin{
       //      if( T::active ){  // allow the compiler to optimize this away ...
       // 	_log->template message<T>( message ) ; 
       //       }
-      if( streamlog::out.write<T>() ) 
+      if( streamlog::out.template write<T>() ) 
 	streamlog::out() << message << std::endl ;
       
     }
