@@ -15,10 +15,26 @@
 //#include "LogStream.h"
 #include "marlin/VerbosityLevels.h"
 #include "streamlog/streamlog.h"
+
+#include <map>
+
+// ----- define some useful macros-----------
+// for backward compatibility 
 #define m_out( VERBOSITY ) streamlog_out( VERBOSITY )  
 #define m_endl std::endl 
 
-#include <map>
+
+//----- define Marlin version macros -------
+
+#define MARLIN_MAJOR_VERSION 0
+#define MARLIN_MINOR_VERSION 9
+#define MARLIN_PATCH_LEVEL 8
+
+#define MARLIN_VERSION_GE( MAJV , MINV , PLEV)  ( (  MARLIN_MAJOR_VERSION  > MAJV ) ||   ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION > MINV ) ) ||   ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION == MINV ) && ( MARLIN_PATCH_LEVEL >= PLEV ) ) )
+
+
+///----------------------------------------
+
 
 /** Define convenient macros for using message efficiently, use m_out(VERBOSITY) for std::cout
  *  and m_endl for std::endl (allways needed ! ), e.g.:
@@ -64,7 +80,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.32 2007-07-13 07:38:41 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.33 2007-07-13 12:34:10 gaede Exp $ 
    */
   
   class Processor {
