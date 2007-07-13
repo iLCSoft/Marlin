@@ -33,7 +33,6 @@ HEADERS	=   mainwindow.h \
 	    dialog.h
 	      
 SOURCES =   main.cpp \
-        $(MARLIN)/src/ProcessorLoader.cc \
 	    mainwindow.cpp \
 	    nparamvecset.cpp \
 	    nparamvecsetd.cpp \
