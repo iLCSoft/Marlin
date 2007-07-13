@@ -30,6 +30,12 @@ namespace marlin{
 			     << std::endl ;
     
 
+#ifdef MARLIN_VERSION_GE
+#if MARLIN_VERSION_GE( 0, 9, 8 )    
+    streamlog_out( DEBUG ) << " marlin version is g.e. 0.9.8 " << std::endl ;
+#endif
+#endif
+
     _nRun = 0 ;
     _nEvt = 0 ;
   
