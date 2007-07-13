@@ -101,7 +101,7 @@ else
 endif
 
 # pre-processor flags
-CPPFLAGS := -I$(INCDIR) -I$(MARLIN)/streamlog/include -I$(LCIO)/src/cpp/include
+CPPFLAGS := -I$(INCDIR) -I$(MARLIN)/streamlog/source/include -I$(LCIO)/src/cpp/include
 CPPFLAGS += $(PKGCPPFLAGS)
 CPPFLAGS += $(USERINCLUDES)
 
