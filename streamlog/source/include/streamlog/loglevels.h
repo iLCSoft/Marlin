@@ -1,8 +1,15 @@
 // -*- mode: c++;
 
-/** Default log levels for streamlog: DEBUG/DEBUG0, DEBUG1, DEBUG2, DEBUG3, DEBUG4,
- *  MESSAGE/MESSAGE0-MESSAGE4, WARNING/WARNING0-WARNING4, ERROR/ERROR0-ERROR4.
- * 
+/** loglevels.h:
+ *  defines default log levels for streamlog
+ *  
+ *  Default log levels for streamlog::logstream:<br>
+ *  <b><ul> 
+ *   <li>DEBUG/DEBUG0, DEBUG1, DEBUG2, DEBUG3, DEBUG4 </li>
+ *   <li>MESSAGE/MESSAGE0,...  MESSAGE4</li>
+ *   <li> WARNING/WARNING0,... WARNING4</li>
+ *   <li>  ERROR/ERROR0,... ERROR4</li>
+ *  </ul></b>
  *  By default all groups are active, except DEBUG when compiled with
  *  -DNDEBUG, i.e. in release mode.
  *  Through -DSTREAMLOG_LEVEL=N, where N=0,1,2,3,4 this behaviour can be changed, e.g.
@@ -16,7 +23,7 @@
  * 
  *  
  *  @author F. Gaede, DESY
- *  @version $Id: loglevels.h,v 1.1.1.1 2007-07-12 17:14:48 gaede Exp $
+ *  @version $Id: loglevels.h,v 1.2 2007-07-13 11:09:04 gaede Exp $
  */
 
 #ifndef loglevels_h

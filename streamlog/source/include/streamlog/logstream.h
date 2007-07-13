@@ -39,12 +39,15 @@ namespace streamlog{
    *  Note that with the above calling sequence or the macro no runtime overhead is created
    *  if streamlog::DEBUG1::active is false and else if the log level is smaller than 
    *  streamlog::DEBUG1::level no formatting of the message will happen, i.e. also very little 
-   *  runtime cost is involved.
+   *  runtime cost is involved. <br>
+   *  the behaviour of the logstream, i.e. the current log level and log scope name can be changed only
+   *  through an object of streamlog::logscope.
    * 
    *  @see logstream::write() 
+   *  @see logscope
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: logstream.h,v 1.1.1.1 2007-07-12 17:14:48 gaede Exp $
+   *  @version $Id: logstream.h,v 1.2 2007-07-13 11:09:04 gaede Exp $
    */
   class logstream {
 

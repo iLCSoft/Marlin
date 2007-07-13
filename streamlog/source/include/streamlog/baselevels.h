@@ -1,20 +1,21 @@
 // -*- mode: c++;
 
-/** Define base log level classes for streamlog. There are the following
+#ifndef baselevels_h
+#define baselevels_h
+/* 
+ *  Define base log level classes for streamlog::logstream. There are the following
  *  groups of log level classes: DEBUG, WARNING, MESSAGE and ERROR. 
  *  By default all groups are active, except DEBUG when compiled with
  *  -DNDEBUG, i.e. in release mode.
  *  Through -DSTREAMLOG_LEVEL=N, where N=0,1,2,3,4 this behaviour can be changed, e.g.
- *  if -DSTREAMLOG_LEVEL=2 is specified all compile time all messages of the groups
+ *  if -DSTREAMLOG_LEVEL=2 is specified at compile time all messages of the groups
  *  DEBUG and MESSAGE are suppressed (no overhead in space or time) and only WARNING
  *  and ERROR messages will be visible if the current log level is reached.
  *  
  *  @author F. Gaede, DESY
- *  @version $Id: baselevels.h,v 1.1.1.1 2007-07-12 17:14:48 gaede Exp $
+ *  @version $Id: baselevels.h,v 1.2 2007-07-13 11:09:04 gaede Exp $
  */
 
-#ifndef baselevels_h
-#define baselevels_h
 
 namespace streamlog{
 

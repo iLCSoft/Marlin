@@ -1,12 +1,14 @@
 ************************************************************************ 
 *
-* Marlin is a simple framework that could serve as the basis 
-* for the FLC software that deals with LCIO files, e.g. reconstruction
-* and analysis code.
+* Marlin is a C++ software framework for ILC software.
+* It uses the LCIO data model and can be used for
+* all tasks that involve processing of LCIO files, e.g. reconstruction
+* and analysis.
 *
 *
-* F. Gaede, DESY-IT
-* $Id: README,v 1.15 2007-07-10 15:11:55 engels Exp $
+* F. Gaede, DESY
+* J. Engels, DESY
+* $Id: README,v 1.16 2007-07-13 11:09:04 gaede Exp $
 ************************************************************************
 
 
@@ -22,14 +24,20 @@ write processors with defined callbacks, i.e. init(), processRunHeader(), proces
 
   +++++++++++++ (NEW since v00-09-08) ++++++++++++++++
 
-    CMake support has been added to Marlin.
+    CMake is now the new default build tool for Marlin - it simplifies the build process
+    and creates shared libraries by default. 
+    This makes it easier to include external packages through a plugin mechanism,
+    in particular only the package that has changed needs to be recompiled and no 
+    relinking is necessary.
+    
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
     Instructions for building Marlin with CMake:
     -------------------------------------------
 
     1st: make sure cmake is in your PATH environment! (for SL3 and SL4
-    users check /afs/desy.de/group/it/ilcsoft/CMake
+    users check /afs/desy.de/group/it/ilcsoft/CMake )
 
     2nd: edit the file BuildSetup.cmake and change it according to your system setup.
 
@@ -106,7 +114,7 @@ write processors with defined callbacks, i.e. init(), processRunHeader(), proces
     ------------------------------
 
     For adapting your processor to be built with CMake just copy the following files
-    from Marlin/examples/mymarlin directory to your package:
+    from $Marlin/examples/mymarlin directory to your package:
 
     CMakeLists.txt
     cmake_uninstall.cmake.in

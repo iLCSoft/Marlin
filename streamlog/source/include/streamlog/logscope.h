@@ -8,18 +8,22 @@ namespace streamlog{
   /** Helper class to change the current scope name and log level - 
    *  if the object goes out of scope, e.g. at the end of the method
    *  where it is instantiated scope name and log level will be reset to the values 
-   *  they had previously, i.e. before changed through this object.
+   *  they had previously, i.e. before changed through this object.<br>
+   *  Example:
+   *  <pre>
+   *   streamlog::logscope scope( streamlog::out ) ;
+   *   scope.setName( "TrackFitter" ) ;
+   *   scope.setLevel< streamlog::MESSAGE3 >() ;
+   *  </pre>
+   *  
    * 
    *  @author F. Gaede, DESY
-   *  @version $Id: logscope.h,v 1.1.1.1 2007-07-12 17:14:48 gaede Exp $
+   *  @version $Id: logscope.h,v 1.2 2007-07-13 11:09:04 gaede Exp $
    */
   class logscope{
 
   public:
-    /** Instantiate a scope object for the given logstream, typically:
-     *  <pre>
-     *  streamlog::logscope scope( streamlog::out ) ;
-     *  </pre>
+    /** Instantiate a scope object for the given logstream.
      */
     logscope(logstream& ls) : _ls(&ls) , _name("") , _level(-1) { }
     
