@@ -121,7 +121,7 @@ namespace marlin{
 #ifdef USE_GEAR
 	       <<  "  <parameter name=\"GearXMLFile\"> gear_ldc.xml </parameter>  " << std::endl
 #endif
-	       <<  "  <parameter name=\"Verbosity\" options=\"DEBUG,MESSAGE,WARNING,ERROR,SILENT\"> DEBUG  </parameter> " << std::endl
+	       <<  "  <parameter name=\"Verbosity\" options=\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\"> DEBUG  </parameter> " << std::endl
 	       <<  " </global>" << std::endl
 	       << std::endl ;
 
