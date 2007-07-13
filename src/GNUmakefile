@@ -63,6 +63,17 @@ DEPS = $(patsubst %.o,%.d,$(OBJS) $(BINOBJS))
 # dependency files with path
 DEP = $(patsubst %,$(DEPDIR)/%,$(DEPS))
 
+# streamlog
+STRLOGSRCS = $(wildcard ../streamlog/source/src/*.cc)
+STRLOGOBJS = $(patsubst ../streamlog/source/src/%.cc,%.o,$(STRLOGSRCS))
+STRLOGOBJ = $(patsubst %,$(OBJDIR)/%,$(STRLOGOBJS))
+STRLOGDEPS = $(patsubst %.o,%.d,$(STRLOGOBJS))
+STRLOGDEP = $(patsubst %,$(DEPDIR)/%,$(STRLOGDEPS))
+
+OBJ += $(STRLOGOBJ)
+DEP += $(STRLOGDEP)
+
+
 # package names (MarlinUtil MarlinReco CEDViewer...)
 PKGNAMES = $(filter-out " CVS ", $(patsubst $(PKGDIR)/%,%,$(wildcard $(PKGDIR)/*)))
 
@@ -86,11 +97,11 @@ endif
 ifeq ($(MARLINDEBUG),1)
  CXXFLAGS = -g -Wall -ansi -DMARLINDEBUG
 else
- CXXFLAGS = -O3 -Wall -ansi
+ CXXFLAGS = -O3 -Wall -ansi -DNDEBUG
 endif
 
 # pre-processor flags
-CPPFLAGS := -I$(INCDIR) -I$(LCIO)/src/cpp/include
+CPPFLAGS := -I$(INCDIR) -I$(MARLIN)/streamlog/include -I$(LCIO)/src/cpp/include
 CPPFLAGS += $(PKGCPPFLAGS)
 CPPFLAGS += $(USERINCLUDES)
 
@@ -221,7 +232,7 @@ $(BINDIR)/$(GUIPROGNAME): $(BIN)
 	cd "$(GUIDIR)/gui"; qmake ; $(MAKE) ; fi
 
 # binary rule
-$(BIN) : $(OBJ) $(BINOBJ) $(PKGLIBS)
+$(BIN) : $(OBJ) $(STRLOGOBJ) $(BINOBJ) $(PKGLIBS)
 	@$(DIR_EXISTS) $(BINDIR) || mkdir -p $(BINDIR)
 	$(LD) $(OBJDIR)/$(notdir $@).o $(LDFLAGS) $(LIBS) -o $@
 
@@ -230,8 +241,13 @@ $(OBJDIR)/%.o: %.cc
 	@$(DIR_EXISTS) $(OBJDIR) || mkdir -p $(OBJDIR)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
+# objects rule for streamlog
+$(OBJDIR)/%.o: ../streamlog/source/src/%.cc
+	@$(DIR_EXISTS) $(OBJDIR) || mkdir -p $(OBJDIR)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+
 # library rule
-$(LIB) : $(OBJ)
+$(LIB) : $(OBJ) $(STRLOGOBJ)
 	@$(DIR_EXISTS) $(LIBDIR) || mkdir -p $(LIBDIR)
 	$(AR) $@ $?
 
@@ -242,5 +258,14 @@ $(DEPDIR)/%.d : %.cc
 	set -e; $(CXX) -MM $(CPPFLAGS) $< \
 	| sed 's|\($*\)\.o[ :]*|$(OBJDIR)/\1.o $(DEPDIR)/$*.d : |g'\
 	> $@; [ -s $@ ] || rm -f $@
+
+# dependency rule
+$(DEPDIR)/%.d : ../streamlog/source/src/%.cc
+	@$(DIR_EXISTS) $(DEPDIR) || mkdir -p $(DEPDIR)
+	@echo "Creating dependencies for $<" ; \
+	set -e; $(CXX) -MM $(CPPFLAGS) $< \
+	| sed 's|\($*\)\.o[ :]*|$(OBJDIR)/\1.o $(DEPDIR)/$*.d : |g'\
+	> $@; [ -s $@ ] || rm -f $@
+
 
 # end
