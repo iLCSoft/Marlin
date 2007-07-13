@@ -139,7 +139,7 @@ namespace marlin{
 
     _factory = simpleFactory ;
     
-    std::cout << " SimpleFastMCProcessor::init() : registering SimpleParticleFactory " << std::endl ;
+    streamlog_out( MESSAGE )  << " SimpleFastMCProcessor::init() : registering SimpleParticleFactory " << std::endl ;
 #endif    
 
   }
@@ -248,7 +248,7 @@ namespace marlin{
     LCCollection* relCol = evt->getCollection( _mcTruthCollectionName ) ;
     
     if( relCol == 0 ) {
-      std::cout << "SimpleFastMCProcessor::check no collection found: MCTruthMapping" << std::endl ;
+      streamlog_out( WARNING ) << "SimpleFastMCProcessor::check no collection found: MCTruthMapping" << std::endl ;
       return ;
     }
     
@@ -322,9 +322,9 @@ namespace marlin{
   
   void SimpleFastMCProcessor::end(){ 
     
-    std::cout << "SimpleFastMCProcessor::end()  " << name() 
-	      << " processed " << _nEvt << " events in " << _nRun << " runs "
-	      << std::endl ;
+    streamlog_out( MESSAGE4 )  << "SimpleFastMCProcessor::end()  " << name() 
+			       << " processed " << _nEvt << " events in " << _nRun << " runs "
+			       << std::endl ;
     
 #ifdef MARLIN_USE_AIDA_IGNORE_FOR_NOW
     // FIXME:

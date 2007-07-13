@@ -216,12 +216,12 @@ void LCIOOutputProcessor::processEvent( LCEvent * evt ) {
 
 void LCIOOutputProcessor::end(){ 
 
-  std::cout  << std::endl 
-	     << "LCIOOutputProcessor::end()  " << name() 
-	     << ": " << _nEvt << " events in " << _nRun << " runs written to file  " 
-	     <<  _lcioOutputFile  
-	     << std::endl
-	     << std::endl ;
+  streamlog_out( MESSAGE4 )   << std::endl 
+			      << "LCIOOutputProcessor::end()  " << name() 
+			      << ": " << _nEvt << " events in " << _nRun << " runs written to file  " 
+			      <<  _lcioOutputFile  
+			      << std::endl
+			      << std::endl ;
   
   _lcWrt->close() ;
 
