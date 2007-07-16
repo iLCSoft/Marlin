@@ -46,6 +46,8 @@ IF( DOXYGEN_FOUND )
                                                                                                                                                             
     ADD_CUSTOM_COMMAND(
         OUTPUT  "${CMAKE_SOURCE_DIR}/doc/html"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/README" "${CMAKE_SOURCE_DIR}/doc/README"
         COMMAND "${DOXYGEN_EXECUTABLE}" ARGS "Doxyfile_cmake"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/doc"
         COMMENT "Building API Documentation..."
