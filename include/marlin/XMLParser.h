@@ -98,7 +98,7 @@ namespace marlin{
    * </pre>
    * 
    * @author F. Gaede, DESY
-   * @version $Id: XMLParser.h,v 1.6 2006-11-16 14:44:45 gaede Exp $ 
+   * @version $Id: XMLParser.h,v 1.7 2007-07-18 12:43:09 engels Exp $ 
    */
 
   class XMLParser : public IParser {
@@ -145,7 +145,7 @@ namespace marlin{
     };
   
 
-    XMLParser( const std::string& fileName ) ;
+    XMLParser( const std::string& fileName, bool forCCheck=false ) ;
     virtual ~XMLParser() ; 
 
 
@@ -188,6 +188,7 @@ namespace marlin{
 
   private:
     XMLParser() ;
+    bool _forCCheck; //boolean variable set to true if parser is used for consistency checking
 
   };
 

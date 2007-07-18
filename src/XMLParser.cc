@@ -10,8 +10,8 @@
 namespace marlin{
 
   // open steering file with processor names 
-  XMLParser::XMLParser( const std::string&  fileName) :
-    _current(0) , _fileName( fileName ) {
+  XMLParser::XMLParser( const std::string&  fileName, bool forCCheck ) :
+    _current(0) , _fileName( fileName ), _forCCheck( forCCheck ) {
   }
   
   XMLParser::~XMLParser(){
@@ -187,7 +187,7 @@ namespace marlin{
     //_doc->SaveFile( "debug.xml" ) ;
     
     
-    if( typeCount.first==0 && typeCount.second ==0){
+    if( _forCCheck && typeCount.first==0 && typeCount.second ==0){
       std::cout  << "---------------------------------------------------------------------" << std::endl
 		 << "  WARNING XMLParser : none of the available processors have input or " << std::endl
 		 << "  or output collection information assigned. You won't be able to    " << std::endl 
@@ -198,7 +198,7 @@ namespace marlin{
 		 << "  or add the appropriate information to your existing steering files " << std::endl 
 		 << "---------------------------------------------------------------------" << std::endl ;
     } 
-    //
+    
     // fg --- this is not really a warning as there are a number of processors w/o any input or output collections
     //
     //     else if( procCount > typedProcCount ){

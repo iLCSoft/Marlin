@@ -515,7 +515,7 @@ namespace marlin{
 	    cerr << "parseXMLFile: Failed to load file: " << _steeringFile << endl;
 	    return false;
 	}
-	_parser = new XMLParser( file ) ;
+	_parser = new XMLParser( file, true ) ;
       }
 
       _parser->parse();
