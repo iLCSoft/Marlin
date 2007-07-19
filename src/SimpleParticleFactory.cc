@@ -5,7 +5,11 @@
 
 #include "IMPL/ReconstructedParticleImpl.h"
 
+#ifdef USE_HEPPDT
+#include "HepPDT/ParticleID.hh"
+#else
 #include "CLHEP/HepPDT/ParticleID.hh"
+#endif
 
 #include "UTIL/LCFourVector.h"
 

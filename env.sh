@@ -42,6 +42,13 @@ export LCIO=/afs/desy.de/group/it/ilcsoft/lcio/v01-08-02
 #---- CLHEP ---------
 export CLHEP=/afs/desy.de/group/it/ilcsoft/CLHEP/2.0.2.2
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLHEP/lib
+#---- CLHEP >= 1.9.3.0/2.0.3.0
+# HepPDT not included any more
+# has to be installed as separate package
+#export CLHEP=/opt/products/CLHEP/2.0.3.1
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLHEP/lib
+#export HEPPDT=/opt/products/HepPDT/2.02.02
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HEPPDT/lib
 
 #---- LCCD -----------
 
