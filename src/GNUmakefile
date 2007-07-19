@@ -135,7 +135,7 @@ ifdef CLHEP
  CPPFLAGS += -DUSE_CLHEP -I$(CLHEP)/include
  LIBS += -L$(CLHEP)/lib -lCLHEP
  ifdef HEPPDT
- 	CPPFLAGS += -DUSE_HEPPDT -I$(HEPPDT)/include
+ 	CPPFLAGS += -DUSE_SEPARATE_HEPPDT -I$(HEPPDT)/include
  	LIBS += -L$(HEPPDT)/lib -lHepPDT -lHepPID
  endif
 endif

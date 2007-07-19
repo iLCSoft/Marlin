@@ -5,7 +5,7 @@
 
 #include "IMPL/ReconstructedParticleImpl.h"
 
-#ifdef USE_HEPPDT
+#ifdef USE_SEPARATE_HEPPDT
 #include "HepPDT/ParticleID.hh"
 #else
 #include "CLHEP/HepPDT/ParticleID.hh"
