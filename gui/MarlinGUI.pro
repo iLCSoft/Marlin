@@ -6,7 +6,8 @@ TEMPLATE = app
 CONFIG -= moc
 CONFIG += create_prl link_prl
 INCLUDEPATH += $(MARLIN)/include $(MARLIN)/streamlog/source/include $(LCIO)/src/cpp/include
-!isEmpty(MARLIN_NO_DLL) {
+ENV_MARLIN_NO_DLL = $$(MARLIN_NO_DLL)
+!isEmpty(ENV_MARLIN_NO_DLL) {
     DEFINES += MARLIN_NO_DLL
 }
 unix:LIBS += `. $(MARLINWORKDIR)/bin/marlin_libs.sh` -L$(MARLINWORKDIR)/lib -lMarlin
