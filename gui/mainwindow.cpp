@@ -1200,13 +1200,32 @@ void MainWindow::changeGearFile()
     QString absFileName = QFileDialog::getOpenFileName(this, tr("Choose a Gear file"), "", "*.xml", 0, QFileDialog::DontResolveSymlinks);
    
     if( !absFileName.isEmpty() ){
-	QFileInfo xmlFile(msc->getXMLFile().c_str());
-	//extract the absolute path from the xml file
-	QDir dir(xmlFile.absolutePath());
-	//get the relative path for the GEAR file
-	QString fileName = dir.relativeFilePath(absFileName);
+	//get the current Path
+	QDir dir;
+
+	//test if the file is on the same directory-branch from the working directory
+	StringVec currentPath, filePath;
+	msc->getMProcs()->tokenize(dir.absolutePath().toStdString(),currentPath,"/");
+	msc->getMProcs()->tokenize(absFileName.toStdString(),filePath,"/");
+
+	QString fileName;
+	//if file is on the same directory-branch from the working directory take relative path
+	if(currentPath[0]==filePath[0]){
+	    fileName = dir.relativeFilePath(absFileName);
+	}
+	//else take absolute path
+	else{
+	    fileName = absFileName;
+	}
+
+    //if( !absFileName.isEmpty() ){
+	//QFileInfo xmlFile(msc->getXMLFile().c_str());
+	////extract the absolute path from the xml file
+	//QDir dir(xmlFile.absolutePath());
+	////get the relative path for the GEAR file
+	//QString fileName = dir.relativeFilePath(absFileName);
      
-        statusBar()->showMessage(tr("Changed GEAR File to %1").arg(fileName), 2000);
+    statusBar()->showMessage(tr("Changed GEAR File to %1").arg(fileName), 2000);
 	msc->getGlobalParameters()->erase( "GearXMLFile" );
 	StringVec file;
 	file.push_back( fileName.toStdString() );
