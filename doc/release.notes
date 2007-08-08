@@ -8,16 +8,40 @@
 | v00-09-08 |
  -----------
 
-  - improved cmake support - see Readme
+  - CMake is now default build tool  - see README for details
 
   - improved logging mechanism - see TestProcessor.cc as example:
 
-    #include "marlin/VerbosityLevels.h"
-    // ...
-    m_out( MESSAGE) << " processing event " << evt->getEventNumber() 
-                    << m_endl ;
+      #include "streamlog/streamlog.h"  // needed only in non processor files!  
+      // ...
+      streamlog_out( MESSAGE ) << " processing event " << evt->getEventNumber() 
+               	               << std::endl ;
     
+
+     + additional log levels: DEBUG0,...DEBUG4, MESSAGE0-4, WARNING0-4, ERROR0-4
+
+     + Processor::message<T>() is deprecated 
    
+     + streamlog is an independant library for logging that can be also be used in other projects 
+  
+
+  - plugin mechanism is now default 
+    ( set MARLIN_NO_DLL to disable plugins at compile time )
+
+  - bug fix in SimpleFastMCProcessor ( anti-neutrinos and collection names )
+
+ 
+  - macro for checking marlin version :
+
+    #ifdef MARLIN_VERSION_GE
+     #if MARLIN_VERSION_GE( 0, 9, 8 )    
+        stream_log( MESSAGE ) << " using some feature introduced in Marlin v00-09-08 " << std::endl ;
+     #endif
+    #endif
+
+
+
+
  -----------
 | v00-09-07 |
  -----------
