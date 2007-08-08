@@ -31,6 +31,7 @@ namespace marlin{
   using  streamlog::ERROR2 ;
   using  streamlog::ERROR3 ;
   using  streamlog::ERROR4 ;
+  using  streamlog::SILENT ;
 
 }
 

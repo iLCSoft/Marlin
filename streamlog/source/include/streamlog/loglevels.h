@@ -23,7 +23,7 @@
  * 
  *  
  *  @author F. Gaede, DESY
- *  @version $Id: loglevels.h,v 1.2 2007-07-13 11:09:04 gaede Exp $
+ *  @version $Id: loglevels.h,v 1.3 2007-08-08 13:58:33 gaede Exp $
  */
 
 #ifndef loglevels_h
@@ -73,7 +73,7 @@ namespace streamlog{
 
 
     // use this to turn of all logging messages
-  DEFINE_STREAMLOG_LEVEL( SILENT, "SILENT  ",  STREAMLOG_MAX_LEVEL    , false ) 
+  DEFINE_STREAMLOG_LEVEL( SILENT, "SILENT" ,  STREAMLOG_MAX_LEVEL    , false ) 
 
 }
 

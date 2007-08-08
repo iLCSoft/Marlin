@@ -224,6 +224,7 @@ int main(int argc, char** argv ){
   streamlog::out.addLevelName<ERROR2>() ;
   streamlog::out.addLevelName<ERROR3>() ;
   streamlog::out.addLevelName<ERROR4>() ;
+  streamlog::out.addLevelName<SILENT>() ;
 
 
   //-------- init logging level ------------

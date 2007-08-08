@@ -16,15 +16,15 @@
 #############################################################################
 
 # ILC_HOME
-SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-00"
+SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-01"
     CACHE PATH "Path to ILC Software" FORCE )
 
 # Path to LCIO
-SET( LCIO_HOME "${ILC_HOME}/lcio/v01-08-02"
+SET( LCIO_HOME "${ILC_HOME}/lcio/v01-08-03"
     CACHE PATH "Path to LCIO" FORCE )
 
 # CMake Modules Path
-SET( CMAKE_MODULE_PATH "/afs/desy.de/group/it/ilcsoft/CMakeModules/HEAD"
+SET( CMAKE_MODULE_PATH "/afs/desy.de/group/it/ilcsoft/CMakeModules/v01-01"
     CACHE PATH "Path to CMake Modules" FORCE )
 
 #############################################################################
@@ -48,11 +48,11 @@ SET( BUILD_WITH "GEAR CLHEP RAIDA ROOT"
     CACHE STRING "Build Marlin with these optional packages" FORCE )
 
 # Path to GEAR
-SET( GEAR_HOME "${ILC_HOME}/gear/v00-05"
+SET( GEAR_HOME "${ILC_HOME}/gear/v00-06"
     CACHE PATH "Path to GEAR" FORCE )
 
 # Path to LCCD
-SET( LCCD_HOME "${ILC_HOME}/lccd/v00-03-05"
+SET( LCCD_HOME "${ILC_HOME}/lccd/v00-03-06"
     CACHE PATH "Path to LCCD" FORCE )
 
 # Path to CLHEP
@@ -60,7 +60,7 @@ SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
     CACHE PATH "Path to CLHEP" FORCE )
 
 # Path to RAIDA
-SET( RAIDA_HOME "${ILC_HOME}/RAIDA/v01-02"
+SET( RAIDA_HOME "${ILC_HOME}/RAIDA/v01-03"
     CACHE PATH "Path to RAIDA" FORCE )
 
 SET( ROOT_HOME "${ILC_HOME}/root/5.08.00"

@@ -4,6 +4,18 @@
   Marlin release notes
  ======================
 
+
+ -----------
+| v00-09-09 - pre |
+ -----------
+    - bug fixes
+	 gui: bug fixed in changing the gear file
+         gui: bug fix with defining MARLIN_NO_DLL (Adrian Vogel)
+         fixed documentation for streamlog
+         fixed verbosity level SILENT
+
+    - made compatible with CLHEP versions >=1.9.3.0/2.0.3.0 (Martin Killenberg)
+
  -----------
 | v00-09-08 |
  -----------
