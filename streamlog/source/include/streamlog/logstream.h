@@ -25,7 +25,7 @@ namespace streamlog{
    * 
    *    //...
    *    
-   *    if( streamlog::out.write< streamlog::DEBUG1 > )
+   *    if( streamlog::out.write< streamlog::DEBUG1 >() )
    *       streamlog::out() << " this message will only be printed if level >= DEBUG1::level " 
    *                        << std::endl ;
    * 
@@ -47,7 +47,7 @@ namespace streamlog{
    *  @see logscope
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: logstream.h,v 1.2 2007-07-13 11:09:04 gaede Exp $
+   *  @version $Id: logstream.h,v 1.3 2007-08-08 13:08:34 gaede Exp $
    */
   class logstream {
 
