@@ -3,11 +3,11 @@
 
 
 #ifdef LCIO_MAJOR_VERSION 
- #if LCIO_VERSION_GE( 1,2)  
-  #include "LCIOSTLTypes.h"
- #endif
+#if LCIO_VERSION_GE( 1,2)  
+#include "LCIOSTLTypes.h"
+#endif
 #else
-  #include "MarlinLCIOSTLTypes.h"
+#include "MarlinLCIOSTLTypes.h"
 #endif
 
 #include "marlin/ProcessorMgr.h"
@@ -63,8 +63,8 @@ int main(int argc, char** argv ){
   HANDLE_LCIO_EXCEPTIONS
   
 
-  //###### init streamlog ######
-  std::string binname = argv[0]  ;
+    //###### init streamlog ######
+    std::string binname = argv[0]  ;
   binname = binname.substr( binname.find_last_of("/") + 1 , binname.size() ) ;
   streamlog::out.init( std::cout , binname ) ;
   
@@ -234,18 +234,18 @@ int main(int argc, char** argv ){
   scope.setLevel( verbosity ) ;
 
 
-//   std::map<std::string, int> verbosity_levels;
-//   verbosity_levels[std::string("VERBOSE")]=Processor::VERBOSE;
-//   verbosity_levels[std::string("DEBUG")]=Processor::DEBUG;
-//   verbosity_levels[std::string("MESSAGE")]=Processor::MESSAGE;
-//   verbosity_levels[std::string("WARNING")]=Processor::WARNING;
-//   verbosity_levels[std::string("ERROR")]=Processor::ERROR;
-//   verbosity_levels[std::string("SILENT")]=Processor::SILENT;
+  //   std::map<std::string, int> verbosity_levels;
+  //   verbosity_levels[std::string("VERBOSE")]=Processor::VERBOSE;
+  //   verbosity_levels[std::string("DEBUG")]=Processor::DEBUG;
+  //   verbosity_levels[std::string("MESSAGE")]=Processor::MESSAGE;
+  //   verbosity_levels[std::string("WARNING")]=Processor::WARNING;
+  //   verbosity_levels[std::string("ERROR")]=Processor::ERROR;
+  //   verbosity_levels[std::string("SILENT")]=Processor::SILENT;
 
-//   std::string verbosity = Global::parameters->getStringVal("Verbosity" ) ;
-//   if( verbosity.size() > 0 ){
-// 	  Processor::Verbosity=verbosity_levels[verbosity];
-//   }
+  //   std::string verbosity = Global::parameters->getStringVal("Verbosity" ) ;
+  //   if( verbosity.size() > 0 ){
+  // 	  Processor::Verbosity=verbosity_levels[verbosity];
+  //   }
 
   createProcessors( *parser ) ;
 
@@ -260,7 +260,7 @@ int main(int argc, char** argv ){
     Global::GEAR = gearXML.createGearMgr() ;
 
     streamlog_out( MESSAGE )  << " ---- instantiated  GEAR from file  " << gearFile  << std::endl 
-			<< *Global::GEAR << std::endl ;
+			      << *Global::GEAR << std::endl ;
 
   } else {
 
@@ -307,7 +307,7 @@ int main(int argc, char** argv ){
       if( skipNEvents > 0 ){
 	
 	streamlog_out( WARNING ) << " --- Marlin.cc - will skip first " << skipNEvents << " event(s)" 
-			   << std::endl << std::endl ;
+				 << std::endl << std::endl ;
 	
 	lcReader->skipNEvents(  skipNEvents ) ;
       }
@@ -375,37 +375,37 @@ int main(int argc, char** argv ){
 
   
 //   void  createProcessors(XMLParser&  parser) {
-  void  createProcessors( const IParser&  parser) {
+void  createProcessors( const IParser&  parser) {
 
-    StringVec activeProcessors ;
-    Global::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
+  StringVec activeProcessors ;
+  Global::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
 
-    StringVec procConds ;
-    Global::parameters->getStringVals("ProcessorConditions" , procConds ) ;
+  StringVec procConds ;
+  Global::parameters->getStringVals("ProcessorConditions" , procConds ) ;
     
-    bool useConditions = ( activeProcessors.size() == procConds.size() ) ;
+  bool useConditions = ( activeProcessors.size() == procConds.size() ) ;
 
-//     for( StringVec::iterator m = activeProcessors.begin() ; m != activeProcessors.end() ; m++){
-    for(unsigned int i=0 ; i<  activeProcessors.size() ; i++ ) {
+  //     for( StringVec::iterator m = activeProcessors.begin() ; m != activeProcessors.end() ; m++){
+  for(unsigned int i=0 ; i<  activeProcessors.size() ; i++ ) {
       
-      StringParameters* p = parser.getParameters( activeProcessors[i] )  ;
+    StringParameters* p = parser.getParameters( activeProcessors[i] )  ;
 
-      if( p!=0 ){
-	std::string type = p->getStringVal("ProcessorType") ;
+    if( p!=0 ){
+      std::string type = p->getStringVal("ProcessorType") ;
 	
-	if( useConditions ) 
-	  ProcessorMgr::instance()->addActiveProcessor( type , activeProcessors[i] , p , procConds[i] )  ;
-	else
-	  ProcessorMgr::instance()->addActiveProcessor( type , activeProcessors[i] , p )  ;
+      if( useConditions ) 
+	ProcessorMgr::instance()->addActiveProcessor( type , activeProcessors[i] , p , procConds[i] )  ;
+      else
+	ProcessorMgr::instance()->addActiveProcessor( type , activeProcessors[i] , p )  ;
 
-      } else{
+    } else{
 
-	streamlog_out( WARNING )  << " Undefined processor : " << activeProcessors[i] << std::endl ;	
-      }
+      streamlog_out( WARNING )  << " Undefined processor : " << activeProcessors[i] << std::endl ;	
     }
   }
+}
 
-  void  createProcessors(Parser&  parser) {
+void  createProcessors(Parser&  parser) {
     
   StringVec activeProcessors ;
   Global::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
@@ -415,9 +415,9 @@ int main(int argc, char** argv ){
     StringParameters* p = parser.getParameters( *m )  ;
     
 
-     streamlog_out( MESSAGE ) << " Parameters for processor " << *m 
-			<< std::endl 
-			<< *p ; 
+    streamlog_out( MESSAGE ) << " Parameters for processor " << *m 
+			     << std::endl 
+			     << *p ; 
 
     if( p!=0 ){
       std::string type = p->getStringVal("ProcessorType") ;
@@ -445,31 +445,31 @@ void listAvailableProcessorsXML() {
 
 int printUsage() {
 
-    std::cout << " Usage: Marlin [OPTION] [FILE]..." << std::endl 
-	      << "   runs a Marlin application " << std::endl 
-	      << std::endl 
-	      << " Running the application with a given steering file:" << std::endl 
-	      << "   Marlin steer.xml   " << std::endl 
-	      << std::endl 
-	      << "   Marlin -h                  \t print this help information" << std::endl 
-	      << "   Marlin -?                  \t print this help information" << std::endl 
-	      << "   Marlin -x                  \t print an example steering file to stdout" << std::endl 
-	      << "   Marlin -c steer.xml        \t check the given steering file for consistency" << std::endl 
-	      << "   Marlin -f old.xml new.xml  \t convert old xml files to new xml files for consistency check" 
-	      << std::endl 
-	      << "   Marlin -o old.steer new.xml\t convert old steering file to xml steering file" << std::endl 
-	      << "   Marlin -l                  \t [deprecated: old format steering file example]" << std::endl 
-	      << "   Marlin -d steer.xml flow.dot\t create a program flow diagram (see: http://www.graphviz.org)" << std::endl 
-	      << std::endl 
-	      << " Example: " << std::endl 
-	      << " To create a new default steering file from any Marlin application, run" << std::endl 
-	      << "     Marlin -x > mysteer.xml" << std::endl 
-	      << " and then use either an editor or the MarlinGUI to modify the created steering file " << std::endl 
-	      << " to configure your application and then run it. e.g. : " << std::endl 
-	      << "     Marlin mysteer.xml > marlin.out 2>&1 &" << std::endl
-	      << std::endl ;
+  std::cout << " Usage: Marlin [OPTION] [FILE]..." << std::endl 
+	    << "   runs a Marlin application " << std::endl 
+	    << std::endl 
+	    << " Running the application with a given steering file:" << std::endl 
+	    << "   Marlin steer.xml   " << std::endl 
+	    << std::endl 
+	    << "   Marlin -h                  \t print this help information" << std::endl 
+	    << "   Marlin -?                  \t print this help information" << std::endl 
+	    << "   Marlin -x                  \t print an example steering file to stdout" << std::endl 
+	    << "   Marlin -c steer.xml        \t check the given steering file for consistency" << std::endl 
+	    << "   Marlin -f old.xml new.xml  \t convert old xml files to new xml files for consistency check" 
+	    << std::endl 
+	    << "   Marlin -o old.steer new.xml\t convert old steering file to xml steering file" << std::endl 
+	    << "   Marlin -l                  \t [deprecated: old format steering file example]" << std::endl 
+	    << "   Marlin -d steer.xml flow.dot\t create a program flow diagram (see: http://www.graphviz.org)" << std::endl 
+	    << std::endl 
+	    << " Example: " << std::endl 
+	    << " To create a new default steering file from any Marlin application, run" << std::endl 
+	    << "     Marlin -x > mysteer.xml" << std::endl 
+	    << " and then use either an editor or the MarlinGUI to modify the created steering file " << std::endl 
+	    << " to configure your application and then run it. e.g. : " << std::endl 
+	    << "     Marlin mysteer.xml > marlin.out 2>&1 &" << std::endl
+	    << std::endl ;
 
-      return(0) ;
+  return(0) ;
 
 }
 
