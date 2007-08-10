@@ -58,44 +58,6 @@ void Processor::setParameters( StringParameters* parameters) {
   }
 
 
-// void Processor::message( int verbosity, const std::string& message ){
-//   if( verbosity >= Verbosity ){
-// 	  std::cout << message;
-//   }
-// }
-
-
-
-
-//   template<class T>
-//   export void Processor::registerProcessorParameter(const std::string& name, 
-// 					     const std::string&description,
-// 					     T& parameter ) {
-//     _map[ name ] = new ProcessorParameter_t<T>( name , description, parameter ) ;
-//   }
-
-
-  void Processor::printParameters(){
-    
-    typedef ProcParamMap::iterator PMI ;
-    
-    std::cout << std::endl  
-     	      << "---- " << name()  <<" -  parameters: " << std::endl ;
-    
-    
-    for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
-      
-      if( ! i->second->isOptional() || i->second->valueSet() ){
-	std::cout << "\t"   << i->second->name()   
-		  << ":  "  << i->second->value() 
-		  << std::endl ;
-      }
-    }
-
-    std::cout << "-------------------------------------------------" 
-	      << std::endl ;
-  }
-
 
   void Processor::printDescription() {
     

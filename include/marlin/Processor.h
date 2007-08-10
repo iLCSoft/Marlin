@@ -80,7 +80,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.33 2007-07-13 12:34:10 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.34 2007-08-10 10:15:13 gaede Exp $ 
    */
   
   class Processor {
@@ -161,9 +161,43 @@ namespace marlin{
      */
     virtual void printDescriptionXML(std::ostream& stream=std::cout) ;
 
-    /** Print the parameters and its values.
+    /** Print the parameters and their values with verbosity level MESSAGE.
      */
-    virtual void printParameters() ;
+    inline void printParameters() { printParameters<MESSAGE>() ;  }
+
+    /** Print the parameters and their values depending on the given verbosity level.
+     */
+    template <class T>
+    void printParameters() {
+    
+      
+      if( streamlog::out.write<T>() ) {
+
+	
+	typedef ProcParamMap::iterator PMI ;
+
+	streamlog::out()  << std::endl  
+			<< "---- " << name()  <<" -  parameters: " << std::endl ;
+	
+	
+	for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
+	  
+	  if( ! i->second->isOptional() || i->second->valueSet() ){
+	    streamlog::out.write<T>() ;
+	    streamlog::out() << "\t"   << i->second->name()   
+			     << ":  "  << i->second->value() 
+			     << std::endl ;
+	  }
+	}
+	
+	streamlog::out.write<T>() ;
+	streamlog::out() << "-------------------------------------------------" 
+			 << std::endl ;
+	
+      }
+    }
+
+  
 
 
     /** Description of processor.
