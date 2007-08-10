@@ -80,7 +80,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.34 2007-08-10 10:15:13 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.35 2007-08-10 12:04:34 gaede Exp $ 
    */
   
   class Processor {
@@ -171,7 +171,7 @@ namespace marlin{
     void printParameters() {
     
       
-      if( streamlog::out.write<T>() ) {
+      if( streamlog::out.template write<T>() ) {
 
 	
 	typedef ProcParamMap::iterator PMI ;
@@ -183,14 +183,14 @@ namespace marlin{
 	for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
 	  
 	  if( ! i->second->isOptional() || i->second->valueSet() ){
-	    streamlog::out.write<T>() ;
+	    streamlog::out.template write<T>() ;
 	    streamlog::out() << "\t"   << i->second->name()   
 			     << ":  "  << i->second->value() 
 			     << std::endl ;
 	  }
 	}
 	
-	streamlog::out.write<T>() ;
+	streamlog::out.template write<T>() ;
 	streamlog::out() << "-------------------------------------------------" 
 			 << std::endl ;
 	
@@ -348,13 +348,12 @@ namespace marlin{
      *  Use this method for simple strings. In order to use more complex messages, including
      *  numbers, use:
      *  @see  void message( const std::basic_ostream<char, std::char_traits<char> >& m)
+     *  @deprecated  
      */
     template <class T>
     void message(  const std::string& message ) const {
       
-      //      if( T::active ){  // allow the compiler to optimize this away ...
-      // 	_log->template message<T>( message ) ; 
-      //       }
+
       if( streamlog::out.template write<T>() ) 
 	streamlog::out() << message << std::endl ;
       
@@ -371,6 +370,7 @@ namespace marlin{
      * </pre>
      * 
      * 
+     * @deprecated  
      * @see void message(  const std::string& message )
      * @see std::stringstream& log()
      */
@@ -390,27 +390,8 @@ namespace marlin{
      }
     }
 
-
-
-    /** Helper method used with macros m_out(VERBOSITY) and m_endl - do not call this method directly.
-     *  Use m_out(VERBOSITY) for std::cout and m_endl for std::endl (allways needed ! ), e.g.:
-     *  <pre>
-     *    m_out( DEBUG ) << " processing event: " << evt->getEventNumber() 
-     *                   << " in run:           " << evt->getRunNumber()  
-     *                   <<  m_endl ;  // <-- NEEDED !!!
-     *  </pre>
-     */
-    //fg: this causesa a strange bug when message(string ) is used in another package -
-    //    it seems like const char* is resolved by bool rather than const std::string& !?
-    //    FIXME ! 
-//     template <class T>
-//     inline void message( bool b ) const {
-//       if( b ) {
-// 	this->template message<T>( _str->str() ) ;
-//       }
-//     }
-    
-    /** Returns an empty stringstream that is used for by the message method.
+    /** Returns an empty stringstream that is used by the message method.
+     * @deprecated
      */
     std::stringstream& log() const ;
 
