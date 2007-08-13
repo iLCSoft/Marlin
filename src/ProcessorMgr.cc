@@ -7,6 +7,7 @@
 #include <set>
 
 #include "marlin/DataSourceProcessor.h"
+#include "marlin/EventModifier.h"
 #include "streamlog/streamlog.h"
 
 namespace marlin{
@@ -235,6 +236,36 @@ namespace marlin{
 //       _outputProcessor->dropCollections( evt ) ;
 //   }
   
+
+
+  void ProcessorMgr::modifyEvent( LCEvent* evt ){ 
+
+    static bool first = true  ;
+    static   std::vector<EventModifier*> emv ;
+
+    if( first ) {
+
+      for(  ProcessorList::iterator it = _list.begin() ;
+	    it != _list.end() ; it++ ){
+	
+	EventModifier* em = dynamic_cast<EventModifier*>( *it ) ; 
+	
+	if( em != 0 ) {
+	  emv.push_back( em ) ;	
+	  streamlog_out( WARNING4 ) << " -----------   " << std::endl
+				    << " the following processor will modify the LCIO event :  "
+				    << (*it)->name()  << " !! " <<  std::endl
+				    << " ------------  "   << std::endl ; 
+	}
+      }
+
+      first = false ;
+    }
+
+    for_each( emv.begin() , emv.end() ,   std::bind2nd(  std::mem_fun( &EventModifier::modifyEvent ) , evt ) ) ;
+
+  }
+
 
   void ProcessorMgr::processEvent( LCEvent* evt ){ 
 
