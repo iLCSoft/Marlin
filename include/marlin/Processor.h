@@ -80,7 +80,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.35 2007-08-10 12:04:34 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.36 2007-08-13 09:38:42 gaede Exp $ 
    */
   
   class Processor {
@@ -163,7 +163,7 @@ namespace marlin{
 
     /** Print the parameters and their values with verbosity level MESSAGE.
      */
-    inline void printParameters() { printParameters<MESSAGE>() ;  }
+    void printParameters() ; 
 
     /** Print the parameters and their values depending on the given verbosity level.
      */

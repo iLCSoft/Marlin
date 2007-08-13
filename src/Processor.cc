@@ -59,6 +59,8 @@ void Processor::setParameters( StringParameters* parameters) {
 
 
 
+  void Processor::printParameters() { printParameters<MESSAGE>() ;  }
+
   void Processor::printDescription() {
     
     std::cout << ".begin My"        <<  type()  << std::endl 
