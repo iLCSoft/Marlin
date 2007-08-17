@@ -241,7 +241,8 @@ namespace marlin{
   void ProcessorMgr::modifyEvent( LCEvent* evt ){ 
 
     static bool first = true  ;
-    static   std::vector<EventModifier*> emv ;
+    typedef std::vector<EventModifier*> EMVec ;
+    static  EMVec  emv ;
 
     if( first ) {
 
@@ -262,7 +263,13 @@ namespace marlin{
       first = false ;
     }
 
-    for_each( emv.begin() , emv.end() ,   std::bind2nd(  std::mem_fun( &EventModifier::modifyEvent ) , evt ) ) ;
+    for( EMVec::iterator it = emv.begin();  it !=  emv.end()  ; ++ it) {
+
+      streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+
+      (*it)->modifyEvent( evt ) ;
+    }
+    //    for_each( emv.begin() , emv.end() ,   std::bind2nd(  std::mem_fun( &EventModifier::modifyEvent ) , evt ) ) ;
 
   }
 
