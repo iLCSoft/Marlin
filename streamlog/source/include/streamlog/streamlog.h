@@ -9,7 +9,7 @@
    *      streamlog_message( MLEVEL , CODE_BLOCK , OUT_MESSAGE) <br>
    * 
    *  @author F. Gaede, DESY
-   *  @version $Id: streamlog.h,v 1.2 2007-07-13 11:09:04 gaede Exp $
+   *  @version $Id: streamlog.h,v 1.3 2007-09-12 11:59:53 gaede Exp $
    */
 
 #ifndef DONT_USE_STREAMLOG
@@ -25,8 +25,17 @@
 
 #define  streamlog_out( MLEVEL ) if(streamlog::out.write< streamlog::MLEVEL >() ) streamlog::out()  
 
+
 #define  streamlog_message( MLEVEL , CODE_BLOCK , OUT_MESSAGE)\
    if( streamlog::out.write< streamlog::MLEVEL >() ) { \
+      CODE_BLOCK \
+    streamlog::out() << OUT_MESSAGE }
+
+//for use in templated classes with gcc 3.2 use these macros:
+#define  streamlog_out_T( MLEVEL ) if(streamlog::out.template write< streamlog::MLEVEL >() ) streamlog::out() 
+
+#define  streamlog_message_T( MLEVEL , CODE_BLOCK , OUT_MESSAGE)\
+   if( streamlog::out.template write< streamlog::MLEVEL >() ) { \
       CODE_BLOCK \
     streamlog::out() << OUT_MESSAGE }
 

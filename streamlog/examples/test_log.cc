@@ -4,7 +4,7 @@
 #include "streamlog/streamlog.h"
 
 #include "fibonacci.h"
-
+#include "ATemplate.h"
 
 
 int main(int argc, char** argv) {
@@ -77,6 +77,12 @@ int main(int argc, char** argv) {
 
   if( streamlog::out.write<streamlog::ERROR>() )
     streamlog::out() << " - no error - just testing .... " << std::endl ;
+
+
+  streamlog_test::ATemplate<std::string> atemp ;
+
+  atemp.doIt() ;
+
 
 
   if(file)
