@@ -23,7 +23,7 @@ SET( ${PROJECT_NAME}_DEPENDS "Marlin;LCIO" )
 
 # set default install prefix to project root directory
 IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
-    SET( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/.." )
+    SET( CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/.." )
 ENDIF()
 
 ## append link pathes to rpath list
@@ -134,12 +134,12 @@ INSTALL( TARGETS ${PROJECT_NAME} DESTINATION bin )
 ###########################################################################################################
 
 ## create uninstall configuration file 
-CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/../cmake_uninstall.cmake.in"
-                "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/../cmake_uninstall.cmake.in"
+                "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake"
                 IMMEDIATE @ONLY )
 
 # create uninstall target
-ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake" )
+ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" )
 
 # display status message for important variables
 MESSAGE( STATUS )
