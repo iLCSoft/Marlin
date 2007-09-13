@@ -6,15 +6,21 @@
 
 
  -----------
-| v00-09-09 - pre |
+| v00-09-09 |
  -----------
+    - introduced EventModifier interface for modifying the LCIO input (e.g. for overlay)
+
+    - printParameters() now on MESSAGE level - or templated: printParameters<DEBUG>() ;
+
     - bug fixes
 	 gui: bug fixed in changing the gear file
          gui: bug fix with defining MARLIN_NO_DLL (Adrian Vogel)
          fixed documentation for streamlog
+         for streamlog in templates (gcc3.2) use  streamlog_out_T( DEBUG ) 
          fixed verbosity level SILENT
+         ...
 
-    - made compatible with CLHEP versions >=1.9.3.0/2.0.3.0 (Martin Killenberg)
+   - made compatible with CLHEP versions >=1.9.3.0/2.0.3.0 (Martin Killenberg)
 
  -----------
 | v00-09-08 |
