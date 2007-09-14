@@ -8,7 +8,7 @@
 *
 * F. Gaede, DESY
 * J. Engels, DESY
-* $Id: README,v 1.17 2007-07-13 14:13:11 engels Exp $
+* $Id: README,v 1.18 2007-09-14 14:16:31 engels Exp $
 ************************************************************************
 
 
@@ -70,10 +70,8 @@ write processors with defined callbacks, i.e. init(), processRunHeader(), proces
     $ export MARLIN_DLL="$PWD/lib/libmymarlin.so"
     $ ../../bin/Marlin -x
 
-    If you have 2 or more libs you should separate them with ';' or
-    with whitespaces, e.g.:
-    $ export MARLIN_DLL="/path1/lib1.so;/path2/lib2.so"
-    $ export MARLIN_DLL="/path1/lib1.so /path2/lib2.so"
+    If you have 2 or more libs you should separate them with a ':'
+    $ export MARLIN_DLL="/path1/lib1.so:/path2/lib2.so"
     
 
     Linking Marlin with shared processor libraries ( at compile time ):
