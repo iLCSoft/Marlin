@@ -24,16 +24,6 @@ INSTALL( DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/include/marlin" DESTINATION in
 # require proper c++
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 
-# add debug definitions
-IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-    CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
-    ADD_DEFINITIONS( "-DMARLINDEBUG" )
-ENDIF()
-
-IF( MARLIN_NO_DLL )
-    ADD_DEFINITIONS( "-DMARLIN_NO_DLL" )
-ENDIF()
-
 # binary sources: list of all sources from which you want to create a binary
 SET( bin_srcs Marlin.cc )
 

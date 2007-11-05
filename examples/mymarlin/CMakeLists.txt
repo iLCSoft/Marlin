@@ -72,6 +72,7 @@ ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
 #    CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
 #    ADD_DEFINITIONS( "-DDEBUG" )
+#    LIST( APPEND ${PROJECT_NAME}_DEFINITIONS "-DDEBUG" )
 #ENDIF()
 
 # get list of all source files

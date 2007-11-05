@@ -40,6 +40,18 @@ IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
     SET( CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" )
 ENDIF()
 
+# definitions
+IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
+    CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
+    ADD_DEFINITIONS( "-DMARLINDEBUG" )
+    LIST( APPEND ${PROJECT_NAME}_DEFINITIONS "-DMARLINDEBUG" )
+ENDIF()
+                                                                                                                                                           
+IF( MARLIN_NO_DLL )
+    ADD_DEFINITIONS( "-DMARLIN_NO_DLL" )
+    LIST( APPEND ${PROJECT_NAME}_DEFINITIONS "-DMARLIN_NO_DLL" )
+ENDIF()
+
 # DOCUMENTATION
 FIND_PACKAGE( Doxygen )
 IF( DOXYGEN_FOUND )
