@@ -16,15 +16,15 @@
 #############################################################################
 
 # ILC_HOME
-SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-01"
+SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-03"
     CACHE PATH "Path to ILC Software" FORCE )
 
 # Path to LCIO
-SET( LCIO_HOME "${ILC_HOME}/lcio/v01-08-03"
+SET( LCIO_HOME "${ILC_HOME}/lcio/v01-08-05"
     CACHE PATH "Path to LCIO" FORCE )
 
 # CMake Modules Path
-SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-01"
+SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-04"
     CACHE PATH "Path to CMake Modules" FORCE )
 
 #############################################################################
@@ -32,7 +32,7 @@ SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-01"
 #############################################################################
 
 # You need to set QT4_HOME path if you want to build the GUI
-SET( MARLIN_GUI OFF CACHE BOOL "Set to ON to build Marlin GUI" FORCE )
+SET( MARLIN_GUI ON CACHE BOOL "Set to ON to build Marlin GUI" FORCE )
 
 # Path to QT4 (needed for MARLIN_GUI)
 SET( QT4_HOME "/afs/desy.de/group/it/ilcsoft/QT/4.2.2"
@@ -48,7 +48,7 @@ SET( BUILD_WITH "GEAR CLHEP RAIDA ROOT"
     CACHE STRING "Build Marlin with these optional packages" FORCE )
 
 # Path to GEAR
-SET( GEAR_HOME "${ILC_HOME}/gear/v00-06"
+SET( GEAR_HOME "${ILC_HOME}/gear/v00-07"
     CACHE PATH "Path to GEAR" FORCE )
 
 # Path to LCCD
