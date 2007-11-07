@@ -4,6 +4,13 @@
   Marlin release notes
  ======================
 
+ -----------
+| v00-09-10 |
+ -----------
+   - patch release 
+     - updated documentation
+     - improved cmake files
+     - no code change
 
  -----------
 | v00-09-09 |
