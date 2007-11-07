@@ -40,11 +40,10 @@ MyProcessor::MyProcessor() : Processor("MyProcessor") {
 
 void MyProcessor::init() { 
 
-//  m_out(MESSAGE) << "   init called  " 
-//		 << m_endl ;
-
-	message<DEBUG>( "     MyProcessor::init()  " ) ;
-
+  streamlog_out(DEBUG) << "   init called  " 
+		       << std::endl ;
+  
+  
   // usually a good idea to
   printParameters() ;
 
@@ -99,9 +98,9 @@ void MyProcessor::processEvent( LCEvent * evt ) {
 
   //-- note: this will not be printed if compiled w/o MARLINDEBUG=1 !
 
-  m_out(DEBUG) << "   processing event: " << evt->getEventNumber() 
-	       << "   in run:  " << evt->getRunNumber() 
-	       << m_endl ;
+  streamlog_out(DEBUG) << "   processing event: " << evt->getEventNumber() 
+		       << "   in run:  " << evt->getRunNumber() 
+		       << std::endl ;
   
 
 
