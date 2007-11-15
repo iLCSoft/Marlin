@@ -44,7 +44,7 @@ SET( QT4_HOME "/afs/desy.de/group/it/ilcsoft/QT/4.2.2"
 
 # if you want to build and link Marlin with one or more of these additional
 # tools you also have to define the corresponding "home" paths
-SET( BUILD_WITH "GEAR CLHEP RAIDA ROOT"
+SET( BUILD_WITH "GEAR LCCD CondDBMySQL CLHEP RAIDA"
     CACHE STRING "Build Marlin with these optional packages" FORCE )
 
 # Path to GEAR
@@ -55,6 +55,10 @@ SET( GEAR_HOME "${ILC_HOME}/gear/v00-07"
 SET( LCCD_HOME "${ILC_HOME}/lccd/v00-03-06"
     CACHE PATH "Path to LCCD" FORCE )
 
+# Path to CondDBMySQL
+SET( CondDBMySQL_HOME "${ILC_HOME}/CondDBMySQL/CondDBMySQL_ILC-0-5-10"
+    CACHE PATH "Path to CondDBMySQL" FORCE )
+
 # Path to CLHEP
 SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
     CACHE PATH "Path to CLHEP" FORCE )
@@ -62,9 +66,6 @@ SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
 # Path to RAIDA
 SET( RAIDA_HOME "${ILC_HOME}/RAIDA/v01-03"
     CACHE PATH "Path to RAIDA" FORCE )
-
-SET( ROOT_HOME "${ILC_HOME}/root/5.08.00"
-    CACHE PATH "Path to ROOT" FORCE )
 
 #############################################################################
 # Link Marlin binary with Processor libraries
