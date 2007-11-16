@@ -20,7 +20,7 @@ SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-03"
     CACHE PATH "Path to ILC Software" FORCE )
 
 # Path to LCIO
-SET( LCIO_HOME "${ILC_HOME}/lcio/v01-08-05"
+SET( LCIO_HOME "${ILC_HOME}/lcio/v01-09"
     CACHE PATH "Path to LCIO" FORCE )
 
 # CMake Modules Path
