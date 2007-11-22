@@ -5,10 +5,15 @@
 
 #include "IMPL/ReconstructedParticleImpl.h"
 
+#if LCIO_VERSION_GE( 1,9) 
+// lcio v01-09 properly fills the charge
+#include "UTIL/LCStdHepRdr.h"
+#else
 #ifdef USE_SEPARATE_HEPPDT
 #include "HepPDT/ParticleID.hh"
 #else
 #include "CLHEP/HepPDT/ParticleID.hh"
+#endif
 #endif
 
 #include "UTIL/LCFourVector.h"
@@ -46,7 +51,11 @@ namespace marlin{
     //     if( mcp->getCharge() > 0.001 ||  mcp->getCharge() < -.001 ){  // mcp->getCharge() != 0.00 
     //     NOTE: the charge is currently (LCIO v01-04) not filled when reading StdHep
 
-    float charge = getCharge( mcp->getPDG() ) ;
+#if LCIO_VERSION_GE( 1,9) 
+     float charge =  mcp->getCharge()  ;
+#else
+     float charge = getCharge( mcp->getPDG() ) ;
+#endif
 
     if( charge > 1e-10 || charge < -1e-10  ){  
 
@@ -71,8 +80,14 @@ namespace marlin{
   }
   
   float SimpleParticleFactory::getCharge( int pdgCode ) {
+#if LCIO_VERSION_GE( 1,9) 
+
+    static LCStdHepRdr rdr("")  ;  // threeCharge should be a static method really ...
+    return rdr.threeCharge( pdgCode ) / 3.00 ;
+#else
 
     return  double( HepPDT::ParticleID( pdgCode ).threeCharge() / 3.00 )   ;
+#endif
 
   }
 
