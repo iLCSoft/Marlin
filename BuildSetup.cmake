@@ -24,7 +24,7 @@ SET( LCIO_HOME "${ILC_HOME}/lcio/v01-09"
     CACHE PATH "Path to LCIO" FORCE )
 
 # CMake Modules Path
-SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-04"
+SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-04-01"
     CACHE PATH "Path to CMake Modules" FORCE )
 
 #############################################################################
