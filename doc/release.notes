@@ -10,7 +10,8 @@
    - patch release 
      - updated documentation
      - improved cmake files
-     - no code change
+     - removed dependency on HepPDT 
+
 
  -----------
 | v00-09-09 |

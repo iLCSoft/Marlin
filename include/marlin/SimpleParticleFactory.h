@@ -15,7 +15,7 @@ namespace marlin {
  *  for charged tracks, photons and neutral hadrons.
  *
  *  @author F. Gaede, DESY
- *  @version $Id: SimpleParticleFactory.h,v 1.2 2005-10-11 12:56:28 gaede Exp $ 
+ *  @version $Id: SimpleParticleFactory.h,v 1.3 2007-11-23 20:09:12 gaede Exp $ 
  */ 
 
   class SimpleParticleFactory : public IRecoParticleFactory {
@@ -44,9 +44,9 @@ namespace marlin {
     virtual FastMCParticleType getParticleType( const lcio::MCParticle* mcp ) ;
 
 
-    /** Helper function to determine the charge from the PDG (charge is missing from stdhep files) 
-     */
-    virtual float getCharge( int pdgCode ) ;
+//     /** Helper function to determine the charge from the PDG (charge is missing from stdhep files) 
+//      */
+//     virtual float getCharge( int pdgCode ) ;
 
 
     /** Set the momentum cut in GeV - no particles are produced for ower momenta. Default is 0.1 eV.
