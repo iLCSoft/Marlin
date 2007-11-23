@@ -11,6 +11,7 @@
      - updated documentation
      - improved cmake files
      - removed dependency on HepPDT 
+       ( requires CMakeModules v01-05 )
 
 
  -----------
