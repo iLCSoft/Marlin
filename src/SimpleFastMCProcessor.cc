@@ -1,4 +1,3 @@
-//#undef MARLIN_USE_AIDA    // fix problem wit RAIDA for now: don't make any plots
 
 #include "marlin/SimpleFastMCProcessor.h"
 
