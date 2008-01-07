@@ -118,14 +118,12 @@ MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH_USE_LINK_PATH )
 # DEPENDENCIES: this code has to be placed before adding any library or
 # executable so that these are linked properly against the dependencies
 IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
-    # load macro
-    IF( NOT EXISTS "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
-        MESSAGE( FATAL_ERROR
-            "\nSorry, could not find MacroCheckDeps.cmake...\n"
-            "Please set CMAKE_MODULE_PATH correctly with: "
-            "cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
+    IF( NOT DEFINED CMAKE_MODULE_PATH )
+        MESSAGE( FATAL_ERROR "CMAKE_MODULE_PATH not set! Set it with: "
+            "-DCMAKE_MODULE_PATH=\"/path_to_ilcsoft/CMakeModules\"" )
     ENDIF()
-    INCLUDE( "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
+    # load macro
+    INCLUDE( "MacroCheckDeps" )
     CHECK_DEPS()
 ENDIF()
 
