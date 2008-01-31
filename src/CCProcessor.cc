@@ -20,7 +20,7 @@ namespace marlin{
     //FIXME: this has to be global
     //if( _error_desc.size() == 0 ){
     _error_desc.push_back( "Processor has no Parameters" );
-    _error_desc.push_back( "Processor is not build in this Marlin binary" );
+    _error_desc.push_back( "Processor not available!" );
     _error_desc.push_back( "Some Collections have Errors" );
     //}
 
