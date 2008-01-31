@@ -78,39 +78,42 @@ ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 # get list of all source files
 AUX_SOURCE_DIRECTORY( src library_sources )
 
-
 ### DOCUMENTATION ############################################################
-FIND_PACKAGE( Doxygen )
-IF( DOXYGEN_FOUND )
+IF( EXISTS "${PROJECT_SOURCE_DIR}/doc/Doxyfile" )
+    FIND_PACKAGE( Doxygen )
+    IF( DOXYGEN_FOUND )
 
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  "${PROJECT_SOURCE_DIR}/doc/html"
-        COMMAND "${DOXYGEN_EXECUTABLE}"
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
-        COMMENT "Building API Documentation..."
-        VERBATIM )
+        ADD_CUSTOM_COMMAND(
+            OUTPUT  "${PROJECT_SOURCE_DIR}/doc/html"
+            COMMAND "${DOXYGEN_EXECUTABLE}"
+            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
+            COMMENT "Building API Documentation..."
+            VERBATIM )
 
-    # add doc target
-    ADD_CUSTOM_TARGET( doc DEPENDS
-        "${PROJECT_SOURCE_DIR}/doc/html" )
-ELSE()
-    MESSAGE( STATUS "Doxygen not found in your system!!" )
-    IF( INSTALL_DOC )
-        MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
-        SET( INSTALL_DOC OFF )
+        # add doc target
+        ADD_CUSTOM_TARGET( doc DEPENDS
+            "${PROJECT_SOURCE_DIR}/doc/html" )
+    ELSE()
+        MESSAGE( STATUS "Doxygen not found in your system!!" )
+        IF( INSTALL_DOC )
+            MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
+            SET( INSTALL_DOC OFF )
+        ENDIF()
     ENDIF()
-ENDIF()
 
-# install documentation
-IF( INSTALL_DOC )
-    # make sure doxygen is executed (make doc) before make install
-    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS doc)" )
     # install documentation
-    INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
-            DESTINATION .
-            PATTERN "*CVS*" EXCLUDE )
+    IF( INSTALL_DOC )
+        # make sure doxygen is executed (make doc) before make install
+        INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS doc)" )
+        # install documentation
+        INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
+                DESTINATION .
+                PATTERN "*CVS*" EXCLUDE )
+    ENDIF()
+ELSE()
+    MESSAGE( STATUS "${PROJECT_SOURCE_DIR}/doc/Doxyfile no found. INSTALL_DOC set to OFF" )
+    SET( INSTALL_DOC OFF )
 ENDIF()
-
 
 ##########################################################################################
 # End of User section: please try not to modify below this line
@@ -141,14 +144,12 @@ MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
 # DEPENDENCIES: this code has to be placed before adding any library or
 # executable so that these are linked properly against the dependencies
 IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
-    # load macro
-    IF( NOT EXISTS "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
-        MESSAGE( FATAL_ERROR
-            "\nSorry, could not find MacroCheckDeps.cmake...\n"
-            "Please set CMAKE_MODULE_PATH correctly with: "
-            "cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
+    IF( NOT DEFINED CMAKE_MODULE_PATH )
+        MESSAGE( FATAL_ERROR "CMAKE_MODULE_PATH not set! Set it with: "
+            "-DCMAKE_MODULE_PATH=\"/path_to_ilcsoft/CMakeModules\"" )
     ENDIF()
-    INCLUDE( "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
+    # load macro
+    INCLUDE( "MacroCheckDeps" )
     CHECK_DEPS()
 ENDIF()
 
