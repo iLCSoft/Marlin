@@ -19,7 +19,7 @@ namespace marlin{
    *  of the ProcessorLoader instance.
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: ProcessorLoader.h,v 1.2 2007-07-10 15:11:55 engels Exp $ 
+   *  @version $Id: ProcessorLoader.h,v 1.3 2008-03-11 15:17:14 engels Exp $ 
    */
   class ProcessorLoader {
     
@@ -31,12 +31,16 @@ namespace marlin{
     ProcessorLoader( lcio::StringVec::const_iterator  first, lcio::StringVec::const_iterator last ) ;
     
     virtual ~ProcessorLoader() ;
+
+    bool failedLoading() { return _loadError; };
     
     
   protected:
     
     LibVec _libs ;
-    
+
+  private:
+    bool _loadError;
   };
 
 } // end namespace marlin 

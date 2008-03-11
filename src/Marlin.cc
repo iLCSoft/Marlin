@@ -90,6 +90,9 @@ int main(int argc, char** argv ){
   std::for_each( marlinProcs.begin(), marlinProcs.end(), t ) ;
   
   ProcessorLoader loader( libs.begin() , libs.end()  ) ;
+  if( loader.failedLoading() ){
+    return(1);
+  }
   
   //------- end processor libs -------------------------
   
