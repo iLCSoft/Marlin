@@ -31,9 +31,20 @@ Processor::~Processor() {
   if( _parameters != 0 ){
     delete _parameters ;
   }
+
   if( _str !=0 )
     delete _str ;
   
+  typedef ProcParamMap::iterator PMI ;
+  
+  for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
+    
+//     streamlog_out(DEBUG) << " deleting processor parameter " << i->second->name() 
+// 			 << " of processor [" << name() << "]" 
+// 			 << std::endl ;
+
+    delete i->second ;
+  }
 }
 
 

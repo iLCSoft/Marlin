@@ -370,6 +370,13 @@ int main(int argc, char** argv ){
 
   }
   
+#ifdef USE_GEAR  
+
+  if(  Global::GEAR != 0 ) 
+    delete Global::GEAR ; 
+
+#endif  
+ 
   return 0 ;
 }
 
