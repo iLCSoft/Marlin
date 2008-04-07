@@ -37,7 +37,7 @@ namespace marlin{
 //     TiXmlHandle docHandle( _doc );
     
     TiXmlElement* root = _doc->RootElement();
-    if( root==0 ){
+    if( root==0 || strcmp(root->Value(),"marlin") != 0 ){
       
       throw ParseException(std::string( "XMLParser::parse : no root tag <marlin>...</marlin> found in  ") 
 			   + _fileName  ) ;

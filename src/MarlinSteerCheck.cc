@@ -196,21 +196,22 @@ namespace marlin{
 // 	fileName=file;
 //     }
 
-    //FIXME: this is to prevent crashing the application if
-    //the file doesn't exist (is there a better way to handle this??)
-    stringstream cmd, error;
-    cmd << "ls " << file << " >/dev/null 2>/dev/null";
-    if( system( cmd.str().c_str() ) ){
-	error << "Error opening LCIO file [" << file << "]. File doesn't exist, or link is not valid!!";
-	_errors.insert(error.str());
-	return 0;
-    }
-
     HANDLE_LCIO_EXCEPTIONS;
     ColVec newCols;
     
     LCReader* lcReader = LCFactory::getInstance()->createLCReader();
-    lcReader->open( file );
+    try{
+        lcReader->open( file );
+    }
+    catch( Exception& e){
+        stringstream error;
+        error << "Error opening LCIO file [" << file << "]. File doesn't exist, or link is not valid!!";
+        _errors.insert(error.str());
+        cerr << "addLCIOFile Exception: " << e.what() << endl;
+        lcReader->close();
+        delete lcReader;
+        return 0;
+    }
     
     LCEvent* evt;
     int nEvents=0;
@@ -517,8 +518,13 @@ namespace marlin{
 	}
 	_parser = new XMLParser( file, true ) ;
       }
-
+    try{
       _parser->parse();
+    }
+    catch( Exception& e ){
+      cerr << "parseXMLFile: Failed to load file: " << e.what() << endl;
+      return false;
+    }
       _gparam = _parser->getParameters( "Global" );
       
       //============================================================
