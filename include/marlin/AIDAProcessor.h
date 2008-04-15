@@ -38,7 +38,7 @@ namespace marlin {
  * @param FileType  type of output file xml (default) or root ( only OpenScientist)
  *
  *  @author F. Gaede, DESY
- *  @version $Id: AIDAProcessor.h,v 1.6 2007-05-21 10:41:24 engels Exp $ 
+ *  @version $Id: AIDAProcessor.h,v 1.7 2008-04-15 10:12:28 gaede Exp $ 
  */
 
 class AIDAProcessor : public marlin::Processor {
@@ -97,7 +97,12 @@ class AIDAProcessor : public marlin::Processor {
    */
   static AIDA::IDataPointSetFactory* dataPointSetFactory( const Processor* proc ) ;
 
-
+ /** Returns an AIDA analysis factory for the given processor with
+   *  the current directory set to the processor's name.
+   *  Call right before using the factory.
+   */
+  static AIDA::IAnalysisFactory* GetIAnalysisFactory( const Processor* proc );
+  
 
 protected:
 

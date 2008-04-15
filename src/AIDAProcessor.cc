@@ -159,7 +159,13 @@ namespace marlin {
     delete _dataPointSetFactory ;
     
   }
-  
+   AIDA::IAnalysisFactory* AIDAProcessor::GetIAnalysisFactory( const Processor* proc )
+   {
+      tree( proc );
+     return _me->_analysisFactory;
+     
+   }
+
   AIDA::IHistogramFactory* AIDAProcessor::histogramFactory( const Processor* proc ){
     tree( proc );
 //     if( !_me->_tree->cd( "/" + proc->name() ) ) {
