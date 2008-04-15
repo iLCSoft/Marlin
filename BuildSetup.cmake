@@ -1,10 +1,14 @@
 #############################################################################
-# cmake build setup for Marlin
+# cmake example build setup for Marlin
+# edit accordingly - pathes to packages !
+# 
 #
 # For building Marlin with cmake type:
 # (1) $ mkdir build
 # (2) $ cd build
 # (3) $ cmake -C ../BuildSetup.cmake ..
+#         or to use an existing installation
+#       cmake -C ../BuildSetup.cmake -C $ILCRELEASE/vxx-yy-zz/ILCSoft.cmake ..
 # (4) $ make install
 #
 # @author Jan Engels, DESY
