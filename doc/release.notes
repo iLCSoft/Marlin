@@ -5,6 +5,29 @@
  ======================
 
  -----------
+| v00-10-00 |
+ -----------
+    * LCIOOutputProcesser:
+      new parameters added: 
+        KeepCollectionNames: collections are kept unconditionally 
+        FullSubsetCollections: complete objects written to file - subset flag ignored
+      needed/useful for 'DST' production
+
+    * AIDAProcessor:
+      added method AIDAProcessor::GetIAnalysisFactory(proc)
+
+    * Marlin main:
+      exit if a plugin fails to load
+
+      bug fixes:
+        - MarlinGUI used to crash when trying to open non-marlin xml file, e.g. a gear file
+        - make valgrind happy by deleting 'global' objects
+        - fixe problem with missing ${PROJECT_SOURCE_DIR}/doc/Doxyfile  
+        - cmake: set INCLUDE_DIR and INCLUDE_DIRS in  MarlinConfig.cmake
+        - allow multiple paths in CMAKE_MODULE_PATH
+
+
+ -----------
 | v00-09-10 |
  -----------
 
