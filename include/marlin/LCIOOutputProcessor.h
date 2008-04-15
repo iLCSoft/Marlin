@@ -8,6 +8,10 @@
 
 using namespace lcio ;
 
+namespace IMPL{
+  class LCCollectionVec ;
+}
+
 namespace marlin{
 
   /** Default output processor. If active every event is writen to the 
@@ -17,14 +21,12 @@ namespace marlin{
    *  event before it gets written to the file, e.g. you can drop 
    *  all collections of types SimCalorimeterHit and SimTrackerHit. It is the users
    *  responsibility to check whether the droped objects are still referenced by other 
-   *  objects (e.g. LCRelations) and drop those collections as well - if needed.
-   *  Otherwise NULL pointers are returned by the corresponding access methods.
+   *  objects (e.g. LCRelations) and drop those collections as well - if needed. 
+   *  If CalorimeterHit and TrackerHit objects are droped then Tracks and clusters will be store w/o
+   *  pointers to hits.
    * 
-   *  <h4>Input - Prerequisites</h4>
-   *  Uses the whole event, i.e. all collections. 
-   *
    *  <h4>Output</h4> 
-   *  none
+   *  file containing the LCIO events
    * 
    * @param LCIOOutputFile  name of outputfile incl. path
    * @param LCIOWriteMode   WRITE_NEW, WRITE_APPEND  [optional]
@@ -32,16 +34,22 @@ namespace marlin{
    * @param DropCollectionTypes   type of collections to be droped  [optional]
    * 
    * 
-   * @param DropCollectionNames  drops the named collections from the event
-   * @param DropCollectionTypes  drops all collections of the given type from the event
-   * @param LCIOOutputFile       name of output file
-   * @param LCIOWriteMode        write mode for output file:  WRITE_APPEND or WRITE_NEW
-   *
+   * @param DropCollectionNames   drops the named collections from the event
+   * @param DropCollectionTypes   drops all collections of the given type from the event
+   * @param LCIOOutputFile        name of output file
+   * @param LCIOWriteMode         write mode for output file:  WRITE_APPEND or WRITE_NEW
+   * @param KeepCollectionNames   names of collections that are to be kept unconditionally
+   * @param fullSubsetCollections optionally write all objects in subset collections to the file
+   *   
+   * 
    * @author F. Gaede, DESY
-   * @version $Id: LCIOOutputProcessor.h,v 1.7 2007-07-04 12:38:40 gaede Exp $ 
+   * @version $Id: LCIOOutputProcessor.h,v 1.8 2008-04-15 10:14:24 gaede Exp $ 
    */
   class LCIOOutputProcessor : public Processor {
   
+    typedef std::vector< LCCollectionVec* > SubSetVec ;
+
+
   public:  
 
     virtual Processor*  newProcessor() { return new LCIOOutputProcessor ; }
@@ -84,8 +92,12 @@ namespace marlin{
 
     StringVec _dropCollectionNames ; 
     StringVec _dropCollectionTypes ; 
+    StringVec _keepCollectionNames ; 
+    StringVec _fullSubsetCollections ; 
 
     int _splitFileSizekB ;
+
+    SubSetVec _subSets ;
 
     LCWriter* _lcWrt ;
     int _nRun ;

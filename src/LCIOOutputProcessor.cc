@@ -67,6 +67,23 @@ namespace marlin{
 			       _dropCollectionTypes ,
 			       dropTypesExample ) ;
     
+    StringVec keepNamesExample ;
+    keepNamesExample.push_back("MyPreciousSimTrackerHits");
+
+    registerOptionalParameter( "KeepCollectionNames" , 
+			       "force keep of the named collections - overrules DropCollectionTypes (and DropCollectionNames)"  ,
+			       _keepCollectionNames ,
+			       keepNamesExample ) ;
+
+
+    StringVec fullSubsetExample ;
+    fullSubsetExample.push_back("MCParticlesSkimmed");
+
+    registerOptionalParameter( "FullSubsetCollections" , 
+			       " write complete objects in subset collections to the file (i.e. ignore subset flag)"  ,
+			       _fullSubsetCollections ,
+			       fullSubsetExample ) ;
+
 
     registerOptionalParameter( "SplitFileSizekB" , 
 			       "will split output file if size in kB exceeds given value - doesn't work with APPEND and NEW"  ,
@@ -170,16 +187,40 @@ void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) {
       
       std::string type  = col->getTypeName() ;
       
-      if( parameterSet("DropCollectionTypes") && std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end(), type ) 
+      if( parameterSet("DropCollectionTypes") && std::find( _dropCollectionTypes.begin(), 
+							    _dropCollectionTypes.end(), type ) 
 	  != _dropCollectionTypes.end()  ) {
 	
 	col->setTransient( true ) ;
       }
-      if( parameterSet("DropCollectionNames") && std::find( _dropCollectionNames.begin(), _dropCollectionNames.end(), *it ) 
+      if( parameterSet("DropCollectionNames") && std::find( _dropCollectionNames.begin(), 
+							    _dropCollectionNames.end(), *it ) 
 	  != _dropCollectionNames.end() ) {
 	
 	col->setTransient( true ) ;
       }
+
+      if( parameterSet("KeepCollectionNames") && std::find( _keepCollectionNames.begin(), 
+							    _keepCollectionNames.end(), *it ) 
+	  != _keepCollectionNames.end() ) {
+	
+	col->setTransient( false ) ;
+      }
+
+
+      if( parameterSet("FullSubsetCollections") && std::find( _fullSubsetCollections.begin(), 
+							      _fullSubsetCollections.end(), *it ) 
+	  != _fullSubsetCollections.end() ) {
+	
+
+	if( col->isSubset() ) {
+
+	  col->setSubset( false ) ;
+	  _subSets.push_back(col) ;
+	}
+
+      }
+
 
       // don't store hit pointers if hits are droped
       if(  type == LCIO::TRACK && trackerHitsDroped ){
@@ -196,6 +237,7 @@ void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) {
       }
 
     }
+
   }
 
 void LCIOOutputProcessor::processEvent( LCEvent * evt ) { 
@@ -211,6 +253,15 @@ void LCIOOutputProcessor::processEvent( LCEvent * evt ) {
 
   _lcWrt->writeEvent( evt ) ;
 
+  // revert subset flag - if any 
+  for( SubSetVec::iterator sIt = _subSets.begin() ; 
+       sIt != _subSets.end() ;  ++sIt  ) {
+    
+    (*sIt)->setSubset( true ) ;
+  }
+  _subSets.clear() ;
+
+						 
   _nEvt ++ ;
 }
 
