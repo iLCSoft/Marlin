@@ -103,7 +103,8 @@ namespace marlin{
 	       <<  std::endl ;
 
     std::cout  <<  std::endl 
-	       << "<marlin>" 
+	       << "<marlin xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+           << "xsi:noNamespaceSchemaLocation=\"http://ilcsoft.desy.de/marlin/marlin.xsd\">"
 	       <<  std::endl ;
 
     std::cout  <<  " <execute>" << std::endl 
