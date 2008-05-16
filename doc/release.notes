@@ -3,7 +3,16 @@
  ======================
   Marlin release notes
  ======================
-
+ -----------
+| v00-10-01 |
+ -----------
+     * check detector model in gear file (if present) for consistency w/ 
+	   detector name in lcio file 
+	   stop processing if inconsistency found
+ 
+     * added style and schema information to Marlin steering files
+       (J.Engels/A.Vogel)
+ 
  -----------
 | v00-10-00 |
  -----------
