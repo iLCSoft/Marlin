@@ -2,6 +2,7 @@
 #include "marlin/Global.h"
 #include "marlin/Exceptions.h"
 
+#include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <set>
@@ -14,6 +15,13 @@ namespace marlin{
 
   ProcessorMgr* ProcessorMgr::_me = 0 ;
 
+
+
+  struct ProcMgrStopProcessing : public StopProcessingException {
+    ProcMgrStopProcessing(const std::string m){
+      StopProcessingException::message = m  ; 
+    }
+  };
 
 
   ProcessorMgr* ProcessorMgr::instance() {
@@ -222,6 +230,55 @@ namespace marlin{
 
   void ProcessorMgr::processRunHeader( LCRunHeader* run){ 
 
+
+#ifdef USE_GEAR
+    // check if gear file is consistent with detector model in lcio run header 
+    std::string lcioDetName = run->getDetectorName() ;
+
+    
+    std::string gearDetName("unknwon_gear_detector") ;
+
+    bool doConsistencyCheck = true ;
+
+    try{
+
+      gearDetName = Global::GEAR->getDetectorName()  ; 
+
+    }
+    catch( gear::UnknownParameterException ){ 
+
+      streamlog_out( WARNING ) << std::endl
+			       << " ======================================================== " << std::endl
+			       << "   Detector name  not found in Gear file     " << std::endl
+			       << "    - can't check consistency with lcio file " << std::endl
+			       << " ======================================================== " << std::endl
+			       << std::endl ;
+
+      doConsistencyCheck = false ;
+    }
+
+
+
+    if( doConsistencyCheck  && lcioDetName != gearDetName ) {
+
+      std::stringstream sstr ;
+
+      sstr  << std::endl
+	    << " ============================================================= " << std::endl
+	    << " ProcessorMgr::processRunHeader : inconsistent detector models : " << std::endl 
+	    << " in lcio : " << lcioDetName << " <=> in gear file : "  << gearDetName << std::endl
+	    << " ============================================================= " << std::endl
+	    << std::endl ;
+      
+      //throw lcio::Exception( sstr.str() )  ;
+
+      throw ProcMgrStopProcessing( sstr.str() ) ;
+    }
+      
+
+
+#endif
+    
 //     for_each( _list.begin() , _list.end() ,  std::bind2nd(  std::mem_fun( &Processor::processRunHeader ) , run ) ) ;
     for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 
