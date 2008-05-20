@@ -1,5 +1,7 @@
 #ifdef USE_CLHEP  // only if CLHEP is available !
 
+ 
+#include <cstdlib>
 
 #include "marlin/SimpleParticleFactory.h"
 

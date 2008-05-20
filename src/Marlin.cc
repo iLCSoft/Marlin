@@ -28,6 +28,10 @@
 #include <string>
 #include <assert.h>
 
+ 
+#include <cstring>
+#include <algorithm>
+
 #ifdef USE_GEAR
 #include "gearimpl/Util.h"
 #include "gearxml/GearXML.h"

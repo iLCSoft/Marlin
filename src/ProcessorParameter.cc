@@ -1,4 +1,5 @@
 #include "marlin/ProcessorParameter.h"
+#include <algorithm>
 
 namespace marlin {
 

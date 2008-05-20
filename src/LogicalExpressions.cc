@@ -1,6 +1,9 @@
 #include "marlin/LogicalExpressions.h"
 #include <iostream>
 
+ 
+#include <algorithm>
+
 
 namespace marlin{
   

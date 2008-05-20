@@ -7,6 +7,9 @@
 
 #include <sstream>
 
+ 
+#include <memory>
+
 namespace marlin{
 
   // open steering file with processor names 
