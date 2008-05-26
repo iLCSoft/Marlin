@@ -4,6 +4,7 @@
 #include "marlin/ProcessorLoader.h"
 
 #include "mainwindow.h"
+#include <algorithm>
 
 int main(int argc, char *argv[])
 {
