@@ -10,6 +10,7 @@
 #include "marlin/DataSourceProcessor.h"
 #include "marlin/EventModifier.h"
 #include "streamlog/streamlog.h"
+#include "streamlog/logbuffer.h"
 
 namespace marlin{
 
@@ -22,6 +23,10 @@ namespace marlin{
       StopProcessingException::message = m  ; 
     }
   };
+
+
+  // create a dummy streamlog stream for std::cout 
+  streamlog::logstream my_cout ;
 
 
   ProcessorMgr* ProcessorMgr::instance() {
@@ -217,11 +222,15 @@ namespace marlin{
 
   void ProcessorMgr::init(){ 
 
+    streamlog::logbuffer* lb = new streamlog::logbuffer( std::cout.rdbuf() ,  &my_cout ) ;
+    std::cout.rdbuf(  lb ) ;
+
 //     for_each( _list.begin() , _list.end() , std::mem_fun( &Processor::baseInit ) ) ;
     
     for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 
       streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
       (*it)->baseInit() ;
     }
@@ -283,6 +292,7 @@ namespace marlin{
     for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 
       streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
       
       (*it)->processRunHeader( run ) ;
     }
@@ -325,6 +335,8 @@ namespace marlin{
 
       streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
 
+      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+
       (*it)->modifyEvent( evt ) ;
     }
     //    for_each( emv.begin() , emv.end() ,   std::bind2nd(  std::mem_fun( &EventModifier::modifyEvent ) , evt ) ) ;
@@ -363,6 +375,10 @@ namespace marlin{
 	  
 	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
 
+	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+
+
+
 	  (*it)->processEvent( evt ) ; 
 	  
 	  if( check )  (*it)->check( evt ) ;
@@ -398,6 +414,7 @@ namespace marlin{
     for( ProcessorList::reverse_iterator it = _list.rbegin() ; it != _list.rend() ; ++it ) {
 
       streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
       
       (*it)->end() ;
     }
