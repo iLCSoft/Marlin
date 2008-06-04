@@ -2,6 +2,7 @@
 #include "marlin/Global.h"
 #include "marlin/Exceptions.h"
 
+#include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <set>
@@ -9,11 +10,23 @@
 #include "marlin/DataSourceProcessor.h"
 #include "marlin/EventModifier.h"
 #include "streamlog/streamlog.h"
+#include "streamlog/logbuffer.h"
 
 namespace marlin{
 
   ProcessorMgr* ProcessorMgr::_me = 0 ;
 
+
+
+  struct ProcMgrStopProcessing : public StopProcessingException {
+    ProcMgrStopProcessing(const std::string m){
+      StopProcessingException::message = m  ; 
+    }
+  };
+
+
+  // create a dummy streamlog stream for std::cout 
+  streamlog::logstream my_cout ;
 
 
   ProcessorMgr* ProcessorMgr::instance() {
@@ -209,11 +222,15 @@ namespace marlin{
 
   void ProcessorMgr::init(){ 
 
+    streamlog::logbuffer* lb = new streamlog::logbuffer( std::cout.rdbuf() ,  &my_cout ) ;
+    std::cout.rdbuf(  lb ) ;
+
 //     for_each( _list.begin() , _list.end() , std::mem_fun( &Processor::baseInit ) ) ;
     
     for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 
       streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
       (*it)->baseInit() ;
     }
@@ -222,10 +239,60 @@ namespace marlin{
 
   void ProcessorMgr::processRunHeader( LCRunHeader* run){ 
 
+
+#ifdef USE_GEAR
+    // check if gear file is consistent with detector model in lcio run header 
+    std::string lcioDetName = run->getDetectorName() ;
+
+    
+    std::string gearDetName("unknwon_gear_detector") ;
+
+    bool doConsistencyCheck = true ;
+
+    try{
+
+      gearDetName = Global::GEAR->getDetectorName()  ; 
+
+    }
+    catch( gear::UnknownParameterException ){ 
+
+      streamlog_out( WARNING ) << std::endl
+			       << " ======================================================== " << std::endl
+			       << "   Detector name  not found in Gear file     " << std::endl
+			       << "    - can't check consistency with lcio file " << std::endl
+			       << " ======================================================== " << std::endl
+			       << std::endl ;
+
+      doConsistencyCheck = false ;
+    }
+
+
+
+    if( doConsistencyCheck  && lcioDetName != gearDetName ) {
+
+      std::stringstream sstr ;
+
+      sstr  << std::endl
+	    << " ============================================================= " << std::endl
+	    << " ProcessorMgr::processRunHeader : inconsistent detector models : " << std::endl 
+	    << " in lcio : " << lcioDetName << " <=> in gear file : "  << gearDetName << std::endl
+	    << " ============================================================= " << std::endl
+	    << std::endl ;
+      
+      //throw lcio::Exception( sstr.str() )  ;
+
+      throw ProcMgrStopProcessing( sstr.str() ) ;
+    }
+      
+
+
+#endif
+    
 //     for_each( _list.begin() , _list.end() ,  std::bind2nd(  std::mem_fun( &Processor::processRunHeader ) , run ) ) ;
     for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 
       streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
       
       (*it)->processRunHeader( run ) ;
     }
@@ -268,6 +335,8 @@ namespace marlin{
 
       streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
 
+      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+
       (*it)->modifyEvent( evt ) ;
     }
     //    for_each( emv.begin() , emv.end() ,   std::bind2nd(  std::mem_fun( &EventModifier::modifyEvent ) , evt ) ) ;
@@ -306,6 +375,10 @@ namespace marlin{
 	  
 	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
 
+	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+
+
+
 	  (*it)->processEvent( evt ) ; 
 	  
 	  if( check )  (*it)->check( evt ) ;
@@ -341,6 +414,7 @@ namespace marlin{
     for( ProcessorList::reverse_iterator it = _list.rbegin() ; it != _list.rend() ; ++it ) {
 
       streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
       
       (*it)->end() ;
     }

@@ -3,7 +3,21 @@
  ======================
   Marlin release notes
  ======================
+ -----------
+| v00-10-01 |
+ -----------
+     * check detector model in gear file (if present) for consistency w/ 
+	   detector name in lcio file 
+	   stop processing if inconsistency found
+ 
+     * add 'streamlog' like output for usage of plain  std::cout :
+       [ VERBOSE "MyProcessor"]  my print message
 
+     * added style and schema information to Marlin steering files
+       (J.Engels/A.Vogel)
+     
+     * made compatible with gcc 4.3.x (Aplin/Bulgheroni)
+   
  -----------
 | v00-10-00 |
  -----------
