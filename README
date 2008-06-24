@@ -8,7 +8,7 @@
 *
 * F. Gaede, DESY
 * J. Engels, DESY
-* $Id: README,v 1.18 2007-09-14 14:16:31 engels Exp $
+* $Id: README,v 1.19 2008-06-24 13:46:48 engels Exp $
 ************************************************************************
 
 
@@ -83,7 +83,7 @@ write processors with defined callbacks, i.e. init(), processRunHeader(), proces
 
     $ cmake -C ../BuildSetup.cmake
             -DLINK_WITH="mymarlin PandoraPFA"
-            -Dmymarlin_HOME="path_to_mymarlin
+            -Dmymarlin_HOME="path_to_mymarlin"
             -DPandoraPFA_HOME="path_to_pandora" ..
 
 
