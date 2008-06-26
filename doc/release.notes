@@ -1,11 +1,12 @@
-
+`
 
  ======================
   Marlin release notes
  ======================
  -----------
-| v00-10-01 |
+| v00-10-02 |
  -----------
+
      * check detector model in gear file (if present) for consistency w/ 
 	   detector name in lcio file 
 	   stop processing if inconsistency found
@@ -18,6 +19,11 @@
      
      * made compatible with gcc 4.3.x (Aplin/Bulgheroni)
    
+ -----------
+| v00-10-01 |
+ -----------
+      - inconsistent tag -> DON'T USE !
+
  -----------
 | v00-10-00 |
  -----------
