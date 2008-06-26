@@ -80,7 +80,7 @@ namespace marlin{
    * @see end
    *
    *  @author F. Gaede, DESY
-   *  @version $Id: Processor.h,v 1.37 2007-08-15 09:07:19 gaede Exp $ 
+   *  @version $Id: Processor.h,v 1.38 2008-06-26 10:25:36 gaede Exp $ 
    */
   
   class Processor {
@@ -127,7 +127,7 @@ namespace marlin{
     virtual void processEvent( LCEvent * ) { }
 
     /** Called for every event - right after processEvent()
-     *  has been called for all processors.
+     *  has been called for  this processor.
      *  Use to check processing and/or produce check plots.
      */
     virtual void check( LCEvent* ) { }
