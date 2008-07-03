@@ -3,6 +3,13 @@
  ======================
   Marlin release notes
  ======================
+
+ -----------
+| v00-10-03 |
+ -----------
+      * added timing of Processor::processEvent() methods 
+      -> printout at end of job
+
  -----------
 | v00-10-02 |
  -----------
