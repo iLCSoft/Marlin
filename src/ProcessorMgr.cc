@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 #include <algorithm>
 #include <set>
 
@@ -12,17 +13,32 @@
 #include "streamlog/streamlog.h"
 #include "streamlog/logbuffer.h"
 
+#include <time.h>
+
 namespace marlin{
 
   ProcessorMgr* ProcessorMgr::_me = 0 ;
 
+  static clock_t start_t , end_t ; 
+  typedef std::map< Processor* , std::pair< double  , int > > TimeMap ;
+  static TimeMap tMap ;
 
 
+
+  // helper for sorting procs wrt to processing time
+  struct Cmp{
+    bool operator()(const TimeMap::value_type& v1, const TimeMap::value_type& v2 ) {
+      // inverse sort:
+      return v1.second.first > v2.second.first ;
+    }
+  } ;
+  
   struct ProcMgrStopProcessing : public StopProcessingException {
     ProcMgrStopProcessing(const std::string m){
       StopProcessingException::message = m  ; 
     }
   };
+
 
 
   // create a dummy streamlog stream for std::cout 
@@ -233,6 +249,8 @@ namespace marlin{
       streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
       (*it)->baseInit() ;
+
+      tMap[ *it ] = std::make_pair( 0 , 0 )  ;
     }
 
   }
@@ -377,12 +395,21 @@ namespace marlin{
 
 	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
-
-
+	  start_t =  clock () ;  // start timer
+      
 	  (*it)->processEvent( evt ) ; 
 	  
 	  if( check )  (*it)->check( evt ) ;
 	  
+	  end_t =  clock () ;  // stop timer
+
+	  
+	  TimeMap::iterator itT = tMap.find( *it ) ;
+
+	  itT->second.first += double( end_t - start_t  ) ; 
+	  itT->second.second ++ ;
+
+
 	  (*it)->setFirstEvent( false ) ;
 	}       
       }    
@@ -419,23 +446,94 @@ namespace marlin{
       (*it)->end() ;
     }
 //     if( _skipMap.size() > 0 ) {
-      std::cout  << " --------------------------------------------------------- " << std::endl
-		 << "  Events skipped by processors : " << std::endl ;
+    streamlog_out(MESSAGE)  << " --------------------------------------------------------- " << std::endl
+			    << "  Events skipped by processors : " << std::endl ;
+    
+    unsigned nSkipped = 0 ;
+    for( SkippedEventMap::iterator it = _skipMap.begin() ; it != _skipMap.end() ; it++) {
+      
+      streamlog_out(MESSAGE) << "       " << it->first << ": \t" <<  it->second << std::endl ;
+      
+      nSkipped += it->second ;	
+    }
+    streamlog_out(MESSAGE)  << "  Total: " << nSkipped  << std::endl ;
+    streamlog_out(MESSAGE)  << " --------------------------------------------------------- "  
+			    << std::endl
+			    << std::endl ;
+    //     }
+    
+    // ----- print timing information ----------
+    
+    streamlog_out(MESSAGE)  << " --------------------------------------------------------- " << std::endl
+			    << "      Time used by processors ( in processEvent() ) :      " << std::endl 
+			    << std::endl ;
+    
 
-      unsigned nSkipped = 0 ;
-      for( SkippedEventMap::iterator it = _skipMap.begin() ; it != _skipMap.end() ; it++) {
+    
+    
 
-	std::cout << "       " << it->first << ": \t" <<  it->second << std::endl ;
+    //    for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
+    //      TimeMap::iterator itT = tMap.find( *it ) ;
+      
+    // sort procs wrt processing time :
+    typedef std::list< TimeMap::value_type > TMList  ;
+    TMList l ;
+    std::copy(  tMap.begin() , tMap.end() , std::back_inserter( l ) )  ;
+    l.sort( Cmp() ) ; 
+    
+    double tTotal = 0.0 ;
+    int evtTotal = 0 ;
 
-	nSkipped += it->second ;	
+    for( TMList::iterator itT = l.begin() ; itT != l.end() ; ++ itT ) {
+      
+      // fg: this does not work  w/ streamlog !?
+      //      streamlog_out(MESSAGE) << std::ios_base::left << std::setw(30)  <<  (*it)->name() ;
+      // copy string to fixed size char* ->
+      char cName[40] = "                                     "  ;
+      const std::string& sName = itT->first->name()  ;
+      unsigned nChar = ( sName.size() > 30 ?  30 : sName.size() )  ;
+      for(unsigned  i=0 ; i< nChar ; i++ ) { 
+	cName[i] = sName[i] ; 
       }
-      std::cout  << "  Total: " << nSkipped  << std::endl ;
-      std::cout  << " --------------------------------------------------------- "  
-		 << std::endl
-		 << std::endl ;
-//     }
 
+
+      double tProc = itT->second.first  / double(CLOCKS_PER_SEC) ;
+
+      tTotal += tProc ;
+
+      int evtProc = itT->second.second ;
+      
+      if( evtProc > evtTotal ) 
+	evtTotal = evtProc ;
+      
+      streamlog_out(MESSAGE)  <<  cName 
+			      <<  std::setw(12) << std::scientific  << tProc  << " s in " 
+			      <<  std::setw(12) << evtProc << " events  ==> " ;
+
+      if( evtProc > 0 )
+	streamlog_out(MESSAGE)  <<  std::setw(12) << std::scientific  << tProc / evtProc << " [ s/evt.] "  ;
+      else
+	streamlog_out(MESSAGE)  <<  std::setw(12) << std::scientific  << "NaN"  << " [ s/evt.] "  ;
+	
+      streamlog_out(MESSAGE)  <<  std::endl ;
+
+    }
+
+    streamlog_out(MESSAGE)  <<  "            Total:                   "  
+			    <<  std::setw(12) << std::scientific  << tTotal << " s in " 
+			    <<  std::setw(12) << evtTotal << " events  ==> " ;
+
+    if( evtTotal > 0 )
+      streamlog_out(MESSAGE)  <<  std::setw(12) << std::scientific  << tTotal / evtTotal << " [ s/evt.] "  ;
+    else
+      streamlog_out(MESSAGE)  <<  std::setw(12) << std::scientific  << "NaN"  << " [ s/evt.] "  ;
+    
+    streamlog_out(MESSAGE)  <<  std::endl ;
+    
+    
+    streamlog_out(MESSAGE) << " --------------------------------------------------------- "  << std::endl ;
+    
   }
-
- 
+  
+  
 } // namespace marlin
