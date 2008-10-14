@@ -1,58 +1,61 @@
 ###############################################
-# cmake configuration file for @PROJECT_NAME@
+# cmake configuration file for streamlog
 # @author Jan Engels, DESY
 ###############################################
 
-SET( @PROJECT_NAME@_FOUND FALSE )
-MARK_AS_ADVANCED( @PROJECT_NAME@_FOUND )
+SET( streamlog_FOUND FALSE )
+MARK_AS_ADVANCED( streamlog_FOUND )
 
 # do not store find results in cache
-SET( @PROJECT_NAME@_INCLUDE_DIR @PROJECT_NAME@_INCLUDE_DIR-NOTFOUND )
+SET( streamlog_INCLUDE_DIR streamlog_INCLUDE_DIR-NOTFOUND )
 
-FIND_PATH( @PROJECT_NAME@_INCLUDE_DIR
-	NAMES @PROJECT_NAME@/@PROJECT_NAME@.h
+FIND_PATH( streamlog_INCLUDE_DIR
+	NAMES streamlog/streamlog.h
 	PATHS @CMAKE_INSTALL_PREFIX@
 	PATH_SUFFIXES include source/include streamlog/source/include
 	NO_DEFAULT_PATH
 )
-IF( NOT @PROJECT_NAME@_INCLUDE_DIR )
-    MESSAGE( STATUS "Check for @PROJECT_NAME@: ${@PROJECT_NAME@_HOME}"
-					" -- failed to find @PROJECT_NAME@ include directory!!" )
-ELSE( NOT @PROJECT_NAME@_INCLUDE_DIR )
-    MARK_AS_ADVANCED( @PROJECT_NAME@_INCLUDE_DIR )
-ENDIF( NOT @PROJECT_NAME@_INCLUDE_DIR )
+IF( NOT streamlog_INCLUDE_DIR )
+    MESSAGE( STATUS "Check for streamlog: ${streamlog_HOME}"
+					" -- failed to find streamlog include directory!!" )
+ELSE( NOT streamlog_INCLUDE_DIR )
+    MARK_AS_ADVANCED( streamlog_INCLUDE_DIR )
+ENDIF( NOT streamlog_INCLUDE_DIR )
 
 
 # do not store find results in cache
-SET( @PROJECT_NAME@_LIB @PROJECT_NAME@_LIB-NOTFOUND )
+SET( streamlog_LIB streamlog_LIB-NOTFOUND )
 
-FIND_LIBRARY( @PROJECT_NAME@_LIB
-	NAMES @PROJECT_NAME@
+FIND_LIBRARY( streamlog_LIB
+	NAMES streamlog
 	PATHS @CMAKE_INSTALL_PREFIX@
 	PATH_SUFFIXES lib
 	NO_DEFAULT_PATH
 )
-IF( NOT @PROJECT_NAME@_LIB )
-    MESSAGE( STATUS "Check for @PROJECT_NAME@: ${@PROJECT_NAME@_HOME}"
-					" -- failed to find @PROJECT_NAME@ library!!" )
-ELSE( NOT @PROJECT_NAME@_LIB )
-    MARK_AS_ADVANCED( @PROJECT_NAME@_LIB )
-ENDIF( NOT @PROJECT_NAME@_LIB )
+IF( NOT streamlog_LIB )
+    MESSAGE( STATUS "Check for streamlog: ${streamlog_HOME}"
+					" -- failed to find streamlog library!!" )
+ELSE( NOT streamlog_LIB )
+    MARK_AS_ADVANCED( streamlog_LIB )
+ENDIF( NOT streamlog_LIB )
 
 
 # set variables and display results
-IF( @PROJECT_NAME@_INCLUDE_DIR AND @PROJECT_NAME@_LIB )
-    SET( @PROJECT_NAME@_FOUND TRUE )
-    SET( @PROJECT_NAME@_INCLUDE_DIRS ${@PROJECT_NAME@_INCLUDE_DIR} )
-	SET( @PROJECT_NAME@_LIBRARIES  ${@PROJECT_NAME@_LIB} )
-	SET( @PROJECT_NAME@_DEFINITIONS "-DUSE_@PROJECT_NAME@ -Wno-long-long" )
-	MARK_AS_ADVANCED( @PROJECT_NAME@_INCLUDE_DIRS @PROJECT_NAME@_LIBRARIES @PROJECT_NAME@_DEFINITIONS )
-	MESSAGE( STATUS "Check for @PROJECT_NAME@: ${@PROJECT_NAME@_HOME} -- works" )
-ELSE( @PROJECT_NAME@_INCLUDE_DIR AND @PROJECT_NAME@_LIB )
-	IF( @PROJECT_NAME@_FIND_REQUIRED )
-		MESSAGE( FATAL_ERROR "Check for @PROJECT_NAME@: ${@PROJECT_NAME@_HOME} -- failed!!" )
-    ELSE( @PROJECT_NAME@_FIND_REQUIRED )
-        MESSAGE( STATUS "Check for @PROJECT_NAME@: ${@PROJECT_NAME@_HOME}"
+IF( streamlog_INCLUDE_DIR AND streamlog_LIB )
+    SET( streamlog_FOUND TRUE )
+    SET( streamlog_INCLUDE_DIRS ${streamlog_INCLUDE_DIR} )
+    SET( streamlog_LIBRARY_DIRS "@CMAKE_INSTALL_PREFIX@/lib" )
+	SET( streamlog_LIBRARIES  ${streamlog_LIB} )
+	SET( streamlog_DEFINITIONS "-DUSE_streamlog" )
+    MARK_AS_ADVANCED( streamlog_INCLUDE_DIRS streamlog_LIBRARY_DIRS )
+    MARK_AS_ADVANCED( streamlog_LIBRARIES streamlog_DEFINITIONS )
+	MESSAGE( STATUS "Check for streamlog: ${streamlog_HOME} -- works" )
+ELSE( streamlog_INCLUDE_DIR AND streamlog_LIB )
+	IF( streamlog_FIND_REQUIRED )
+		MESSAGE( FATAL_ERROR "Check for streamlog: ${streamlog_HOME} -- failed!!" )
+    ELSE( streamlog_FIND_REQUIRED )
+        MESSAGE( STATUS "Check for streamlog: ${streamlog_HOME}"
 						" -- failed!! will skip this package..." )
-    ENDIF( @PROJECT_NAME@_FIND_REQUIRED )
-ENDIF( @PROJECT_NAME@_INCLUDE_DIR AND @PROJECT_NAME@_LIB  )
+    ENDIF( streamlog_FIND_REQUIRED )
+ENDIF( streamlog_INCLUDE_DIR AND streamlog_LIB  )
+

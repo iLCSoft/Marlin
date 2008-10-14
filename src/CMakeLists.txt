@@ -8,11 +8,11 @@
 ####################################################################################################
 
 # include directories
-INCLUDE_DIRECTORIES( "${${PROJECT_NAME}_SOURCE_DIR}/include" )
-INCLUDE_DIRECTORIES( "${${PROJECT_NAME}_SOURCE_DIR}/streamlog/source/include" )
+INCLUDE_DIRECTORIES( "${Marlin_SOURCE_DIR}/include" )
+INCLUDE_DIRECTORIES( "${Marlin_SOURCE_DIR}/streamlog/source/include" )
 
 # install include files
-INSTALL( DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/include/marlin" DESTINATION include
+INSTALL( DIRECTORY "${Marlin_SOURCE_DIR}/include/marlin" DESTINATION include
         PATTERN "*~" EXCLUDE
         PATTERN "*CVS*" EXCLUDE )
 
@@ -24,29 +24,22 @@ INSTALL( DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/include/marlin" DESTINATION in
 # require proper c++
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 
-# binary sources: list of all sources from which you want to create a binary
-SET( bin_srcs Marlin.cc )
-
-# sources needed for binaries that do not belong to the library
-SET( ext_bin_srcs ProcessorLoader.cc )
-
 # get list of all source files in this directory
-AUX_SOURCE_DIRECTORY( . all_srcs )
+AUX_SOURCE_DIRECTORY( . lib_srcs )
 
-# remove "./" from the list of source files
-STRING( REPLACE "./" "" all_srcs "${all_srcs}" )
-
-# exclude sources: filter out the sources specified above from the list of all sources
-IF( bin_srcs OR ext_bin_srcs )
-    LIST( REMOVE_ITEM all_srcs ${bin_srcs} ${ext_bin_srcs} )
-ENDIF()
-
-# library sources
-SET( lib_srcs ${all_srcs} )
+# ProcessorLoader and main application should not go into the library
+LIST( REMOVE_ITEM lib_srcs ./Marlin.cc ./ProcessorLoader.cc )
 
 # gui stuff
 IF( MARLIN_GUI )
 
+    # cmake 2.6 throws warning because QT_LIBRARIES contains -lpthread -ldl
+    # without the full path
+    IF(COMMAND CMAKE_POLICY)
+        CMAKE_POLICY(SET CMP0003 NEW)
+    ENDIF()
+
+    # FindQt4 looks for qmake in $PATH
     SET( ENV{PATH} "${QT4_HOME}/bin:$ENV{PATH}" )
     FIND_PACKAGE( Qt4 REQUIRED )
     INCLUDE(${QT_USE_FILE})
@@ -98,26 +91,26 @@ ENDIF()
 ####################################################################################################
 
 # create library
-ADD_LIBRARY( lib_${PROJECT_NAME} ${lib_srcs} )
+ADD_LIBRARY( lib_Marlin ${lib_srcs} )
 
 # link to libstreamlog
-TARGET_LINK_LIBRARIES( lib_${PROJECT_NAME}  lib_streamlog )
+TARGET_LINK_LIBRARIES( lib_Marlin lib_streamlog )
 
 # create symbolic lib target for calling target lib_XXX
-ADD_CUSTOM_TARGET( lib DEPENDS lib_${PROJECT_NAME} )
+ADD_CUSTOM_TARGET( lib DEPENDS lib_Marlin )
 
 # change lib_target properties
-SET_TARGET_PROPERTIES( lib_${PROJECT_NAME} PROPERTIES
+SET_TARGET_PROPERTIES( lib_Marlin PROPERTIES
     # create *nix style library versions + symbolic links
-    VERSION ${${PROJECT_NAME}_VERSION}
-    SOVERSION ${${PROJECT_NAME}_SOVERSION}
+    VERSION ${Marlin_VERSION}
+    SOVERSION ${Marlin_SOVERSION}
     # allow creating static and shared libs without conflicts
     CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
-    OUTPUT_NAME ${PROJECT_NAME} )
+    OUTPUT_NAME Marlin )
 
 # install library
-INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
+INSTALL( TARGETS lib_Marlin DESTINATION lib PERMISSIONS
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE )
@@ -126,102 +119,83 @@ INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
 ### BINS
 ####################################################################################################
 
-IF( bin_srcs )
-
-    # check if we are on a *nix system
-    IF( NOT UNIX OR APPLE )
-        IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-            MESSAGE( FATAL_ERROR "The LINK_STATIC_WHOLE_LIBS option is only avaliabe for *nix systems" )
-        ENDIF()
-        IF( NOT BUILD_SHARED_LIBS )
-            MESSAGE( FATAL_ERROR "You can only build Marlin statically under *nix systems" )
-        ENDIF()
+# check if we are on a *nix system
+IF( NOT UNIX OR APPLE )
+    IF( DEFINED LINK_STATIC_WHOLE_LIBS )
+        MESSAGE( FATAL_ERROR "The LINK_STATIC_WHOLE_LIBS option is only avaliabe for *nix systems" )
     ENDIF()
-    
-    # create symbolic bin target for calling targets bin_XXX
-    ADD_CUSTOM_TARGET( bin )
+    IF( NOT BUILD_SHARED_LIBS )
+        MESSAGE( FATAL_ERROR "You can only build Marlin statically under *nix systems" )
+    ENDIF()
+ENDIF()
 
-    # create bin targets (remove .cc extensions from binary sources)
-    FOREACH( src ${bin_srcs} )
-        STRING( REPLACE ".cc" "" bin ${src} )
-        LIST( APPEND bins ${bin} )
+# create symbolic bin target for calling targets bin_XXX
+ADD_CUSTOM_TARGET( bin )
+
+IF( NOT MARLIN_NO_DLL )
+    FIND_LIBRARY( DL_LIB NAMES ${CMAKE_DL_LIBS} )
+    IF( NOT DL_LIB )
+        MESSAGE( FATAL_ERROR "failed to find libdl.so" )
+    ELSE()
+        MESSAGE( STATUS "using dl library: ${DL_LIB}" )
+    ENDIF()
+    LINK_LIBRARIES( ${DL_LIB} )
+ENDIF()
+
+# whole archive libraries
+IF( DEFINED LINK_STATIC_WHOLE_LIBS )
+    SEPARATE_ARGUMENTS( LINK_STATIC_WHOLE_LIBS )
+    SET( LINK_STATIC_WHOLE_LIBS "${LINK_STATIC_WHOLE_LIBS}" CACHE STRING
+            "Link Marlin with these static libs" FORCE )
+    MESSAGE( STATUS "Following static libraries are going to be linked to the binaries with the" )
+    MESSAGE( STATUS "-Wl,--whole-archive linker flag:" )
+    FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
+         MESSAGE( STATUS "${lib}" )
     ENDFOREACH()
+ENDIF()
 
-    IF( NOT MARLIN_NO_DLL )
-        LINK_LIBRARIES( ${CMAKE_DL_LIBS} )
+
+# ----- Marlin binary --------------------------------------------------------
+ADD_EXECUTABLE( Marlin Marlin.cc ProcessorLoader.cc )
+ADD_DEPENDENCIES( bin Marlin )
+
+# link against library
+IF( BUILD_SHARED_LIBS )
+    TARGET_LINK_LIBRARIES( Marlin lib_Marlin )
+ELSE()
+    TARGET_LINK_LIBRARIES( Marlin -Wl,--whole-archive lib_Marlin -Wl,--no-whole-archive )
+ENDIF()
+
+# whole archive libraries
+IF( DEFINED LINK_STATIC_WHOLE_LIBS )
+    FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
+        TARGET_LINK_LIBRARIES( Marlin -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
+    ENDFOREACH()
+ENDIF()
+
+INSTALL( TARGETS Marlin DESTINATION bin )
+# ----------------------------------------------------------------------------
+
+
+# ----- MarlinGUI ------------------------------------------------------------
+IF( MARLIN_GUI )
+    ADD_EXECUTABLE( MarlinGUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ProcessorLoader.cc )
+    ADD_DEPENDENCIES( bin MarlinGUI )
+    
+    # link against library
+    IF( BUILD_SHARED_LIBS )
+        TARGET_LINK_LIBRARIES( MarlinGUI lib_Marlin ${QT_LIBRARIES} )
+    ELSE()
+        TARGET_LINK_LIBRARIES( MarlinGUI -Wl,--whole-archive lib_Marlin -Wl,--no-whole-archive ${QT_LIBRARIES} )
     ENDIF()
 
     # whole archive libraries
     IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-        SEPARATE_ARGUMENTS( LINK_STATIC_WHOLE_LIBS )
-        SET( LINK_STATIC_WHOLE_LIBS "${LINK_STATIC_WHOLE_LIBS}" CACHE STRING
-                "Link ${PROJECT_NAME} with these static libs" FORCE )
-        MESSAGE( STATUS "Following static libraries are going to be linked to the binaries with the" )
-        MESSAGE( STATUS "-Wl,--whole-archive linker flag:" )
         FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
-             MESSAGE( STATUS "${lib}" )
+            TARGET_LINK_LIBRARIES( MarlinGUI -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
         ENDFOREACH()
     ENDIF()
 
-
-    # loop through list of binaries
-    FOREACH( bin ${bins} )
-        
-        # create target for binary
-        ADD_EXECUTABLE( bin_${bin} ${bin}.cc ${ext_bin_srcs} )
-        
-        # tell bin target to call this bin_XXX target
-        ADD_DEPENDENCIES( bin bin_${bin} )
-        
-        # avoid conflicts between library and binary target names
-        SET_TARGET_PROPERTIES( bin_${bin} PROPERTIES OUTPUT_NAME ${bin} )
-        
-        # link against project library
-        IF( BUILD_SHARED_LIBS )
-            TARGET_LINK_LIBRARIES( bin_${bin} lib_${PROJECT_NAME} )
-        ELSE()
-            TARGET_LINK_LIBRARIES( bin_${bin} -Wl,--whole-archive lib_${PROJECT_NAME} -Wl,--no-whole-archive )
-        ENDIF()
-        
-        # whole archive libraries
-        IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-            FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
-                TARGET_LINK_LIBRARIES( bin_${bin} -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
-            ENDFOREACH()
-        ENDIF()
-        
-        # install binary commando
-        INSTALL( TARGETS bin_${bin} DESTINATION bin )
-    ENDFOREACH()
-
-    IF( MARLIN_GUI )
-        
-        # create target for binary
-        ADD_EXECUTABLE( bin_${PROJECT_NAME}_GUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ${ext_bin_srcs} )
-        
-        # tell bin target to call this bin_XXX target
-        ADD_DEPENDENCIES( bin bin_${PROJECT_NAME}_GUI )
-        
-        # avoid conflicts between library and binary target names
-        SET_TARGET_PROPERTIES( bin_${PROJECT_NAME}_GUI PROPERTIES OUTPUT_NAME ${PROJECT_NAME}GUI )
-        
-        # link against project library
-        IF( BUILD_SHARED_LIBS )
-            TARGET_LINK_LIBRARIES( bin_${PROJECT_NAME}_GUI lib_${PROJECT_NAME} ${QT_LIBRARIES} )
-        ELSE()
-            TARGET_LINK_LIBRARIES( bin_${PROJECT_NAME}_GUI -Wl,--whole-archive lib_${PROJECT_NAME} -Wl,--no-whole-archive ${QT_LIBRARIES} )
-        ENDIF()
-
-        # whole archive libraries
-        IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-            FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
-                TARGET_LINK_LIBRARIES( bin_${PROJECT_NAME}_GUI -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
-            ENDFOREACH()
-        ENDIF()
-
-        # install binary commando
-        INSTALL( TARGETS bin_${PROJECT_NAME}_GUI DESTINATION bin )
-    ENDIF()
-
+    INSTALL( TARGETS MarlinGUI DESTINATION bin )
 ENDIF()
 

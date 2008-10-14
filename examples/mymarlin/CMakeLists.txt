@@ -33,6 +33,7 @@ SET( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
+OPTION( BUILD_32BIT_COMPATIBLE "Set to ON to build in 32 bit compatibility mode" ON )
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
 
 # project dependencies
@@ -49,6 +50,28 @@ ENDIF()
 IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
     SET( CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" )
 ENDIF()
+
+#---------------- 32/64 bit issues ---------------------------------------
+IF( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+    MESSAGE( STATUS "32 bit architecture detected" )
+ENDIF()
+
+IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    MESSAGE( STATUS "64 bit architecture detected" )
+
+    IF( BUILD_32BIT_COMPATIBLE )
+        IF( COMMAND SET_PROPERTY )
+            SET_PROPERTY(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS 0)
+            SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32" )
+        ELSE()
+            MESSAGE( FATAL_ERROR "to build in 32 bit compatibility mode you need cmake >= 2.6" )
+        ENDIF()
+        MESSAGE( STATUS "Build in 32 bit compatibility mode" )
+    ELSE()
+        MESSAGE( STATUS "Build in native 64 bit mode" )
+    ENDIF()
+ENDIF()
+#-------------------------------------------------------------------------
 
 
 ### INCLUDES #################################################################
@@ -67,13 +90,8 @@ INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/include"
 
 # require proper c++
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
-
-# add debug definitions
-#IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-#    CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
-#    ADD_DEFINITIONS( "-DDEBUG" )
-#    LIST( APPEND ${PROJECT_NAME}_DEFINITIONS "-DDEBUG" )
-#ENDIF()
+#----- need long long for int64 for now ------
+ADD_DEFINITIONS( "-Wno-long-long" )
 
 # get list of all source files
 AUX_SOURCE_DIRECTORY( src library_sources )
@@ -179,8 +197,7 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake_uninstall.cmake.in"
                 IMMEDIATE @ONLY )
 
 # create uninstall target
-ADD_CUSTOM_TARGET( uninstall
-  "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" )
+ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" )
 
 # create configuration file from .in file
 CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in"
@@ -195,6 +212,9 @@ MESSAGE( STATUS "---------------------------------------------------------------
 MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
+IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    MESSAGE( STATUS "BUILD_32BIT_COMPATIBLE = ${BUILD_32BIT_COMPATIBLE}" )
+ENDIF()
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
 MESSAGE( STATUS "${PROJECT_NAME}_DEPENDS = \"${${PROJECT_NAME}_DEPENDS}\"" )
 MESSAGE( STATUS "BUILD_WITH = \"${BUILD_WITH}\"" )
