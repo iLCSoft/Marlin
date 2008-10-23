@@ -133,7 +133,7 @@ ENDIF()
 ADD_CUSTOM_TARGET( bin )
 
 IF( NOT MARLIN_NO_DLL )
-    FIND_LIBRARY( DL_LIB NAMES ${CMAKE_DL_LIBS} )
+    FIND_LIBRARY( DL_LIB NAMES ${CMAKE_DL_LIBS} dl )
     IF( NOT DL_LIB )
         MESSAGE( FATAL_ERROR "failed to find libdl.so" )
     ELSE()
