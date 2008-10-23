@@ -198,4 +198,5 @@ IF( MARLIN_GUI )
 
     INSTALL( TARGETS MarlinGUI DESTINATION bin )
 ENDIF()
+# ----------------------------------------------------------------------------
 

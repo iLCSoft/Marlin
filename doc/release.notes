@@ -5,6 +5,13 @@
  ======================
 
  -----------
+| v00-10-04 |
+ -----------
+    * made cmake 2.6 compatible
+    * added 32 bit compatibility build option
+    * added LIBRARY_DIRS
+
+ -----------
 | v00-10-03 |
  -----------
       * added timing of Processor::processEvent() methods 
