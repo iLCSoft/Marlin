@@ -58,7 +58,7 @@ ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long" )
 
 # include directories
-INCLUDE_DIRECTORIES( ./source/include )
+INCLUDE_DIRECTORIES( BEFORE ./source/include )
 
 # get list of all source files
 AUX_SOURCE_DIRECTORY( ./source/src lib_srcs )

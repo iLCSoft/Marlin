@@ -8,8 +8,8 @@
 ####################################################################################################
 
 # include directories
-INCLUDE_DIRECTORIES( "${Marlin_SOURCE_DIR}/include" )
-INCLUDE_DIRECTORIES( "${Marlin_SOURCE_DIR}/streamlog/source/include" )
+INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/include" )
+INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/streamlog/source/include" )
 
 # install include files
 INSTALL( DIRECTORY "${Marlin_SOURCE_DIR}/include/marlin" DESTINATION include
