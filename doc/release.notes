@@ -5,6 +5,13 @@
  ======================
 
  -----------
+| v00-10-05 |
+ -----------
+    * added BEFORE to INCLUDE_DIRECTORIES(...) statements in CMakeLists.txt
+    * removed old GNU makefiles
+    * removed old .steer example files
+    
+ -----------
 | v00-10-04 |
  -----------
     * made cmake 2.6 compatible
