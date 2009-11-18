@@ -178,6 +178,14 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/MarlinConfig.cmake.in"
 # install configuration file
 INSTALL( FILES "${PROJECT_BINARY_DIR}/MarlinConfig.cmake" DESTINATION . )
 
+# create documentation overview.html
+CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/doc/overview.html.in"
+                "${PROJECT_BINARY_DIR}/overview.html" @ONLY )
+
+# install configuration file
+INSTALL( FILES "${PROJECT_BINARY_DIR}/overview.html" DESTINATION doc )
+
+
 # display status message for important variables
 MESSAGE( STATUS )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
