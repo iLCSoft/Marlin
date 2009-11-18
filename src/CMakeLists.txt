@@ -7,6 +7,28 @@
 ### INCLUDES
 ####################################################################################################
 
+SET( Marlin_Version_Header "MarlinVersion.h" )
+
+FILE( WRITE "${Marlin_BINARY_DIR}/marlin/${Marlin_Version_Header}"
+"#ifndef MarlinVersion_h
+#define MarlinVersion_h 1
+
+// version macros
+#define MARLIN_MAJOR_VERSION ${Marlin_MAJOR_VERSION}
+#define MARLIN_MINOR_VERSION ${Marlin_MINOR_VERSION}
+#define MARLIN_PATCH_LEVEL ${Marlin_PATCH_LEVEL}
+#define MARLIN_VERSION_GE( MAJV , MINV , PLEV)  ( (  MARLIN_MAJOR_VERSION > MAJV ) || ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION > MINV ) ) ||   ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION == MINV ) && ( MARLIN_PATCH_LEVEL >= PLEV ) ) )
+
+#endif
+"
+)
+
+# include previously generated marlinversion.h
+INCLUDE_DIRECTORIES( BEFORE "${Marlin_BINARY_DIR}" )
+
+# and install it
+INSTALL( DIRECTORY "${Marlin_BINARY_DIR}/marlin" DESTINATION include PATTERN "*~" EXCLUDE )
+
 # include directories
 INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/include" )
 INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/streamlog/source/include" )
