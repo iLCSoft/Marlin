@@ -3,6 +3,7 @@
 #define logbuffer_h
 
 #include <sstream>
+#include <cstdio>
 #include "streamlog/logstream.h"
 
 namespace streamlog{
