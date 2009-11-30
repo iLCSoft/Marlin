@@ -5,6 +5,14 @@
  ======================
 
  -----------
+| v00-10-06 |
+ -----------
+
+   * README: updated documentation (README)
+   * bug fix: streamlog/source/include/streamlog/logbuffer.h:
+         added #include <cstdio> for gcc 4.4.1
+
+ -----------
 | v00-10-05 |
  -----------
     * added BEFORE to INCLUDE_DIRECTORIES(...) statements in CMakeLists.txt
