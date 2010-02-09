@@ -105,10 +105,15 @@ MainWindow::MainWindow() : _modified(false), _saved(false), _file(""), msc(NULL)
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
+    // bug fix: when editing global parameters the values only get saved
+    // after the edit box has lost focus
+    this->setFocus();
+
     if( !_modified ){
 	e->accept();
 	return;
     }
+
     int ret = QMessageBox::warning(this, tr("Exit Marlin GUI"), saveChangesMsg,
 	    QMessageBox::Yes,
 	    QMessageBox::No | QMessageBox::Default,
@@ -1345,6 +1350,25 @@ void MainWindow::openXMLFile()
 
 void MainWindow::newXMLFile(){
   
+    // bug fix: when editing global parameters the values only get saved
+    // after the edit box has lost focus
+    this->setFocus();
+
+    if( _modified ){
+        int ret = QMessageBox::warning(this, tr("Exit Marlin GUI"), saveChangesMsg,
+            QMessageBox::Yes,
+            QMessageBox::No | QMessageBox::Default,
+            QMessageBox::Cancel | QMessageBox::Escape);
+
+        if( ret == QMessageBox::Yes ){
+            saveXMLFile();
+        }
+        else if( ret == QMessageBox::Cancel ){
+            return;
+        }
+    }
+
+
     _file="Untitled.xml";
     _modified=false;
     _saved=false;
@@ -1364,48 +1388,55 @@ void MainWindow::newXMLFile(){
     updateIProcessors();
 }
 
-void MainWindow::saveXMLFile()
-{
-    
+void MainWindow::saveXMLFile(){
+
+    // bug fix: when editing global parameters the values only get saved
+    // after the edit box has lost focus
+    this->setFocus();
+
     //create backup file
     std::string cmd= "ls ";
     cmd+=_file;
     cmd+= " >/dev/null 2>/dev/null";
     //if file already exists show overwrite warning
     if( !_saved && !system( cmd.c_str()) ){
-	QString msg=_file.c_str();
-	msg+=" already exists. Do you want to replace it?";
-	int ret = QMessageBox::warning(this, tr("Save"), msg,
-		QMessageBox::Yes,
-		QMessageBox::No | QMessageBox::Default);
-	if( ret == QMessageBox::No ){
-	    saveAsXMLFile();
-	    return;
-	}
+        QString msg=_file.c_str();
+        msg+=" already exists. Do you want to replace it?";
+        int ret = QMessageBox::warning(this, tr("Save"), msg,
+                QMessageBox::Yes,
+                QMessageBox::No | QMessageBox::Default);
+        if( ret == QMessageBox::No ){
+            saveAsXMLFile();
+            return;
+        }
     }
 
     if( !_saved && _file == "Untitled.xml" ){
-	saveAsXMLFile();
+        saveAsXMLFile();
     }
     else{
-	if(!msc->saveAsXMLFile(_file)){
-	    QMessageBox::critical(this,
-		     tr("Error Saving File"),
-		     tr("Sorry, there was an error saving the file. Please choose another file.")
-	     );
-	     saveAsXMLFile();
-	     return;
-	}
-	_modified=false;
-	_saved=true;
-	statusBar()->showMessage(tr("Saved %1").arg(QString(_file.c_str())), 2000);
+        if(!msc->saveAsXMLFile(_file)){
+            QMessageBox::critical(this,
+                    tr("Error Saving File"),
+                    tr("Sorry, there was an error saving the file. Please choose another file.")
+                    );
+            saveAsXMLFile();
+            return;
+        }
+        _modified=false;
+        _saved=true;
+        statusBar()->showMessage(tr("Saved %1").arg(QString(_file.c_str())), 2000);
     }
 }
 
-void MainWindow::saveAsXMLFile()
-{
+void MainWindow::saveAsXMLFile(){
+
+    // bug fix: when editing global parameters the values only get saved
+    // after the edit box has lost focus
+    this->setFocus();
+
     QFileDialog *fd = new QFileDialog(this, tr("Save file as"), QDir::currentPath(), "*.xml");
-    
+
     fd->setDefaultSuffix( "xml" );
     fd->setAcceptMode( QFileDialog::AcceptSave );
     fd->setFileMode( QFileDialog::AnyFile );
@@ -1415,39 +1446,39 @@ void MainWindow::saveAsXMLFile()
     QString fileName;
 
     if( fd->exec() ){
-	fileName=fd->selectedFiles().at(0);
+        fileName=fd->selectedFiles().at(0);
     }
 
     if( !fileName.isEmpty() ){
 
-	//if it is an old steering file append .xml at the end
-	if( !fileName.contains(".xml", Qt::CaseInsensitive ) ){
-	    QString error;
-	    error="Sorry, you have tried to save the file with an extension different than \".xml\"\n"
-		    "Marlin GUI does not support other extensions than the xml one.. \nThe filename you've chosen (";
-	    error+=fileName;
-	    error+=") was therefore renamed to (";
-	    error+=fileName;
-	    error+=".xml)";
-	    
-	    QMessageBox::critical(this,
-                     tr( "Error Saving File"),
-                     error
-             );
-	    fileName+=".xml";
-	    _saved=false;
-	}
-	else{
-	    _saved=true;
-	}
-     
-	//update the window title bar
-	QString title= "Marlin GUI - ";
-	title+=fileName;
-	setWindowTitle(title);
+        //if it is an old steering file append .xml at the end
+        if( !fileName.contains(".xml", Qt::CaseInsensitive ) ){
+            QString error;
+            error="Sorry, you have tried to save the file with an extension different than \".xml\"\n"
+                "Marlin GUI does not support other extensions than the xml one.. \nThe filename you've chosen (";
+            error+=fileName;
+            error+=") was therefore renamed to (";
+            error+=fileName;
+            error+=".xml)";
 
-	_file=fileName.toStdString();
-	saveXMLFile();
+            QMessageBox::critical(this,
+                    tr( "Error Saving File"),
+                    error
+                    );
+            fileName+=".xml";
+            _saved=false;
+        }
+        else{
+            _saved=true;
+        }
+
+        //update the window title bar
+        QString title= "Marlin GUI - ";
+        title+=fileName;
+        setWindowTitle(title);
+
+        _file=fileName.toStdString();
+        saveXMLFile();
     }
 }
 
