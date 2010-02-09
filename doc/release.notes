@@ -5,6 +5,14 @@
  ======================
 
  -----------
+| v00-10-07 |
+ -----------
+
+   * bug fixes:
+       - added GEAR dependency. loading plugins could get undefined symbol: _ZN6marlin6Global4GEARE
+       - gui: global parameter not saved if edit box still in focus
+
+ -----------
 | v00-10-06 |
  -----------
 
