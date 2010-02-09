@@ -66,6 +66,11 @@ IF( MARLIN_GUI )
     FIND_PACKAGE( Qt4 REQUIRED )
     INCLUDE(${QT_USE_FILE})
 
+    IF( APPLE)
+       #fg:  needed when the QT framework was installed via dmg....
+      ADD_DEFINITIONS( "-DQT_EDITION=0x0003" )
+    ENDIF( APPLE )
+
     SET( cpp_srcs
         ../gui/addcondition.cpp
         ../gui/addprocdialog.cpp
