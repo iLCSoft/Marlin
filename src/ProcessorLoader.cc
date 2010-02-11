@@ -40,9 +40,19 @@ ProcessorLoader::ProcessorLoader(
 
 
 ProcessorLoader::~ProcessorLoader() {
+
+
+  char * s = getenv("MARLIN_DEBUG" ) ;
+  
+  // do not unload processors if $MARLIN_DEBUG is set to 1
+  // useful for debugging with valgrind (https://jira.slac.stanford.edu/browse/MAR-45)
+  if( std::string("1").compare( (s?s:"0") ) == 0 ) {
+    std::cout << std::endl << "<!-- MARLIN_DEBUG=1 set in your environment - skip unloading processors --> " << std::endl ;
+  } else {
     for( LibVec::iterator it = _libs.begin() ; it != _libs.end() ; ++it ) {
         dlclose( *it ) ;
     }
+  }
 }
 
 
