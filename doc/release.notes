@@ -5,12 +5,14 @@
  ======================
 
  -----------
-| v00-10-07 |
+| v00-10-08 |
  -----------
 
    * bug fixes:
+       - fixed JIRA issues( MAR-37 MAR-43 MAR-45 )
        - added GEAR dependency. loading plugins could get undefined symbol: _ZN6marlin6Global4GEARE
        - gui: global parameter not saved if edit box still in focus
+       - gui: applied patch to build on MAC
 
  -----------
 | v00-10-06 |
