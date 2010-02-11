@@ -37,7 +37,7 @@ namespace marlin{
     SkipEventException() {  /*no_op*/ ; } 
 
   public: 
-    SkipEventException(Processor* proc){
+    SkipEventException(const Processor* proc){
       message = proc->name()  ;
     }
     virtual ~SkipEventException() throw() { /*no_op*/; } 
@@ -55,7 +55,7 @@ namespace marlin{
     StopProcessingException() {  /*no_op*/ ; } 
 
   public: 
-    StopProcessingException(Processor* proc){
+    StopProcessingException(const Processor* proc){
       message = proc->name()  ;
     }
     virtual ~StopProcessingException() throw() { /*no_op*/; } 
@@ -73,7 +73,7 @@ namespace marlin{
     RewindDataFilesException() {  /*no_op*/ ; } 
 
   public: 
-    RewindDataFilesException(Processor* proc){
+    RewindDataFilesException(const Processor* proc){
       message = proc->name()  ;
     }
     virtual ~RewindDataFilesException() throw() { /*no_op*/; } 
