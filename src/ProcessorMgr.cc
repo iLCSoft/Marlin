@@ -200,11 +200,12 @@ namespace marlin{
 
     Processor* processor = getProcessor( processorType ) ;
 
+
+
     if( processor == 0 ) {
-      std::cerr << " ProcessorMgr::registerProcessor: unknown processor with type " 
-		<<  processorType  << " ! " 	      
-		<< std::endl   ;
-      return false ;
+        std::stringstream sstr ;
+        sstr << " ProcessorMgr::registerProcessor: unknown processor with type " <<  processorType  << " ! " << std::endl   ;
+        throw Exception( sstr.str() );
     }
 
     
