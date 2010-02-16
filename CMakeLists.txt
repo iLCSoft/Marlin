@@ -23,8 +23,8 @@ PROJECT( Marlin )
 
 # project version
 SET( Marlin_MAJOR_VERSION 0 )
-SET( Marlin_MINOR_VERSION 10 )
-SET( Marlin_PATCH_LEVEL 8 )
+SET( Marlin_MINOR_VERSION 11 )
+SET( Marlin_PATCH_LEVEL 0 )
 
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )

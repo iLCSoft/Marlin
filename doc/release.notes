@@ -1,15 +1,20 @@
-`
 
  ======================
   Marlin release notes
  ======================
 
- -----------
-| v00-10-08 |
- -----------
+ --------
+| v00-11 |
+ --------
 
-   * bug fixes:
-       - fixed JIRA issues( MAR-37 MAR-43 MAR-45 )
+    * new features  (  JIRA issues MAR-37 MAR-43 MAR-45 )
+           - Marlin stops processing if requested Processor does not exist
+           - added const to Exception(const Processor*)
+           - no unloading of plugins specified in MARLIN_DLL if MARLIN_DEBUG=1 is set 
+             in environment
+             -> useful for running Marlin jobs in valgrind for debugging
+
+    * bug fixes:
        - added GEAR dependency. loading plugins could get undefined symbol: _ZN6marlin6Global4GEARE
        - gui: global parameter not saved if edit box still in focus
        - gui: applied patch to build on MAC
