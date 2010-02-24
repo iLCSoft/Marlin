@@ -420,8 +420,10 @@ void  createProcessors( const IParser&  parser) {
 	ProcessorMgr::instance()->addActiveProcessor( type , activeProcessors[i] , p )  ;
 
     } else{
-
-      streamlog_out( WARNING )  << " Undefined processor : " << activeProcessors[i] << std::endl ;	
+        std::stringstream sstr ;
+        sstr << "Undefined processor : " << activeProcessors[i] << std::endl ;
+        streamlog_out( ERROR )  << sstr.str() ;	
+        throw Exception( sstr.str() );
     }
   }
 }
@@ -431,23 +433,32 @@ void  createProcessors(Parser&  parser) {
   StringVec activeProcessors ;
   Global::parameters->getStringVals("ActiveProcessors" , activeProcessors ) ;
 
-  for( StringVec::iterator m = activeProcessors.begin() ; m != activeProcessors.end() ; m++){
+  //for( StringVec::iterator m = activeProcessors.begin() ; m != activeProcessors.end() ; m++){
+  for(unsigned int i=0 ; i<  activeProcessors.size() ; i++ ) {
 
-    StringParameters* p = parser.getParameters( *m )  ;
+    //StringParameters* p = parser.getParameters( *m )  ;
+    StringParameters* p = parser.getParameters( activeProcessors[i] )  ;
     
 
-    streamlog_out( MESSAGE ) << " Parameters for processor " << *m 
+    streamlog_out( MESSAGE ) << " Parameters for processor " << activeProcessors[i]
 			     << std::endl 
 			     << *p ; 
 
     if( p!=0 ){
       std::string type = p->getStringVal("ProcessorType") ;
       
-      if( ProcessorMgr::instance()->addActiveProcessor( type , *m , p )  ){
+      //if( ProcessorMgr::instance()->addActiveProcessor( type , *m , p )  ){
+      if( ProcessorMgr::instance()->addActiveProcessor( type , activeProcessors[i] , p )  ){
 
 	// 	Processor* processor =  ProcessorMgr::instance()->getActiveProcessor( *m ) ;
 	//	processor->setParameters( p ) ;
       }
+    } else{
+        std::stringstream sstr ;
+        sstr << "Undefined processor : " << activeProcessors[i] << std::endl ;
+        streamlog_out( ERROR )  << sstr.str() ;	
+        throw Exception( sstr.str() );
+    
     }
 
   }
