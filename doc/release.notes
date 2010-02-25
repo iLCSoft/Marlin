@@ -6,9 +6,9 @@
  --------
 | trunk  |
  --------
-
     * bug fixes:
         - exit Marlin if active Processor is undefined (i.e. no parameters defined for that processor)
+        - made gcc 4.4.1 compliant
 
  --------
 | v00-11 |
