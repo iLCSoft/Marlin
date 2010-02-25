@@ -53,7 +53,7 @@ namespace marlin{
 
   public:
     
-    Tokenizer( std::vector< Expression >& tokens ) : _tokens(tokens) , needToken(true) 
+    Tokenizer( std::vector< Expression >& tokens ) : _tokens(tokens) , _last(0), needToken(true) 
 						   , openPar(0), closedPar(0) ,
 						     _state( newtoken ) {
     }
