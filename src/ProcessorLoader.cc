@@ -3,6 +3,7 @@
 
 #include <dlfcn.h>
 #include <iostream>
+#include <cstdlib>
 
 namespace marlin{
 
@@ -42,7 +43,7 @@ ProcessorLoader::ProcessorLoader(
 ProcessorLoader::~ProcessorLoader() {
 
 
-  char * s = getenv("MARLIN_DEBUG" ) ;
+  char * s = std::getenv("MARLIN_DEBUG" ) ;
   
   // do not unload processors if $MARLIN_DEBUG is set to 1
   // useful for debugging with valgrind (https://jira.slac.stanford.edu/browse/MAR-45)
