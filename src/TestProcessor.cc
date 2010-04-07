@@ -38,7 +38,9 @@ namespace marlin{
 
     _nRun = 0 ;
     _nEvt = 0 ;
-  
+    _doCalibration = false ;
+    _nLoops = 0 ;
+ 
 
   }
 
@@ -75,9 +77,16 @@ namespace marlin{
     if( isFirstEvent() ){
       _doCalibration = true ;
       _nLoops = 0 ;
+
+      streamlog_out( DEBUG ) << " initialize  _doCalibration  and  _nLoops in first event :  " << evt->getEventNumber() 
+			     << " run " << evt->getRunNumber() << std::endl ; 
     }
   
+    setReturnValue( "Calibrating" , false ) ;
+
     if( _doCalibration ) {
+
+      setReturnValue( "Calibrating" , true ) ;
 
       //      message<MESSAGE>(  log()
       streamlog_out( MESSAGE) << "processEvent()  ---CALIBRATING ------ "  
@@ -101,11 +110,9 @@ namespace marlin{
 	if( _nLoops == 3 ){
 	
 	  _doCalibration = false ;
-	  setReturnValue( "Calibration" , false ) ;
 	
 	}else{
 	
-	  setReturnValue( "Calibration" , true ) ;
 	  throw RewindDataFilesException( this ) ;
 	}
       }
@@ -122,8 +129,8 @@ namespace marlin{
     setReturnValue( true ) ;
     
     // set ProcessorName.EvenNumberOfEvents == true if this processor has been called 2n (n=0,1,2,...) times 
-    if( !( _nEvt % 2 )  )  
-      setReturnValue("EvenNumberOfEvents", true ) ;
+    setReturnValue("EvenNumberOfEvents",  !( _nEvt % 2 )   ) ;
+
     
   }
   

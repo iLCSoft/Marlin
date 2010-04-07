@@ -1,7 +1,8 @@
 #include "marlin/LogicalExpressions.h"
-#include <iostream>
+#include "marlin/Exceptions.h"
 
- 
+#include <iostream>
+#include <sstream>
 #include <algorithm>
 
 
@@ -61,13 +62,15 @@ namespace marlin{
       
       if( tokens[0].isNot ) {
 // 	std::cout << " evaluated !"<< tokens[0].Value << " to "  << ! _resultMap[ tokens[0].Value ] << std::endl ;
-	return ! _resultMap[ tokens[0].Value ] ;
+//	return ! _resultMap[ tokens[0].Value ] ;
+         return ! getValue( tokens[0].Value ) ;
       }
       else {
 // 	if(  _resultMap.find( tokens[0].Value ) == _resultMap.end() ) 
 // 	  std::cout << " error in result map : " <<  tokens[0].Value << " not found !"  << std::endl ;
 // 	std::cout << " evaluated "<< tokens[0].Value << " to "  <<  _resultMap[ tokens[0].Value ] << std::endl ;
-	return _resultMap[ tokens[0].Value ] ;
+//	return _resultMap[ tokens[0].Value ] ;
+         return  getValue( tokens[0].Value ) ;
       }
     }	
 	  
@@ -105,6 +108,24 @@ namespace marlin{
   
 //     ConditionsMap _condMap ;
 //     ResultMap _resultMap ;
+
+
+  bool LogicalExpressions::getValue( const std::string& key) {
+      ResultMap::iterator it = _resultMap.find( key );
+      if (it == _resultMap.end() ) {
+         std::ostringstream error; 
+         error << "LogicalExpressions::getValue():  key \"" << key << "\" not found. Bad processor condition?\n";
+ 
+	 //fg: debug:
+	 for(  it = _resultMap.begin() ; it != _resultMap.end() ; ++it ){
+
+	   streamlog_out( DEBUG ) << " key : " << it->first << " val: " << it->second << std::endl ;
+	 }
+
+	 throw marlin::ParseException( error.str() );
+      }
+      return it->second;
+  }
 
 }
 
