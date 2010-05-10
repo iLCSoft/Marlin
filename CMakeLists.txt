@@ -15,6 +15,7 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 # project name
 PROJECT( Marlin )
 
+# needed for using ctest
 ENABLE_TESTING()
 INCLUDE(CTest)
 
