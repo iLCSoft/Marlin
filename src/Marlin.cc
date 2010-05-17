@@ -345,7 +345,7 @@ int main(int argc, char** argv ){
 
       } catch( StopProcessingException &e) {
 	
-	std::cout << std::endl
+	streamlog_out( MESSAGE )  << std::endl
 		  << " **********************************************************" << std::endl
 		  << " *                                                        *" << std::endl
 		  << " *   Stop of EventProcessiong requested by processor :    *" << std::endl
@@ -359,7 +359,7 @@ int main(int argc, char** argv ){
 	
 	rewind = true ;
 
-	std::cout << std::endl
+	streamlog_out( MESSAGE )  << std::endl
 		  << " **********************************************************" << std::endl
 		  << " *                                                        *" << std::endl
 		  << " *   Rewind data files requested by processor :           *" << std::endl
