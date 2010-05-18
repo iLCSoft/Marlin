@@ -125,6 +125,14 @@ namespace marlin{
 			   << std::endl ;
     
     
+//     streamlog_out(DEBUG)   << "(DEBUG)   local verbosity level: " << logLevelName() << std::endl ;
+    streamlog_out(MESSAGE) << "(MESSAGE) local verbosity level: " << logLevelName() << std::endl ;
+//     streamlog_out(WARNING) << "(WARNING) local verbosity level: " << logLevelName() << std::endl ;
+//     streamlog_out(ERROR)   << "(ERROR)   local verbosity level: " << logLevelName() << std::endl ;
+
+
+
+
     // always return true  for ProcessorName
     setReturnValue( true ) ;
     

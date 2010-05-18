@@ -247,6 +247,8 @@ namespace marlin{
         for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 
             streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+	    scope.setLevel( (*it)->logLevelName() ) ;
+
             streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
             (*it)->baseInit() ;
@@ -311,6 +313,8 @@ namespace marlin{
         for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 
             streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+	    scope.setLevel( (*it)->logLevelName() ) ;
+
             streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
             (*it)->processRunHeader( run ) ;
@@ -353,6 +357,7 @@ namespace marlin{
         for( EMVec::iterator it = emv.begin();  it !=  emv.end()  ; ++ it) {
 
             streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+	    scope.setLevel( (*it)->logLevelName() ) ;
 
             streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
@@ -393,7 +398,9 @@ namespace marlin{
                 if( _conditions.conditionIsTrue( (*it)->name() ) ) {
 
                     streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-
+		    //if( (*it)->logLevelName().size() > 0  )
+		    scope.setLevel( (*it)->logLevelName() ) ;
+		    
                     streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
                     start_t =  clock () ;  // start timer
@@ -442,6 +449,8 @@ namespace marlin{
         for( ProcessorList::reverse_iterator it = _list.rbegin() ; it != _list.rend() ; ++it ) {
 
             streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+	    scope.setLevel( (*it)->logLevelName() ) ;
+
             streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
             (*it)->end() ;

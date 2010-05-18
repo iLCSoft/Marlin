@@ -23,29 +23,10 @@
 #include <map>
 
 // ----- define some useful macros-----------
-// for backward compatibility 
+// for backward compatibility - use streamlog_out( MESSAGE )  instead 
 #define m_out( VERBOSITY ) streamlog_out( VERBOSITY )  
 #define m_endl std::endl 
-
-
-///----------------------------------------
-
-
-/** Define convenient macros for using message efficiently, use m_out(VERBOSITY) for std::cout
- *  and m_endl for std::endl (allways needed ! ), e.g.:
- *  <pre>
- *    m_out( DEBUG ) << " processing event: " << evt->getEventNumber() 
- *                   << " in run:           " << evt->getRunNumber()  
- *                   <<  m_endl ;  // <-- NEEDED !!!
- *  </pre>
- */
-//#define m_out( VERBOSITY ) message<VERBOSITY>( VERBOSITY::active && log() 
-//#define m_out( VERBOSITY ) message<VERBOSITY>( log() 
-
-//#define m_endl "" ) 
-
-
-//#define m_endl "" ) 
+//----------------------------------------
 
 using namespace lcio ;
 
@@ -142,6 +123,11 @@ namespace marlin{
     /** Return  name of this  processor.
      */
     virtual const std::string & name() const { return _processorName ; } 
+
+    /** Return  name of the local verbosity level of this  processor - "" if not set.
+     */
+    virtual const std::string & logLevelName() const { return _logLevelName ; } 
+
 
     /** Return parameters defined for this Processor.
      */
@@ -450,8 +436,8 @@ namespace marlin{
     LCIOTypeMap   _inTypeMap ;
     LCIOTypeMap   _outTypeMap ;
 
-    //    mutable LogStream* _log ; 
-
+    std::string _logLevelName ;
+    
   private:
     mutable std::stringstream* _str ;
 

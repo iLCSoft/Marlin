@@ -4,9 +4,11 @@
  ======================
 
  --------
-| trunk  |
+| v00-12 |
  --------
      * new features:
+       - processors can have local "Verbosity" parameter (overwrites global parameter for given processor)
+
        - processor return values now have to be set for every event, if they are used in a logical expression in the <execute/>
          section of the steering file - otherwise an exception is thrown (patch provided by Philipp Klenze, DESY)
 
