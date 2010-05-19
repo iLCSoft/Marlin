@@ -22,7 +22,10 @@ public:
 
     /** Return  name of log level name this event modifier.
      */
-    virtual const std::string & logLevelName() const = 0 ;
+    virtual const std::string & logLevelName() { 
+      static const std::string s("") ;
+      return s ; 
+    }
 
     virtual ~EventModifier() {}
   };
