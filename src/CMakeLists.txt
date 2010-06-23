@@ -36,7 +36,9 @@ INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/streamlog/source/include" )
 # install include files
 INSTALL( DIRECTORY "${Marlin_SOURCE_DIR}/include/marlin" DESTINATION include
         PATTERN "*~" EXCLUDE
-        PATTERN "*CVS*" EXCLUDE )
+        PATTERN "*CVS*" EXCLUDE
+        PATTERN "*/.svn*" EXCLUDE
+        )
 
 
 ####################################################################################################

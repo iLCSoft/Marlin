@@ -107,7 +107,9 @@ INSTALL( FILES "${PROJECT_BINARY_DIR}/streamlogConfig.cmake" DESTINATION . )
 INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/source/include/streamlog"
     DESTINATION include
     PATTERN "*~" EXCLUDE
-    PATTERN "*CVS*" EXCLUDE )
+    PATTERN "*CVS*" EXCLUDE
+    PATTERN "*/.svn*" EXCLUDE
+    )
 
 # display status message for important variables
 MESSAGE( STATUS )

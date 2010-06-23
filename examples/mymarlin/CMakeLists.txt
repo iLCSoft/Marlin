@@ -83,7 +83,9 @@ INCLUDE_DIRECTORIES( "${PROJECT_SOURCE_DIR}/include" )
 INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/include"
         DESTINATION .
         PATTERN "*~" EXCLUDE
-        PATTERN "*CVS*" EXCLUDE )
+        PATTERN "*CVS*" EXCLUDE
+        PATTERN "*/.svn*" EXCLUDE
+        )
 
 
 ### SOURCES ##################################################################
@@ -126,7 +128,9 @@ IF( EXISTS "${PROJECT_SOURCE_DIR}/doc/Doxyfile" )
         # install documentation
         INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
                 DESTINATION .
-                PATTERN "*CVS*" EXCLUDE )
+                PATTERN "*CVS*" EXCLUDE
+                PATTERN "*/.svn*" EXCLUDE
+                )
     ENDIF()
 ELSE()
     MESSAGE( STATUS "${PROJECT_SOURCE_DIR}/doc/Doxyfile no found. INSTALL_DOC set to OFF" )

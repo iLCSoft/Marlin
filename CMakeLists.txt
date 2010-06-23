@@ -121,7 +121,9 @@ IF( INSTALL_DOC )
     # install documentation
     INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
             DESTINATION .
-            PATTERN "*CVS*" EXCLUDE )
+            PATTERN "*CVS*" EXCLUDE
+            PATTERN "*/.svn*" EXCLUDE
+    )
 ENDIF()
 
 ##########################################################################################
