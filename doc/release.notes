@@ -12,6 +12,9 @@
        - processor return values now have to be set for every event, if they are used in a logical expression in the <execute/>
          section of the steering file - otherwise an exception is thrown (patch provided by Philipp Klenze, DESY)
 
+   
+       - removed (optional) dependency on CondDBMySQL
+  
      * bug fixes:
         - exit Marlin if active Processor is undefined (i.e. no parameters defined for that processor)
         - made gcc 4.4.1 compliant

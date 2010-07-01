@@ -46,7 +46,6 @@ namespace marlin{
     
     // register steering parameters: name, description, class-variable, default value
     
-#ifdef USE_CONDDB
     registerProcessorParameter( "DBInit" , 
 				"Initialization string for conditions database"  ,
 				_dbInit ,
@@ -65,7 +64,6 @@ namespace marlin{
 			       dbcondExample ,
 			       dbcondExample.size() ) ;
     
-#endif
     
     StringVec simpleExample ;
     simpleExample.push_back("conditionsName");
@@ -129,7 +127,6 @@ namespace marlin{
       }
     }
     
-#ifdef USE_CONDDB
     
     if( parameterSet( "DBCondHandler" ) ) {
       
@@ -150,7 +147,6 @@ namespace marlin{
       }
     }
     
-#endif
     
     if( parameterSet( "DBFileHandler" ) ) {
       
