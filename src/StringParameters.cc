@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <exception>
 
 namespace marlin{
 
@@ -100,13 +101,41 @@ StringVec& StringParameters::getStringKeys( StringVec& stringVec ) {
   return  stringVec ;
 }
 
+// FIXME where should this utility function live ?
+template <class T>
+bool convert(std::string input, T &value) {
+
+ std::istringstream stream(input);
+
+ return ( ! (stream >> value).fail() ) && stream.eof();
+
+}
+
+
 int intVal(  const std::string& str ){
   // FIXME - add support for hex numbers 
   return atoi( str.c_str() )  ; 
 }
 
 float floatVal( const std::string& str ){
-  return atof( str.c_str() )  ; 
+
+  // atof would not give an error trying to convert from string: "1.003.4"
+  //return atof( str.c_str() )  ; 
+
+  static float f;
+
+  if( convert( str , f ) ){
+      //std::cout << "converted : " << f << std::endl ;
+      return f;
+  }
+  else{
+      
+      std::stringstream sstr;
+
+      sstr << "failed converting float from string: " << str << std::endl ;
+
+      throw Exception( sstr.str() );
+  }
 }
 
 std::ostream& operator<< (  std::ostream& s,  StringParameters& p ) {
