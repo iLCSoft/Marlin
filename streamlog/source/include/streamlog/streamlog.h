@@ -23,8 +23,9 @@
 #include "loglevels.h"
 
 
-#define  streamlog_out( MLEVEL ) if(streamlog::out.write< streamlog::MLEVEL >() ) streamlog::out()  
+#define  streamlog_level( MLEVEL ) ( streamlog::out.write< streamlog::MLEVEL >() )
 
+#define  streamlog_out( MLEVEL ) if(streamlog::out.write< streamlog::MLEVEL >() ) streamlog::out()  
 
 #define  streamlog_message( MLEVEL , CODE_BLOCK , OUT_MESSAGE)\
    if( streamlog::out.write< streamlog::MLEVEL >() ) { \
