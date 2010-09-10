@@ -27,9 +27,9 @@ namespace marlin {
       " Processors only need to create and fill the histograms, clouds and tuples. Needs to be the first ActiveProcessor" ;
 
     registerProcessorParameter( "FileType" , 
-				" type of output file xml (default) or root ( only OpenScientist)"  ,
+				" type of output file root (default) or xml )"  ,
 				_fileType ,
-				std::string("xml") ) ;
+				std::string("root") ) ;
     
     registerProcessorParameter( "FileName" , 
 				" filename without extension"  ,
