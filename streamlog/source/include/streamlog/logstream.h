@@ -70,7 +70,7 @@ namespace streamlog{
      */
     void init( std::ostream& os , const std::string name ) ;
 
-    /** True if next log message of the current level (class T ) will be written, i.e.
+   /** True if next log message of the current level (class T ) will be written, i.e.
      *  the next call to std::ostream& operator()() will return a valid outstream.
      * 
      */
@@ -81,7 +81,18 @@ namespace streamlog{
       return (  T::active   &&    check_level<T>()  ) ;
     }
 
-    /** Return the actual std::ostream where the message should be writen to - will return
+    /** True if next log message of the current level (class T ) would be written
+     *  - can be used to conditionally execute code blocks that are needed before writing to
+     * the outstream.
+     * 
+     */
+    template<class T>
+    inline bool would_write() {
+      
+      return (  T::active   &&  T::level >= _level ) ;
+    }
+
+   /** Return the actual std::ostream where the message should be writen to - will return
      *  a nullstream unless prepended by a successfull call to write<MESSAGELEVEL>()
      */
     std::ostream& operator()() ;
