@@ -3,6 +3,23 @@
   Marlin release notes
  ======================
 
+ 
+ --------
+| v00-13 |
+ --------
+
+        -  added macro streamlog_level( MLEVEL ) for use in if() statements with VERBOSITY, e.g.
+          if( streamlog_level( DEBUG ) && x ) {
+            // do additional computation
+            // ...
+            streamlog_out( DEBUG ) <<  ....
+          }
+
+        - fixes:
+            AIDAProcessor:  switched default file extension to root
+            StringParameters.cc: protect against converting strings like "12.3.4" to float 
+	    CMakeLists.txt: bug fixed to generated documentation (overview.html)
+
  --------
 | v00-12 |
  --------
