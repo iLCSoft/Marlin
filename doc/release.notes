@@ -18,7 +18,11 @@
         - fixes:
             AIDAProcessor:  switched default file extension to root
             StringParameters.cc: protect against converting strings like "12.3.4" to float 
-	    CMakeLists.txt: bug fixed to generated documentation (overview.html)
+	    
+        - cmake changes/fixes:
+            - CMakeLists.txt: bug fixed to generated documentation (overview.html)
+            - BUILD_WITH not needed anymore to configure Marlin
+            - simplified mymarlin example
 
  --------
 | v00-12 |
