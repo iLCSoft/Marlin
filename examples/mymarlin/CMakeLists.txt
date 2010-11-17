@@ -25,7 +25,7 @@ LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 SET( required_packages LCIO GEAR Marlin )
 
 # ------- optional packages -------------------
-SET( optional_packages AIDA )
+#SET( optional_packages AIDA )
 
 
 # ------- do the search -----------------------
