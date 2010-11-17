@@ -34,7 +34,7 @@ FOREACH( pkg ${required_packages} )
 ENDFOREACH()
 
 FOREACH( pkg ${optional_packages} )
-    FIND_PACKAGE( ${pkg} )
+    FIND_PACKAGE( ${pkg} QUIET )
 ENDFOREACH()
 
 FOREACH( pkg ${required_packages} ${optional_packages} )
@@ -42,6 +42,8 @@ FOREACH( pkg ${required_packages} ${optional_packages} )
         INCLUDE_DIRECTORIES( ${${pkg}_INCLUDE_DIRS} )
         LINK_LIBRARIES( ${${pkg}_LIBRARIES} )
         ADD_DEFINITIONS ( ${${pkg}_DEFINITIONS} )
+    ELSE()
+        MESSAGE( STATUS "${pkg} not found" )
     ENDIF()
 ENDFOREACH()
 
