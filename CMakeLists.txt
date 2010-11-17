@@ -37,8 +37,38 @@ OPTION( MARLIN_NO_DLL "Set to ON to build Marlin without DLL support" OFF )
 OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
 
-# project dependencies
-SET( Marlin_DEPENDS "LCIO GEAR" )
+
+### DEPENDENCIES ############################################################
+
+# additionally search for cmake macros/moules defined by this project
+#LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
+
+# ------- required packages -------------------
+SET( required_packages LCIO GEAR )
+
+# ------- optional packages -------------------
+SET( optional_packages CLHEP LCCD RAIDA )
+
+
+# ------- do the search -----------------------
+FOREACH( pkg ${required_packages} )
+    FIND_PACKAGE( ${pkg} REQUIRED )
+ENDFOREACH()
+
+FOREACH( pkg ${optional_packages} )
+    FIND_PACKAGE( ${pkg} QUIET )
+ENDFOREACH()
+
+FOREACH( pkg ${required_packages} ${optional_packages} )
+    IF( ${pkg}_FOUND )
+        INCLUDE_DIRECTORIES( ${${pkg}_INCLUDE_DIRS} )
+        LINK_LIBRARIES( ${${pkg}_LIBRARIES} )
+        ADD_DEFINITIONS ( ${${pkg}_DEFINITIONS} )
+    ELSE()
+        MESSAGE( STATUS "${pkg} NOT FOUND !!" )
+    ENDIF()
+ENDFOREACH()
+
 
 # set default cmake build type to RelWithDebInfo
 IF( NOT CMAKE_BUILD_TYPE )
@@ -152,18 +182,6 @@ ENDIF()
 # append link pathes to rpath list
 SET( CMAKE_INSTALL_RPATH_USE_LINK_PATH 1 )
 MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH_USE_LINK_PATH )
-
-# DEPENDENCIES: this code has to be placed before adding any library or
-# executable so that these are linked properly against the dependencies
-IF( DEFINED Marlin_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
-    IF( NOT DEFINED CMAKE_MODULE_PATH )
-        MESSAGE( FATAL_ERROR "CMAKE_MODULE_PATH not set! Set it with: "
-            "-DCMAKE_MODULE_PATH=\"/path_to_ilcsoft/CMakeModules\"" )
-    ENDIF()
-    # load macro
-    INCLUDE( "MacroCheckDeps" )
-    CHECK_DEPS()
-ENDIF()
 
 # input directories
 ADD_SUBDIRECTORY( streamlog )
