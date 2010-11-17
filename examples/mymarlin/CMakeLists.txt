@@ -18,13 +18,17 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 ### DEPENDENCIES ############################################################
 
-# ------- required ----------------------------
+# additionally search for cmake macros/moules defined by this project
+LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
+
+# ------- required packages -------------------
 SET( required_packages LCIO GEAR Marlin )
 
-# ------- optional ----------------------------
+# ------- optional packages -------------------
 SET( optional_packages AIDA )
 
 
+# ------- do the search -----------------------
 FOREACH( pkg ${required_packages} )
     FIND_PACKAGE( ${pkg} REQUIRED )
 ENDFOREACH()
@@ -46,7 +50,6 @@ ENDFOREACH()
 ### SETTINGS ################################################################
 
 # ilcsoft cmake macros / default settings
-LIST( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
 INCLUDE( ilcsoft_default_settings )
 INCLUDE( MacroAddSharedLibrary )
 
