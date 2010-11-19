@@ -1,6 +1,6 @@
 ########################################################
 # cmake file for building Marlin example Package
-# @author Jan Engels, DESY
+# @author Jan Engels, Desy IT
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 ########################################################
 
