@@ -4,6 +4,8 @@
 #include <dlfcn.h>
 #include <iostream>
 #include <cstdlib>
+#include <set>
+
 
 namespace marlin{
 
@@ -16,26 +18,47 @@ ProcessorLoader::ProcessorLoader(
     _loadError=false;
     lcio::StringVec::const_iterator current = first ;
 
+    std::set<std::string> _checkDuplicateLibs;
+
     while( current != last ){
 
-        //std::string libName( "lib" + *current + ".so" ) ;
         std::string libName( *current ) ;
-        std::cout << "<!-- Loading shared library : " << libName << " -->" << std::endl ;
-        
-        //void* libPointer  = dlopen( libName.c_str() , RTLD_NOW) ;
-        //void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY ) ;
-        //void* libPointer  = dlopen( libName.c_str() , RTLD_NOW | RTLD_GLOBAL) ;
-        void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY | RTLD_GLOBAL) ;
+        size_t idx;
+        idx = libName.find_last_of("/");
+        // the library basename, i.e. /path/to/libBlah.so --> libBlah.so
+        std::string libBaseName( libName.substr( idx + 1 ) );
 
-        if( libPointer == 0 ){
-            std::cout << std::endl << "<!-- ERROR loading shared library : " << libName << std::endl
-                      << "    ->    "   << dlerror() << " -->" << std::endl ;
-            _loadError=true;
+        std::cout << "<!-- Loading shared library : " << libName << " ("<< libBaseName << ")-->" << std::endl ;
+        
+        if( _checkDuplicateLibs.find( libBaseName ) == _checkDuplicateLibs.end() ){
+            _checkDuplicateLibs.insert( libBaseName ) ;
         }
         else{
-            _libs.push_back( libPointer ) ;
+            std::cout << std::endl << "<!-- ERROR loading shared library : " << libName << std::endl
+                << "    ->    Trying to load DUPLICATE library -->" << std::endl << std::endl ;
+            _loadError=true;
         }
+
+
+        if( ! _loadError ){
+
+            //void* libPointer  = dlopen( libName.c_str() , RTLD_NOW) ;
+            //void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY ) ;
+            //void* libPointer  = dlopen( libName.c_str() , RTLD_NOW | RTLD_GLOBAL) ;
+            void* libPointer  = dlopen( libName.c_str() , RTLD_LAZY | RTLD_GLOBAL) ;
+
+            if( libPointer == 0 ){
+                std::cout << std::endl << "<!-- ERROR loading shared library : " << libName << std::endl
+                          << "    ->    "   << dlerror() << " -->" << std::endl << std::endl ;
+                _loadError=true;
+            }
+            else{
+                _libs.push_back( libPointer ) ;
+            }
+        }
+
         ++current ;
+
     }
 }
 
