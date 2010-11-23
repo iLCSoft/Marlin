@@ -24,10 +24,10 @@
 SET( ILC_HOME "/path/to/ilcsoft" CACHE PATH "Path to ILC Software" FORCE )
 
 # Path to LCIO
-SET( LCIO_DIR "${ILC_HOME}/lcio/vXX-YY" CACHE PATH "Path to LCIO" FORCE )
+SET( LCIO_HOME "${ILC_HOME}/lcio/vXX-YY" CACHE PATH "Path to LCIO" FORCE )
 
 # Path to GEAR
-SET( GEAR_DIR "${ILC_HOME}/gear/vXX-YY" CACHE PATH "Path to GEAR" FORCE )
+SET( GEAR_HOME "${ILC_HOME}/gear/vXX-YY" CACHE PATH "Path to GEAR" FORCE )
 
 
 
@@ -39,7 +39,7 @@ SET( GEAR_DIR "${ILC_HOME}/gear/vXX-YY" CACHE PATH "Path to GEAR" FORCE )
 #SET( MARLIN_GUI OFF CACHE BOOL "Set to ON to build Marlin GUI" FORCE )
 
 # Path to QT4 (needed for MARLIN_GUI)
-#SET( QT4_DIR "/path/to/QT4" CACHE PATH "Path to QT4" FORCE )
+#SET( QT4_HOME "/path/to/QT4" CACHE PATH "Path to QT4" FORCE )
  
 
 
@@ -48,13 +48,13 @@ SET( GEAR_DIR "${ILC_HOME}/gear/vXX-YY" CACHE PATH "Path to GEAR" FORCE )
 #############################################################################
 
 # Path to LCCD
-SET( LCCD_DIR "${ILC_HOME}/lccd/vXX-YY" CACHE PATH "Path to LCCD" FORCE )
+SET( LCCD_HOME "${ILC_HOME}/lccd/vXX-YY" CACHE PATH "Path to LCCD" FORCE )
 
 # Path to CLHEP
-SET( CLHEP_DIR "${ILC_HOME}/CLHEP/vXX-YY" CACHE PATH "Path to CLHEP" FORCE )
+SET( CLHEP_HOME "${ILC_HOME}/CLHEP/vXX-YY" CACHE PATH "Path to CLHEP" FORCE )
 
 # Path to RAIDA
-#SET( RAIDA_DIR "${ILC_HOME}/RAIDA/vXX-YY" CACHE PATH "Path to RAIDA" FORCE )
+#SET( RAIDA_HOME "${ILC_HOME}/RAIDA/vXX-YY" CACHE PATH "Path to RAIDA" FORCE )
 
 # CMake Modules Path
 #SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/vXX-YY" CACHE PATH "Path to CMake Modules" FORCE )
