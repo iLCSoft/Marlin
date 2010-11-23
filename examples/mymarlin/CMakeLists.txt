@@ -29,6 +29,14 @@ SET( required_packages LCIO GEAR Marlin )
 
 
 # ------- do the search -----------------------
+
+# fix for backwards compatibility
+FOREACH( pkg ${required_packages} ${optional_packages} )
+    IF( NOT ${pkg}_DIR AND DEFINED ${pkg}_HOME )
+        SET( ${pkg}_DIR ${${pkg}_HOME} )
+    ENDIF()
+ENDFOREACH()
+
 FOREACH( pkg ${required_packages} )
     FIND_PACKAGE( ${pkg} REQUIRED )
 ENDFOREACH()
