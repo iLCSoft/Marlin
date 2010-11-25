@@ -220,12 +220,11 @@ MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
-IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    MESSAGE( STATUS "BUILD_32BIT_COMPATIBLE = ${BUILD_32BIT_COMPATIBLE}" )
-ENDIF()
+#IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+#    MESSAGE( STATUS "BUILD_32BIT_COMPATIBLE = ${BUILD_32BIT_COMPATIBLE}" )
+#ENDIF()
 MESSAGE( STATUS "MARLIN_NO_DLL = ${MARLIN_NO_DLL}" )
 MESSAGE( STATUS "MARLIN_GUI = ${MARLIN_GUI}" )
-MESSAGE( STATUS "BUILD_WITH = \"${BUILD_WITH}\"" )
 MESSAGE( STATUS "INSTALL_DOC = ${INSTALL_DOC}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
@@ -247,11 +246,6 @@ SET( MARLIN_GUI "${MARLIN_GUI}" CACHE BOOL
     "Set to ON to build Marlin GUI" FORCE )
 SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
     "Set to OFF to skip build/install Documentation" FORCE )
-
-# export build settings
-INCLUDE( CMakeExportBuildSettings )
-CMAKE_EXPORT_BUILD_SETTINGS( "MarlinBuildSettings.cmake" )
-INSTALL( FILES "${PROJECT_BINARY_DIR}/MarlinBuildSettings.cmake" DESTINATION lib/cmake )
 
 # export library dependencies (keep this as the last line in the file)
 EXPORT_LIBRARY_DEPENDENCIES( "MarlinLibDeps.cmake" )
