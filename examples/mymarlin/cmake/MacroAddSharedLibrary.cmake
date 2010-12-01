@@ -1,9 +1,9 @@
 # create symbolic lib target for calling library targets
 #ADD_CUSTOM_TARGET( lib )
 
-MACRO( ADD_SHARED_LIBRARY _name _sources )
+MACRO( ADD_SHARED_LIBRARY _name )
 
-    ADD_LIBRARY( ${_name} SHARED ${_sources} )
+    ADD_LIBRARY( ${_name} SHARED ${ARGN} )
     
     #ADD_DEPENDENCIES( lib ${_name} )
    
