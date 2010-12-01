@@ -28,7 +28,7 @@ INCLUDE(CTest)
 # project version
 SET( Marlin_MAJOR_VERSION 0 )
 SET( Marlin_MINOR_VERSION 13 )
-SET( Marlin_PATCH_LEVEL 0 )
+SET( Marlin_PATCH_LEVEL 1 )
 
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )

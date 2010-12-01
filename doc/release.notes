@@ -4,6 +4,12 @@
  ======================
 
  
+ -----------
+| v00-13-01 |
+ -----------
+
+        - fixed bug in marlin example (macro ADD_SHARED_LIBRARY)
+
  --------
 | v00-13 |
  --------
