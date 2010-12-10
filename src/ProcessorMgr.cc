@@ -245,17 +245,30 @@ namespace marlin{
         //     for_each( _list.begin() , _list.end() , std::mem_fun( &Processor::baseInit ) ) ;
 
         for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
+	  
+	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+	  scope.setLevel( (*it)->logLevelName() ) ;
+	  
+	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+	  
+	  (*it)->baseInit() ;
+	  
+	  tMap[ *it ] = std::make_pair( 0 , 0 )  ;
+	  
+	  
+	  EventModifier* em = dynamic_cast<EventModifier*>( *it ) ; 
+	  
+	  if( em != 0 ) {
+	    
+	    _eventModifierList.push_back( *it ) ;	
+	    
+	    streamlog_out( WARNING4 ) << " -----------   " << std::endl
+				      << " the following processor will modify the LCIO event :  "
+				      << (*it)->name()  << " !! " <<  std::endl
+				      << " ------------  "   << std::endl ; 
+	  }
 
-            streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	    scope.setLevel( (*it)->logLevelName() ) ;
-
-            streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-
-            (*it)->baseInit() ;
-
-            tMap[ *it ] = std::make_pair( 0 , 0 )  ;
-        }
-
+	}
     }
 
     void ProcessorMgr::processRunHeader( LCRunHeader* run){ 
@@ -311,80 +324,49 @@ namespace marlin{
 
         //     for_each( _list.begin() , _list.end() ,  std::bind2nd(  std::mem_fun( &Processor::processRunHeader ) , run ) ) ;
         for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
-
-            streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	    scope.setLevel( (*it)->logLevelName() ) ;
-
-            streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-
-            (*it)->processRunHeader( run ) ;
+	  
+	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+	  scope.setLevel( (*it)->logLevelName() ) ;
+	  
+	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+	  
+	  (*it)->processRunHeader( run ) ;
         }
     }   
-
-
-    //   void ProcessorMgr::modifyEvent( LCEvent * evt ) { 
-    //     if( _outputProcessor != 0 )
-    //       _outputProcessor->dropCollections( evt ) ;
-    //   }
-
-
-
-    void ProcessorMgr::modifyEvent( LCEvent* evt ){ 
-
-        static bool first = true  ;
-        typedef std::vector<EventModifier*> EMVec ;
-        static  EMVec  emv ;
-
-        if( first ) {
-
-            for(  ProcessorList::iterator it = _list.begin() ;
-                    it != _list.end() ; it++ ){
-
-                EventModifier* em = dynamic_cast<EventModifier*>( *it ) ; 
-
-                if( em != 0 ) {
-                    emv.push_back( em ) ;	
-                    streamlog_out( WARNING4 ) << " -----------   " << std::endl
-                        << " the following processor will modify the LCIO event :  "
-                        << (*it)->name()  << " !! " <<  std::endl
-                        << " ------------  "   << std::endl ; 
-                }
-            }
-
-            first = false ;
-        }
-
-        for( EMVec::iterator it = emv.begin();  it !=  emv.end()  ; ++ it) {
-
-            streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	    scope.setLevel( (*it)->logLevelName() ) ;
-
-            streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-
-            (*it)->modifyEvent( evt ) ;
-        }
-        //    for_each( emv.begin() , emv.end() ,   std::bind2nd(  std::mem_fun( &EventModifier::modifyEvent ) , evt ) ) ;
-
+  
+  
+    void ProcessorMgr::modifyRunHeader( LCRunHeader* rhd ){ 
+    
+      for( ProcessorList::iterator it = _eventModifierList.begin();  it !=  _eventModifierList.end()  ; ++ it) {
+      
+        streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      
+        (*it)->logLevelName()   ;
+      
+        streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+      
+        (  dynamic_cast<EventModifier*>( *it )  )->modifyRunHeader( rhd ) ;
+      }
+    
     }
 
+    void ProcessorMgr::modifyEvent( LCEvent* evt ){ 
+    
+      for( ProcessorList::iterator it = _eventModifierList.begin();  it !=  _eventModifierList.end()  ; ++ it) {
+      
+        streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+      
+        (*it)->logLevelName()   ;
+      
+        streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+      
+        (  dynamic_cast<EventModifier*>( *it )  )->modifyEvent( evt ) ;
+      }
+    
+    }
+  
 
     void ProcessorMgr::processEvent( LCEvent* evt ){ 
-
-        //     static bool isFirstEvent = true ;
-
-        //     for_each( _list.begin() , _list.end() ,   std::bind2nd(  std::mem_fun( &Processor::processEvent ) , evt ) ) ;
-
-        //     if( Global::parameters->getStringVal("SupressCheck") != "true" ) {
-
-        //       for_each( _list.begin() , _list.end(), 
-        // 		std::bind2nd( std::mem_fun( &Processor::check ) , evt ) ) ;
-        //     }
-
-        //     if ( isFirstEvent ) {
-        //       isFirstEvent = false;
-        //       for_each( _list.begin(), _list.end() , 
-        // 		std::bind2nd( std::mem_fun( &Processor::setFirstEvent ),isFirstEvent )) ;
-        //     }
 
         _conditions.clear() ;
 

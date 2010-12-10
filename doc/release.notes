@@ -3,6 +3,11 @@
   Marlin release notes
  ======================
 
+ --------
+| v01-00 |
+ --------
+        - allow RunHeaders to be modified in EventModifier interface
+
  
  --------
 | v00-13 |

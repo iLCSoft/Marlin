@@ -25,7 +25,6 @@ typedef std::map< const std::string , Processor* > ProcessorMap ;
 typedef std::list< Processor* > ProcessorList ;
 typedef std::map< const std::string , int > SkippedEventMap ;
 
-
 /** Processor manager singleton class. Holds references to all registered Processors. 
  *
  *  @author F. Gaede, DESY
@@ -84,8 +83,8 @@ public:
   virtual void end() ;
   
   
-  virtual void modifyRunHeader( LCRunHeader*) { /*no_op*/; }   
-  virtual void modifyEvent( LCEvent *) ; //{ /*no_op*/; }  
+  virtual void modifyRunHeader( LCRunHeader*) ; 
+  virtual void modifyEvent( LCEvent *) ; 
 
   /** Calls readDataSource() for all Processors of type DataSourceProcessor.
    */
@@ -115,6 +114,8 @@ private:
   ProcessorMap _activeMap ;
   ProcessorList _list ;
   SkippedEventMap _skipMap ;
+
+  ProcessorList _eventModifierList ;
 
   LogicalExpressions _conditions ;
 //   LCIOOutputProcessor* _outputProcessor ;
