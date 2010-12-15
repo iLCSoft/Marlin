@@ -4,6 +4,14 @@
  ======================
 
  --------
+|  HEAD  |
+ --------
+
+        - renamed MarlinVersion.h to MarlinConfig.h (to include other general purpose configuration definitions)
+        - removed deprecated build mode: MARLIN_NO_DLL
+
+
+ --------
 | v01-00 |
  --------
         - allow RunHeaders to be modified in EventModifier interface

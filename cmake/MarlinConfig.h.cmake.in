@@ -1,0 +1,11 @@
+#ifndef MarlinConfig_h
+#define MarlinConfig_h 1
+
+// version macros
+#define MARLIN_MAJOR_VERSION @Marlin_VERSION_MAJOR@
+#define MARLIN_MINOR_VERSION @Marlin_VERSION_MINOR@
+#define MARLIN_PATCH_LEVEL @Marlin_VERSION_PATCH@
+
+#define MARLIN_VERSION_GE( MAJV , MINV , PLEV )  ( (MARLIN_MAJOR_VERSION > MAJV) || ( (MARLIN_MAJOR_VERSION == MAJV) && (MARLIN_MINOR_VERSION >= MINV) ) || ( (MARLIN_MAJOR_VERSION == MAJV) && (MARLIN_MINOR_VERSION == MINV) && (MARLIN_PATCH_LEVEL >= PLEV) ) )
+
+#endif // MarlinConfig_h

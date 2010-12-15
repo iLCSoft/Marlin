@@ -7,21 +7,21 @@
 ### INCLUDES
 ####################################################################################################
 
-SET( Marlin_Version_Header "MarlinVersion.h" )
-
-FILE( WRITE "${Marlin_BINARY_DIR}/marlin/${Marlin_Version_Header}"
-"#ifndef MarlinVersion_h
-#define MarlinVersion_h 1
-
-// version macros
-#define MARLIN_MAJOR_VERSION ${Marlin_MAJOR_VERSION}
-#define MARLIN_MINOR_VERSION ${Marlin_MINOR_VERSION}
-#define MARLIN_PATCH_LEVEL ${Marlin_PATCH_LEVEL}
-#define MARLIN_VERSION_GE( MAJV , MINV , PLEV)  ( (  MARLIN_MAJOR_VERSION > MAJV ) || ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION > MINV ) ) ||   ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION == MINV ) && ( MARLIN_PATCH_LEVEL >= PLEV ) ) )
-
-#endif
-"
-)
+#SET( Marlin_Version_Header "MarlinVersion.h" )
+#
+#FILE( WRITE "${Marlin_BINARY_DIR}/marlin/${Marlin_Version_Header}"
+#"#ifndef MarlinVersion_h
+##define MarlinVersion_h 1
+#
+#// version macros
+##define MARLIN_MAJOR_VERSION ${Marlin_MAJOR_VERSION}
+##define MARLIN_MINOR_VERSION ${Marlin_MINOR_VERSION}
+##define MARLIN_PATCH_LEVEL ${Marlin_PATCH_LEVEL}
+##define MARLIN_VERSION_GE( MAJV , MINV , PLEV)  ( (  MARLIN_MAJOR_VERSION > MAJV ) || ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION > MINV ) ) ||   ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION == MINV ) && ( MARLIN_PATCH_LEVEL >= PLEV ) ) )
+#
+##endif
+#"
+#)
 
 # include previously generated marlinversion.h
 INCLUDE_DIRECTORIES( BEFORE "${Marlin_BINARY_DIR}" )
@@ -55,6 +55,7 @@ AUX_SOURCE_DIRECTORY( . lib_srcs )
 LIST( REMOVE_ITEM lib_srcs ./Marlin.cc ./ProcessorLoader.cc )
 
 # gui stuff
+OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
 IF( MARLIN_GUI )
 
     # cmake 2.6 throws warning because QT_LIBRARIES contains -lpthread -ldl
