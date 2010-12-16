@@ -18,5 +18,5 @@ ENDIF( NOT ${PACKAGE_FIND_NAME}_FIND_QUIETLY )
 
 
 INCLUDE( ${_aux}/cmake/MacroCheckPackageVersion.cmake ) # FIXME full path ?!
-CHECK_PACKAGE_VERSION()
+CHECK_PACKAGE_VERSION( ${PACKAGE_FIND_NAME} )
 
