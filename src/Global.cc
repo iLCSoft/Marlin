@@ -1,5 +1,6 @@
 #include "marlin/Global.h"
 #include "marlin/StringParameters.h"
+#include "marlin/ProcessorEventSeeder.h"
 
 namespace marlin{
   

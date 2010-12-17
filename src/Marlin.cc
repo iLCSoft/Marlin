@@ -12,6 +12,7 @@
 
 #include "marlin/ProcessorMgr.h"
 #include "marlin/Processor.h"
+#include "marlin/ProcessorEventSeeder.h"
 #include "marlin/Exceptions.h"
 #include "IO/LCReader.h"
 

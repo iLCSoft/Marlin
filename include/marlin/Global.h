@@ -5,10 +5,13 @@
 #include "gear/GearMgr.h"
 #endif 
 
-#include "marlin/ProcessorEventSeeder.h"
+//#include "marlin/ProcessorEventSeeder.h"
+
+
 
 namespace marlin{
 
+  class ProcessorEventSeeder;
   class StringParameters ;
 
   /** Simple global class for Marlin.

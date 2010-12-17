@@ -10,6 +10,7 @@
 
 #include "marlin/DataSourceProcessor.h"
 #include "marlin/EventModifier.h"
+#include "marlin/ProcessorEventSeeder.h"
 #include "streamlog/streamlog.h"
 #include "streamlog/logbuffer.h"
 
