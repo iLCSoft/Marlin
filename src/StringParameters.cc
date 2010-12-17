@@ -3,6 +3,7 @@
 #include <sstream>
 #include <algorithm>
 #include <exception>
+#include <iomanip>
 
 namespace marlin{
 
@@ -107,14 +108,29 @@ bool convert(std::string input, T &value) {
 
  std::istringstream stream(input);
 
- return ( ! (stream >> value).fail() ) && stream.eof();
+ return ( ! (stream >> std::setbase(0) >> value).fail() ) && stream.eof();
 
 }
 
 
 int intVal(  const std::string& str ){
-  // FIXME - add support for hex numbers 
-  return atoi( str.c_str() )  ; 
+
+  static int i;
+
+  if( convert( str , i ) ){
+      //std::cout << "converted : " << f << std::endl ;
+      return i;
+  }
+  else{
+      
+      std::stringstream sstr;
+
+      sstr << "failed converting int from string: " << str << std::endl ;
+
+      throw Exception( sstr.str() );
+  }
+
+
 }
 
 float floatVal( const std::string& str ){
