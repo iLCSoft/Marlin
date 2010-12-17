@@ -372,7 +372,9 @@ namespace marlin{
 
         bool check = ( Global::parameters->getStringVal("SupressCheck") != "true" ) ;
 
-
+	// refresh the seeds for this event
+	Global::EVENTSEEDER->refreshSeeds( evt ) ;
+ 
         try{ 
 
             for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {

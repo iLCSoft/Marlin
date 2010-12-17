@@ -8,6 +8,7 @@ namespace marlin{
 #ifdef USE_GEAR
   gear::GearMgr* Global::GEAR = 0 ;
 #endif 
- 
+
+  ProcessorEventSeeder* Global::EVENTSEEDER = 0 ;
 
 }

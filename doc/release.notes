@@ -10,7 +10,25 @@
         - renamed MarlinVersion.h to MarlinConfig.h (to include other general purpose configuration definitions)
         - removed deprecated build mode: MARLIN_NO_DLL
 
+        - global random seed established. This is used to provide individual pseudo-random numbers to Processors on
+          an event-by-event basis. These may be used by Processors to seed their random number generator of choice.
+          In order to use this service a Processor must register itself using:
 
+                Global::EVENTSEEDER->registerProcessor(this);
+
+          and may retrieve its allocated event seed during processEvent using:
+
+                int eventSeed = Global::EVENTSEEDER->getSeed(this);
+
+          The global seed is used for a complete job and is set in the Global steering parameters thus:
+        
+                <parameter name="Seed" value="1234567890"/>
+
+          note the value must be a positive integer, with max value 2,147,483,647
+          Currently the random event seed is generated using:
+        
+                global_seed ^ evt->getRunNumber() ^ evt->getEventNumber()
+          
  --------
 | v01-00 |
  --------

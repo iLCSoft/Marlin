@@ -5,7 +5,7 @@
 #include "gear/GearMgr.h"
 #endif 
 
-
+#include "marlin/ProcessorEventSeeder.h"
 
 namespace marlin{
 
@@ -27,6 +27,8 @@ namespace marlin{
 #ifdef USE_GEAR
     static gear::GearMgr* GEAR ;
 #endif 
+
+    static ProcessorEventSeeder* EVENTSEEDER ;
 
 
   };
