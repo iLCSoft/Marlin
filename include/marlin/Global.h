@@ -1,9 +1,9 @@
 #ifndef Global_h
 #define Global_h 1
 
-#ifdef USE_GEAR
+//#ifdef USE_GEAR
 #include "gear/GearMgr.h"
-#endif 
+//#endif 
 
 //#include "marlin/ProcessorEventSeeder.h"
 
@@ -27,9 +27,9 @@ namespace marlin{
     static StringParameters* parameters ;
     
 
-#ifdef USE_GEAR
+//#ifdef USE_GEAR
     static gear::GearMgr* GEAR ;
-#endif 
+//#endif 
 
     static ProcessorEventSeeder* EVENTSEEDER ;
 

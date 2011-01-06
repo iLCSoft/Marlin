@@ -33,11 +33,11 @@
 #include <cstring>
 #include <algorithm>
 
-#ifdef USE_GEAR
+//#ifdef USE_GEAR
 #include "gearimpl/Util.h"
 #include "gearxml/GearXML.h"
 #include "gearimpl/GearMgrImpl.h"
-#endif
+//#endif
 
 #include "marlin/ProcessorLoader.h"
 
@@ -255,7 +255,7 @@ int main(int argc, char** argv ){
   Global::EVENTSEEDER = new ProcessorEventSeeder( seed );
   streamlog_out( MESSAGE )  << " ---- Processor Event Seeder using Global Seed: " <<  seed << std::endl ;  
  
-#ifdef USE_GEAR
+//#ifdef USE_GEAR
 
   std::string gearFile = Global::parameters->getStringVal("GearXMLFile" ) ;
   
@@ -274,7 +274,7 @@ int main(int argc, char** argv ){
     Global::GEAR = new gear::GearMgrImpl ;
   }
 
-#endif
+//#endif
 
   StringVec lcioInputFiles ; 
 
@@ -376,12 +376,12 @@ int main(int argc, char** argv ){
 
   }
   
-#ifdef USE_GEAR  
+//#ifdef USE_GEAR  
 
   if(  Global::GEAR != 0 ) 
     delete Global::GEAR ; 
 
-#endif  
+//#endif  
 
   delete Global::EVENTSEEDER ; 
  
