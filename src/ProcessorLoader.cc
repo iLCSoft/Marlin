@@ -1,4 +1,3 @@
-#ifndef MARLIN_NO_DLL
 #include "marlin/ProcessorLoader.h"
 
 #include <dlfcn.h>
@@ -81,4 +80,3 @@ ProcessorLoader::~ProcessorLoader() {
 
 
 } // namespace marlin
-#endif //MARLIN_NO_DLL

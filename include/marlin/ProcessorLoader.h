@@ -1,6 +1,5 @@
 #ifndef ProcessorLoader_h
 #define ProcessorLoader_h 1
-#ifndef MARLIN_NO_DLL
 
 #include "lcio.h"
 
@@ -44,5 +43,4 @@ namespace marlin{
   };
 
 } // end namespace marlin 
-#endif
 #endif

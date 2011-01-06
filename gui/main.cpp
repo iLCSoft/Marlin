@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     std::cout << "\nLoading GUI...\n";
 
-#ifndef MARLIN_NO_DLL
+//#ifndef MARLIN_NO_DLL
 
   //------ load shared libraries with processors ------
                                                                                                                                                             
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
                                                                                                                                                             
   //------- end processor libs -------------------------
                                                                                                                                                             
-#endif
+//#endif
 	
     QApplication app(argc, argv);
 

@@ -15,9 +15,6 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 # project name
 PROJECT( MarlinGUI )
 
-# project options
-OPTION( MARLIN_NO_DLL "Set to ON to build MarlinGUI without DLL support" OFF )
-
 # project dependencies e.g. SET( ${PROJECT_NAME}_DEPENDS "LCIO;CLHEP" )
 SET( ${PROJECT_NAME}_DEPENDS "Marlin;LCIO" )
 
@@ -77,10 +74,6 @@ SET( moc_hdrs
 
 #QT4_AUTOMOC(${cpp_srcs})
 QT4_WRAP_CPP( cpp_moc_srcs ${moc_hdrs} )
-
-IF( MARLIN_NO_DLL )
-    ADD_DEFINITIONS( "-DMARLIN_NO_DLL" )
-ENDIF()
 
 ####################################################################################################
 ### DEPENDENCIES
@@ -146,7 +139,6 @@ MESSAGE( STATUS )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
-MESSAGE( STATUS "MARLIN_NO_DLL = ${MARLIN_NO_DLL}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
@@ -157,5 +149,3 @@ SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
     "Where to install ${PROJECT_NAME}" FORCE )
 SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
     "Path to custom CMake Modules" FORCE )
-SET( MARLIN_NO_DLL "${MARLIN_NO_DLL}" CACHE BOOL
-    "Set to ON to build MarlinGUI without DLL support" FORCE )

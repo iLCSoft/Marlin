@@ -3,43 +3,13 @@
 # @author Jan Engels, DESY
 #################################
 
-####################################################################################################
-### INCLUDES
-####################################################################################################
-
-#SET( Marlin_Version_Header "MarlinVersion.h" )
-#
-#FILE( WRITE "${Marlin_BINARY_DIR}/marlin/${Marlin_Version_Header}"
-#"#ifndef MarlinVersion_h
-##define MarlinVersion_h 1
-#
-#// version macros
-##define MARLIN_MAJOR_VERSION ${Marlin_MAJOR_VERSION}
-##define MARLIN_MINOR_VERSION ${Marlin_MINOR_VERSION}
-##define MARLIN_PATCH_LEVEL ${Marlin_PATCH_LEVEL}
-##define MARLIN_VERSION_GE( MAJV , MINV , PLEV)  ( (  MARLIN_MAJOR_VERSION > MAJV ) || ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION > MINV ) ) ||   ( (MARLIN_MAJOR_VERSION==MAJV) && ( MARLIN_MINOR_VERSION == MINV ) && ( MARLIN_PATCH_LEVEL >= PLEV ) ) )
-#
-##endif
-#"
-#)
-
-# include previously generated marlinversion.h
-INCLUDE_DIRECTORIES( BEFORE "${Marlin_BINARY_DIR}" )
-
-# and install it
-INSTALL( DIRECTORY "${Marlin_BINARY_DIR}/marlin" DESTINATION include PATTERN "*~" EXCLUDE )
-
 # include directories
+INCLUDE_DIRECTORIES( BEFORE "${Marlin_BINARY_DIR}" ) # generated MarlinConfig.h
 INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/include" )
 INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/streamlog/source/include" )
 
-# install include files
-INSTALL( DIRECTORY "${Marlin_SOURCE_DIR}/include/marlin" DESTINATION include
-        PATTERN "*~" EXCLUDE
-        PATTERN "*CVS*" EXCLUDE
-        PATTERN "*/.svn*" EXCLUDE
-        )
-
+# install header files
+INSTALL_DIRECTORY( "${Marlin_SOURCE_DIR}/include/marlin" DESTINATION include )
 
 ####################################################################################################
 ### SOURCES
@@ -162,15 +132,13 @@ ENDIF()
 # create symbolic bin target for calling targets bin_XXX
 ADD_CUSTOM_TARGET( bin )
 
-IF( NOT MARLIN_NO_DLL )
-    FIND_LIBRARY( DL_LIB NAMES ${CMAKE_DL_LIBS} dl )
-    IF( NOT DL_LIB )
-        MESSAGE( FATAL_ERROR "failed to find libdl.so" )
-    ELSE()
-        MESSAGE( STATUS "using dl library: ${DL_LIB}" )
-    ENDIF()
-    LINK_LIBRARIES( ${DL_LIB} )
+FIND_LIBRARY( DL_LIB NAMES ${CMAKE_DL_LIBS} dl )
+IF( NOT DL_LIB )
+    MESSAGE( FATAL_ERROR "failed to find libdl.so" )
+ELSE()
+    MESSAGE( STATUS "using dl library: ${DL_LIB}" )
 ENDIF()
+LINK_LIBRARIES( ${DL_LIB} )
 
 # whole archive libraries
 IF( DEFINED LINK_STATIC_WHOLE_LIBS )

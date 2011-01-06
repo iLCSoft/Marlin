@@ -81,7 +81,7 @@ int main(int argc, char** argv ){
     }
   }
 
-#ifndef MARLIN_NO_DLL
+//#ifndef MARLIN_NO_DLL
     
   //------ load shared libraries with processors ------
     
@@ -108,7 +108,7 @@ int main(int argc, char** argv ){
   
   //------- end processor libs -------------------------
   
-#endif
+//#endif
 
 
   const char* steeringFileName = "none"  ;
