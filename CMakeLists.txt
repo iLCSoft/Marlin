@@ -18,11 +18,13 @@ SET( ${PROJECT_NAME}_VERSION_TWEAK 0 )
 
 ### SETTINGS ################################################################
 
-# additionally search for cmake macros/moules defined by this project
-LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
+# try to load ilcsoft CMakeModules from CMAKE_MODULE_PATH
+INCLUDE( ilcsoft_cmake_modules )
+IF( NOT ILCSOFT_CMAKE_MODULES_FOUND )
+    MESSAGE( FATAL_ERROR "Could not find ilcsoft CMakeModules in CMAKE_MODULE_PATH" )
+ENDIF( NOT ILCSOFT_CMAKE_MODULES_FOUND )
+ILCSOFT_CMAKE_MODULES_MINIMUM_REQUIRED( 0.10.1.1 )
 INCLUDE( ilcsoft_default_settings )
-#INCLUDE( build_32bit_compatible )
-INCLUDE( MacroAddSharedLibrary )
 
 
 
@@ -120,11 +122,7 @@ IF( INSTALL_DOC )
     # make sure doxygen is executed (make doc) before make install
     INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS doc)" )
     # install documentation
-    INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
-            DESTINATION .
-            PATTERN "*CVS*" EXCLUDE
-            PATTERN "*/.svn*" EXCLUDE
-    )
+    INSTALL_DIRECTORY( "${PROJECT_SOURCE_DIR}/doc" DESTINATION . )
 ENDIF()
 
 # create documentation overview.html
