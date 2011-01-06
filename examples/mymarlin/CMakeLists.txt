@@ -15,11 +15,19 @@ SET( ${PROJECT_NAME}_VERSION_MINOR 1 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 
+### SETTINGS ################################################################
+
+# try to load ilcsoft CMakeModules from CMAKE_MODULE_PATH
+INCLUDE( ilcsoft_cmake_modules )
+IF( NOT ILCSOFT_CMAKE_MODULES_FOUND )
+    MESSAGE( FATAL_ERROR "Could not find ilcsoft CMakeModules in CMAKE_MODULE_PATH" )
+ENDIF( NOT ILCSOFT_CMAKE_MODULES_FOUND )
+ILCSOFT_CMAKE_MODULES_MINIMUM_REQUIRED( 0.10.1.1 )
+INCLUDE( ilcsoft_default_settings )
+
+
 
 ### DEPENDENCIES ############################################################
-
-# additionally search for cmake macros/moules defined by this project
-LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
 # ------- required packages -------------------
 SET( required_packages LCIO GEAR Marlin )
@@ -57,14 +65,6 @@ ENDFOREACH()
 
 
 
-### SETTINGS ################################################################
-
-# ilcsoft cmake macros / default settings
-INCLUDE( ilcsoft_default_settings )
-INCLUDE( MacroAddSharedLibrary )
-
-
-
 ### DOCUMENTATION ###########################################################
 
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
@@ -84,16 +84,17 @@ ENDIF()
 SET( libname ${PROJECT_NAME} )
 
 # include directories
-INCLUDE_DIRECTORIES( "include" )
-INSTALL( DIRECTORY include DESTINATION . FILES_MATCHING PATTERN "*.h" )
+INCLUDE_DIRECTORIES( ./include )
+INSTALL_DIRECTORY( ./include DESTINATION . FILES_MATCHING PATTERN "*.h" )
 
 # definitions to pass to the compiler
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 ADD_DEFINITIONS( "-Wno-long-long" )
 
 # add library
-AUX_SOURCE_DIRECTORY( src library_sources )
+AUX_SOURCE_DIRECTORY( ./src library_sources )
 ADD_SHARED_LIBRARY( ${libname} ${library_sources} )
+INSTALL_SHARED_LIBRARY( ${libname} DESTINATION lib )
 
 
 # display some variables and write them to cache
