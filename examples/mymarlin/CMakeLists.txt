@@ -35,6 +35,16 @@ INCLUDE_DIRECTORIES( ${Marlin_INCLUDE_DIRS} )
 LINK_LIBRARIES( ${Marlin_LIBRARIES} )
 #ADD_DEFINITIONS ( ${Marlin_DEFINITIONS} )
 
+# optional package
+#FIND_PACKAGE( AIDA QUIET )
+#IF( AIDA_FOUND )
+#    INCLUDE_DIRECTORIES( ${AIDA_INCLUDE_DIRS} )
+#    LINK_LIBRARIES( ${AIDA_LIBRARIES} )
+#    ADD_DEFINITIONS ( "-DUSE_AIDA" )
+#ELSE()
+#    MESSAGE( STATUS "AIDA not found" )
+#ENDIF()
+    
 
 ### DOCUMENTATION ###########################################################
 
