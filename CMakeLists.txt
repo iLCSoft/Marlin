@@ -23,7 +23,7 @@ INCLUDE( ilcsoft_cmake_modules )
 IF( NOT ILCSOFT_CMAKE_MODULES_FOUND )
     MESSAGE( FATAL_ERROR "Could not find ilcsoft CMakeModules in CMAKE_MODULE_PATH" )
 ENDIF( NOT ILCSOFT_CMAKE_MODULES_FOUND )
-ILCSOFT_CMAKE_MODULES_MINIMUM_REQUIRED( 0.10.1.1 )
+ILCSOFT_CMAKE_MODULES_MINIMUM_REQUIRED( 0.11 )
 INCLUDE( ilcsoft_default_settings )
 
 
@@ -64,6 +64,8 @@ FOREACH( pkg ${optional_packages} )
     ENDIF()
 ENDFOREACH()
 
+
+SET( Marlin_DEPENDS_INCLUDE_DIRS ${LCIO_INCLUDE_DIRS} ${GEAR_INCLUDE_DIRS} )
 
 
 ### DOCUMENTATION ###########################################################
@@ -171,7 +173,6 @@ MESSAGE( STATUS )
 
 
 
-# export library dependencies (keep this as the last line in the file)
-EXPORT_LIBRARY_DEPENDENCIES( "${PROJECT_NAME}LibDeps.cmake" )
-INSTALL( FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}LibDeps.cmake" DESTINATION lib/cmake )
+# generate and install following configuration files
+GENERATE_PACKAGE_CONFIGURATION_FILES( MarlinConfig.cmake MarlinConfigVersion.cmake MarlinLibDeps.cmake )
 
