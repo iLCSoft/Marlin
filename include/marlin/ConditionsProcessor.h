@@ -1,15 +1,17 @@
 #ifndef ConditionsProcessor_h
 #define ConditionsProcessor_h 1
 
-#ifdef USE_LCCD
+//#ifdef USE_LCCD
 
-#include "lccd/IConditionsChangeListener.hh"
+//#include "lccd/IConditionsChangeListener.hh"
 
 #include "marlin/Processor.h"
 #include "lcio.h"
 #include <string>
 
-
+namespace lccd{
+    class IConditionsChangeListener;
+}
 
 using namespace lcio ;
 
@@ -105,8 +107,7 @@ class ConditionsProcessor : public Processor {
 
 } // end namespace 
 
-#endif
+//#endif // #ifdef USE_LCCD
 
-#endif // #ifdef USE_LCCD
-
+#endif // ConditionsProcessor_h
 

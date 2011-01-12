@@ -1,5 +1,6 @@
 #ifdef USE_LCCD
 #include "marlin/ConditionsProcessor.h"
+#include "lccd/IConditionsChangeListener.hh"
 
 //--- LCIO headers 
 //#include <UTIL/LCTOOLS.h>   // debug
