@@ -1,4 +1,4 @@
-#ifdef MARLIN_USE_AIDA
+#ifdef MARLIN_AIDA
 
 #include "marlin/AIDAProcessor.h"
 
@@ -202,8 +202,5 @@ namespace marlin {
   
 } // namespace
 
-#endif
-
-
-
+#endif // MARLIN_AIDA
 

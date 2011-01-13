@@ -1,3 +1,4 @@
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
 
 #include "marlin/SimpleFastMCProcessor.h"
 
@@ -7,12 +8,14 @@
 #include "marlin/FastMCParticleType.h"
 #include "marlin/ErrorOfSigma.h"
 
+
 //--- LCIO headers 
 #include "IMPL/LCCollectionVec.h"   
 #include "EVENT/ReconstructedParticle.h" 
 #include "UTIL/LCRelationNavigator.h"
 
-#ifdef MARLIN_USE_AIDA
+
+#ifdef MARLIN_AIDA
 #include <marlin/AIDAProcessor.h>
 #include <AIDA/IHistogramFactory.h>
 #include <AIDA/ICloud1D.h>
@@ -26,7 +29,7 @@
 #include <AIDA/IManagedObject.h>
 #include <AIDA/ITree.h>
 #include <AIDA/IAxis.h>
-#endif
+#endif // MARLIN_AIDA
 
 #include <iostream>
 #include <cmath>
@@ -126,8 +129,7 @@ namespace marlin{
 
     _factory = 0 ;
 
-#ifdef USE_CLHEP
-
+#ifdef MARLIN_CLHEP
 
     SimpleParticleFactory* simpleFactory  =  new SimpleParticleFactory() ; 
 
@@ -139,7 +141,8 @@ namespace marlin{
     _factory = simpleFactory ;
     
     streamlog_out( MESSAGE )  << " SimpleFastMCProcessor::init() : registering SimpleParticleFactory " << std::endl ;
-#endif    
+
+#endif // MARLIN_CLHEP
 
   }
 
@@ -189,7 +192,7 @@ namespace marlin{
   void SimpleFastMCProcessor::check( LCEvent * evt ) { 
     
     
-#ifdef MARLIN_USE_AIDA
+#ifdef MARLIN_AIDA
     
     // define a histogram pointer
     static AIDA::ICloud1D* hChargedRes ;    
@@ -313,7 +316,7 @@ namespace marlin{
 
     } // recoCol != 0  
 
-#endif
+#endif // MARLIN_AIDA
       
 
   }
@@ -325,7 +328,7 @@ namespace marlin{
 			       << " processed " << _nEvt << " events in " << _nRun << " runs "
 			       << std::endl ;
     
-#ifdef MARLIN_USE_AIDA_IGNORE_FOR_NOW
+#ifdef MARLIN_AIDA_IGNORE_FOR_NOW
     // FIXME:
     // RAIDA does not support DataPoint sets and AIDA in generall does not allow to create a histogramm 
     // with 'faked' entries from another source (i.e. bin mean, bin error, ...)
@@ -408,11 +411,8 @@ namespace marlin{
 	
       }
     }
-#endif
+#endif // MARLIN_AIDA_IGNORE_FOR_NOW
 
   }
 }
-  
-  
 
-//#define MARLIN_USE_AIDA 1 

@@ -1,12 +1,14 @@
-#ifdef USE_CLHEP  // only if CLHEP is available !
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+
+#ifdef MARLIN_CLHEP  // only if CLHEP is available !
 
 #include "marlin/SimpleTrackSmearer.h"
 
 #include "CLHEP/Random/RandGauss.h"
 #include "CLHEP/Random/RandEngine.h"
-#include <cmath>
 
- 
+
+#include <cmath>
 #include <cstdlib>
 
 namespace CLHEP{} 
@@ -97,4 +99,4 @@ namespace marlin{
   
 }
 
-#endif
+#endif // MARLIN_CLHEP

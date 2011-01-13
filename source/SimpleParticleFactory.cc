@@ -1,6 +1,7 @@
-#ifdef USE_CLHEP  // only if CLHEP is available !
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
 
- 
+#ifdef MARLIN_CLHEP  // only if CLHEP is available !
+
 #include <cstdlib>
 
 #include "marlin/SimpleParticleFactory.h"
@@ -154,5 +155,5 @@ namespace marlin{
 
 } // namespace
 
+#endif // MARLIN_CLHEP
 
-#endif

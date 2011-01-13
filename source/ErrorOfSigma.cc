@@ -1,4 +1,7 @@
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+
 #include "marlin/ErrorOfSigma.h"
+
 #include <iostream>
 #include <cmath>
 
@@ -39,7 +42,7 @@ namespace marlin{
     
 //     std::cout << " getChiSquaredPlus( " << _n << ") :" << chiPlus << std::endl ;
 
-#ifdef USE_CLHEP  // only if CLHEP is available !
+#ifdef MARLIN_CLHEP  // only if CLHEP is available !
     // here we can use CLHEP::CumulativeChiSquared to compute
     // the exact chiPlus
 #endif
@@ -59,7 +62,7 @@ namespace marlin{
     
 //     std::cout << " getChiSquaredMinus( " << _n << ") :" << chiMinus << std::endl ;
     
-#ifdef USE_CLHEP  
+#ifdef MARLIN_CLHEP  
     
     // here we can use CLHEP::CumulativeChiSquared to compute
     // the exact chiMinus

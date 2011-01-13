@@ -1,4 +1,6 @@
-#ifdef USE_CLHEP  // only if CLHEP is available !
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+
+#ifdef MARLIN_CLHEP  // only if CLHEP is available !
 
 #include "marlin/SimpleClusterSmearer.h"
 
@@ -82,4 +84,5 @@ namespace marlin{
   
 }
 
-#endif
+#endif // MARLIN_CLHEP
+
