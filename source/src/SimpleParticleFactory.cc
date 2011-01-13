@@ -19,6 +19,7 @@
 // #endif
 // #endif
 
+#define USE_CLHEP // to activate "UTIL/LCFourVector.h" in LCIO
 #include "UTIL/LCFourVector.h"
 
 using namespace lcio ;

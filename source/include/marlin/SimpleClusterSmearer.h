@@ -1,7 +1,7 @@
 #ifndef SimpleClusterSmearer_h
 #define SimpleClusterSmearer_h 1
 
-#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+#include "marlin/MarlinConfig.h"
 
 #ifdef MARLIN_CLHEP  // only if CLHEP is available !
 

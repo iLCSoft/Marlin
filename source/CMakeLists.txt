@@ -5,31 +5,72 @@
 
 # include directories
 INCLUDE_DIRECTORIES( BEFORE "${Marlin_BINARY_DIR}" ) # generated MarlinConfig.h
-INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/include" )
+INCLUDE_DIRECTORIES( BEFORE "./include" )
 INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/streamlog/source/include" )
 
-# install header files
-INSTALL_DIRECTORY( "${Marlin_SOURCE_DIR}/include/marlin" DESTINATION include )
 
-####################################################################################################
-### SOURCES
-####################################################################################################
+# install header files
+FILE( GLOB marlin_headers ./include/marlin/*.h )
+
+IF( NOT MARLIN_AIDA )
+    LIST( REMOVE_ITEM marlin_headers ./include/marlin/AIDAProcessor.h )
+ENDIF()
+
+IF( NOT MARLIN_LCCD )
+    LIST( REMOVE_ITEM marlin_headers ./include/marlin/ConditionsProcessor.h )
+ENDIF()
+
+IF( NOT MARLIN_CLHEP )
+    LIST( REMOVE_ITEM marlin_headers
+        ./include/marlin/IFourVectorSmearer.h
+        ./include/marlin/SimpleClusterSmearer.h
+        ./include/marlin/SimpleParticleFactory.h
+        ./include/marlin/SimpleTrackSmearer.h
+    )
+ENDIF()
+
+INSTALL( FILES ${marlin_headers} DESTINATION include/marlin )
+
+
 
 # require proper c++
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
+ADD_DEFINITIONS( "-Wno-long-long" )
 
-# get list of all source files in this directory
-AUX_SOURCE_DIRECTORY( . lib_srcs )
+# definitions
+# FIXME rather add to CMAKE_CXX_Debug_FLAGS ...
+IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
+    CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
+    ADD_DEFINITIONS( "-DMARLINDEBUG" )
+ENDIF()
 
-# ProcessorLoader and main application should not go into the library
-LIST( REMOVE_ITEM lib_srcs ./Marlin.cc ./ProcessorLoader.cc )
+AUX_SOURCE_DIRECTORY( ./src library_sources )
 
-# gui stuff
-OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
+# need to remove ProcessorLoader.cc and Marlin.cc from library sources
+LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc )
+
+# create library
+ADD_SHARED_LIBRARY( Marlin ${library_sources} )
+INSTALL_SHARED_LIBRARY( Marlin DESTINATION lib )
+TARGET_LINK_LIBRARIES( Marlin streamlog ${CMAKE_DL_LIBS} )
+
+
+
+# ----- Marlin executable ----------------------------------------------------
+ADD_EXECUTABLE( bin_Marlin ./src/Marlin.cc ./src/ProcessorLoader.cc )
+# avoid name conflict between Marlin library and Marlin application
+SET_TARGET_PROPERTIES( bin_Marlin PROPERTIES OUTPUT_NAME Marlin )
+TARGET_LINK_LIBRARIES( bin_Marlin Marlin )
+INSTALL( TARGETS bin_Marlin DESTINATION bin )
+# ----------------------------------------------------------------------------
+
+
+
+# ----- MarlinGUI ------------------------------------------------------------
 IF( MARLIN_GUI )
 
     # cmake 2.6 throws warning because QT_LIBRARIES contains -lpthread -ldl
-    # without the full path
+    # without full path
     IF(COMMAND CMAKE_POLICY)
         CMAKE_POLICY(SET CMP0003 NEW)
     ENDIF()
@@ -44,157 +85,20 @@ IF( MARLIN_GUI )
       ADD_DEFINITIONS( "-DQT_EDITION=0x0003" )
     ENDIF( APPLE )
 
-    SET( cpp_srcs
-        ../gui/addcondition.cpp
-        ../gui/addprocdialog.cpp
-        ../gui/aprocdelegate.cpp
-        ../gui/dialog.cpp
-        ../gui/editcondition.cpp
-        ../gui/flowlayout.cpp
-        ../gui/gparamdelegate.cpp
-        ../gui/guihelp.cpp
-        ../gui/icoldelegate.cpp
-        ../gui/icoltdelegate.cpp
-        ../gui/iprocdelegate.cpp
-        ../gui/mainwindow.cpp
-        ../gui/nparamvecset.cpp
-        ../gui/nparamvecsetd.cpp
-        ../gui/ocoldelegate.cpp
-        ../gui/paramdelegate.cpp
-    )
-    SET( moc_hdrs
-        ../gui/addcondition.h
-        ../gui/addprocdialog.h
-        ../gui/aprocdelegate.h
-        ../gui/dialog.h
-        ../gui/editcondition.h
-        ../gui/gparamdelegate.h
-        ../gui/guihelp.h
-        ../gui/icoldelegate.h
-        ../gui/icoltdelegate.h
-        ../gui/iprocdelegate.h
-        ../gui/mainwindow.h
-        ../gui/nparamvecset.h
-        ../gui/nparamvecsetd.h
-        ../gui/ocoldelegate.h
-        ../gui/paramdelegate.h
-    )
+    AUX_SOURCE_DIRECTORY( ./gui gui_sources )
+    #FILE( GLOB gui_sources ./gui/*.cpp )
+    #LIST( REMOVE_ITEM gui_sources ./gui/main.cpp )
+
+    FILE( GLOB gui_headers ./gui/*.h )
+    LIST( REMOVE_ITEM gui_headers ./gui/flowlayout.h )
 
     # generate moc files
-    QT4_WRAP_CPP( cpp_moc_srcs ${moc_hdrs} )
+    QT4_WRAP_CPP( gui_moc_sources ${gui_headers} )
     
-ENDIF()
-
-
-####################################################################################################
-### LIBRARY
-####################################################################################################
-
-# create library
-ADD_LIBRARY( lib_Marlin ${lib_srcs} )
-
-# link to libstreamlog
-TARGET_LINK_LIBRARIES( lib_Marlin lib_streamlog )
-
-# create symbolic lib target for calling target lib_XXX
-ADD_CUSTOM_TARGET( lib DEPENDS lib_Marlin )
-
-# change lib_target properties
-SET_TARGET_PROPERTIES( lib_Marlin PROPERTIES
-    # create *nix style library versions + symbolic links
-    VERSION ${Marlin_VERSION}
-    SOVERSION ${Marlin_SOVERSION}
-    # allow creating static and shared libs without conflicts
-    CLEAN_DIRECT_OUTPUT 1
-    # avoid conflicts between library and binary target names
-    OUTPUT_NAME Marlin )
-
-# install library
-INSTALL( TARGETS lib_Marlin DESTINATION lib PERMISSIONS
-        OWNER_READ OWNER_WRITE OWNER_EXECUTE
-        GROUP_READ GROUP_EXECUTE
-        WORLD_READ WORLD_EXECUTE )
-
-####################################################################################################
-### BINS
-####################################################################################################
-
-# check if we are on a *nix system
-IF( NOT UNIX OR APPLE )
-    IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-        MESSAGE( FATAL_ERROR "The LINK_STATIC_WHOLE_LIBS option is only avaliabe for *nix systems" )
-    ENDIF()
-    IF( NOT BUILD_SHARED_LIBS )
-        MESSAGE( FATAL_ERROR "You can only build Marlin statically under *nix systems" )
-    ENDIF()
-ENDIF()
-
-# create symbolic bin target for calling targets bin_XXX
-ADD_CUSTOM_TARGET( bin )
-
-FIND_LIBRARY( DL_LIB NAMES ${CMAKE_DL_LIBS} dl )
-IF( NOT DL_LIB )
-    MESSAGE( FATAL_ERROR "failed to find libdl.so" )
-ELSE()
-    MESSAGE( STATUS "using dl library: ${DL_LIB}" )
-ENDIF()
-LINK_LIBRARIES( ${DL_LIB} )
-
-# whole archive libraries
-IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-    SEPARATE_ARGUMENTS( LINK_STATIC_WHOLE_LIBS )
-    SET( LINK_STATIC_WHOLE_LIBS "${LINK_STATIC_WHOLE_LIBS}" CACHE STRING
-            "Link Marlin with these static libs" FORCE )
-    MESSAGE( STATUS "Following static libraries are going to be linked to the binaries with the" )
-    MESSAGE( STATUS "-Wl,--whole-archive linker flag:" )
-    FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
-         MESSAGE( STATUS "${lib}" )
-    ENDFOREACH()
-ENDIF()
-
-
-# ----- Marlin binary --------------------------------------------------------
-ADD_EXECUTABLE( Marlin Marlin.cc ProcessorLoader.cc )
-ADD_DEPENDENCIES( bin Marlin )
-
-# link against library
-IF( BUILD_SHARED_LIBS )
-    TARGET_LINK_LIBRARIES( Marlin lib_Marlin )
-ELSE()
-    TARGET_LINK_LIBRARIES( Marlin -Wl,--whole-archive lib_Marlin -Wl,--no-whole-archive )
-ENDIF()
-
-# whole archive libraries
-IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-    FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
-        TARGET_LINK_LIBRARIES( Marlin -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
-    ENDFOREACH()
-ENDIF()
-
-INSTALL( TARGETS Marlin DESTINATION bin )
-# ----------------------------------------------------------------------------
-
-
-# ----- MarlinGUI ------------------------------------------------------------
-IF( MARLIN_GUI )
-    ADD_EXECUTABLE( MarlinGUI ../gui/main.cpp ${cpp_srcs} ${cpp_moc_srcs} ProcessorLoader.cc )
-    ADD_DEPENDENCIES( bin MarlinGUI )
-    
-    # link against library
-    IF( BUILD_SHARED_LIBS )
-        TARGET_LINK_LIBRARIES( MarlinGUI lib_Marlin ${QT_LIBRARIES} )
-    ELSE()
-        TARGET_LINK_LIBRARIES( MarlinGUI -Wl,--whole-archive lib_Marlin -Wl,--no-whole-archive ${QT_LIBRARIES} )
-    ENDIF()
-
-    # whole archive libraries
-    IF( DEFINED LINK_STATIC_WHOLE_LIBS )
-        FOREACH( lib ${LINK_STATIC_WHOLE_LIBS} )
-            TARGET_LINK_LIBRARIES( MarlinGUI -Wl,--whole-archive ${lib} -Wl,--no-whole-archive )
-        ENDFOREACH()
-    ENDIF()
-
+    ADD_EXECUTABLE( MarlinGUI ${gui_sources} ${gui_moc_sources} ./src/ProcessorLoader.cc )
+    TARGET_LINK_LIBRARIES( MarlinGUI Marlin ${QT_LIBRARIES} )
     INSTALL( TARGETS MarlinGUI DESTINATION bin )
+
 ENDIF()
 # ----------------------------------------------------------------------------
 

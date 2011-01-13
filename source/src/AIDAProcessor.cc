@@ -1,3 +1,5 @@
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+
 #ifdef MARLIN_AIDA
 
 #include "marlin/AIDAProcessor.h"
