@@ -1,7 +1,9 @@
 #ifndef IFourVectorSmearer_h
 #define IFourVectorSmearer_h 1
 
-#ifdef USE_CLHEP  // only if CLHEP is available !
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+
+#ifdef MARLIN_CLHEP  // only if CLHEP is available !
 
 #include "CLHEP/Vector/LorentzVector.h"
 
@@ -34,8 +36,6 @@ namespace marlin{
   
 } // end namespace 
 
-#endif // ifdef CLHEP  
-#endif
-
-
+#endif // MARLIN_CLHEP
+#endif // IFourVectorSmearer_h
 

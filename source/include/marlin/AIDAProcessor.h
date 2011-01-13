@@ -1,7 +1,9 @@
-#ifdef MARLIN_USE_AIDA
-
 #ifndef AIDAProcessor_h
 #define AIDAProcessor_h 1
+
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+
+#ifdef MARLIN_AIDA
 
 #include "marlin/Processor.h"
 #include "lcio.h"
@@ -123,9 +125,7 @@ private:
 } ;
 
 } // end namespace marlin 
-#endif
 
-#endif
-
-
+#endif // MARLIN_AIDA
+#endif // AIDAProcessor_h
 

@@ -1,7 +1,9 @@
 #ifndef ConditionsProcessor_h
 #define ConditionsProcessor_h 1
 
-//#ifdef USE_LCCD
+#include "marlin/MarlinConfig.h" // defines MARLIN_LCCD
+
+#ifdef MARLIN_LCCD
 
 //#include "lccd/IConditionsChangeListener.hh"
 
@@ -107,7 +109,7 @@ class ConditionsProcessor : public Processor {
 
 } // end namespace 
 
-//#endif // #ifdef USE_LCCD
+#endif // #ifdef MARLIN_LCCD
 
 #endif // ConditionsProcessor_h
 

@@ -1,4 +1,7 @@
-#ifdef USE_LCCD
+#include "marlin/MarlinConfig.h" // defines MARLIN_LCCD
+
+#ifdef MARLIN_LCCD
+
 #include "marlin/ConditionsProcessor.h"
 #include "lccd/IConditionsChangeListener.hh"
 
@@ -219,4 +222,4 @@ namespace marlin{
   
 }
   
-#endif // #ifdef USE_LCCD
+#endif // #ifdef MARLIN_LCCD

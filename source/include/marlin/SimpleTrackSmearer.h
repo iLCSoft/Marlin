@@ -1,7 +1,9 @@
 #ifndef SimpleTrackSmearer_h
 #define SimpleTrackSmearer_h 1
 
-#ifdef USE_CLHEP  // only if CLHEP is available !
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+
+#ifdef MARLIN_CLHEP  // only if CLHEP is available !
 
 #include "marlin/IFourVectorSmearer.h"
 #include <vector>
@@ -74,8 +76,6 @@ namespace marlin{
 
 } // end namespace 
 
-#endif // ifdef CLHEP  
-#endif
-
-
+#endif // MARLIN_CLHEP
+#endif // SimpleTrackSmearer_h
 

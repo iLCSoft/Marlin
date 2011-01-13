@@ -1,7 +1,9 @@
 #ifndef SimpleParticleFactory_h
 #define SimpleParticleFactory_h 1
 
-#ifdef USE_CLHEP  // only if CLHEP is available !
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+
+#ifdef MARLIN_CLHEP  // only if CLHEP is available !
 
 #include "marlin/IRecoParticleFactory.h"
 #include "marlin/IFourVectorSmearer.h"
@@ -61,6 +63,7 @@ namespace marlin {
   };
   
 }
-#endif
 
-#endif
+#endif // MARLIN_CLHEP
+
+#endif // SimpleParticleFactory_h
