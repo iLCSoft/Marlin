@@ -9,24 +9,10 @@
 SET( DOC_SRC_DIR "${PROJECT_SOURCE_DIR}/doc" )
 SET( DOC_BIN_DIR "${PROJECT_BINARY_DIR}/docbuild" )
 
-SET( DOXYFILE_INPUT "overview.html ${PROJECT_SOURCE_DIR}/source/include" )
+SET( DOXYFILE_INPUT "overview.html ${PROJECT_SOURCE_DIR}/source/include/marlin ${PROJECT_SOURCE_DIR}/source/src ${PROJECT_SOURCE_DIR}/streamlog/source" )
 
-# replace DOXYFILE_INPUT
 CONFIGURE_FILE( "${DOC_SRC_DIR}/Doxyfile.cmake.in" "${DOC_BIN_DIR}/Doxyfile" @ONLY )
-
-# replace @Marlin_VERSION@
 CONFIGURE_FILE( "${DOC_SRC_DIR}/overview.html.in" "${DOC_BIN_DIR}/overview.html" @ONLY )
-
-
-ADD_CUSTOM_COMMAND(
-    OUTPUT  "${PROJECT_SOURCE_DIR}/doc/html"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-        "${PROJECT_SOURCE_DIR}/README" "${PROJECT_SOURCE_DIR}/doc/README"
-    COMMAND "${DOXYGEN_EXECUTABLE}" ARGS "Doxyfile_cmake"
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
-    COMMENT "Building API Documentation..."
-    VERBATIM )
-
 
 
 ADD_CUSTOM_COMMAND(
@@ -68,7 +54,7 @@ IF( CMAKE_INSTALL_PREFIX STREQUAL "${PROJECT_SOURCE_DIR}" )
 ELSE()
 
     # --- out-of-source installations ---
-    INSTALL_DIRECTORY( "${DOC_BIN_DIR}/" DESTINATION "doc/Marlin"
+    INSTALL_DIRECTORY( "${DOC_BIN_DIR}/" DESTINATION "doc/marlin"
         PATTERN "*Doxyfile*" EXCLUDE
         PATTERN "*latex*" EXCLUDE
         PATTERN "*manual*" EXCLUDE

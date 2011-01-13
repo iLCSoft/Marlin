@@ -17,7 +17,7 @@
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project.
 
-PROJECT_NAME           =  Marlin
+PROJECT_NAME           =  @PROJECT_NAME@
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. 
 # This could be handy for archiving the generated documentation or 
@@ -355,7 +355,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = overview.html ../include/marlin ../src ../streamlog/source
+INPUT                  = @DOXYFILE_INPUT@
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -857,7 +857,7 @@ INCLUDE_FILE_PATTERNS  =
 # or name=definition (no spaces). If the definition and the = are 
 # omitted =1 is assumed.
 
-PREDEFINED=CLHEP USE_LCCD MARLIN_USE_AIDA USE_CONDDB
+PREDEFINED=MARLIN_CLHEP MARLIN_LCCD MARLIN_AIDA
 
 # by predefining the header defines we can exclude classes from documentation
 #DATA_LCFLOATVEC_H DATA_LCINTVEC_H
