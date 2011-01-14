@@ -59,8 +59,9 @@ CHECK_PACKAGE_LIBS( streamlog streamlog )
 
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
-# set streamlog_FOUND to TRUE if all listed variables are TRUE and not empty
+# set STREAMLOG_FOUND to TRUE if all listed variables are TRUE and not empty
 # streamlog_COMPONENT_VARIABLES will be set if FIND_PACKAGE is called with REQUIRED argument
 FIND_PACKAGE_HANDLE_STANDARD_ARGS( streamlog DEFAULT_MSG streamlog_ROOT streamlog_INCLUDE_DIRS streamlog_LIBRARIES ${streamlog_COMPONENT_VARIABLES} )
 
+SET( streamlog_FOUND ${STREAMLOG_FOUND} )
 
