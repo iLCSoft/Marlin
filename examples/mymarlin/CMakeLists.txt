@@ -26,25 +26,23 @@ INCLUDE( ilcsoft_default_settings )
 
 
 FIND_PACKAGE( Marlin 0.14 REQUIRED ) # minimum required Marlin version
-
-MESSAGE(" Marlin_LIBRARIES ${Marlin_LIBRARIES} ")
-MESSAGE( "Marlin_INCLUDE_DIRS ${Marlin_INCLUDE_DIRS} ")
-
-
 INCLUDE_DIRECTORIES( ${Marlin_INCLUDE_DIRS} )
 LINK_LIBRARIES( ${Marlin_LIBRARIES} )
-#ADD_DEFINITIONS ( ${Marlin_DEFINITIONS} )
+ADD_DEFINITIONS ( ${Marlin_DEFINITIONS} )
+
 
 # optional package
-#FIND_PACKAGE( AIDA QUIET )
+#FIND_PACKAGE( AIDA )
 #IF( AIDA_FOUND )
 #    INCLUDE_DIRECTORIES( ${AIDA_INCLUDE_DIRS} )
 #    LINK_LIBRARIES( ${AIDA_LIBRARIES} )
 #    ADD_DEFINITIONS ( "-DUSE_AIDA" )
+#    MESSAGE( STATUS "AIDA -- found" )
 #ELSE()
-#    MESSAGE( STATUS "AIDA not found" )
+#    MESSAGE( STATUS "AIDA -- not found" )
 #ENDIF()
-    
+
+
 
 ### DOCUMENTATION ###########################################################
 
