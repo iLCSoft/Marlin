@@ -1,0 +1,21 @@
+##############################################################################
+# this file is parsed when FIND_PACKAGE is called with version argument
+#
+# @author Jan Engels, Desy IT
+##############################################################################
+
+
+SET( ${PACKAGE_FIND_NAME}_VERSION_MAJOR @streamlog_VERSION_MAJOR@ )
+SET( ${PACKAGE_FIND_NAME}_VERSION_MINOR @streamlog_VERSION_MINOR@ )
+SET( ${PACKAGE_FIND_NAME}_VERSION_PATCH @streamlog_VERSION_PATCH@ )
+
+
+GET_FILENAME_COMPONENT( _aux ${CMAKE_CURRENT_LIST_FILE} PATH )
+IF( NOT ${PACKAGE_FIND_NAME}_FIND_QUIETLY )
+    MESSAGE( STATUS "Check for ${PACKAGE_FIND_NAME}: ${_aux}" )
+ENDIF( NOT ${PACKAGE_FIND_NAME}_FIND_QUIETLY )
+
+
+INCLUDE( ${_aux}/cmake/MacroCheckPackageVersion.cmake ) # FIXME full path ?!
+CHECK_PACKAGE_VERSION( ${PACKAGE_FIND_NAME} )
+

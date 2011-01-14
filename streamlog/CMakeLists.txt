@@ -22,18 +22,7 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 FIND_PACKAGE( ILCSOFT_CMAKE_MODULES 0.11 REQUIRED )
 
 # load default settings from ILCSOFT_CMAKE_MODULES
-#CMAKE_POLICY(SET CMP0002 OLD) # avoid error from duplicate uninstall target (Marlin vs streamlog)
-#INCLUDE( ilcsoft_default_settings )
-
-# FIXME: cannot INCLUDE( ilcsoft_default_settings ) due to duplicate uninstall target
-# even if setting POLICY CMP0002 to OLD 'make uninstall' returns error
-INCLUDE( ilcsoft_default_install_prefix )
-INCLUDE( ilcsoft_default_build_type )
-INCLUDE( ilcsoft_default_enable_ctest )
-INCLUDE( ilcsoft_default_library_versioning )
-INCLUDE( ilcsoft_default_build_output_directories )
-INCLUDE( ilcsoft_default_rpath_settings )
-#INCLUDE( ilcsoft_default_uninstall_target )
+INCLUDE( ilcsoft_default_settings )
 
 
 
@@ -57,4 +46,7 @@ ADD_SUBDIRECTORY( ./examples )
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
+
+# generate and install following configuration files
+GENERATE_PACKAGE_CONFIGURATION_FILES( streamlogConfig.cmake streamlogConfigVersion.cmake )
 
