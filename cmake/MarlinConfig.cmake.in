@@ -60,31 +60,32 @@ CHECK_PACKAGE_LIBS( Marlin Marlin )
 INCLUDE( "${Marlin_ROOT}/lib/cmake/MarlinLibDeps.cmake" )
  
 
+# include streamlog package
+INCLUDE( "${Marlin_ROOT}/streamlogConfig.cmake" )
+
 
 
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
-# set Marlin_FOUND to TRUE if all listed variables are TRUE and not empty
+# set MARLIN_FOUND to TRUE if all listed variables are TRUE and not empty
 # Marlin_COMPONENT_VARIABLES will be set if FIND_PACKAGE is called with REQUIRED argument
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( Marlin DEFAULT_MSG Marlin_ROOT Marlin_INCLUDE_DIRS Marlin_LIBRARIES ${Marlin_COMPONENT_VARIABLES} )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( Marlin DEFAULT_MSG Marlin_ROOT Marlin_INCLUDE_DIRS Marlin_LIBRARIES streamlog_INCLUDE_DIRS streamlog_LIBRARIES )
 
-
+SET( Marlin_FOUND ${MARLIN_FOUND} )
 
 # ---------- definitions ------------------------------------------------------
-IF( Marlin_FOUND )
+IF( MARLIN_FOUND )
+
     IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
         CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
         SET( Marlin_DEFINITIONS "-DMARLINDEBUG" )
         MARK_AS_ADVANCED( Marlin_DEFINITIONS )
     ENDIF()
-ENDIF( Marlin_FOUND )
 
+    IF( STREAMLOG_FOUND )
+        LIST( APPEND Marlin_INCLUDE_DIRS ${streamlog_INCLUDE_DIRS} )
+        LIST( APPEND Marlin_LIBRARIES ${streamlog_LIBRARIES} )
+    ENDIF()
 
-
-# ---------- bug fix for cmake versions < 2.8 ---------------------------------
-# FIND_PACKAGE( Marlin REQUIRED )
-# FIND_PACKAGE( Marlin COMPONENTS XXX QUIET ) # gives FATAL_ERROR
-IF( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS 2.8 )
-    SET( Marlin_FIND_REQUIRED )
 ENDIF()
 

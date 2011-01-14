@@ -27,6 +27,10 @@ INCLUDE( ilcsoft_default_settings )
 
 FIND_PACKAGE( Marlin 0.14 REQUIRED ) # minimum required Marlin version
 
+MESSAGE(" Marlin_LIBRARIES ${Marlin_LIBRARIES} ")
+MESSAGE( "Marlin_INCLUDE_DIRS ${Marlin_INCLUDE_DIRS} ")
+
+
 INCLUDE_DIRECTORIES( ${Marlin_INCLUDE_DIRS} )
 LINK_LIBRARIES( ${Marlin_LIBRARIES} )
 #ADD_DEFINITIONS ( ${Marlin_DEFINITIONS} )
