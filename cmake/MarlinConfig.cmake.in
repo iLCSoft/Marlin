@@ -55,8 +55,8 @@ INCLUDE( ${Marlin_ROOT}/streamlogConfig.cmake )
 INCLUDE( ${Marlin_ROOT}/cmake/MacroExportPackageDeps.cmake ) # FIXME full path ?!
 # exports following package dependencies (if set)
 # first argument of macro should be the package name
-SET( Marlin_DEPENDS_INCLUDE_DIRS  @Marlin_DEPENDS_INCLUDE_DIRS@ ${streamlog_INCLUDE_DIRS} )
-SET( Marlin_DEPENDS_LIBRARY_DIRS  @Marlin_DEPENDS_LIBRARY_DIRS@ ${streamlog_LIBRARY_DIRS} )
+SET( Marlin_DEPENDS_INCLUDE_DIRS  @Marlin_DEPENDS_INCLUDE_DIRS@ ) # ${streamlog_INCLUDE_DIRS} )
+SET( Marlin_DEPENDS_LIBRARY_DIRS  @Marlin_DEPENDS_LIBRARY_DIRS@ ) # ${streamlog_LIBRARY_DIRS} )
 SET( Marlin_DEPENDS_LIBRARIES  @Marlin_DEPENDS_LIBRARIES@ ${streamlog_LIBRARIES} )
 EXPORT_PACKAGE_DEPENDENCIES( Marlin )
 
