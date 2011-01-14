@@ -3,6 +3,7 @@
 #
 # requires:
 #   MacroCheckPackageLibs.cmake for checking package libraries
+#   MacroExportPackageDeps.cmake for exporting package dependencies
 #
 # returns following variables:
 #
@@ -37,11 +38,6 @@ FIND_PATH( Marlin_INCLUDE_DIRS
 	NO_DEFAULT_PATH
 )
 
-SET( Marlin_DEPENDS_INCLUDE_DIRS @Marlin_DEPENDS_INCLUDE_DIRS@ )
-IF( Marlin_INCLUDE_DIRS AND NOT FIND_PACKAGE_SKIP_DEPENDENCIES )
-    LIST( APPEND Marlin_INCLUDE_DIRS ${Marlin_DEPENDS_INCLUDE_DIRS} )
-ENDIF( Marlin_INCLUDE_DIRS AND NOT FIND_PACKAGE_SKIP_DEPENDENCIES )
-
 
 
 # ---------- libraries --------------------------------------------------------
@@ -54,14 +50,15 @@ CHECK_PACKAGE_LIBS( Marlin Marlin )
 
 
 
-
-# ---------- libraries dependencies -------------------------------------------
-# this sets Marlin_${COMPONENT}_LIB_DEPENDS variables
-INCLUDE( "${Marlin_ROOT}/lib/cmake/MarlinLibDeps.cmake" )
- 
-
-# include streamlog package
-INCLUDE( "${Marlin_ROOT}/streamlogConfig.cmake" )
+# ---------- dependencies -----------------------------------------------------
+INCLUDE( ${Marlin_ROOT}/streamlogConfig.cmake )
+INCLUDE( ${Marlin_ROOT}/cmake/MacroExportPackageDeps.cmake ) # FIXME full path ?!
+# exports following package dependencies (if set)
+# first argument of macro should be the package name
+SET( Marlin_DEPENDS_INCLUDE_DIRS  @Marlin_DEPENDS_INCLUDE_DIRS@ ${streamlog_INCLUDE_DIRS} )
+SET( Marlin_DEPENDS_LIBRARY_DIRS  @Marlin_DEPENDS_LIBRARY_DIRS@ ${streamlog_LIBRARY_DIRS} )
+SET( Marlin_DEPENDS_LIBRARIES  @Marlin_DEPENDS_LIBRARIES@ ${streamlog_LIBRARIES} )
+EXPORT_PACKAGE_DEPENDENCIES( Marlin )
 
 
 
@@ -69,9 +66,11 @@ INCLUDE( "${Marlin_ROOT}/streamlogConfig.cmake" )
 INCLUDE( FindPackageHandleStandardArgs )
 # set MARLIN_FOUND to TRUE if all listed variables are TRUE and not empty
 # Marlin_COMPONENT_VARIABLES will be set if FIND_PACKAGE is called with REQUIRED argument
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( Marlin DEFAULT_MSG Marlin_ROOT Marlin_INCLUDE_DIRS Marlin_LIBRARIES streamlog_INCLUDE_DIRS streamlog_LIBRARIES )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( Marlin DEFAULT_MSG Marlin_ROOT Marlin_INCLUDE_DIRS Marlin_LIBRARIES STREAMLOG_FOUND )
 
 SET( Marlin_FOUND ${MARLIN_FOUND} )
+
+
 
 # ---------- definitions ------------------------------------------------------
 IF( MARLIN_FOUND )
@@ -80,11 +79,6 @@ IF( MARLIN_FOUND )
         CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
         SET( Marlin_DEFINITIONS "-DMARLINDEBUG" )
         MARK_AS_ADVANCED( Marlin_DEFINITIONS )
-    ENDIF()
-
-    IF( STREAMLOG_FOUND )
-        LIST( APPEND Marlin_INCLUDE_DIRS ${streamlog_INCLUDE_DIRS} )
-        LIST( APPEND Marlin_LIBRARIES ${streamlog_LIBRARIES} )
     ENDIF()
 
 ENDIF()
