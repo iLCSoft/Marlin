@@ -1,4 +1,4 @@
-#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP / MARLIN_AIDA
+#include "marlin/MarlinConfig.h" // defines MARLIN_CLHEP
 
 #ifdef MARLIN_CLHEP  // only if CLHEP is available !
 
@@ -19,7 +19,11 @@
 // #endif
 // #endif
 
-#define USE_CLHEP // to activate "UTIL/LCFourVector.h" in LCIO
+#if ! LCIO_PATCHVERSION_GE( 1,51,3 )
+    //#warning "have to #define USE_CLHEP to activate code from LCIO header <UTIL/LCFourVector.h>"
+    #define USE_CLHEP // to activate code from LCIO header <UTIL/LCFourVector.h>
+#endif
+
 #include "UTIL/LCFourVector.h"
 
 using namespace lcio ;
