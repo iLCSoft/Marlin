@@ -10,7 +10,7 @@ INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/streamlog/source/include" )
 
 
 # install header files
-FILE( GLOB marlin_headers ./include/marlin/*.h )
+FILE( GLOB marlin_headers RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" ./include/marlin/*.h )
 
 IF( NOT MARLIN_AIDA )
     LIST( REMOVE_ITEM marlin_headers ./include/marlin/AIDAProcessor.h )
