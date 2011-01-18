@@ -11,22 +11,28 @@ IF( DOXYGEN_FOUND )
     # build documentation out-of-source
     SET( DOC_SRC_DIR "${PROJECT_SOURCE_DIR}/doc" )
     SET( DOC_BIN_DIR "${PROJECT_BINARY_DIR}/docbuild" )
+    
+    # directories to search for documentation
+    SET( DOX_INPUT ../include ../src )
 
+
+    # custom command to build documentation
     ADD_CUSTOM_COMMAND(
         OUTPUT  "${DOC_BIN_DIR}/html/index.html"
         # copy over doc from source tree to keep source tree clean
-        COMMAND "${CMAKE_COMMAND}" -E copy_directory "${DOC_SRC_DIR}" "${DOC_BIN_DIR}"
-        COMMAND "${DOXYGEN_EXECUTABLE}"
-        WORKING_DIRECTORY "${DOC_BIN_DIR}"
+        #COMMAND "${CMAKE_COMMAND}" -E copy_directory "${DOC_SRC_DIR}" "${DOC_BIN_DIR}"
+        COMMAND DOX_PROJECT_NAME=${PROJECT_NAME}
+                DOX_PROJECT_NUMBER="${${PROJECT_NAME}_VERSION}"
+                DOX_OUTPUT_DIRECTORY="${DOC_BIN_DIR}"
+                DOX_INPUT="${DOX_INPUT}"
+                "${DOXYGEN_EXECUTABLE}"
+        WORKING_DIRECTORY "${DOC_SRC_DIR}"
         COMMENT "Building API Documentation..."
-        DEPENDS "${DOC_SRC_DIR}/Doxyfile.cmake.in"
+        DEPENDS Doxyfile CMakeLists.txt
     )
 
     # add doc target
     ADD_CUSTOM_TARGET( doc DEPENDS "${DOC_BIN_DIR}/html/index.html" )
-
-    # replace INPUT = @PROJECT_SOURCE_DIR@/{src,include}
-    CONFIGURE_FILE( "${DOC_SRC_DIR}/Doxyfile.cmake.in" "${DOC_BIN_DIR}/Doxyfile" @ONLY )
 
 ELSE()
 
