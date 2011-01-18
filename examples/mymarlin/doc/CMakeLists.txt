@@ -19,8 +19,6 @@ IF( DOXYGEN_FOUND )
     # custom command to build documentation
     ADD_CUSTOM_COMMAND(
         OUTPUT  "${DOC_BIN_DIR}/html/index.html"
-        # copy over doc from source tree to keep source tree clean
-        #COMMAND "${CMAKE_COMMAND}" -E copy_directory "${DOC_SRC_DIR}" "${DOC_BIN_DIR}"
         COMMAND DOX_PROJECT_NAME=${PROJECT_NAME}
                 DOX_PROJECT_NUMBER="${${PROJECT_NAME}_VERSION}"
                 DOX_OUTPUT_DIRECTORY="${DOC_BIN_DIR}"
