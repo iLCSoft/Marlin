@@ -81,8 +81,6 @@ IF( MARLIN_GUI )
     FIND_PACKAGE( Qt4 )
     IF( NOT QT4_FOUND )
         MESSAGE( SEND_ERROR "QT4 not found. Please set MARLIN_GUI to OFF or QT4_DIR=/path/to/QT4" )
-    ELSE()
-        INCLUDE(${QT_USE_FILE})
     ENDIF()
 ENDIF()
 

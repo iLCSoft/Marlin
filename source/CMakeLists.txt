@@ -68,37 +68,7 @@ INSTALL( TARGETS bin_Marlin DESTINATION bin )
 
 # ----- MarlinGUI ------------------------------------------------------------
 IF( MARLIN_GUI )
-
-    # cmake 2.6 throws warning because QT_LIBRARIES contains -lpthread -ldl
-    # without full path
-    IF(COMMAND CMAKE_POLICY)
-        CMAKE_POLICY(SET CMP0003 NEW)
-    ENDIF()
-
-    # FindQt4 looks for qmake in $PATH
-    SET( ENV{PATH} "${QT4_HOME}/bin:$ENV{PATH}" )
-    FIND_PACKAGE( Qt4 REQUIRED )
-    INCLUDE(${QT_USE_FILE})
-
-    IF( APPLE)
-       #fg:  needed when the QT framework was installed via dmg....
-      ADD_DEFINITIONS( "-DQT_EDITION=0x0003" )
-    ENDIF( APPLE )
-
-    AUX_SOURCE_DIRECTORY( ./gui gui_sources )
-    #FILE( GLOB gui_sources ./gui/*.cpp )
-    #LIST( REMOVE_ITEM gui_sources ./gui/main.cpp )
-
-    FILE( GLOB gui_headers ./gui/*.h )
-    LIST( REMOVE_ITEM gui_headers ./gui/flowlayout.h )
-
-    # generate moc files
-    QT4_WRAP_CPP( gui_moc_sources ${gui_headers} )
-    
-    ADD_EXECUTABLE( MarlinGUI ${gui_sources} ${gui_moc_sources} ./src/ProcessorLoader.cc )
-    TARGET_LINK_LIBRARIES( MarlinGUI Marlin ${QT_LIBRARIES} )
-    INSTALL( TARGETS MarlinGUI DESTINATION bin )
-
+    ADD_SUBDIRECTORY( ./gui )
 ENDIF()
 # ----------------------------------------------------------------------------
 
