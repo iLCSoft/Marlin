@@ -15,15 +15,9 @@ SET( ${PROJECT_NAME}_VERSION_MINOR 1 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 
-
-### DEPENDENCIES ############################################################
-
-# FindILCSOFT_CMAKE_MODULES.cmake needs to be in CMAKE_MODULE_PATH
-FIND_PACKAGE( ILCSOFT_CMAKE_MODULES 1.11 REQUIRED )
-
-# load default settings from ILCSOFT_CMAKE_MODULES
+# load default ilcsoft settings (install prefix, build type, rpath, etc.)
+LIST( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 INCLUDE( ilcsoft_default_settings )
-
 
 
 ### LIBRARY #################################################################
@@ -33,7 +27,7 @@ ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 
 # include directories
 INCLUDE_DIRECTORIES( BEFORE ./source/include )
-INSTALL_DIRECTORY( ./source/include DESTINATION . FILES_MATCHING PATTERN "*.h" )
+INSTALL( DIRECTORY ./source/include DESTINATION . PATTERN ".svn" EXCLUDE )
 
 # add library
 AUX_SOURCE_DIRECTORY( ./source/src library_sources )
@@ -42,7 +36,6 @@ INSTALL( TARGETS ${PROJECT_NAME} DESTINATION lib )
 
 
 ADD_SUBDIRECTORY( ./examples )
-
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
