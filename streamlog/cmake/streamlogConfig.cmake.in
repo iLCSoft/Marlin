@@ -1,24 +1,13 @@
 ##############################################################################
 # cmake configuration file for streamlog
 #
-# requires:
-#   MacroCheckPackageLibs.cmake for checking package libraries
-#
 # returns following variables:
 #
 #   streamlog_FOUND      : set to TRUE if streamlog found
-#       if FIND_PACKAGE called with REQUIRED and COMPONENTS arguments
-#       streamlog_FOUND is only set to TRUE if ALL components are also found
-#       if REQUIRED is NOT set components may or may not be available
-#
 #   streamlog_ROOT       : path to this streamlog installation
-#   streamlog_LIBRARIES  : list of streamlog libraries (NOT including COMPONENTS)
+#   streamlog_LIBRARIES  : list of streamlog libraries
 #   streamlog_INCLUDE_DIRS  : list of paths to be used with INCLUDE_DIRECTORIES
 #   streamlog_LIBRARY_DIRS  : list of paths to be used with LINK_DIRECTORIES
-#   streamlog_COMPONENT_LIBRARIES      : list of streamlog component libraries
-#   streamlog_${COMPONENT}_FOUND       : set to TRUE or FALSE for each library
-#   streamlog_${COMPONENT}_LIBRARY     : path to individual libraries
-#   streamlog_${COMPONENT}_LIB_DEPENDS : individual library dependencies
 #
 # @author Jan Engels, Desy
 ##############################################################################
@@ -40,28 +29,23 @@ FIND_PATH( streamlog_INCLUDE_DIRS
 
 
 # ---------- libraries --------------------------------------------------------
-INCLUDE( ${streamlog_ROOT}/cmake/MacroCheckPackageLibs.cmake ) # FIXME full path ?!
+# do not store find results in cache
+SET( streamlog_LIBRARY_DIRS ${streamlog_ROOT}/lib )
+SET( streamlog_LIBRARIES streamlog_LIBRARIES-NOTFOUND )
+MARK_AS_ADVANCED( streamlog_LIBRARY_DIRS streamlog_LIBRARIES )
 
-# only standard libraries should be passed as arguments to CHECK_PACKAGE_LIBS
-# additional components are set by cmake in variable PKG_FIND_COMPONENTS
-# first argument should be the package name
-CHECK_PACKAGE_LIBS( streamlog streamlog )
-
-
-
-
-# ---------- libraries dependencies -------------------------------------------
-# this sets streamlog_${COMPONENT}_LIB_DEPENDS variables
-#INCLUDE( "${streamlog_ROOT}/lib/cmake/streamlogLibDeps.cmake" )
- 
+FIND_LIBRARY( streamlog_LIBRARIES
+	NAMES streamlog
+	PATHS ${streamlog_LIBRARY_DIRS}
+	NO_DEFAULT_PATH
+)
 
 
 
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
 # set STREAMLOG_FOUND to TRUE if all listed variables are TRUE and not empty
-# streamlog_COMPONENT_VARIABLES will be set if FIND_PACKAGE is called with REQUIRED argument
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( streamlog DEFAULT_MSG streamlog_ROOT streamlog_INCLUDE_DIRS streamlog_LIBRARIES ${streamlog_COMPONENT_VARIABLES} )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( streamlog DEFAULT_MSG streamlog_ROOT streamlog_INCLUDE_DIRS streamlog_LIBRARIES )
 
 SET( streamlog_FOUND ${STREAMLOG_FOUND} )
 
