@@ -9,7 +9,9 @@
 SET( DOC_SRC_DIR "${PROJECT_SOURCE_DIR}/doc" )
 SET( DOC_BIN_DIR "${PROJECT_BINARY_DIR}/docbuild" )
 
-SET( DOX_INPUT overview.html ../source ../streamlog/source )
+SET( DOX_INPUT overview.html ../source ) 
+
+# to be done in ilcutil :   ../streamlog/source )
 
 # custom command to build documentation
 ADD_CUSTOM_COMMAND(
@@ -24,9 +26,10 @@ ADD_CUSTOM_COMMAND(
     DEPENDS Doxyfile CMakeLists.txt
         ../source/include/marlin/*
         ../source/src/*
-        ../streamlog/source/src/*
-        ../streamlog/source/include/streamlog/*
 )
+#        ../streamlog/source/src/*
+#        ../streamlog/source/include/streamlog/*
+#)
 
 
 ADD_CUSTOM_TARGET( doc DEPENDS "${DOC_BIN_DIR}/html/index.html" ) # "${DOC_BIN_DIR}/latex/index.tex" )

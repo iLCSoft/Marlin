@@ -1,9 +1,8 @@
 ########################################################
 # cmake file for building Marlin
 # @author Jan Engels, Desy IT
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
 ########################################################
-
 
 # project name
 PROJECT( Marlin )
@@ -19,7 +18,11 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 ### DEPENDENCIES ############################################################
 
 # FindILCSOFT_CMAKE_MODULES.cmake needs to be in CMAKE_MODULE_PATH
-FIND_PACKAGE( ILCSOFT_CMAKE_MODULES 1.11 REQUIRED )
+
+FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES streamlog ILCTEST REQUIRED )
+
+
+#FIND_PACKAGE( ILCSOFT_CMAKE_MODULES 1.11 REQUIRED )
 
 # load default settings from ILCSOFT_CMAKE_MODULES
 INCLUDE( ilcsoft_default_settings )
@@ -60,7 +63,7 @@ IF( MARLIN_LCCD )
 ENDIF()
 
 
-FOREACH( pkg LCIO GEAR AIDA CLHEP LCCD )
+FOREACH( pkg LCIO GEAR AIDA CLHEP LCCD streamlog )
     IF( ${pkg}_FOUND )
         INCLUDE_DIRECTORIES( ${${pkg}_INCLUDE_DIRS} )
         LINK_LIBRARIES( ${${pkg}_LIBRARIES} )
@@ -117,13 +120,14 @@ INSTALL( FILES "${PROJECT_BINARY_DIR}/marlin/MarlinConfig.h" DESTINATION "includ
 # -----------------------------------------------------------------------------
 
 
-ADD_SUBDIRECTORY( ./streamlog )
+#ADD_SUBDIRECTORY( ./streamlog )
 
 ADD_SUBDIRECTORY( ./source )
 
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
+
 
 # generate and install following configuration files
 GENERATE_PACKAGE_CONFIGURATION_FILES( MarlinConfig.cmake MarlinConfigVersion.cmake MarlinLibDeps.cmake )
