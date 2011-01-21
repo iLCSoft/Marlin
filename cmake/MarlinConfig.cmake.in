@@ -41,7 +41,7 @@ FIND_PATH( Marlin_INCLUDE_DIRS
 
 
 # ---------- libraries --------------------------------------------------------
-INCLUDE( ${Marlin_ROOT}/cmake/MacroCheckPackageLibs.cmake ) # FIXME full path ?!
+INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroCheckPackageLibs.cmake" )
 
 # only standard libraries should be passed as arguments to CHECK_PACKAGE_LIBS
 # additional components are set by cmake in variable PKG_FIND_COMPONENTS
@@ -52,7 +52,7 @@ CHECK_PACKAGE_LIBS( Marlin Marlin )
 
 # ---------- dependencies -----------------------------------------------------
 INCLUDE( ${Marlin_ROOT}/streamlogConfig.cmake )
-INCLUDE( ${Marlin_ROOT}/cmake/MacroExportPackageDeps.cmake ) # FIXME full path ?!
+INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroCheckPackageDeps.cmake" )
 # exports following package dependencies (if set)
 # first argument of macro should be the package name
 SET( Marlin_DEPENDS_INCLUDE_DIRS  @Marlin_DEPENDS_INCLUDE_DIRS@ ) # ${streamlog_INCLUDE_DIRS} )
