@@ -52,7 +52,7 @@ CHECK_PACKAGE_LIBS( Marlin Marlin )
 
 # ---------- dependencies -----------------------------------------------------
 INCLUDE( ${Marlin_ROOT}/streamlogConfig.cmake )
-INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroCheckPackageDeps.cmake" )
+INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroExportPackageDeps.cmake" )
 # exports following package dependencies (if set)
 # first argument of macro should be the package name
 SET( Marlin_DEPENDS_INCLUDE_DIRS  @Marlin_DEPENDS_INCLUDE_DIRS@ ) # ${streamlog_INCLUDE_DIRS} )
