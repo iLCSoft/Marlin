@@ -51,13 +51,12 @@ CHECK_PACKAGE_LIBS( Marlin Marlin )
 
 
 # ---------- dependencies -----------------------------------------------------
-INCLUDE( "@streamlog_ROOT@/streamlogConfig.cmake" )
 INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroExportPackageDeps.cmake" )
 # exports following package dependencies (if set)
 # first argument of macro should be the package name
-SET( Marlin_DEPENDS_INCLUDE_DIRS  @Marlin_DEPENDS_INCLUDE_DIRS@  ${streamlog_INCLUDE_DIRS} )
-SET( Marlin_DEPENDS_LIBRARY_DIRS  @Marlin_DEPENDS_LIBRARY_DIRS@  ${streamlog_LIBRARY_DIRS} )
-SET( Marlin_DEPENDS_LIBRARIES  @Marlin_DEPENDS_LIBRARIES@ ${streamlog_LIBRARIES} )
+SET( Marlin_DEPENDS_INCLUDE_DIRS  @Marlin_DEPENDS_INCLUDE_DIRS@ )
+SET( Marlin_DEPENDS_LIBRARY_DIRS  @Marlin_DEPENDS_LIBRARY_DIRS@ )
+SET( Marlin_DEPENDS_LIBRARIES  @Marlin_DEPENDS_LIBRARIES@ )
 EXPORT_PACKAGE_DEPENDENCIES( Marlin )
 
 
@@ -66,8 +65,7 @@ EXPORT_PACKAGE_DEPENDENCIES( Marlin )
 INCLUDE( FindPackageHandleStandardArgs )
 # set MARLIN_FOUND to TRUE if all listed variables are TRUE and not empty
 # Marlin_COMPONENT_VARIABLES will be set if FIND_PACKAGE is called with REQUIRED argument
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( Marlin DEFAULT_MSG Marlin_ROOT Marlin_INCLUDE_DIRS Marlin_LIBRARIES STREAMLOG_FOUND )
-#FIND_PACKAGE_HANDLE_STANDARD_ARGS( Marlin DEFAULT_MSG Marlin_ROOT Marlin_INCLUDE_DIRS Marlin_LIBRARIES  )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( Marlin DEFAULT_MSG Marlin_ROOT Marlin_INCLUDE_DIRS Marlin_LIBRARIES ${Marlin_COMPONENT_VARIABLES} )
 
 SET( Marlin_FOUND ${MARLIN_FOUND} )
 

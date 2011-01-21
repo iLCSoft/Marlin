@@ -4,9 +4,8 @@
 #################################
 
 # include directories
-INCLUDE_DIRECTORIES( BEFORE "${Marlin_BINARY_DIR}" ) # generated MarlinConfig.h
 INCLUDE_DIRECTORIES( BEFORE "./include" )
-#INCLUDE_DIRECTORIES( BEFORE "${Marlin_SOURCE_DIR}/streamlog/source/include" )
+INCLUDE_DIRECTORIES( "${Marlin_BINARY_DIR}" ) # generated MarlinConfig.h
 
 
 # install header files
@@ -52,7 +51,7 @@ LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc )
 # create library
 ADD_SHARED_LIBRARY( Marlin ${library_sources} )
 INSTALL( TARGETS Marlin DESTINATION lib )
-#TARGET_LINK_LIBRARIES( Marlin streamlog ${CMAKE_DL_LIBS} )
+TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} )
 
 
 

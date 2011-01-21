@@ -17,11 +17,8 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 ### DEPENDENCIES ############################################################
 
-# FindILCSOFT_CMAKE_MODULES.cmake needs to be in CMAKE_MODULE_PATH
-
 FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES streamlog ILCTEST REQUIRED )
-
-
+# FindILCSOFT_CMAKE_MODULES.cmake needs to be in CMAKE_MODULE_PATH
 #FIND_PACKAGE( ILCSOFT_CMAKE_MODULES 1.11 REQUIRED )
 
 # load default settings from ILCSOFT_CMAKE_MODULES
@@ -33,7 +30,12 @@ FIND_PACKAGE( LCIO REQUIRED )
 FIND_PACKAGE( GEAR REQUIRED )
 
 # export Marlin_DEPENDS_INCLUDE_DIRS to MarlinConfig.cmake
-SET( Marlin_DEPENDS_INCLUDE_DIRS ${LCIO_INCLUDE_DIRS} ${GEAR_INCLUDE_DIRS} )
+SET( Marlin_DEPENDS_INCLUDE_DIRS ${LCIO_INCLUDE_DIRS} ${GEAR_INCLUDE_DIRS} ${streamlog_INCLUDE_DIRS} )
+SET( Marlin_DEPENDS_LIBRARY_DIRS ${LCIO_LIBRARY_DIRS} ${GEAR_LIBRARY_DIRS} ${streamlog_LIBRARY_DIRS} )
+SET( Marlin_DEPENDS_LIBRARIES ${LCIO_LIBRARIES} ${GEAR_LIBRARIES} ${streamlog_LIBRARIES} )
+
+INCLUDE_DIRECTORIES( ${Marlin_DEPENDS_INCLUDE_DIRS} )
+LINK_LIBRARIES( ${Marlin_DEPENDS_LIBRARIES} )
 
 
 OPTION( MARLIN_AIDA "Set to ON to build Marlin with AIDA" ON )
@@ -63,7 +65,7 @@ IF( MARLIN_LCCD )
 ENDIF()
 
 
-FOREACH( pkg LCIO GEAR AIDA CLHEP LCCD streamlog )
+FOREACH( pkg AIDA CLHEP LCCD )
     IF( ${pkg}_FOUND )
         INCLUDE_DIRECTORIES( ${${pkg}_INCLUDE_DIRS} )
         LINK_LIBRARIES( ${${pkg}_LIBRARIES} )
@@ -119,8 +121,6 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake/MarlinConfig.h.cmake.in"
 INSTALL( FILES "${PROJECT_BINARY_DIR}/marlin/MarlinConfig.h" DESTINATION "include/marlin/" )
 # -----------------------------------------------------------------------------
 
-
-#ADD_SUBDIRECTORY( ./streamlog )
 
 ADD_SUBDIRECTORY( ./source )
 
