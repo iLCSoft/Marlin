@@ -5,7 +5,7 @@
 
 # include directories
 INCLUDE_DIRECTORIES( BEFORE "./include" )
-INCLUDE_DIRECTORIES( "${Marlin_BINARY_DIR}" ) # generated MarlinConfig.h
+INCLUDE_DIRECTORIES( "${PROJECT_BINARY_DIR}" ) # generated MarlinConfig.h
 
 
 # install header files
