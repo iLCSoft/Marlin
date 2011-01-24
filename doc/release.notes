@@ -4,13 +4,11 @@
  ======================
 
  --------
-|  HEAD  |
+| v01-00 |
  --------
 
-        - renamed MarlinVersion.h to MarlinConfig.h (to include other general purpose configuration definitions)
-        - removed deprecated build mode: MARLIN_NO_DLL
-
-        - global random seed established. This is used to provide individual pseudo-random numbers to Processors on
+        - Add a global random seed for Marlin processors. 
+          This is used to provide individual pseudo-random numbers to Processors on
           an event-by-event basis. These may be used by Processors to seed their random number generator of choice.
           In order to use this service a Processor must register itself using:
 
@@ -29,10 +27,19 @@
         
                 global_seed ^ evt->getRunNumber() ^ evt->getEventNumber()
           
- --------
-| v01-00 |
- --------
-        - allow RunHeaders to be modified in EventModifier interface
+
+        - allow RunHeaders to be modified in EventModifier interface 
+	  (https://jira.slac.stanford.edu/browse/MAR-35)
+
+
+	- added ./test directory with some initial marlin tests
+          (use make test to run the tests)
+
+        - improved CMake files and build procedure
+
+            - added MarlinConfig.h to include general purpose configuration definitions
+            - removed deprecated build mode: MARLIN_NO_DLL
+
 
  
  --------
