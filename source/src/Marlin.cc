@@ -251,7 +251,7 @@ int main(int argc, char** argv ){
   createProcessors( *parser ) ;
 
   //--------- create event seeder ----------
-  int seed = Global::parameters->getIntVal("Seed" ) ;
+  int seed = Global::parameters->getIntVal("RandomSeed" ) ;
   Global::EVENTSEEDER = new ProcessorEventSeeder( seed );
   streamlog_out( MESSAGE )  << " ---- Processor Event Seeder using Global Seed: " <<  seed << std::endl ;  
  

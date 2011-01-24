@@ -1,11 +1,11 @@
 ##################################################################################
 #
-#    the actual tests :
+#    Marlin tests
 #
 ##################################################################################
 
-# build the marlintest plugin
+# build the marlintest plugin library
 ADD_SUBDIRECTORY( ./marlintest )
 
-# run some tests 
+# the actual tests  
 ADD_SUBDIRECTORY( ./testmarlin )

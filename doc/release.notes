@@ -20,7 +20,7 @@
 
           The global seed is used for a complete job and is set in the Global steering parameters thus:
         
-                <parameter name="Seed" value="1234567890"/>
+                <parameter name="RandomSeed" value="1234567890"/>
 
           note the value must be a positive integer, with max value 2,147,483,647
           Currently the random event seed is generated using:

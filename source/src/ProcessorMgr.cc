@@ -145,17 +145,16 @@ namespace marlin{
             << std::endl ;
 
         std::cout  <<  " <global>" << std::endl 
-            <<  "  <parameter name=\"LCIOInputFiles\"> simjob.slcio </parameter>" << std::endl
-            <<  "  <!-- limit the number of processed records (run+evt): -->  " << std::endl
-                                                                                   <<  "  <parameter name=\"MaxRecordNumber\" value=\"5001\" />  " << std::endl
-                                                                                   <<  "  <parameter name=\"SkipNEvents\" value=\"0\" />  " << std::endl
-                                                                                   <<  "  <parameter name=\"SupressCheck\" value=\"false\" />  " << std::endl
-//#ifdef USE_GEAR
-                                                                                   <<  "  <parameter name=\"GearXMLFile\"> gear_ldc.xml </parameter>  " << std::endl
-//#endif
-                                                                                       <<  "  <parameter name=\"Verbosity\" options=\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\"> DEBUG  </parameter> " << std::endl
-                                                                                       <<  " </global>" << std::endl
-                                                                                       << std::endl ;
+		   <<  "  <parameter name=\"LCIOInputFiles\"> simjob.slcio </parameter>" << std::endl
+		   <<  "  <!-- limit the number of processed records (run+evt): -->  " << std::endl
+		   <<  "  <parameter name=\"MaxRecordNumber\" value=\"5001\" />  " << std::endl
+		   <<  "  <parameter name=\"SkipNEvents\" value=\"0\" />  " << std::endl
+		   <<  "  <parameter name=\"SupressCheck\" value=\"false\" />  " << std::endl
+		   <<  "  <parameter name=\"GearXMLFile\"> gear_ldc.xml </parameter>  " << std::endl
+		   <<  "  <parameter name=\"Verbosity\" options=\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\"> DEBUG  </parameter> " << std::endl
+		   <<  "  <parameter name=\"RandomSeed\" value=\"1234567890\" />" << std::endl
+		   <<  " </global>" << std::endl
+		   << std::endl ;
 
         for(MI i=_map.begin() ; i!= _map.end() ; i++) {
             i->second->printDescriptionXML() ;
