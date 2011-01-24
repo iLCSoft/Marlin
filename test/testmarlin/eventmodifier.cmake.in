@@ -1,0 +1,13 @@
+
+SET( ENV{MARLIN_DLL} "@LIBRARY_OUTPUT_PATH@/libmarlintest.dylib" ) 
+
+# execute marlin
+
+#EXECUTE_PROCESS( COMMAND "ln -s @CMAKE_CURRENT_SOURCE_DIR@/M06-07-p01_ttbar_3evt.slcio .")
+#EXECUTE_PROCESS( COMMAND "cp @CMAKE_CURRENT_SOURCE_DIR@/gear_ild00.xml .")
+#EXECUTE_PROCESS( COMMAND "cp @CMAKE_CURRENT_SOURCE_DIR@/eventmodifier.xml .")
+#EXECUTE_PROCESS( COMMAND "@EXECUTABLE_OUTPUT_PATH@/Marlin eventmodifier.xml")
+
+
+EXECUTE_PROCESS( COMMAND "@EXECUTABLE_OUTPUT_PATH@/Marlin" "eventmodifier.xml" 
+                         WORKING_DIRECTORY "@CMAKE_CURRENT_SOURCE_DIR@") 

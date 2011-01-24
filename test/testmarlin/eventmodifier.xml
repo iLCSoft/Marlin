@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
+ <execute>
+  <processor name="MyTestEventModifier"/>  
+ </execute>
+
+ <global>
+  <parameter name="LCIOInputFiles">simjob.slcio </parameter>
+  <parameter name="MaxRecordNumber" value="4" />  
+  <parameter name="GearXMLFile"> gear_simjob.xml </parameter>  
+  <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE3 DEBUG </parameter> 
+ </global>
+
+ <processor name="MyTestEventModifier" type="TestEventModifier">
+ </processor>
+
+</marlin>

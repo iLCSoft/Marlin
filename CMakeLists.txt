@@ -123,6 +123,8 @@ INSTALL( FILES "${PROJECT_BINARY_DIR}/marlin/MarlinConfig.h" DESTINATION "includ
 
 
 ADD_SUBDIRECTORY( ./source )
+##########################################################################
+ADD_SUBDIRECTORY( ./test )
 
 
 # display some variables and write them to cache
@@ -131,4 +133,6 @@ DISPLAY_STD_VARIABLES()
 
 # generate and install following configuration files
 GENERATE_PACKAGE_CONFIGURATION_FILES( MarlinConfig.cmake MarlinConfigVersion.cmake MarlinLibDeps.cmake )
+
+
 
