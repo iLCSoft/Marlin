@@ -253,7 +253,7 @@ int main(int argc, char** argv ){
   //--------- create event seeder ----------
   int seed = Global::parameters->getIntVal("RandomSeed" ) ;
   Global::EVENTSEEDER = new ProcessorEventSeeder( seed );
-  streamlog_out( MESSAGE )  << " ---- Processor Event Seeder using Global Seed: " <<  seed << std::endl ;  
+  streamlog_out( MESSAGE )  << " ---- Processor Event Seeder using Global RandomSeed: " <<  seed << std::endl ;  
  
 //#ifdef USE_GEAR
 

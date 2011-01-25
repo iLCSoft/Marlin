@@ -26,6 +26,10 @@
           Currently the random event seed is generated using:
         
                 global_seed ^ evt->getRunNumber() ^ evt->getEventNumber()
+
+	  this seed is then used to generate one random seed per registered processor.
+	  This mechanism ensures reproducible results for every event, regardless of the sequence in which the 
+	  event is processed in a Marlin job. 
           
 
         - allow RunHeaders to be modified in EventModifier interface 
