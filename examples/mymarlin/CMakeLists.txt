@@ -18,8 +18,7 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 ### DEPENDENCIES ############################################################
 
-# FindILCSOFT_CMAKE_MODULES.cmake needs to be in CMAKE_MODULE_PATH
-FIND_PACKAGE( ILCSOFT_CMAKE_MODULES 1.11 REQUIRED )
+FIND_PACKAGE( ILCUTIL REQUIRED COMPONENTS ILCSOFT_CMAKE_MODULES )
 
 # load default settings from ILCSOFT_CMAKE_MODULES
 INCLUDE( ilcsoft_default_settings )
@@ -28,15 +27,14 @@ INCLUDE( ilcsoft_default_settings )
 FIND_PACKAGE( Marlin 0.14 REQUIRED ) # minimum required Marlin version
 INCLUDE_DIRECTORIES( ${Marlin_INCLUDE_DIRS} )
 LINK_LIBRARIES( ${Marlin_LIBRARIES} )
-ADD_DEFINITIONS ( ${Marlin_DEFINITIONS} )
-
+ADD_DEFINITIONS( ${Marlin_DEFINITIONS} )
 
 # optional package
 #FIND_PACKAGE( AIDA )
 #IF( AIDA_FOUND )
 #    INCLUDE_DIRECTORIES( ${AIDA_INCLUDE_DIRS} )
 #    LINK_LIBRARIES( ${AIDA_LIBRARIES} )
-#    ADD_DEFINITIONS ( "-DMARLIN_USE_AIDA" )
+#    ADD_DEFINITIONS( "-DMARLIN_USE_AIDA" )
 #    MESSAGE( STATUS "AIDA -- found" )
 #ELSE()
 #    MESSAGE( STATUS "AIDA -- not found" )
