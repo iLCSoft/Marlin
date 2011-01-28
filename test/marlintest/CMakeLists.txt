@@ -18,5 +18,5 @@ ADD_SHARED_LIBRARY( ${libname} ${library_sources} )
 
 TARGET_LINK_LIBRARIES( ${libname} Marlin )
 
-#INSTALL( TARGETS ${libname} DESTINATION lib )
+#INSTALL_SHARED_LIBRARY( ${libname} DESTINATION lib )
 

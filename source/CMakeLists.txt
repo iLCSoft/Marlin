@@ -50,7 +50,7 @@ LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc )
 
 # create library
 ADD_SHARED_LIBRARY( Marlin ${library_sources} )
-INSTALL( TARGETS Marlin DESTINATION lib )
+INSTALL_SHARED_LIBRARY( Marlin DESTINATION lib )
 TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} )
 
 
