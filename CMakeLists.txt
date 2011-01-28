@@ -74,6 +74,7 @@ ENDFOREACH()
 
 
 OPTION( MARLIN_GUI "Set to ON to build Marlin GUI" OFF )
+MESSAGE( STATUS "MARLIN_GUI: ${MARLIN_GUI}" )
 IF( MARLIN_GUI )
 
     # FindQt4 looks for qmake in $PATH
@@ -92,7 +93,7 @@ ENDIF()
 
 ### DOCUMENTATION ###########################################################
 
-OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
+OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
 
 IF( INSTALL_DOC )
 
