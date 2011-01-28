@@ -7,14 +7,15 @@
 | v01-00 |
  --------
 
-        - Add a global random seed for Marlin processors. 
+        - Added a global random seed for Marlin processors. 
           This is used to provide individual pseudo-random numbers to Processors on
-          an event-by-event basis. These may be used by Processors to seed their random number generator of choice.
-          In order to use this service a Processor must register itself using:
+          an event-by-event and run-by-run basis. These may be used by Processors to 
+	  seed their random number generator of choice. In order to use this service 
+	  a Processor must register itself in the init method using:
 
                 Global::EVENTSEEDER->registerProcessor(this);
 
-          and may retrieve its allocated event seed during processEvent using:
+          and should retrieve its allocated event seed during processEvent using:
 
                 int eventSeed = Global::EVENTSEEDER->getSeed(this);
 
@@ -22,14 +23,19 @@
         
                 <parameter name="RandomSeed" value="1234567890"/>
 
-          note the value must be a positive integer, with max value 2,147,483,647
-          Currently the random event seed is generated using:
-        
-                global_seed ^ evt->getRunNumber() ^ evt->getEventNumber()
+          Note that the value must be a positive integer, with max value 2,147,483,647
+          A pseudo-random event seed is generated using a three step hashing function of unsigned ints,
+	  in the following order: event_number, run_number, RandomSeed. The hashed int from each step 
+	  in the above order is used as input to the next hash step. This is used to ensure that in 
+	  the likely event of similar values of event_number, run_number and RandomSeed, different 
+	  event seeds will be generated. 
+       
+	  The event seed is then used to seed rand via srand(seed) and then rand is used to 
+	  generate one seed per registered processor.
 
-	  this seed is then used to generate one random seed per registered processor.
-	  This mechanism ensures reproducible results for every event, regardless of the sequence in which the 
-	  event is processed in a Marlin job. 
+	  This mechanism ensures reproducible results for every event, regardless of the sequence 
+	  in which the event is processed in a Marlin job, whilst maintaining the full 32bit range 
+	  for event and run numbers.
           
 
         - allow RunHeaders to be modified in EventModifier interface 

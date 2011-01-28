@@ -40,11 +40,12 @@ namespace marlin{
     
     /** Called by Processors to register themselves for the seeding service. 
      */
-    void registerProcessor( Processor* proc) ;
+    void registerProcessor( Processor* proc ) ;
 
     /** Create new set of seeds for registered Processors for the given event.
+     *  This method should only be called from ProcessorMgr::processEvent
      */
-    void refreshSeeds(LCEvent * evt) ;
+    void refreshSeeds( LCEvent * evt ) ;
 
     /** Called by Processors to obtain seed assigned to it for the current event.
      */
@@ -53,11 +54,16 @@ namespace marlin{
   private:
     
     ProcessorEventSeeder(const ProcessorEventSeeder&);	// prevent copying
-    ProcessorEventSeeder& operator=(const ProcessorEventSeeder&);
+    ProcessorEventSeeder& operator=(const ProcessorEventSeeder&); // prevent assignment
 
     /** Global seed for current Job. Set in steering file.
      */
     int _global_seed ;
+
+    /** bool to ensure no calls of registerProcessor( Processor* proc ) 
+     *	after Event Processesing has started
+     */
+    bool _eventProcessingStarted ;
 
     /** Map to hold pointers to the registered processors and their assigned seeds
      */
