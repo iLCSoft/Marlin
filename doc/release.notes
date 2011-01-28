@@ -19,6 +19,10 @@
 
                 int eventSeed = Global::EVENTSEEDER->getSeed(this);
 
+	  and include the header file:
+
+	  	#include "marlin/ProcessorEventSeeder.h"	      	
+
           The global seed is used for a complete job and is set in the Global steering parameters thus:
         
                 <parameter name="RandomSeed" value="1234567890"/>
