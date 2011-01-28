@@ -1,5 +1,6 @@
 #include "marlin/ProcessorEventSeeder.h"
 #include "marlin/Processor.h"
+#include "marlin/Global.h"
 
 #include "jenkinsHash.h"
 
@@ -8,23 +9,20 @@
 
 namespace marlin{
 
-  ProcessorEventSeeder::ProcessorEventSeeder( int global_seed ) : _global_seed(global_seed) , _eventProcessingStarted(false) {
-    
-    if( _global_seed < 0 )
-      {
-	throw Exception("ProcessorEventSeeder: Marlin's global seed, must not be less than zero");
-      }
 
-    // at this point we don't know which runs and events will be processed so all we can do is use the global random seed set in the steering file.
-    srand( _global_seed );
-    streamlog_out(DEBUG) << "ProcessorEventSeeder: srand initialised with global seed " << _global_seed << std::endl; 
-
+  ProcessorEventSeeder::ProcessorEventSeeder() : _global_seed(0), _global_seed_set(false), _eventProcessingStarted(false) 
+  {
   } 
 
   
   void ProcessorEventSeeder::registerProcessor( Processor* proc ) {
 
     
+    if( _global_seed_set == false ) {
+      _global_seed = Global::parameters->getIntVal("RandomSeed" ) ;
+      _global_seed_set = true;
+    }
+
     if ( _eventProcessingStarted ) { // event processing started, so disallow any more calls to registerProcessor
       streamlog_out(ERROR) << "ProcessorEventSeeder:registerProcessor( Processor* proc ) called from Processor: " 
 			   << proc->name() << std::endl << "The method registerProcessor( Processor* proc ) must be called in the init() method of the Processor" 
@@ -67,17 +65,17 @@ namespace marlin{
     srand( seed );
 
     // fill map with seeds for each registered processor using rand() 
-    std::map<Processor*, EVENT::long64>::iterator it = _seed_map.begin();
+    std::map<Processor*, unsigned int >::iterator it = _seed_map.begin();
     for( /* it initialised above */; it != _seed_map.end(); ++it) 
       {
 	it->second = rand();
       } 
     
   }
-
-  EVENT::long64 ProcessorEventSeeder::getSeed( Processor* proc ) {
-
-    std::map<Processor*, EVENT::long64>::iterator it = _seed_map.find(proc);
+  
+  unsigned int ProcessorEventSeeder::getSeed( Processor* proc ) {
+    
+    std::map<Processor*, unsigned int>::iterator it = _seed_map.find(proc);
     
     return ( it != _seed_map.end() ? it->second : throw ) ;
 

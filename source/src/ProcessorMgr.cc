@@ -45,14 +45,32 @@ namespace marlin{
     // create a dummy streamlog stream for std::cout 
     streamlog::logstream my_cout ;
 
+  ProcessorMgr::ProcessorMgr(){
+    if( Global::EVENTSEEDER == NULL ) {
+      Global::EVENTSEEDER = new ProcessorEventSeeder() ;
+    }
+    else {
+      std::stringstream sstr ;
+      sstr << " ProcessorMgr::instance: Global::EVENTSEEDER pointer not NULL" << std::endl   ;
+      throw Exception( sstr.str() );
+    }
+  }
+  
 
-    ProcessorMgr* ProcessorMgr::instance() {
+  ProcessorMgr* ProcessorMgr::instance() {
 
-        if( _me == 0 ) 
-            _me = new ProcessorMgr ;
-
-        return _me ;
-    }  
+    if( _me == 0 ) {
+      _me = new ProcessorMgr ;
+    }
+    
+    return _me ;
+  }  
+  
+  
+  ProcessorMgr::~ProcessorMgr(){
+    delete Global::EVENTSEEDER ;
+    Global::EVENTSEEDER = NULL ;
+  }
 
     void ProcessorMgr::registerProcessor( Processor* processor ){
 
@@ -533,6 +551,6 @@ namespace marlin{
         streamlog_out(MESSAGE) << " --------------------------------------------------------- "  << std::endl ;
 
     }
-
+  
 
     } // namespace marlin

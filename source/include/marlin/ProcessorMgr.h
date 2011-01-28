@@ -20,13 +20,16 @@ using namespace lcio ;
 
 namespace marlin{
 
+  class ProcessorEventSeeder;
 
 typedef std::map< const std::string , Processor* > ProcessorMap ;
 typedef std::list< Processor* > ProcessorList ;
 typedef std::map< const std::string , int > SkippedEventMap ;
 
 /** Processor manager singleton class. Holds references to all registered Processors. 
- *
+ *    
+ *  Responsible for creating the instance of ProcessorEventSeeder and setting the Global::EVENTSEEDER variable.
+ * 
  *  @author F. Gaede, DESY
  *  @version $Id: ProcessorMgr.h,v 1.16 2007-08-13 10:38:39 gaede Exp $ 
  */
@@ -41,7 +44,11 @@ public:
   /** Return the instance of this manager.
    */
   static ProcessorMgr* instance() ;
-  
+
+  /** destructor deletes ProcessorEventSeeder
+   */
+  virtual ~ProcessorMgr() ;
+
   /** Add a processor of type processorType with name processorName to the list
    *  of active processors. Initializes the parameters (if != 0).
    */
@@ -97,6 +104,7 @@ public:
   /** Set the named return value for the given processor */
   virtual void setProcessorReturnValue( Processor* proc, bool val , const std::string& name) ;
 
+
 protected:
   /** Register a processor with the given name.
    */
@@ -106,7 +114,8 @@ protected:
   std::set< std::string > getAvailableProcessorTypes() ;
   
 //   ProcessorMgr() : _outputProcessor(0) {}
-  ProcessorMgr() {}
+//   ProcessorMgr() {}
+  ProcessorMgr() ;
 
 private:
   static ProcessorMgr*  _me ;

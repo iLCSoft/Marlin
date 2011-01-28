@@ -250,10 +250,6 @@ int main(int argc, char** argv ){
 
   createProcessors( *parser ) ;
 
-  //--------- create event seeder ----------
-  int seed = Global::parameters->getIntVal("RandomSeed" ) ;
-  Global::EVENTSEEDER = new ProcessorEventSeeder( seed );
-  streamlog_out( MESSAGE )  << " ---- Processor Event Seeder using Global RandomSeed: " <<  seed << std::endl ;  
  
 //#ifdef USE_GEAR
 
@@ -382,8 +378,6 @@ int main(int argc, char** argv ){
     delete Global::GEAR ; 
 
 //#endif  
-
-  delete Global::EVENTSEEDER ; 
  
   return 0 ;
 }
