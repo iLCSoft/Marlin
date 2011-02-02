@@ -11,8 +11,6 @@ SET( DOC_BIN_DIR "${PROJECT_BINARY_DIR}/docbuild" )
 
 SET( DOX_INPUT overview.html ../source ) 
 
-# to be done in ilcutil :   ../streamlog/source )
-
 # custom command to build documentation
 ADD_CUSTOM_COMMAND(
     OUTPUT  "${DOC_BIN_DIR}/html/index.html" #"${DOC_BIN_DIR}/latex/index.tex"
@@ -27,10 +25,6 @@ ADD_CUSTOM_COMMAND(
         ../source/include/marlin/*
         ../source/src/*
 )
-#        ../streamlog/source/src/*
-#        ../streamlog/source/include/streamlog/*
-#)
-
 
 ADD_CUSTOM_TARGET( doc DEPENDS "${DOC_BIN_DIR}/html/index.html" ) # "${DOC_BIN_DIR}/latex/index.tex" )
 
