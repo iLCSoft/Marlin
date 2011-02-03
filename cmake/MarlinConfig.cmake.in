@@ -13,6 +13,7 @@
 #       if REQUIRED is NOT set components may or may not be available
 #
 #   Marlin_ROOT       : path to this Marlin installation
+#   Marlin_VERSION    : package version
 #   Marlin_LIBRARIES  : list of Marlin libraries (NOT including COMPONENTS)
 #   Marlin_INCLUDE_DIRS  : list of paths to be used with INCLUDE_DIRECTORIES
 #   Marlin_LIBRARY_DIRS  : list of paths to be used with LINK_DIRECTORIES
@@ -25,6 +26,7 @@
 ##############################################################################
 
 SET( Marlin_ROOT "@CMAKE_INSTALL_PREFIX@" )
+SET( Marlin_VERSION "@Marlin_VERSION@" )
 
 
 # ---------- include dirs -----------------------------------------------------
