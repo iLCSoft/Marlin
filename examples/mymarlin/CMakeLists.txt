@@ -48,9 +48,6 @@ OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
 
 IF( INSTALL_DOC AND EXISTS "${PROJECT_SOURCE_DIR}/doc/CMakeLists.txt" )
     ADD_SUBDIRECTORY( ./doc )
-ELSE()
-    MESSAGE( STATUS "INSTALL_DOC set to OFF" )
-    SET( INSTALL_DOC OFF )
 ENDIF()
 
 
