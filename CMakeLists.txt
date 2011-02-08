@@ -78,7 +78,6 @@ MESSAGE( STATUS "MARLIN_GUI: ${MARLIN_GUI}" )
 IF( MARLIN_GUI )
 
     # FindQt4 looks for qmake in $PATH
-    # FIXME is this really needed ?
     IF( DEFINED QT4_DIR )
         SET( ENV{PATH} "${QT4_DIR}/bin:$ENV{PATH}" )
     ENDIF()
