@@ -49,10 +49,19 @@ IF( INSTALL_DOC )
     # in-source vs out-of-source installations
     IF( CMAKE_INSTALL_PREFIX STREQUAL "${PROJECT_SOURCE_DIR}" )
         # --- in-source installations ---
-        INSTALL( DIRECTORY "${DOC_BIN_DIR}/html" DESTINATION "doc" )
+        SET( DOC_INSTALL_PREFIX doc )
+
+        # keep source tree clean
+        ADD_CUSTOM_TARGET( uninstall_doc
+            COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_INSTALL_PREFIX}/doc/html"
+        )
+        ADD_DEPENDENCIES( uninstall uninstall_doc )
     ELSE()
         # --- out-of-source installations ---
-        INSTALL( DIRECTORY "${DOC_BIN_DIR}/html" DESTINATION "doc/${PROJECT_NAME}" )
+        SET( DOC_INSTALL_PREFIX doc/${PROJECT_NAME} )
     ENDIF()
 
+    INSTALL( DIRECTORY "${DOC_BIN_DIR}/html" DESTINATION ${DOC_INSTALL_PREFIX} )
+
 ENDIF()
+
