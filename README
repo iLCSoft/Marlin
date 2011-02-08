@@ -36,84 +36,43 @@ write processors with defined callbacks, i.e. init(), processRunHeader(), proces
     Instructions for building Marlin with CMake:
     -------------------------------------------
 
-    1st: make sure cmake is in your PATH environment! (for SL3 and SL4
-    users check /afs/desy.de/group/it/ilcsoft/CMake )
+    . path_to_ilcsoft_installation/v01-XX/init_ilcsoft.sh
 
-    2nd: edit the file BuildSetup.cmake and change it according to your system setup.
+    mkdir build
+    cd build
 
-    Afterwards type:
-
-    $ mkdir build
-    $ cd build
-    $ cmake -C ../BuildSetup.cmake ..
-    $ make install
+    cmake -C $ILCSOFT/ILCSoft.cmake ..
+    
+    make install
 
 
     Loading plugins/processors dynamically ( at run time ):
     -------------------------------------------------------
     
+    It is possible to load plugins dynamically @ run-time into Marlin
+    by setting the colon-separated environment variable MARLIN_DLL to
+    a list of plugins:
+    
     Take mymarlin as an example:
     
-    1st: edit the file <Path_to_Marlin>/BuildSetup.cmake
-         and change it according to your system setup
+    cd ./examples/mymarlin
+    mkdir build ; cd build
+    cmake -C $ILCSOFT/ILCSoft.cmake ..
+    make install
 
-    2nd: build the processor library by typing:
-    
-    $ cd <Path_to_Marlin>
-    $ mkdir build_plugin ; cd build_plugin
-    $ cmake -C ../BuildSetup.cmake -DMarlin_DIR=$PWD/../ ../examples/mymarlin
-    $ make install
-
-    Afterwards you have to tell Marlin to load the plugin
-    by setting the environment variable MARLIN_DLL:
-    
-    $ export MARLIN_DLL="$PWD/../examples/mymarlin/lib/libmymarlin.so"
-    $ ../bin/Marlin -x
+    export MARLIN_DLL="$PWD/lib/libmymarlin.so"
+    Marlin -x
 
     If you have 2 or more libs you should separate them with a ':'
     $ export MARLIN_DLL="/path1/lib1.so:/path2/lib2.so"
     
 
-    Linking Marlin with shared processor libraries ( at compile time ):
-    ------------------------------------------------------------------
-    
-    However if you don't want to set MARLIN_DLL for loading your libraries, you can
-    link the Marlin library with the processors you need. Define this settings inside
-    BuildSetup.cmake or directly on the command line when building Marlin:
-
-    $ cmake -C ../BuildSetup.cmake
-            -DLINK_WITH="mymarlin PandoraPFA"
-            -Dmymarlin_HOME="path_to_mymarlin"
-            -DPandoraPFA_HOME="path_to_pandora" ..
-
-
-    Linking Marlin with static processor libraries ( not recommended!! ):
-    --------------------------------------------------------------------
-    
-    --- This only works under Linux! ---
-    
-    If for some reason you have a processor that you can't build with CMake and you
-    only have it as a static library (libMyProcessor.a). You can still link Marlin
-    against it by adding the option:
-
-    -DLINK_STATIC_WHOLE_LIBS="path_to_library/libMyprocessor.a"
-
-    so the cmake command to build Marlin would look like:
-    $ cmake -C ../BuildSetup.cmake
-            -DLINK_STATIC_WHOLE_LIBS="path_to_library/libMyprocessor.a" ..
-
-    this way your static library gets fully linked into the Marlin binary.
-
-    If you have 2 or more libs you should separate them with a ';' or with a whitespace, e.g.:
-    -DLINK_STATIC_WHOLE_LIBS="/path1/lib1.a;/path2/lib2.a"
-
-
     Create a new Marlin Plugin / Processor:
     ---------------------------------------
     
-    examples/mymarlin can serve as a template for a new project using marlin !
+    ./examples/mymarlin can be used as a template for a new Marlin plugin
 
-    simply copy the whole directory
+    simply copy the whole directory:
 
     cp -r $MARLIN/examples/mymarlin MyFastJetClustering (or whatever your processor should be called...)
 
@@ -187,26 +146,6 @@ write processors with defined callbacks, i.e. init(), processRunHeader(), proces
       execution of the processors (see API doc of class XMLParser for details)     
 
   ++++++++++++++++++++++++++
-
-
- -> examples/mymarlin can serve as a template for a new project using marlin !
-
-    simply copy the whole directory 
-
-       cp -r $MARLIN/examples/mymarlin MyMarlinPackage   (please choose another name !)
- 
-    renaming the files source files, e.g.
-
-      mv include/MyProcessor.h include/ChooseAReasonableNameForThisClass.h
-      mv src/MyProcessor.cc src/ChooseAReasonableNameForThisClass.cc
-
-    edit the CMakeLists.txt
-
-      PROJECT( MyMarlinPackage ) (please choose another name but the same as above for the package ! )
-
-      add external dependencies (if needed)
-      look for line SET( ${PROJECT_NAME}_DEPENDS "Marlin LCIO" ) and change as appropriate
-    
 
 If you are updating from an older version please also read the ./doc/release.notes and the latest version
 of the API doc !
