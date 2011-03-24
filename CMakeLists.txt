@@ -57,6 +57,7 @@ ENDIF()
 
 OPTION( MARLIN_LCCD "Set to ON to build Marlin with LCCD" ON )
 IF( MARLIN_LCCD )
+    SET( FIND_PACKAGE_SKIP_DEPENDENCIES TRUE ) # lccd also exports lcio libraries/headers
     FIND_PACKAGE( LCCD )
     IF( NOT LCCD_FOUND )
         MESSAGE( SEND_ERROR "LCCD not found. Please set MARLIN_LCCD to OFF or LCCD_DIR=/path/to/LCCD" )
