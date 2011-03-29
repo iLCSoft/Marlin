@@ -74,7 +74,7 @@ namespace marlin {
   public:
 
     // Constructor
-    MarlinSteerCheck( const char* steerFileName=NULL );
+    MarlinSteerCheck( const char* steerFileName=NULL, const CommandLineParametersMap * cmdlineparams=NULL );
 
     // Destructor
     ~MarlinSteerCheck();
@@ -192,7 +192,7 @@ namespace marlin {
     ProcVec& getAllProcs() const;
     
     // Parse the given steering file
-    bool parseXMLFile( const std::string& file );
+    bool parseXMLFile( const std::string& file, const CommandLineParametersMap * cmdlineparams=NULL );
     
     // Pop a processor out of a vector from processors
     CCProcessor* popProc(ProcVec& v, CCProcessor* p);
