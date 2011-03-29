@@ -182,7 +182,7 @@ int main(int argc, char** argv ){
         }
         else if( std::string(argv[1]) == "-c" ){
             if( argc == 3 ){
-                MarlinSteerCheck msc(argv[2]);
+                MarlinSteerCheck msc(argv[2], &cmdlineparams );
                 msc.dump_information();
                 return(0) ;
             }
@@ -193,7 +193,7 @@ int main(int argc, char** argv ){
         }
         else if( std::string(argv[1]) == "-o" ){
             if( argc == 4 ){
-                MarlinSteerCheck msc(argv[2]);
+                MarlinSteerCheck msc(argv[2], &cmdlineparams );
                 msc.saveAsXMLFile(argv[3]) ;
                 return(0) ;
             }
@@ -215,7 +215,7 @@ int main(int argc, char** argv ){
         }
         else if( std::string(argv[1]) == "-d" ){
             if( argc == 4 ){
-                MarlinSteerCheck msc(argv[2]);
+                MarlinSteerCheck msc(argv[2], &cmdlineparams );
                 msc.saveAsDOTFile(argv[3]);
                 return(0) ;
             }
@@ -550,7 +550,7 @@ int printUsage() {
         << " Dynamic command line options may be specified in order to overwrite individual steering file parameters, e.g.:" << std::endl 
         << "     Marlin --global.LCIOInputFiles=\"input1.slcio input2.slcio\" --global.GearXMLFile=mydetector.xml" << std::endl 
         << "            --MyLCIOOutputProcessor.LCIOWriteMode=WRITE_APPEND --MyLCIOOutputProcessor.LCIOOutputFile=out.slcio steer.xml" << std::endl << std::endl
-        << "     NOTE: Dynamic options do NOT work with any of the other Marlin options (-x, -c, -f, -o, -l, -d) nor with the MarlinGUI nor with old steering files" << std::endl 
+        << "     NOTE: Dynamic options do NOT work together with Marlin options (-x, -f, -l) nor with the MarlinGUI or old steering files" << std::endl 
         << std::endl ;
 
     return(0) ;

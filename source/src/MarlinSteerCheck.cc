@@ -28,16 +28,17 @@ using namespace std;
 
 namespace marlin{
 
-  // Constructor
-  MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile ) : _parser(NULL), _gparam(NULL), _steeringFile("Untitled.xml") {
+    // Constructor
+    MarlinSteerCheck::MarlinSteerCheck( const char* steeringFile, const CommandLineParametersMap * cmdlineparams ) : _parser(NULL), _gparam(NULL), _steeringFile("Untitled.xml") {
 
     if( steeringFile != 0 ){
-      _steeringFile=steeringFile;
+        _steeringFile=steeringFile;
 
-      if(!parseXMLFile( steeringFile )){
-	_errors.insert("XML File parsing error");
-      }
+        if(!parseXMLFile( steeringFile, cmdlineparams )){
+            _errors.insert("XML File parsing error");
+        }
     }
+
     //create Global Parameters
     else{
 	_gparam = new StringParameters;
@@ -487,7 +488,7 @@ namespace marlin{
   ////////////////////////////////////////////////////////////////////////////////
 
   //parse an xml file and initialize data
-  bool MarlinSteerCheck::parseXMLFile( const string& file ){
+  bool MarlinSteerCheck::parseXMLFile( const string& file, const CommandLineParametersMap * cmdlineparams ){
 
       stringstream cmd;
       cmd << "ls " << file << " >/dev/null 2>/dev/null";
@@ -518,6 +519,11 @@ namespace marlin{
 	    return false;
 	}
 	_parser = new XMLParser( file, true ) ;
+    if( cmdlineparams != NULL ){
+       // tell parser to take into account any options defined on the command line
+       _parser->setCmdLineParameters( *cmdlineparams ) ;
+    }
+
       }
     try{
       _parser->parse();
