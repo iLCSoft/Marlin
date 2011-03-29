@@ -13,7 +13,7 @@ class TiXmlDocument ;
 
 namespace marlin{
 
-  typedef std::map< std::string ,  StringParameters* > StringParametersMap ;
+  typedef std::map< std::string , StringParameters* > StringParametersMap ;
 
   /** XML parser for Marlin steering files.
    *  Marlin XML steering files have the following form (use <b>Marlin -x > example.xml</b> to 
@@ -148,6 +148,10 @@ namespace marlin{
     XMLParser( const std::string& fileName, bool forCCheck=false ) ;
     virtual ~XMLParser() ; 
 
+    /** set command line parameters */
+    void setCmdLineParameters( const CommandLineParametersMap & cmdlineparams ){
+        _cmdlineparams = cmdlineparams ;
+    }
 
     /** Parse the input file */
     void parse() ;
@@ -189,6 +193,8 @@ namespace marlin{
   private:
     XMLParser() ;
     bool _forCCheck; //boolean variable set to true if parser is used for consistency checking
+
+    CommandLineParametersMap _cmdlineparams ;
 
   };
 

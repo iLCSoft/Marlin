@@ -27,7 +27,18 @@ ProcessorLoader::ProcessorLoader(
         // the library basename, i.e. /path/to/libBlah.so --> libBlah.so
         std::string libBaseName( libName.substr( idx + 1 ) );
 
-        std::cout << "<!-- Loading shared library : " << libName << " ("<< libBaseName << ")-->" << std::endl ;
+        char *real_path = realpath(libName.c_str(), NULL);
+
+        if( real_path != NULL ){
+            std::cout << "<!-- Loading shared library : " << real_path << " ("<< libBaseName << ")-->" << std::endl ;
+
+            // use real_path
+            free(real_path);
+        }
+        else{
+            std::cout << "<!-- Loading shared library : " << libName << " ("<< libBaseName << ")-->" << std::endl ;
+        }
+
         
         if( _checkDuplicateLibs.find( libBaseName ) == _checkDuplicateLibs.end() ){
             _checkDuplicateLibs.insert( libBaseName ) ;

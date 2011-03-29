@@ -4,6 +4,7 @@
 //#include "lcio.h"
 #include "IParser.h"
 #include "StringParameters.h"
+#include "marlin/Exceptions.h"
 
 #include <fstream>
 #include <string>
@@ -45,6 +46,12 @@ public:
   virtual ~Parser() ; 
 
   StringParameters* getParameters( const std::string& sectionName ) const ;
+
+    /** set command line parameters */
+    void setCmdLineParameters( const CommandLineParametersMap & cmdlineparams ){
+        throw ParseException( "dynamic command line options only supported for xml steering files" ) ;
+    }
+
   
   /** Parse the input file
    */
