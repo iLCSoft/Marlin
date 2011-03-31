@@ -129,7 +129,9 @@ int main(int argc, char** argv ){
             StringVec cmdlinearg, cmdlinekey ;
             LCTokenizer t( cmdlinearg, '=' ) ;
 
-            string s( string( argv[i] ).substr( 2 ) ) ;
+            string param( argv[i] ) ;
+
+            string s( param.substr( 2 ) ) ;
             for_each( s.begin(), s.end(), t ) ;
 
             // cout << "split opt:\tkey: " << cmdlinearg[0] << ", value: " << cmdlinearg[1] << endl ;
