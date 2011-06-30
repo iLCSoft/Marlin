@@ -23,7 +23,7 @@ SET( MARLIN_INPUT_FILES
 )
 CONFIGURE_FILE( runmarlin.cmake.in eventmodifier.cmake @ONLY ) 
 
-ADD_TEST( t_eventmodifier cmake -P eventmodifier.cmake )
+ADD_TEST( t_eventmodifier "${CMAKE_COMMAND}" -P eventmodifier.cmake )
 SET_TESTS_PROPERTIES( t_eventmodifier PROPERTIES PASS_REGULAR_EXPRESSION "TestEventModifier modified 3 events in 1 run" )
 
 
@@ -36,7 +36,7 @@ SET( MARLIN_INPUT_FILES
 )
 CONFIGURE_FILE( runmarlin.cmake.in processoreventseeder.cmake @ONLY ) 
 
-ADD_TEST( t_processoreventseeder cmake -P processoreventseeder.cmake )
+ADD_TEST( t_processoreventseeder "${CMAKE_COMMAND}" -P processoreventseeder.cmake )
 
 SET_TESTS_PROPERTIES( t_processoreventseeder PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR .TestProcessorEventSeeder.* Seeds don't match"   )
 
