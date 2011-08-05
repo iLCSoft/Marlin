@@ -3,6 +3,19 @@
   Marlin release notes
  ======================
 
+
+ --------
+| v01-01 |
+ --------
+
+    - Added dynamic command line options (see example by calling Marlin -h)
+
+    Bug fixes:
+        - skip loading of duplicate lcio libraries/headers from lccd (cause warning on mac osx)
+        - examples/mymarlin/src/MyProcessor.cc: protected against non-existing collections
+        - made gcc 4.4.3 compliant
+        - removed compiler warnings
+
  --------
 | v01-00 |
  --------
