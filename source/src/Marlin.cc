@@ -162,6 +162,8 @@ int main(int argc, char** argv ){
             // save dynamic options into map
             cmdlineparams[ cmdlinekey[0] ][ cmdlinekey[1] ] = cmdlinearg[1] ;
 
+            cout << "<!-- steering file parameter: [ " << cmdlinekey[0] << "." << cmdlinekey[1] << " ] will be OVERWRITTEN with value: [\"" << cmdlinearg[1] << "\"] -->" << endl;
+
             // erase dynamic options from **argv
             for( int j = i ; j < argc-1 ; j++ ){
                 argv[j] = argv[j+1];
@@ -170,6 +172,8 @@ int main(int argc, char** argv ){
             i--;
         }
     }
+
+    cout << endl ;
 
     // read file name from command line
     if( argc > 1 ){
