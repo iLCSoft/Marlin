@@ -9,7 +9,7 @@ SET_TESTS_PROPERTIES( t_marlinminusx PROPERTIES PASS_REGULAR_EXPRESSION "<parame
 
 #find the marlintest library and set the MARLIN_DLL to it
 GET_TARGET_PROPERTY( MARLIN_DLL marlintest LOCATION )
-MESSAGE( " using the following MARLIN_DLL for tests:"  ${MARLIN_DLL}  )
+MESSAGE( STATUS "using the following MARLIN_DLL for tests: ${MARLIN_DLL}"  )
 
 
 
