@@ -9,6 +9,7 @@
  --------
 
     - Added dynamic command line options (see example by calling Marlin -h)
+    - Added checking of duplicate processor entries in the steering file
 
     Bug fixes:
         - skip loading of duplicate lcio libraries/headers from lccd (cause warning on mac osx)

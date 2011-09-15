@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include <sstream>
+#include <set>
 
 
 #include <memory>
@@ -75,6 +76,9 @@ namespace marlin{
         std::vector<std::string> procConds ;
         procConds.push_back("ProcessorConditions") ;
 
+        // variable used to check for duplicate processor entries in the execute section
+        std::set<std::string> procList ;
+
         section = root->FirstChild("execute")  ;
         if( section != 0  ){
 
@@ -89,7 +93,17 @@ namespace marlin{
             TiXmlNode* proc = 0 ;
             while( ( proc = section->IterateChildren( "processor", proc ) )  != 0  ){
 
-                activeProcs.push_back( getAttribute( proc, "name") ) ;
+                std::string procName( getAttribute( proc, "name") );
+                
+                //std::cout << "looping over processor " + procName << std::endl;
+
+                // exit if processor defined more than once in the execute section
+                if( procList.find( procName ) != procList.end() ){
+                    throw ParseException(std::string( "XMLParser::parse : "+ procName +" defined more than once in <execute> section ") );
+                }
+                procList.insert( procName ) ;
+
+                activeProcs.push_back( procName ) ;
 
                 std::string condition(  getAttribute( proc,"condition")  ) ;
 
@@ -151,6 +165,9 @@ namespace marlin{
         unsigned procCount(0) ; 
         unsigned typedProcCount(0) ;
 
+        // use this variable to check for duplicate processor definitions
+        procList.clear();
+
         while( (section = root->IterateChildren("processor",  section ) )  != 0  ){
 
             // std::cout << " processor found: " << section->Value() << std::endl ;
@@ -159,6 +176,12 @@ namespace marlin{
 
             std::string name( getAttribute( section, "name") ) ;
             _map[ name  ] =  _current ;
+
+            // exit if processor defined more than once in the execute section
+            if( procList.find( name ) != procList.end() ){
+                throw ParseException(std::string( "XMLParser::parse : "+ name +" defined more than once in the steering file ") );
+            }
+            procList.insert( name ) ;
 
 
             // std::cout << " processor found: " << name << std::endl ;
