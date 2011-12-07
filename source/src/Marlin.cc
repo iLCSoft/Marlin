@@ -153,9 +153,9 @@ int main(int argc, char** argv ){
                 return printUsage();
             }
 
-            // case insensitive command line options
-            std::transform(cmdlinekey[0].begin(), cmdlinekey[0].end(), cmdlinekey[0].begin(), ::toupper);
-            std::transform(cmdlinekey[1].begin(), cmdlinekey[1].end(), cmdlinekey[1].begin(), ::toupper);
+            // // case insensitive command line options
+            // std::transform(cmdlinekey[0].begin(), cmdlinekey[0].end(), cmdlinekey[0].begin(), ::toupper);
+            // std::transform(cmdlinekey[1].begin(), cmdlinekey[1].end(), cmdlinekey[1].begin(), ::toupper);
 
             // cout << "split key:\tindex1: " << cmdlinekey[0] << ", index2: " << cmdlinekey[1] << endl ;
 
@@ -280,32 +280,32 @@ int main(int argc, char** argv ){
     }
 
 
-    //-----  register log level names with the logstream ---------
-    streamlog::out.addLevelName<DEBUG>() ;
-    streamlog::out.addLevelName<DEBUG0>() ;
-    streamlog::out.addLevelName<DEBUG1>() ;
-    streamlog::out.addLevelName<DEBUG2>() ;
-    streamlog::out.addLevelName<DEBUG3>() ;
-    streamlog::out.addLevelName<DEBUG4>() ;
-    streamlog::out.addLevelName<MESSAGE>() ;
-    streamlog::out.addLevelName<MESSAGE0>() ;
-    streamlog::out.addLevelName<MESSAGE1>() ;
-    streamlog::out.addLevelName<MESSAGE2>() ;
-    streamlog::out.addLevelName<MESSAGE3>() ;
-    streamlog::out.addLevelName<MESSAGE4>() ;
-    streamlog::out.addLevelName<WARNING>() ;
-    streamlog::out.addLevelName<WARNING0>() ;
-    streamlog::out.addLevelName<WARNING1>() ;
-    streamlog::out.addLevelName<WARNING2>() ;
-    streamlog::out.addLevelName<WARNING3>() ;
-    streamlog::out.addLevelName<WARNING4>() ;
-    streamlog::out.addLevelName<ERROR>() ;
-    streamlog::out.addLevelName<ERROR0>() ;
-    streamlog::out.addLevelName<ERROR1>() ;
-    streamlog::out.addLevelName<ERROR2>() ;
-    streamlog::out.addLevelName<ERROR3>() ;
-    streamlog::out.addLevelName<ERROR4>() ;
-    streamlog::out.addLevelName<SILENT>() ;
+    // //-----  register log level names with the logstream ---------
+    // streamlog::out.addLevelName<DEBUG>() ;
+    // streamlog::out.addLevelName<DEBUG0>() ;
+    // streamlog::out.addLevelName<DEBUG1>() ;
+    // streamlog::out.addLevelName<DEBUG2>() ;
+    // streamlog::out.addLevelName<DEBUG3>() ;
+    // streamlog::out.addLevelName<DEBUG4>() ;
+    // streamlog::out.addLevelName<MESSAGE>() ;
+    // streamlog::out.addLevelName<MESSAGE0>() ;
+    // streamlog::out.addLevelName<MESSAGE1>() ;
+    // streamlog::out.addLevelName<MESSAGE2>() ;
+    // streamlog::out.addLevelName<MESSAGE3>() ;
+    // streamlog::out.addLevelName<MESSAGE4>() ;
+    // streamlog::out.addLevelName<WARNING>() ;
+    // streamlog::out.addLevelName<WARNING0>() ;
+    // streamlog::out.addLevelName<WARNING1>() ;
+    // streamlog::out.addLevelName<WARNING2>() ;
+    // streamlog::out.addLevelName<WARNING3>() ;
+    // streamlog::out.addLevelName<WARNING4>() ;
+    // streamlog::out.addLevelName<ERROR>() ;
+    // streamlog::out.addLevelName<ERROR0>() ;
+    // streamlog::out.addLevelName<ERROR1>() ;
+    // streamlog::out.addLevelName<ERROR2>() ;
+    // streamlog::out.addLevelName<ERROR3>() ;
+    // streamlog::out.addLevelName<ERROR4>() ;
+    // streamlog::out.addLevelName<SILENT>() ;
 
 
     //-------- init logging level ------------

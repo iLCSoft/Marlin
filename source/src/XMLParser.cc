@@ -242,6 +242,33 @@ namespace marlin{
         // 		 << "---------------------------------------------------------------------" << std::endl ;
         //     }
 
+
+	// ======    check if we have unused cmd line parameter overwrites
+	if( _cmdlineparams.size() > 0 ) { 
+	  
+	  std::stringstream str ;
+	  str  << "Unknwon command line parameter overwrite ( spelling !?) : \n " ;
+	  
+	  typedef CommandLineParametersMap::iterator IT ;
+	  
+	  for( IT it=_cmdlineparams.begin() ; it != _cmdlineparams.end() ; ++it ){
+	    
+	    std::string index1 = it->first ;
+	    
+	    typedef CommandLineParametersMap::mapped_type ValMap ;
+	    
+	    ValMap* clp_map = &it->second ; 
+	    
+	    for( ValMap::iterator it = clp_map->begin() , end = clp_map->end() ;  it!=end ; ++it ) {  
+	      str << "   " << index1 << "." << it->first << " : " << it->second << "\n"   ;
+	    }
+	  }
+	  
+	  str << " Note: only parameters that are present in the Marlin steering file can be overwritten !!! " << "\n"  ;
+	  
+	  throw ParseException( str.str() ) ;
+	}
+	//===================================================================
     }
 
 
@@ -275,22 +302,33 @@ namespace marlin{
 
         std::string index1, index2, cmdlinevalues ;
 
+	//  std::cout << " ******************************* "  <<std::endl ;
+
+	index1 = section->Value() ;
+	if( index1.compare( "processor" ) == 0 ){
+	  index1 = getAttribute( section, "name") ;
+	}
+	
+	// try and get a map of overwritten cmd line parameters for this processor
+	typedef CommandLineParametersMap::mapped_type ValMap ;
+	ValMap* clp_map = 0 ; 
+	CommandLineParametersMap::iterator clp_it = _cmdlineparams.find( index1 ) ;
+	if( clp_it != _cmdlineparams.end() ){  // found some command line parameters for this section
+	  clp_map = &( clp_it->second ) ;
+	}
+	// CommandLineParametersMap::mapped_type clp_map = _cmdlineparams[ index1 ] ;
+
 
         while( ( par = section->IterateChildren( "parameter", par ) )  != 0  ){
 
-            index1 = section->Value() ;
             index2 = par->ToElement()->Attribute("name") ;
 
-            if( index1.compare( "processor" ) == 0 ){
-                index1 = getAttribute( section, "name") ;
-            }
-
-            // case insensitive command line options
-            std::transform(index1.begin(), index1.end(), index1.begin(), ::toupper);
-            std::transform(index2.begin(), index2.end(), index2.begin(), ::toupper);
+            // // case insensitive command line options
+            // std::transform(index1.begin(), index1.end(), index1.begin(), ::toupper);
+            // std::transform(index2.begin(), index2.end(), index2.begin(), ::toupper);
             
-            // std::cout << " parameter found : " << par->ToElement()->Attribute("name") << std::endl ;
-            // std::cout << " xml parameter: " << index1 << ": " << index2 << std::endl ;
+	    //std::cout << " ******** parameter found : " << par->ToElement()->Attribute("name") << std::endl ;
+	    //std::cout << " ***** xml parameter: " << index1 << ": " << index2 << std::endl ;
 
             std::vector<std::string> tokens ;
 
@@ -318,10 +356,31 @@ namespace marlin{
             //       }
 
 
-            cmdlinevalues = _cmdlineparams[ index1 ][ index2 ] ;
-            if( cmdlinevalues.compare( "" ) != 0 ){
-                inputLine = cmdlinevalues ; // overwrite steering file parameters with command line ones
-            }
+
+	    // cmdlinevalues = _cmdlineparams[ index1 ][ index2 ] ;
+            // if( cmdlinevalues.compare( "" ) != 0 ){
+            //     inputLine = cmdlinevalues ; // overwrite steering file parameters with command line ones
+            // }
+
+	    // ---- check we have a cmd line param overwrite 	    
+	    if( clp_map != 0 ) {   
+
+	      ValMap::iterator vm_it = clp_map->find(  index2 ) ;
+
+	      if( vm_it != clp_map->end() ) {
+	      
+		cmdlinevalues = vm_it->second ;
+
+		if( cmdlinevalues.compare( "" ) != 0 ){
+
+		  inputLine = cmdlinevalues ; // overwrite steering file parameters with command line ones
+
+		  //	  std::cout << " ###############  will replace " << index1 << "." << index2 << " with : " << cmdlinevalues << std::endl ;
+
+		  clp_map->erase( vm_it ) ;
+		}
+	      }
+	    }
 
             // std::cout << " values : " << inputLine << std::endl ;
 
@@ -370,7 +429,14 @@ namespace marlin{
 
             _current->add( lcioInTypes  ) ; 
             _current->add( lcioOutTypes  ) ; 
-        } 
+        }
+
+
+	// if we did have cmd line parameters and have used all of them, we delete the corresponding submap ... 
+	if( clp_map != 0 && clp_map->size() == 0 ) { 
+	  _cmdlineparams.erase( clp_it ) ;
+	}
+
     }
 
     //   TiXmlElement* child2 = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).Child( "Child", 1 ).Element();
