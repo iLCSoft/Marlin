@@ -4,6 +4,18 @@
  ======================
 
  --------
+| v01-02 |
+ --------
+     - made command line options case sensitive
+
+     - check spelling of command line options
+       and enforce that parameters are present
+       in steering file
+
+     - increased verbosity threshold levels - added:
+       DEBUG5-DEBUG9, MESSAGE5,....,ERROR9
+
+ --------
 | v01-01 |
  --------
 
