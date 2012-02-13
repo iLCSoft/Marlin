@@ -359,7 +359,8 @@ namespace marlin{
       
         streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
       
-        (*it)->logLevelName()   ;
+	scope.setLevel( (*it)->logLevelName() ) ;
+	//        (*it)->logLevelName()   ;
       
         streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
       
@@ -373,8 +374,9 @@ namespace marlin{
       for( ProcessorList::iterator it = _eventModifierList.begin();  it !=  _eventModifierList.end()  ; ++ it) {
       
         streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-      
-        (*it)->logLevelName()   ;
+	
+	scope.setLevel( (*it)->logLevelName() ) ;
+	//        (*it)->logLevelName()   ;
       
         streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
       
