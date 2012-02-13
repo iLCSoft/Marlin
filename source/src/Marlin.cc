@@ -33,11 +33,12 @@
 #include <cstring>
 #include <algorithm>
 
-//#ifdef USE_GEAR
+
 #include "gearimpl/Util.h"
 #include "gearxml/GearXML.h"
+#include "gearxml/MergeXML.h"
 #include "gearimpl/GearMgrImpl.h"
-//#endif
+
 
 #include "marlin/ProcessorLoader.h"
 
@@ -342,14 +343,52 @@ int main(int argc, char** argv ){
     std::string gearFile = Global::parameters->getStringVal("GearXMLFile" ) ;
 
     if( gearFile.size() > 0 ) {
+      
 
-        gear::GearXML gearXML( gearFile ) ;
 
-        Global::GEAR = gearXML.createGearMgr() ;
+      // //---------- check if we have an extension Gear file -------------------------
 
-        streamlog_out( MESSAGE )  << " ---- instantiated  GEAR from file  " << gearFile  << std::endl 
-            << *Global::GEAR << std::endl ;
+      // StringVec gearExtFiles ; 
 
+      // if( (Global::parameters->getStringVals("GearExtensionFiles" , gearExtFiles ) ).size() == 2 ){
+	
+      // 	streamlog_out( MESSAGE ) << " ======== Extension Gear file given: " <<  gearExtFiles[0] << " ============= \n"
+      // 				 << "     will add its parameters to the original Gear file: "  << gearFile << "\n"
+      // 				 << "     resulting Gear file will be used and saved as:     "  << gearExtFiles[1] << "\n"
+      // 				 << " ========================================================================= " << std::endl ;
+	
+      // 	gear::MergeXML mergeXML ;
+	
+      // 	if( ! mergeXML.setFile1(  gearFile  )){
+	  
+      // 	  streamlog_out( ERROR ) << "  Could not read Gear file  " <<  gearFile << std::endl ;
+      // 	  exit(1) ;
+      // 	}
+	
+      // 	if( ! mergeXML.setFile2( gearExtFiles[0] )){
+	  
+      // 	  streamlog_out( ERROR ) << "  Could not read extension Gear file  " <<  gearExtFiles[0] << std::endl ;
+      // 	  exit(1) ;
+      // 	}
+	
+      // 	if( !  mergeXML.mergeFiles( gearExtFiles[1] )){
+	  
+      // 	  streamlog_out( ERROR ) << "  Could not write extended Gear file  " <<  gearExtFiles[1] << std::endl ;
+      // 	  exit(1) ;
+      // 	}
+	
+      // 	gearFile =  gearExtFiles[1] ;
+
+      // }
+      // //----------------------------------------------------------------------------
+      
+      gear::GearXML gearXML( gearFile ) ;
+      
+      Global::GEAR = gearXML.createGearMgr() ;
+      
+      streamlog_out( MESSAGE )  << " ---- instantiated  GEAR from file  " << gearFile  << std::endl 
+				<< *Global::GEAR << std::endl ;
+      
     } else {
 
         streamlog_out( WARNING ) << " ---- no GEAR XML file given  --------- " << std::endl ;
