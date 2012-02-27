@@ -3,6 +3,13 @@
   Marlin release notes
  ======================
 
+ -----------
+| v01-02-01 |
+ ----------
+      - bug fixes: 
+           - fixed new streamlog levels DEBUG5-DEBUG9, MESSAGE5-MESSAGE9,....ERROR9
+	   - local streamlog level was not used in modifyEvent() and modifyRunHeader()
+ 
  --------
 | v01-02 |
  --------
