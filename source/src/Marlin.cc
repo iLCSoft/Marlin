@@ -66,10 +66,9 @@ int printUsage() ;
  */
 int main(int argc, char** argv ){
 
-    // this macro enables printout of uncaught exceptions
-    HANDLE_LCIO_EXCEPTIONS
-
-
+  // ---- catch all uncaught exceptions in the end ...
+  try{
+ 
     //###### init streamlog ######
     std::string binname = argv[0]  ;
     binname = binname.substr( binname.find_last_of("/") + 1 , binname.size() ) ;
@@ -409,12 +408,13 @@ int main(int argc, char** argv ){
 
     } else { 
 
+
+
         int maxRecord = Global::parameters->getIntVal("MaxRecordNumber") ;
         int skipNEvents = Global::parameters->getIntVal("SkipNEvents");
 
         // create lcio reader 
         LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
-
 
         lcReader->registerLCRunListener( ProcessorMgr::instance() ) ; 
         lcReader->registerLCEventListener( ProcessorMgr::instance() ) ; 
@@ -505,8 +505,21 @@ int main(int argc, char** argv ){
     //#endif  
 
     return 0 ;
-}
 
+  } catch( std::exception& e) {
+
+    std::cerr << " ***********************************************\n" 
+	      << " A runtime error occured - (uncaught exception):\n" 
+	      << "      " <<    e.what() << "\n"
+	      << " Marlin will have to be terminated, sorry.\n"  
+	      << " ***********************************************\n" 
+	      << std:: endl ; 
+
+    return 1 ;
+
+  }
+
+}
 
 //   void  createProcessors(XMLParser&  parser) {
 void createProcessors( const IParser&  parser) {
