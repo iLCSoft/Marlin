@@ -69,11 +69,7 @@ int main(int argc, char** argv ){
   // ---- catch all uncaught exceptions in the end ...
   try{
  
-    //###### init streamlog ######
-    std::string binname = argv[0]  ;
-    binname = binname.substr( binname.find_last_of("/") + 1 , binname.size() ) ;
-    streamlog::out.init( std::cout , binname ) ;
-
+    
     if( argc > 1 ){
         if( std::string(argv[1]) == "-x" ){
             std::cout  << "<?xml version=\"1.0\" encoding=\"us-ascii\"?>" << std::endl
@@ -245,6 +241,10 @@ int main(int argc, char** argv ){
     }
 
 
+    //###### init streamlog ######
+    std::string binname = argv[0]  ;
+    binname = binname.substr( binname.find_last_of("/") + 1 , binname.size() ) ;
+    streamlog::out.init( std::cout , binname ) ;
 
 
 

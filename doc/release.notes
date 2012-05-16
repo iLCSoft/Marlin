@@ -9,7 +9,7 @@
    - changed error handling:
      have global try-catch block in main in order to not have to rely on
      std::terminate/std::unexpeted (machine dependent and not compatible with ROOT)
-
+   - fixed DEBUG printouts in startup phase (e.g. Marlin -x ...)
 
  -----------
 | v01-02-01 |
