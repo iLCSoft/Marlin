@@ -65,6 +65,11 @@ namespace marlin{
     friend class CMProcessor ;
     friend class XMLFixCollTypes ;
 
+  private:
+    //prevent users from making (default) copies of processors
+    Processor(const Processor& typeName) {}
+    void operator=(const Processor& typeName) { }
+
   public:
 
 // 	/** Possible verbosity levels */

@@ -5,6 +5,11 @@
 
 
  --------
+| v01-04 |
+ --------
+   -  prevent implicit copy c'tors and assignment operators for Processors 
+
+ --------
 | v01-03 |
  --------
    - changed error handling:
