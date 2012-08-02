@@ -156,11 +156,14 @@ namespace marlin{
             <<  std::endl ;
 
         std::cout  <<  " <execute>" << std::endl 
-            <<  "  <processor name=\"MyAIDAProcessor\"/>" << std::endl
-            <<  "  <processor name=\"MyTestProcessor\"/>  " << std::endl
-            <<  "  <processor name=\"MyLCIOOutputProcessor\"/>  " << std::endl
-            <<  " </execute>" << std::endl
-            << std::endl ;
+		   << "  <XXprocessor name=\"MyEventSelector\"/> " << std::endl 
+		   << "  <XXif condition=\"MyEventSelector\">    " << std::endl 
+		   <<  "   <processor name=\"MyAIDAProcessor\"/>" << std::endl
+		   <<  "   <processor name=\"MyTestProcessor\"/>  " << std::endl
+		   <<  "   <processor name=\"MyLCIOOutputProcessor\"/>  " << std::endl
+		   << "  </XXif>                                 " << std::endl  
+		   <<  " </execute>" << std::endl
+		   << std::endl ;
 
         std::cout  <<  " <global>" << std::endl 
 		   <<  "  <parameter name=\"LCIOInputFiles\"> simjob.slcio </parameter>" << std::endl

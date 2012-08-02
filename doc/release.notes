@@ -8,6 +8,9 @@
 | v01-04 |
  --------
    -  prevent implicit copy c'tors and assignment operators for Processors 
+   -  added EventSelector processor  
+      - use Marlin -x and uncomment lines with EventSelector and <if>
+        and specify run and event number in MyEventSelector
 
  --------
 | v01-03 |
