@@ -374,6 +374,9 @@ namespace marlin{
 
     void ProcessorMgr::modifyEvent( LCEvent* evt ){ 
     
+      // refresh the seeds for this event
+      Global::EVENTSEEDER->refreshSeeds( evt ) ;
+
       for( ProcessorList::iterator it = _eventModifierList.begin();  it !=  _eventModifierList.end()  ; ++ it) {
       
         streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
