@@ -45,6 +45,7 @@ namespace marlin{
   
   SimpleFastMCProcessor::SimpleFastMCProcessor() : Processor("SimpleFastMCProcessor") {
     
+    _factory = NULL;
     // modify processor description
     _description = "SimpleFastMCProcessor creates ReconstrcutedParticles from MCParticles " 
       "according to the resolution given in the steering file." ;
