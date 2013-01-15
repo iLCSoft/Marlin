@@ -26,7 +26,7 @@ namespace marlin{
   LCIOOutputProcessor::LCIOOutputProcessor(const std::string& typeName) : Processor(typeName)  {
     myConstruct() ;
   }
-  LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor") {
+  LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor"), _lcWrt(NULL) {
     myConstruct() ;
   }
 
