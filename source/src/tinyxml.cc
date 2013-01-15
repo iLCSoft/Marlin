@@ -985,6 +985,13 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 		SetError( TIXML_ERROR_DOCUMENT_EMPTY, 0, 0, TIXML_ENCODING_UNKNOWN );
 		return false;
 	}
+   // coverity complains (rightly), if ftell() fails, a negative value will be returned
+  // so better catch this one as well
+   else if( length < 0 )
+   {
+    // TODO: what kind of error should be passed?
+    return false;
+   }
 
 	// If we have a file, assume it is all one big XML file, and read it in.
 	// The document parser may decide the document ends sooner than the entire file, however.
