@@ -15,7 +15,7 @@ namespace marlin{
 
     // open steering file with processor names 
     XMLParser::XMLParser( const std::string&  fileName, bool forCCheck ) :
-        _current(0) , _fileName( fileName ), _forCCheck( forCCheck ) {
+        _current(NULL) , _doc(NULL), _fileName( fileName ), _forCCheck( forCCheck ) {
         }
 
     XMLParser::~XMLParser(){
