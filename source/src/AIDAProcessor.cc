@@ -23,7 +23,13 @@ namespace marlin {
   AIDAProcessor aAIDAProcessor ;
   
   
-  AIDAProcessor::AIDAProcessor() : Processor("AIDAProcessor") {
+  AIDAProcessor::AIDAProcessor() : Processor("AIDAProcessor"),
+  _analysisFactory(NULL),
+  _treeFactory(NULL),
+  _tree(NULL),
+  _histoFactory(NULL),
+  _tupleFactory(NULL),
+  _dataPointSetFactory(NULL) {
     
     _description = "Processor that handles AIDA files. Creates on directory per processor. "
       " Processors only need to create and fill the histograms, clouds and tuples. Needs to be the first ActiveProcessor" ;
