@@ -13,7 +13,7 @@ namespace marlin{
 
   // open steering file with processor names 
   XMLFixCollTypes::XMLFixCollTypes( const std::string&  fileName) :
-    _fileName( fileName ) {
+    _doc(NULL), _fileName( fileName ) {
   }
   
   XMLFixCollTypes::~XMLFixCollTypes(){
