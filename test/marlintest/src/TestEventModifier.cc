@@ -17,6 +17,8 @@ TestEventModifier::TestEventModifier() : Processor("TestEventModifier") {
   
   // modify processor description
   _description = "TestEventModifier make changes to the run header and the event data for testing" ;
+  _nRun = -1;
+  _nEvt = -1;
 }
 
 
