@@ -20,16 +20,19 @@ TestProcessorEventSeeder::TestProcessorEventSeeder() : Processor("TestProcessorE
   
   // modify processor description
   _description = "TestProcessorEventSeeder test the uniquie event seeding functionality of the ProcessorEventSeeder service in Marlin" ;
+
+  _nRun = -1 ;
+  _nEvt = -1 ;
+  
 }
 
 
 void TestProcessorEventSeeder::init() { 
 
+  Global::EVENTSEEDER->registerProcessor(this);
+  
   _nRun = 0 ;
   _nEvt = 0 ;
-  
-  Global::EVENTSEEDER->registerProcessor(this);
-
 }
 
 
