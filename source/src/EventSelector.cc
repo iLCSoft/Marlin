@@ -27,7 +27,8 @@ EventSelector::EventSelector() : Processor("EventSelector") {
 			      "event list - pairs of Eventnumber RunNumber"  ,
 			      _evtList ,
 			      evtsExample ) ;
-  
+  _nEvt = -1;
+  _nRun = -1;  
 }
 
 
