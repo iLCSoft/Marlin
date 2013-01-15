@@ -19,6 +19,9 @@ namespace marlin{
 
     _description = "Simple processor to test the marlin application."
       " Prints run and event number." ;
+    _nRun = -1;
+    _nEvt = -1;
+    _nLoops = -1;
   }
 
   void TestProcessor::init() { 
