@@ -102,6 +102,9 @@ namespace marlin{
 			       datafileExample ,
 			       datafileExample.size() ) ;
     
+    _nRun = -1;
+    _nEvt = -1;
+    
   }
   
   
