@@ -31,7 +31,7 @@ namespace marlin{
   }
 
 
-  Processor::Processor(){}
+  Processor::Processor() : _parameters(NULL), _str(NULL)  {}
 
   Processor::~Processor() {
 
