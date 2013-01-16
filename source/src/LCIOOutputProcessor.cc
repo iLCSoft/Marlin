@@ -23,7 +23,10 @@ namespace marlin{
   LCIOOutputProcessor::~LCIOOutputProcessor() {
   } 
 
-  LCIOOutputProcessor::LCIOOutputProcessor(const std::string& typeName) : Processor(typeName), _lcWrt(NULL)   {
+  LCIOOutputProcessor::LCIOOutputProcessor(const std::string& typeName) : Processor(typeName), 
+    _lcWrt(NULL),
+    _nRun(-1),
+    _nEvt(-1)   {
     myConstruct() ;
   }
   LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor"), _lcWrt(NULL) {
