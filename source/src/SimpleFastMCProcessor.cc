@@ -43,9 +43,12 @@ namespace marlin{
   SimpleFastMCProcessor aSimpleFastMCProcessor ;
   
   
-  SimpleFastMCProcessor::SimpleFastMCProcessor() : Processor("SimpleFastMCProcessor") {
+  SimpleFastMCProcessor::SimpleFastMCProcessor() : Processor("SimpleFastMCProcessor"),
+    _factory(NULL),
+    _nRun(-1),
+    _nEvt(-1)
+    {
     
-    _factory = NULL;
     // modify processor description
     _description = "SimpleFastMCProcessor creates ReconstrcutedParticles from MCParticles " 
       "according to the resolution given in the steering file." ;
@@ -201,7 +204,7 @@ namespace marlin{
     static AIDA::ICloud1D* hChargedEnergy ;    
     static AIDA::ICloud1D* hPhotonEnergy ;    
     static AIDA::ICloud1D* hHadronEnergy ;    
-    static AIDA::ICloud1D* hLostEnergy ;    
+    //~ static AIDA::ICloud1D* hLostEnergy ;    
     
     static AIDA::IHistogram1D* hPhotonRes ;    
     static AIDA::IHistogram1D* hHadronRes ;    
@@ -225,8 +228,8 @@ namespace marlin{
       hHadronEnergy = AIDAProcessor::histogramFactory(this)->
        	createCloud1D( "hHadronEnergy", "E/GeV for neutral hadrons", 100 ) ; 
 
-      hLostEnergy = AIDAProcessor::histogramFactory(this)->
-       	createCloud1D( "hLostEnergy", "E/GeV for not reconstructed particles", 100 ) ; 
+      //~ hLostEnergy = AIDAProcessor::histogramFactory(this)->
+       	//~ createCloud1D( "hLostEnergy", "E/GeV for not reconstructed particles", 100 ) ; 
       
       
       hPhotonRes = AIDAProcessor::histogramFactory(this)->
