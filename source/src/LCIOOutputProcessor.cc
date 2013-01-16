@@ -29,7 +29,10 @@ namespace marlin{
     _nEvt(-1)   {
     myConstruct() ;
   }
-  LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor"), _lcWrt(NULL) {
+  LCIOOutputProcessor::LCIOOutputProcessor() : Processor("LCIOOutputProcessor"),
+    _lcWrt(NULL),
+    _nRun(-1),
+    _nEvt(-1)  {
     myConstruct() ;
   }
 
