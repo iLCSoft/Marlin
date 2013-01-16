@@ -15,13 +15,14 @@ namespace marlin{
   TestProcessor aTestProcessor ;
 
 
-  TestProcessor::TestProcessor() : Processor("TestProcessor") {
+  TestProcessor::TestProcessor() : Processor("TestProcessor"),
+    _nRun (-1), 
+    _nEvt(-1),
+    _doCalibration(false), 
+    _nLoops(-1) {
 
     _description = "Simple processor to test the marlin application."
       " Prints run and event number." ;
-    _nRun = -1;
-    _nEvt = -1;
-    _nLoops = -1;
   }
 
   void TestProcessor::init() { 
