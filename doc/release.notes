@@ -2,6 +2,14 @@
  ======================
   Marlin release notes
  ======================
+
+ ----------
+| v01-04-02 |
+ ----------
+      - fix problem with ROOT seg fault at program end:
+        do not call dlclose on shared libraries anymmore
+        (A.Sailer)
+        
  ----------
 | v01-04-01 |
  ----------
