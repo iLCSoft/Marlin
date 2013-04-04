@@ -76,17 +76,27 @@ ProcessorLoader::ProcessorLoader(
 ProcessorLoader::~ProcessorLoader() {
 
 
-  char * s = std::getenv("MARLIN_DEBUG" ) ;
-  
-  // do not unload processors if $MARLIN_DEBUG is set to 1
-  // useful for debugging with valgrind (https://jira.slac.stanford.edu/browse/MAR-45)
-  if( std::string("1").compare( (s?s:"0") ) == 0 ) {
-    std::cout << std::endl << "<!-- MARLIN_DEBUG=1 set in your environment - skip unloading processors --> " << std::endl ;
-  } else {
-    for( LibVec::iterator it = _libs.begin() ; it != _libs.end() ; ++it ) {
-        dlclose( *it ) ;
-    }
-  }
+  //fg: calling of dlclose causes a ROOT segmentation fault at the end of the program
+  //    - as the dlclose is not strictly needed, we do not call it anymore
+  //    so also MARLIN_DEBUG is no longer needed 
+  //    (thanks to A.Sailer for pointing this out)
+  //
+  //
+  // char * s = std::getenv("MARLIN_DEBUG" ) ;
+  // 
+  // // do not unload processors if $MARLIN_DEBUG is set to 1
+  // // useful for debugging with valgrind (https://jira.slac.stanford.edu/browse/MAR-45)
+  // if( std::string("1").compare( (s?s:"0") ) == 0 ) {
+  //   std::cout << std::endl << "<!-- MARLIN_DEBUG=1 set in your environment - skip unloading processors --> " << std::endl ;
+  // } else {
+  ////    for( LibVec::iterator it = _libs.begin() ; it != _libs.end() ; ++it ) {
+  //    std::cout << std::endl << "################ ProcessorLoader: dlclose libraries in reverse order !!!!!! " << std::endl ;
+  //
+  //    for( LibVec::reverse_iterator it = _libs.rbegin() ; it != _libs.rend() ; ++it ) {
+  //        dlclose( *it ) ;
+  //    }
+  //  }
+
 }
 
 
