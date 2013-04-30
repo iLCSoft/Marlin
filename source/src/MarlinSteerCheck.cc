@@ -210,7 +210,8 @@ namespace marlin{
         error << "Error opening LCIO file [" << file << "]. File doesn't exist, or link is not valid!!";
         _errors.insert(error.str());
         cerr << "addLCIOFile Exception: " << e.what() << endl;
-        lcReader->close();
+      	_lcioFiles.push_back(file); // we still add the file without collections
+	lcReader->close();
         delete lcReader;
         return 0;
     }

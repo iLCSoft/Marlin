@@ -193,6 +193,17 @@ int main(int argc, char** argv ){
                 return(1);
             }
         }
+	else if( std::string(argv[1]) == "-u" ){
+	  if( argc == 4 ){
+	    MarlinSteerCheck msc(argv[2], &cmdlineparams );
+	    msc.dump_information();
+	    return(msc.saveAsXMLFile(argv[3] )) ;
+	  }
+	  else{
+	    std::cout << "  usage: Marlin -u oldsteering.xml newsteering.xml" << std::endl << std::endl;
+	    return(1);
+	  }
+	}
         else if( std::string(argv[1]) == "-o" ){
             if( argc == 4 ){
                 MarlinSteerCheck msc(argv[2], &cmdlineparams );
@@ -603,35 +614,34 @@ void listAvailableProcessorsXML() {
 
 int printUsage() {
 
-    std::cout << " Usage: Marlin [OPTION] [FILE]..." << std::endl 
-        << "   runs a Marlin application " << std::endl 
-        << std::endl 
-        << " Running the application with a given steering file:" << std::endl 
-        << "   Marlin steer.xml   " << std::endl 
-        << std::endl 
-        << "   Marlin -h                  \t print this help information" << std::endl 
-        << "   Marlin -?                  \t print this help information" << std::endl 
-        << "   Marlin -x                  \t print an example steering file to stdout" << std::endl 
-        << "   Marlin -c steer.xml        \t check the given steering file for consistency" << std::endl 
-        << "   Marlin -f old.xml new.xml  \t convert old xml files to new xml files for consistency check" 
-        << std::endl 
-        << "   Marlin -o old.steer new.xml\t convert old steering file to xml steering file" << std::endl 
-        << "   Marlin -l                  \t [deprecated: old format steering file example]" << std::endl 
-        << "   Marlin -d steer.xml flow.dot\t create a program flow diagram (see: http://www.graphviz.org)" << std::endl 
-        << std::endl 
-        << " Example: " << std::endl 
-        << " To create a new default steering file from any Marlin application, run" << std::endl 
-        << "     Marlin -x > mysteer.xml" << std::endl 
-        << " and then use either an editor or the MarlinGUI to modify the created steering file " << std::endl 
-        << " to configure your application and then run it. e.g. : " << std::endl 
-        << "     Marlin mysteer.xml > marlin.out 2>&1 &" << std::endl << std::endl
-        << " Dynamic command line options may be specified in order to overwrite individual steering file parameters, e.g.:" << std::endl 
-        << "     Marlin --global.LCIOInputFiles=\"input1.slcio input2.slcio\" --global.GearXMLFile=mydetector.xml" << std::endl 
-        << "            --MyLCIOOutputProcessor.LCIOWriteMode=WRITE_APPEND --MyLCIOOutputProcessor.LCIOOutputFile=out.slcio steer.xml" << std::endl << std::endl
-        << "     NOTE: Dynamic options do NOT work together with Marlin options (-x, -f, -l) nor with the MarlinGUI or old steering files" << std::endl 
-        << std::endl ;
-
-    return(0) ;
+  std::cout << " Usage: Marlin [OPTION] [FILE]..." << std::endl 
+	    << "   runs a Marlin application " << std::endl 
+	    << std::endl 
+	    << " Running the application with a given steering file:" << std::endl 
+	    << "   Marlin steer.xml   " << std::endl 
+	    << std::endl 
+	    << "   Marlin [-h/-?]             \t print this help information" << std::endl 
+	    << "   Marlin -x                  \t print an example steering file to stdout" << std::endl 
+	    << "   Marlin -c steer.xml        \t check the given steering file for consistency" << std::endl 
+	    << "   Marlin -u old.xml new.xml  \t consistency check with update of xml file"  << std::endl
+	    << "   Marlin -d steer.xml flow.dot\t create a program flow diagram (see: http://www.graphviz.org)" << std::endl 
+	    << "   Marlin -l                  \t [deprecated: old format steering file example]" << std::endl 
+	    << "   Marlin -f old.xml new.xml  \t [deprecated: convert old xml files to new xml files for consistency check]"  << std::endl 
+	    << "   Marlin -o old.steer new.xml\t [deprecated: convert old steering file to xml steering file]" << std::endl 
+	    << std::endl 
+	    << " Example: " << std::endl 
+	    << " To create a new default steering file from any Marlin application, run" << std::endl 
+	    << "     Marlin -x > mysteer.xml" << std::endl 
+	    << " and then use either an editor or the MarlinGUI to modify the created steering file " << std::endl 
+	    << " to configure your application and then run it. e.g. : " << std::endl 
+	    << "     Marlin mysteer.xml > marlin.out 2>&1 &" << std::endl << std::endl
+	    << " Dynamic command line options may be specified in order to overwrite individual steering file parameters, e.g.:" << std::endl 
+	    << "     Marlin --global.LCIOInputFiles=\"input1.slcio input2.slcio\" --global.GearXMLFile=mydetector.xml" << std::endl 
+	    << "            --MyLCIOOutputProcessor.LCIOWriteMode=WRITE_APPEND --MyLCIOOutputProcessor.LCIOOutputFile=out.slcio steer.xml" << std::endl << std::endl
+	    << "     NOTE: Dynamic options do NOT work together with Marlin options (-x, -f, -l) nor with the MarlinGUI or old steering files" << std::endl 
+	    << std::endl ;
+  
+  return(0) ;
 
 }
 

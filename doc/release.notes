@@ -3,9 +3,12 @@
   Marlin release notes
  ======================
 
- ----------
-| v01-04-02 |
- ----------
+ --------
+| v01-05 |
+ --------
+      - new command line option (H.Perrey, DESY):
+         -u : consistency check and updated version of xml file
+
       - fix problem with ROOT seg fault at program end:
         do not call dlclose on shared libraries anymmore
         (A.Sailer)
