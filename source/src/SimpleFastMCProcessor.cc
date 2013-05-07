@@ -168,7 +168,9 @@ namespace marlin{
       
       MCParticle* mcp = dynamic_cast<MCParticle*> ( mcpCol->getElementAt( i ) ) ;
       
-      if( mcp->getDaughters().size() == 0 ) { // stable particles only 
+      //      if( mcp->getDaughters().size() == 0 ) { // stable particles only 
+
+      if( mcp->getGeneratorStatus() == 1 ) { // stable particles only 
 
 	ReconstructedParticle*  rec = 0 ;
 	
