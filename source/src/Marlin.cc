@@ -427,6 +427,23 @@ int main(int argc, char** argv ){
         // create lcio reader 
         LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
 
+	StringVec readColNames ; 
+	if( (Global::parameters->getStringVals("LCIOReadCollectionNames" , readColNames ) ).size() != 0 ){
+	  
+	  streamlog_out( WARNING )  << " *********** Parameter LCIOReadCollectionNames given - will only read the following collections: **** " 
+				    << std::endl ;
+
+	  for( unsigned i=0,N=readColNames.size() ; i<N ; ++i ) {
+	    streamlog_out( WARNING )  << "     " << readColNames[i] << std::endl ;
+	  } 
+	  streamlog_out( WARNING )  << " *************************************************************************************************** " << std::endl ;
+
+#if  LCIO_PATCHVERSION_GE( 2,4,0 )
+
+	  lcReader->setReadCollectionNames( readColNames ) ;
+#endif
+	} 
+
         lcReader->registerLCRunListener( ProcessorMgr::instance() ) ; 
         lcReader->registerLCEventListener( ProcessorMgr::instance() ) ; 
 

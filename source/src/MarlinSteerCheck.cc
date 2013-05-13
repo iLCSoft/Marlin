@@ -204,6 +204,11 @@ namespace marlin{
     LCReader* lcReader = LCFactory::getInstance()->createLCReader();
     try{
         lcReader->open( file );
+	// 
+	StringVec readCols ;
+	_gparam->getStringVals( "LCIOReadCollectionNames" , readCols );
+	if( ! readCols.empty() )
+	  lcReader->setReadCollectionNames( readCols  ) ;
     }
     catch( Exception& e){
         stringstream error;

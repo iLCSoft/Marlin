@@ -174,6 +174,8 @@ namespace marlin{
 		   <<  "  <parameter name=\"GearXMLFile\"> gear_ldc.xml </parameter>  " << std::endl
 		   <<  "  <parameter name=\"Verbosity\" options=\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\"> DEBUG  </parameter> " << std::endl
 		   <<  "  <parameter name=\"RandomSeed\" value=\"1234567890\" />" << std::endl
+		   <<  "  <!-- optionally limit the collections that are read from the input file: -->  " << std::endl
+		   <<  "  <!--parameter name=\"LCIOReadCollectionNames\">MCParticle PandoraPFOs</parameter-->" << std::endl
 		   <<  " </global>" << std::endl
 		   << std::endl ;
 
