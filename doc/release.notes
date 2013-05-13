@@ -6,6 +6,7 @@
  --------
 | v01-05 |
  --------
+
       - new optional global parameter: "LCIOReadCollectionNames"
         allows to restrict the collection that are read from the 
         LCIO file(s) to the ones given 
