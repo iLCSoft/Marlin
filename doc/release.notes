@@ -2,6 +2,15 @@
  ======================
   Marlin release notes
  ======================
+ --------
+| v01-06 |
+ --------
+     - optionally instantiate DD4hep geometry
+       - if built with MARLIN_USE_DD4HEP
+         and global variable "DD4hepXMLFile" is given
+         the geometry can be accessed in processors via:
+         DD4hep::Geometry::LCDD& lcdd = DD4hep::Geometry::LCDD::getInstance();
+
 
  --------
 | v01-05 |
