@@ -76,6 +76,12 @@ IF( MARLIN_DD4HEP )
     LINK_LIBRARIES( ${DD4hep_LIBRARIES} )
     ADD_DEFINITIONS( "-D MARLIN_USE_DD4HEP" )
 
+    #fg: fixme: for now need to link against geant4 libraries:
+    find_package(Geant4 REQUIRED gdml ui_all vis_all)
+    INCLUDE(${Geant4_USE_FILE})   # this also takes care of geant 4 definitions and include dirs
+    LINK_LIBRARIES( ${Geant4_LIBRARIES} )
+
+
     FIND_PACKAGE( ROOT REQUIRED ) 
     INCLUDE_DIRECTORIES( ${ROOT_INCLUDE_DIRS} )
     LINK_LIBRARIES( ${ROOT_LIBRARIES} )
