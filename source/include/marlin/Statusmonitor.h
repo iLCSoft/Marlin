@@ -8,6 +8,17 @@
 using namespace lcio ;
 using namespace marlin ;
 
+  /** Simple processor for writing out a status message every n-th event.
+   *
+   *  <h4>Input - Prerequisites</h4>
+   *  none
+   *  <h4>Output</h4> 
+   *  none
+   * @parameter HowOften  print run and event number for every HowOften-th event
+   * 
+   * @author A.Sailer CERN
+   * @version $Id:$
+   */
 class Statusmonitor : public Processor {
   
  public:

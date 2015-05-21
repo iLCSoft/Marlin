@@ -20,7 +20,7 @@ Statusmonitor::Statusmonitor() : Processor("Statusmonitor") {
   // modify processor description
   _description = "Statusmonitor prints out information on running Marlin Job: Prints number of runs run and current number of the event. Counting is sequential and not the run or event ID." ;
 
-  registerProcessorParameter("howOften",
+  registerProcessorParameter("HowOften",
 			     "Print the event number every N events",
 			     _howOften, 
 			     int(10000) ) ;
@@ -48,7 +48,7 @@ void Statusmonitor::processEvent( LCEvent *  ) {
 
   if (_nEvt % _howOften == 0) {
     streamlog_out(MESSAGE) 
-      << "Run  : " << std::setw(7) << _nRun
+      << " ===== Run  : " << std::setw(7) << _nRun
       << "  Event: " << std::setw(7) << _nEvt << endl;
   }
   _nEvt ++ ;
