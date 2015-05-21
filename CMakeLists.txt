@@ -65,29 +65,6 @@ IF( MARLIN_LCCD )
 ENDIF()
 
 
-OPTION( MARLIN_DD4HEP "Set to ON to build Marlin with DD4hep" ON )
-IF( MARLIN_DD4HEP )
-    SET( FIND_PACKAGE_SKIP_DEPENDENCIES TRUE ) # lccd also exports lcio libraries/headers
-    FIND_PACKAGE( DD4hep )
-    IF( NOT DD4hep_FOUND )
-        MESSAGE( SEND_ERROR "DD4HEP not found. Please set MARLIN_DD4HEP to OFF or DD4hep_DIR=/path/to/DD4HEP" )
-    ENDIF()
-    INCLUDE_DIRECTORIES( ${DD4hep_INCLUDE_DIRS} )
-    LINK_LIBRARIES( ${DD4hep_LIBRARIES} )
-    ADD_DEFINITIONS( "-D MARLIN_USE_DD4HEP" )
-
-    #fg: fixme: for now need to link against geant4 libraries:
-    find_package(Geant4 REQUIRED gdml ui_all vis_all)
-    INCLUDE(${Geant4_USE_FILE})   # this also takes care of geant 4 definitions and include dirs
-    LINK_LIBRARIES( ${Geant4_LIBRARIES} )
-
-
-    FIND_PACKAGE( ROOT REQUIRED ) 
-    INCLUDE_DIRECTORIES( ${ROOT_INCLUDE_DIRS} )
-    LINK_LIBRARIES( ${ROOT_LIBRARIES} )
-    ADD_DEFINITIONS( ${ROOT_DEFINITIONS} )
-    
-ENDIF()
 
 FOREACH( pkg AIDA CLHEP LCCD )
     IF( ${pkg}_FOUND )

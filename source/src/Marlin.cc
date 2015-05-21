@@ -39,10 +39,6 @@
 #include "gearxml/MergeXML.h"
 #include "gearimpl/GearMgrImpl.h"
 
-#ifdef MARLIN_USE_DD4HEP
-#include "DD4hep/LCDD.h"
-#endif
-
 #include "marlin/ProcessorLoader.h"
 
 #include "marlin/VerbosityLevels.h"
@@ -407,32 +403,6 @@ int main(int argc, char** argv ){
         streamlog_out( WARNING ) << " ---- no GEAR XML file given  --------- " << std::endl ;
         Global::GEAR = new gear::GearMgrImpl ;
     }
-
-
-#ifdef MARLIN_USE_DD4HEP
-
-    std::string dd4hepFile = Global::parameters->getStringVal("DD4hepXMLFile" ) ;
-    
-    if( dd4hepFile.size() > 0 ) {
-      
-      // set up the geometery needed for tracking
-      DD4hep::Geometry::LCDD& lcdd = DD4hep::Geometry::LCDD::getInstance();
-      
-      lcdd.fromCompact( dd4hepFile );
-      
-      streamlog_out( MESSAGE )  << " ---- instantiated  DD4HEP from file  " << dd4hepFile  << std::endl 
-				<< " for detector " << lcdd.header().name()          << std::endl 
-				<< " -------------------------------------" << std::endl ;
-
-    } else {
-
-        streamlog_out( WARNING ) << " ---- no DD4hep XML file given  --------- " << std::endl ;
-    }
-
-#endif
-
-
-
 
     //#endif
 
