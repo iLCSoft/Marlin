@@ -3,7 +3,7 @@
 
 #include "sys/types.h"
 
-#if APPLE
+#ifdef __APPLE__
 #include "sys/sysctl.h"
 #include <mach/mach.h>
 
@@ -52,7 +52,7 @@ void MemoryMonitor::processEvent( LCEvent* evt ) {
 
   if (_eventNumber % _howOften == 0) {
 
-#if APPLE
+#ifdef __APPLE__
     struct task_basic_info t_info;
     mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
     
