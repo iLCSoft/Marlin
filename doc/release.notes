@@ -3,6 +3,14 @@
   Marlin release notes
  ======================
  --------
+| v01-07 |
+ --------
+     - introduced global flag: AllowToModifyEvent
+       allowing to modify LCIO collections that have
+       been read from an input file in the processEvent()
+       method
+
+ --------
 | v01-06 |
  --------
     - added Statusmonitor processer (A.Sailer)

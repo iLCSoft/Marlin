@@ -171,6 +171,7 @@ namespace marlin{
 		   <<  "  <parameter name=\"MaxRecordNumber\" value=\"5001\" />  " << std::endl
 		   <<  "  <parameter name=\"SkipNEvents\" value=\"0\" />  " << std::endl
 		   <<  "  <parameter name=\"SupressCheck\" value=\"false\" />  " << std::endl
+		   <<  "  <parameter name=\"AllowToModifyEvent\" value=\"false\" />  " << std::endl
 		   <<  "  <parameter name=\"GearXMLFile\"> gear_ldc.xml </parameter>  " << std::endl
 		   <<  "  <parameter name=\"Verbosity\" options=\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\"> DEBUG  </parameter> " << std::endl
 		   <<  "  <parameter name=\"RandomSeed\" value=\"1234567890\" />" << std::endl
@@ -391,6 +392,54 @@ namespace marlin{
         (  dynamic_cast<EventModifier*>( *it )  )->modifyEvent( evt ) ;
       }
     
+      
+      bool check = ( Global::parameters->getStringVal("SupressCheck") != "true" ) ;
+
+      bool modify = ( Global::parameters->getStringVal("AllowToModifyEvent") == "true" ) ;
+      
+      if( modify ) {
+	
+	// refresh the seeds for this event
+	Global::EVENTSEEDER->refreshSeeds( evt ) ;
+	
+        try{ 
+	  
+	  for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
+	    
+	    if( _conditions.conditionIsTrue( (*it)->name() ) ) {
+	      
+	      streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
+	      //if( (*it)->logLevelName().size() > 0  )
+	      scope.setLevel( (*it)->logLevelName() ) ;
+	      
+	      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+	      
+	      start_t =  clock () ;  // start timer
+	      
+	      (*it)->processEvent( evt ) ; 
+	      
+	      if( check )  (*it)->check( evt ) ;
+	      
+	      end_t =  clock () ;  // stop timer
+	      
+	      
+	      TimeMap::iterator itT = tMap.find( *it ) ;
+	      
+	      itT->second.first += double( end_t - start_t  ) ; 
+	      itT->second.second ++ ;
+	      
+	      
+	      (*it)->setFirstEvent( false ) ;
+	    }       
+	  }    
+        } catch( SkipEventException& e){
+	  
+	  ++ _skipMap[ e.what() ] ;
+        }  
+	
+      } // end modify
+
+
     }
   
 
@@ -399,6 +448,12 @@ namespace marlin{
         _conditions.clear() ;
 
         bool check = ( Global::parameters->getStringVal("SupressCheck") != "true" ) ;
+
+        bool modify = ( Global::parameters->getStringVal("AllowToModifyEvent") == "true" ) ;
+
+	if( modify ) 
+	  return ;   // processorEventMethods already called in modifyEvent() ...
+
 
 	// refresh the seeds for this event
 	Global::EVENTSEEDER->refreshSeeds( evt ) ;
@@ -417,7 +472,7 @@ namespace marlin{
 
                     start_t =  clock () ;  // start timer
 
-                    (*it)->processEvent( evt ) ; 
+		    (*it)->processEvent( evt ) ; 
 
                     if( check )  (*it)->check( evt ) ;
 

@@ -423,6 +423,22 @@ int main(int argc, char** argv ){
         int maxRecord = Global::parameters->getIntVal("MaxRecordNumber") ;
         int skipNEvents = Global::parameters->getIntVal("SkipNEvents");
 
+        bool modify = ( Global::parameters->getStringVal("AllowToModifyEvent") == "true" ) ;
+
+	if( modify ) {
+
+	  streamlog_out( WARNING )  << " ******************************************************************************* \n" 
+				    << " *    AllowToModifyEvent is set to 'true'                                      * \n"
+				    << " *    => all processors can modify the input event in processEvent() !!        * \n"
+				    << " *        consider setting this flag to 'false'                                * \n"
+				    << " *        unless you really need it...                                         * \n"
+				    << " *    - if you need a processor that modifies the input event                  * \n"
+				    << " *      please implement the EventModifier interface and use the modifyEvent() * \n"
+				    << " *      method for this                                                        * \n"
+ 				    << " ******************************************************************************* \n" 
+				    << std::endl ;
+	}
+
         // create lcio reader 
         LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
 
