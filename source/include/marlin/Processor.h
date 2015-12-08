@@ -24,8 +24,9 @@
 
 // ----- define some useful macros-----------
 // for backward compatibility - use streamlog_out( MESSAGE )  instead 
-#define m_out( VERBOSITY ) streamlog_out( VERBOSITY )  
-#define m_endl std::endl 
+// - this conflicts with a boost header und should not be used by now anywhere ...
+//#define m_out( VERBOSITY ) streamlog_out( VERBOSITY )  
+//#define m_endl std::endl 
 //----------------------------------------
 
 using namespace lcio ;
