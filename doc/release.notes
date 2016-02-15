@@ -3,6 +3,14 @@
   Marlin release notes
  ======================
  --------
+| v01-08 |
+ --------
+
+   M /Marlin/trunk/source/include/marlin/Processor.h
+  - commented out old define for m_out (conflicts with a boost header )
+
+
+ --------
 | v01-07 |
  --------
      - introduced global flag: AllowToModifyEvent
