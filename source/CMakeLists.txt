@@ -33,8 +33,8 @@ INSTALL( FILES ${marlin_headers} DESTINATION include/marlin )
 
 
 # require proper c++
-ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
-ADD_DEFINITIONS( "-Wno-long-long" )
+#ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
+#ADD_DEFINITIONS( "-Wno-long-long" )
 
 # definitions
 # FIXME rather add to CMAKE_CXX_Debug_FLAGS ...
