@@ -120,6 +120,10 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake/MarlinConfig.h.cmake.in"
     "${PROJECT_BINARY_DIR}/marlin/MarlinConfig.h" @ONLY )
 
 INSTALL( FILES "${PROJECT_BINARY_DIR}/marlin/MarlinConfig.h" DESTINATION "include/marlin/" )
+INSTALL( FILES "${PROJECT_SOURCE_DIR}/source/python/compareMarlinSteeringFiles.py" DESTINATION "bin" 
+  PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
+	      OWNER_READ GROUP_READ WORLD_READ 
+	      OWNER_WRITE )
 # -----------------------------------------------------------------------------
 
 
