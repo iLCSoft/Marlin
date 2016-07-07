@@ -142,7 +142,7 @@ namespace marlin{
 
   void Processor::printDescriptionXML(std::ostream& stream) {
 
-    if(stream == std::cout){
+    if(&stream == &std::cout){
       stream << " <processor name=\"My" <<  type()  << "\"" 
 	     << " type=\"" <<  type() << "\">" 
 	     << std::endl ;
