@@ -2,6 +2,22 @@
  ======================
   Marlin release notes
  ======================
+
+ --------
+| v01-09 |
+ --------
+
+F. Gaede
+   - made compatible with c++11
+   - removed -ansi -pedantic -Wno-long-long
+   - fix comparison of ostream and std::cout
+
+A. Sailer
+   - Add program to compare two marlinSteering files and print out differences between the two files based on parameter values installs the compareMarlinSteeringFiles.py into the Marlin bin folder, which is usually in the PATH
+
+R. Simoniello
+   - removed -Wall etc from mymarlin example for c++11
+
  --------
 | v01-08 |
  --------
