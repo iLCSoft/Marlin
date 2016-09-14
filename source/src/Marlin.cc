@@ -28,7 +28,7 @@
 #include <fstream>
 #include <string>
 #include <assert.h>
-
+#include <signal.h>
 
 #include <cstring>
 #include <algorithm>
@@ -58,12 +58,23 @@ void listAvailableProcessorsXML() ;
 int printUsage() ;
 
 
+// Handle user interruption
+// This allows you to ^\ at any point to exit in a controlled way
+void userException(int sig){
+  std::cout<<std::endl<<"User interrupted"<<std::endl;
+	ProcessorMgr::instance()->end() ;
+  exit(1);
+}
+
 /** LCIO framework that can be used to analyse LCIO data files
  *  in a modular way. All tasks have to be implemented in Subclasses
  *  of Processor. They will be called in the order specified in the steering file.
  *
  */
 int main(int argc, char** argv ){
+
+  // Register escape behaviour
+  signal(SIGQUIT, userException);
 
   // ---- catch all uncaught exceptions in the end ...
   try{
