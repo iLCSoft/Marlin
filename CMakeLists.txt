@@ -88,6 +88,7 @@ IF( MARLIN_GUI )
     IF( NOT QT4_FOUND )
         MESSAGE( SEND_ERROR "QT4 not found. Please set MARLIN_GUI to OFF or QT4_DIR=/path/to/QT4" )
     ENDIF()
+    #ADD_DEFINITIONS ( -DQT_NO_DEBUG )
 ENDIF()
 
 
