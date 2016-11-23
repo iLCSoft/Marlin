@@ -3,6 +3,30 @@
   Marlin release notes
  ======================
 
+
+ --------
+| v01-10 |
+ --------
+
+F.Gaede	
+
+   - add a licence to marlin: GPLv3
+
+S.Lu
+
+  - fix buidling the MarlinGUI for gcc48 
+    - apply '-DQT_NO_DEBUG' when 'MARLIN_GUI' is set to 'on' 
+      and the MarlinGUI will be built.
+
+D.Hynds
+
+  - added escape behaviour mapped to SIGQUIT signal (^\). 
+    Hitting this during running will run the end routine for each processor and then exit Marlin, 
+    allowing you to stop event processing and still preserve histograms/results/etc. 
+    ( A bug in LCIOOutputProcessor leads to a memory error on exiting, but has no impact 
+      on anything else )
+
+
  --------
 | v01-09 |
  --------
