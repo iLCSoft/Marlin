@@ -293,7 +293,7 @@ namespace marlin{
   void MarlinSteerCheck::changeLCIOFilePos( unsigned int pos, unsigned int newPos ){
   
     //check if positions are valid
-    if( pos != newPos && pos >= 0 && newPos >= 0 && pos < _lcioFiles.size() && newPos < _lcioFiles.size() ){
+    if( pos != newPos && pos < _lcioFiles.size() && newPos < _lcioFiles.size() ){
 	
 	string file = _lcioFiles[pos];
 	     
@@ -342,13 +342,13 @@ namespace marlin{
   void MarlinSteerCheck::remProcessor( unsigned int index, bool status ){
 
     if( status == ACTIVE ){
-	if( index >=0 && index < _aProc.size() ){
+	if( index < _aProc.size() ){
 	  CCProcessor *p=popProc( _aProc, _aProc[index] );
 	  delete p;
 	}
     }
     else{
-	if( index >=0 && index < _iProc.size() ){
+	if( index < _iProc.size() ){
 	  CCProcessor *p=popProc( _iProc, _iProc[index] );
 	  delete p;
 	}
@@ -374,7 +374,7 @@ namespace marlin{
   // Activate a processor
   void MarlinSteerCheck::activateProcessor( unsigned int index ){
 
-    if( index >=0 && index < _iProc.size() ){
+    if( index < _iProc.size() ){
     
       //changes the processor status
       _iProc[index]->changeStatus();
@@ -392,7 +392,7 @@ namespace marlin{
   // Deactivate a processor
   void MarlinSteerCheck::deactivateProcessor( unsigned int index ){
     
-    if( index >=0 && index < _aProc.size() ){
+    if( index < _aProc.size() ){
     
       //changes the processor status
       _aProc[index]->changeStatus();
@@ -415,7 +415,7 @@ namespace marlin{
   // Change an active processor's position
   void MarlinSteerCheck::changeProcessorPos( unsigned int pos, unsigned int newPos ){
     //check if positions are valid
-    if( pos != newPos && pos >= 0 && newPos >= 0 && pos < _aProc.size() && newPos < _aProc.size() ){
+    if( pos != newPos && pos < _aProc.size() && newPos < _aProc.size() ){
 	
       CCProcessor* p = popProc(_aProc, _aProc[pos] );
 	
@@ -744,7 +744,7 @@ namespace marlin{
   }
 
   const string MarlinSteerCheck::getCondition( unsigned int index ){
-    if( index >= 0 && index < _pConditions.size()){
+    if( index < _pConditions.size()){
 	sSet::const_iterator p;
 	advance( p=_pConditions.begin(), index );
 	return *p;
@@ -1207,7 +1207,7 @@ namespace marlin{
   void MarlinSteerCheck::dumpColErrors( unsigned int i, ostream& stream, bool separators ){
     
     //skip if index is not valid or processor has no col errors
-    if( i>=0 && i<_aProc.size() && _aProc[i]->hasErrorCols() ){
+    if( i<_aProc.size() && _aProc[i]->hasErrorCols() ){
 	
 	dred(); dunderline();
 	stream << "\nProcessor [" <<

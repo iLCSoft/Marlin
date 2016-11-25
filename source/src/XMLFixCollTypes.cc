@@ -52,14 +52,14 @@ namespace marlin{
     while( (section = root->IterateChildren("processor",  section ) )  != 0  ){
       
 
-      std::string name( getAttribute( section, "name") ) ;
+      std::string procName( getAttribute( section, "name") ) ;
 
       std::string type=getAttribute( section, "type")  ;      
 
       
       Processor* processor =  ProcessorMgr::instance()->getProcessor( type )  ;
       
-      std::cout << " processor : " << name << " ( type: " << type << " ) "  ; 
+      std::cout << " processor : " << procName << " ( type: " << type << " ) "  ; 
 
       if( processor != 0 ) {
 

@@ -106,7 +106,7 @@ void TestEventModifier::processEvent( LCEvent * evt ) {
 
 
 
-void TestEventModifier::check( LCEvent * evt ) { 
+void TestEventModifier::check( LCEvent * ) { 
   // nothing to check here - could be used to fill checkplots in reconstruction processor
 }
 

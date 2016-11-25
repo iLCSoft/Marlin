@@ -14,11 +14,11 @@ namespace marlin {
 //   } 
 
 
-  void toStream(  std::ostream& s, int i , int N) { s << i ; }
-  void toStream(  std::ostream& s, float f , int N) { s << f ; }
-  void toStream(  std::ostream& s, double d , int N) { s << d ; }
-  void toStream(  std::ostream& s, const std::string& str , int N) { s << str ; }
-  void toStream(  std::ostream& s, bool b , int N) { s << ( b ? "true":"false" ) ; }
+  void toStream(  std::ostream& s, int i , int ) { s << i ; }
+  void toStream(  std::ostream& s, float f , int ) { s << f ; }
+  void toStream(  std::ostream& s, double d , int ) { s << d ; }
+  void toStream(  std::ostream& s, const std::string& str , int ) { s << str ; }
+  void toStream(  std::ostream& s, bool b , int ) { s << ( b ? "true":"false" ) ; }
 
   template<>
   void setProcessorParameter<int>( ProcessorParameter_t<int>* procParam,  StringParameters* params ) {

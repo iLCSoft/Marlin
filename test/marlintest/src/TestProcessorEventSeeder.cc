@@ -36,7 +36,7 @@ void TestProcessorEventSeeder::init() {
 }
 
 
-void TestProcessorEventSeeder::processRunHeader( LCRunHeader* run) { 
+void TestProcessorEventSeeder::processRunHeader( LCRunHeader* ) { 
   
   ++_nRun ;
 
@@ -110,7 +110,7 @@ void TestProcessorEventSeeder::processEvent( LCEvent * evt ) {
 
 
 
-void TestProcessorEventSeeder::check( LCEvent * evt ) { 
+void TestProcessorEventSeeder::check( LCEvent * ) { 
   // nothing to check here - could be used to fill checkplots in reconstruction processor
 }
 

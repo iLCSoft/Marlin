@@ -151,7 +151,7 @@ namespace marlin{
   }
 
 
-  void SimpleFastMCProcessor::processRunHeader( LCRunHeader* run) { 
+  void SimpleFastMCProcessor::processRunHeader( LCRunHeader* ) { 
     _nRun++ ;
   } 
   

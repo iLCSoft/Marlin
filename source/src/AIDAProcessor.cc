@@ -119,15 +119,15 @@ namespace marlin {
   } 
   
   
-  void AIDAProcessor::processRunHeader( LCRunHeader* run) { 
+  void AIDAProcessor::processRunHeader( LCRunHeader* ) { 
   } 
   
 
-  void AIDAProcessor::processEvent( LCEvent * evt ) { 
+  void AIDAProcessor::processEvent( LCEvent* ) { 
     // no processing
   }
 
-  void AIDAProcessor::check( LCEvent * evt ) { 
+  void AIDAProcessor::check( LCEvent* ) { 
     
     static AIDA::ICloud1D* hEvtTime ;    
     static clock_t eventTime =  clock () ; 

@@ -34,7 +34,7 @@ namespace marlin{
   }
   
   
-  HepLorentzVector SimpleClusterSmearer::smearedFourVector( const HepLorentzVector& v, int pdgCode ){
+  HepLorentzVector SimpleClusterSmearer::smearedFourVector( const HepLorentzVector& v, int /*pdgCode*/ ){
 
 
     // find resolution for polar angle
