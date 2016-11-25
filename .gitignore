@@ -1,0 +1,13 @@
+.dependencies
+MarlinConfig.cmake
+MarlinConfigVersion.cmake
+bin/
+build/
+build_env.sh
+doc/README
+doc/html/
+include/
+lib/
+*~
+
+
