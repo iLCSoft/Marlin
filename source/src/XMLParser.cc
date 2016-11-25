@@ -251,13 +251,13 @@ namespace marlin{
 	  
 	  typedef CommandLineParametersMap::iterator IT ;
 	  
-	  for( IT it=_cmdlineparams.begin() ; it != _cmdlineparams.end() ; ++it ){
+	  for( IT itP=_cmdlineparams.begin() ; itP != _cmdlineparams.end() ; ++itP ){
 	    
-	    std::string index1 = it->first ;
+	    std::string index1 = itP->first ;
 	    
 	    typedef CommandLineParametersMap::mapped_type ValMap ;
 	    
-	    ValMap* clp_map = &it->second ; 
+	    ValMap* clp_map = &itP->second ; 
 	    
 	    for( ValMap::iterator it = clp_map->begin() , end = clp_map->end() ;  it!=end ; ++it ) {  
 	      str << "   " << index1 << "." << it->first << " : " << it->second << "\n"   ;

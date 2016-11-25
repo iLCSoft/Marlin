@@ -49,7 +49,7 @@ void EventSelector::init() {
   }
 }
 
-void EventSelector::processRunHeader( LCRunHeader* run) { 
+void EventSelector::processRunHeader( LCRunHeader* ) { 
   
   _nRun++ ;
 } 
@@ -82,7 +82,7 @@ void EventSelector::processEvent( LCEvent * evt ) {
 
 
 
-void EventSelector::check( LCEvent * evt ) { 
+void EventSelector::check( LCEvent *  ) { 
   // nothing to check here - could be used to fill checkplots in reconstruction processor
 }
 

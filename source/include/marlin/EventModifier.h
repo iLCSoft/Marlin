@@ -17,7 +17,7 @@ public:
     virtual void modifyEvent( EVENT::LCEvent* ) = 0 ;
 
     /** Implement to modify the run header */
-    virtual void modifyRunHeader(EVENT::LCRunHeader * rh) {} ;
+    virtual void modifyRunHeader(EVENT::LCRunHeader* ) {} ;
 
     /** Return  name of this  event modifier.
      */

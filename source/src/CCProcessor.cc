@@ -324,7 +324,7 @@ namespace marlin{
   }
  
   void CCProcessor::remCol( const string& iotype, const string& name, unsigned int index ){
-    if( index >=0 && index < _cols[iotype][name].size() ){
+    if( index < _cols[iotype][name].size() ){
       popCol( _cols[iotype][name], _cols[iotype][name][index] );
     }
   }
@@ -513,13 +513,13 @@ namespace marlin{
 		stream << "  <" << (isParamOptional( keys[i] ) ? "!--" : "") << "parameter name=\"" << keys[i] << "\" ";
 		stream << "type=\"" << p->type() << "\"";
 		
-		StringVec values;
-		_param->getStringVals( keys[i], values );
-		stream << (values.size() == 1 ? " value=\"" : "> ");
-		for( unsigned int j=0; j<values.size(); j++ ){
-		    stream << values[j] << (values.size() > 1 ? " " : "");
+		StringVec valuesLocal;
+		_param->getStringVals( keys[i], valuesLocal );
+		stream << (valuesLocal.size() == 1 ? " value=\"" : "> ");
+		for( unsigned int j=0; j<valuesLocal.size(); j++ ){
+		    stream << valuesLocal[j] << (valuesLocal.size() > 1 ? " " : "");
 		}
-		stream << (values.size() == 1 ? "\"/" : "</parameter") << (isParamOptional( keys[i] ) ? "--" : "")  << ">\n";
+		stream << (valuesLocal.size() == 1 ? "\"/" : "</parameter") << (isParamOptional( keys[i] ) ? "--" : "")  << ">\n";
 	    }
 	}
 	//else it's a parameter from an uninstalled processor or an extra parameter from an installed processor

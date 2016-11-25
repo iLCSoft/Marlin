@@ -36,7 +36,6 @@
 
 #include "gearimpl/Util.h"
 #include "gearxml/GearXML.h"
-#include "gearxml/MergeXML.h"
 #include "gearimpl/GearMgrImpl.h"
 
 #include "marlin/ProcessorLoader.h"
@@ -61,7 +60,7 @@ int printUsage() ;
 // Handle user interruption
 // This allows you to ^\ at any point to exit in a controlled way
 void userException(int sig){
-  std::cout<<std::endl<<"User interrupted"<<std::endl;
+  std::cout<<std::endl<<"User interrupted with sig="<< sig <<std::endl;
 	ProcessorMgr::instance()->end() ;
   exit(1);
 }
@@ -93,7 +92,7 @@ int main(int argc, char** argv ){
     //------ load shared libraries with processors ------
 
     StringVec libs ;
-    LCTokenizer t( libs, ':' ) ;
+    LCTokenizer tk1( libs, ':' ) ;
 
     std::string marlinProcs("") ;
 
@@ -106,7 +105,7 @@ int main(int argc, char** argv ){
             " - so no processors will be loaded. ! --> " << std::endl << std::endl ;
     }
 
-    std::for_each( marlinProcs.begin(), marlinProcs.end(), t ) ;
+    std::for_each( marlinProcs.begin(), marlinProcs.end(), tk1 ) ;
 
     ProcessorLoader loader( libs.begin() , libs.end()  ) ;
     if( loader.failedLoading() ){

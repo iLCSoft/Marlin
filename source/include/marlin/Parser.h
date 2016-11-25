@@ -48,7 +48,7 @@ public:
   StringParameters* getParameters( const std::string& sectionName ) const ;
 
     /** set command line parameters */
-    void setCmdLineParameters( const CommandLineParametersMap & cmdlineparams ){
+    void setCmdLineParameters( const CommandLineParametersMap &  ){
         throw ParseException( "dynamic command line options only supported for xml steering files" ) ;
     }
 

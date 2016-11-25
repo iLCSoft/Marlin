@@ -68,8 +68,8 @@ namespace marlin{
 
   private:
     //prevent users from making (default) copies of processors
-    Processor(const Processor& typeName) {}
-    void operator=(const Processor& typeName) { }
+    Processor(const Processor& /*typeName*/) {}
+    void operator=(const Processor& /*typeName*/) { }
 
   public:
 
