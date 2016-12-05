@@ -1,0 +1,24 @@
+sudo: required
+dist: trusty
+
+services:
+  - docker
+
+# command to install dependencies
+install:
+  - shopt -s extglob dotglob
+  - mkdir Marlin
+  - mv !(Marlin) Marlin
+  - shopt -u dotglob
+  - export PKGDIR=${PWD}/Marlin
+  - cat $PKGDIR/.travis-ci.d/compile_and_test.sh
+  - curl -O https://lcd-data.web.cern.ch/lcd-data/CernVM/cernvm3-docker-latest.tar
+  - cat cernvm3-docker-latest.tar | docker import - cernvm
+
+# command to run tests
+script:
+  - docker run -t -v $PKGDIR:/Marlin cernvm /init /Marlin/.travis-ci.d/compile_and_test.sh
+
+# Don't send e-mail notifications
+notifications:
+  email: false
