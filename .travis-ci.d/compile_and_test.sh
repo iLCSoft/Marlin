@@ -1,8 +1,9 @@
 #!/bin/bash
 
-source /Marlin/.travis-ci.d/init_x86_64.sh
+ILCSOFT=/cvmfs/clicdp.cern.ch/iLCSoft/builds/current/CI_${COMPILER}
+source $ILCSOFT/init_ilcsoft.sh
 
-cd /Marlin
+cd /Package
 mkdir build
 cd build
 cmake -GNinja -C $ILCSOFT/ILCSoft.cmake ..
