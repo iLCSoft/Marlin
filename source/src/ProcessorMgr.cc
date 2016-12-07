@@ -314,13 +314,6 @@ namespace marlin{
         }
         catch( gear::UnknownParameterException ){ 
 
-            streamlog_out( WARNING ) << std::endl
-                << " ======================================================== " << std::endl
-                << "   Detector name  not found in Gear file     " << std::endl
-                << "    - can't check consistency with lcio file " << std::endl
-                << " ======================================================== " << std::endl
-                << std::endl ;
-
             doConsistencyCheck = false ;
         }
 
