@@ -9,7 +9,7 @@ INCLUDE_DIRECTORIES( BEFORE "${PROJECT_BINARY_DIR}" ) # generated MarlinConfig.h
 
 
 # install header files
-FILE( GLOB marlin_headers RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" ./include/marlin/*.h )
+FILE( GLOB marlin_headers RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" ./include/marlin/*.h ./tinyxml/include/marlin/*.h )
 
 IF( NOT MARLIN_AIDA )
     LIST( REMOVE_ITEM marlin_headers ./include/marlin/AIDAProcessor.h )
@@ -43,15 +43,23 @@ IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
     ADD_DEFINITIONS( "-DMARLINDEBUG" )
 ENDIF()
 
+
 AUX_SOURCE_DIRECTORY( ./src library_sources )
+AUX_SOURCE_DIRECTORY( ./tinyxml/src tinyxml_sources )
+INCLUDE_DIRECTORIES( SYSTEM tinyxml/include )
 
 # need to remove ProcessorLoader.cc and Marlin.cc from library sources
 LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc )
 
 # create library
 ADD_SHARED_LIBRARY( Marlin ${library_sources} )
+
+ADD_SHARED_LIBRARY( MarlinXML ${tinyxml_sources} )
+SET_TARGET_PROPERTIES( MarlinXML  PROPERTIES COMPILE_FLAGS "-w" )
+INSTALL_SHARED_LIBRARY( MarlinXML DESTINATION lib )
+
 INSTALL_SHARED_LIBRARY( Marlin DESTINATION lib )
-TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} )
+TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} MarlinXML )
 
 
 
