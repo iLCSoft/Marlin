@@ -49,9 +49,9 @@ class Statusmonitor : public Processor {
   
  protected:
 
-  int _nRun ;
-  int _nEvt ;
-  int _howOften;
+  int _nRun=0;
+  int _nEvt=0;
+  int _howOften=10000;
 
 } ;
 
