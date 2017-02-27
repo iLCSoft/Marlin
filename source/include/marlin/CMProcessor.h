@@ -75,12 +75,12 @@ namespace marlin{
 	CMProcessor();
 
 	static CMProcessor*  _me;	//singleton instance
-	ProcessorMap _mProcs;		//processor instances
-	ssMap _mpDescriptions;		//processor descriptions
-	sbMap _mpStatus;		//processor status ( INSTALLED=true ; NOT_INSTALLED=false )
-	sSPMap _mpSParameters;		//processor string parameters
+	ProcessorMap _mProcs{};	//processor instances
+	ssMap _mpDescriptions{};	//processor descriptions
+	sbMap _mpStatus{};		//processor status ( INSTALLED=true ; NOT_INSTALLED=false )
+	sSPMap _mpSParameters{};	//processor string parameters
 
-	sSet _mpTypes;			//all processor types
+	sSet _mpTypes{};		//all processor types
 	
     }; // end class CMProcessor
     
