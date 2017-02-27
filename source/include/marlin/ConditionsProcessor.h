@@ -85,25 +85,25 @@ class ConditionsProcessor : public Processor {
  protected:
   
   /** Default database init string */
-  std::string _dbInit ;
+  std::string _dbInit="";
 
   /** initialization of SimpleFileHandlers */
-  StringVec _simpleHandlerInit ;
+  StringVec _simpleHandlerInit{};
 
   /** initialization of DBCondHandlers */
-  StringVec _dbcondHandlerInit ;
+  StringVec _dbcondHandlerInit{};
 
   /** initialization of DBFileHandlers */
-  StringVec _dbfileHandlerInit ;
+  StringVec _dbfileHandlerInit{};
 
   /** initialization of DataFileHandlers */
-  StringVec _datafileHandlerInit ;
+  StringVec _datafileHandlerInit{};
 
   /** the names of all handlers */
-  StringVec _condHandlerNames ;
+  StringVec _condHandlerNames{};
 
-  int _nRun ;
-  int _nEvt ;
+  int _nRun=-1;
+  int _nEvt=-1;
 
 } ;
 
