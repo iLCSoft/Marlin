@@ -14,22 +14,24 @@
 namespace marlin{
 
 
-  SimpleClusterSmearer::SimpleClusterSmearer(const std::vector<float>& resVec ){
+  SimpleClusterSmearer::SimpleClusterSmearer(const std::vector<float>& resVec ):
+  _resVec(0)
+  {
     
     // copy the resolution vector parameters into a more structured vector 
-    
-    _resVec.resize(  resVec.size() / ( sizeof( ClusterResolution)  / sizeof(float) )  ) ;  // ==3
-    
+    const unsigned int size = resVec.size() / ( sizeof( ClusterResolution)  / sizeof(float) );  // ==3
+    _resVec.reserve(size);
+
     int index = 0 ;
     
-    for( unsigned int i=0 ; i <  _resVec.size() ; i++ ){
+    for( unsigned int i=0 ; i <  size ; i++ ){
       
       float A     =  resVec[ index++ ] ;
       float B     =  resVec[ index++ ] ;
       float thMin =  resVec[ index++ ] ;
       float thMax =  resVec[ index++ ] ;
       
-      _resVec[i] = ClusterResolution( A, B , thMin, thMax ) ;      
+      _resVec.push_back( ClusterResolution( A, B , thMin, thMax ) );
     }
   }
   
