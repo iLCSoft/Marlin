@@ -53,9 +53,10 @@ namespace marlin{
   public:  
 
     virtual Processor*  newProcessor() { return new LCIOOutputProcessor ; }
-  
-  
+
     LCIOOutputProcessor() ;
+    LCIOOutputProcessor(const marlin::LCIOOutputProcessor&) = delete;
+    LCIOOutputProcessor& operator=(const marlin::LCIOOutputProcessor&) = delete;
 
     /** C'tor for possible subclasses */
     LCIOOutputProcessor(const std::string& typeName) ;
@@ -87,21 +88,21 @@ namespace marlin{
 
   protected:
 
-    std::string _lcioOutputFile ;
-    std::string _lcioWriteMode ; 
+    std::string _lcioOutputFile="";
+    std::string _lcioWriteMode="";
 
-    StringVec _dropCollectionNames ; 
-    StringVec _dropCollectionTypes ; 
-    StringVec _keepCollectionNames ; 
-    StringVec _fullSubsetCollections ; 
+    StringVec _dropCollectionNames{};
+    StringVec _dropCollectionTypes{};
+    StringVec _keepCollectionNames{};
+    StringVec _fullSubsetCollections{};
 
-    int _splitFileSizekB ;
+    int _splitFileSizekB=1992294;
 
-    SubSetVec _subSets ;
+    SubSetVec _subSets{};
 
-    LCWriter* _lcWrt ;
-    int _nRun ;
-    int _nEvt ;
+    LCWriter* _lcWrt=NULL;
+    int _nRun=-1;
+    int _nEvt=-1;
 
   private:
   
