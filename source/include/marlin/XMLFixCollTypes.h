@@ -53,8 +53,9 @@ namespace marlin{
     std::string _fileName ;
 
   private:
-    XMLFixCollTypes() ;
-
+    XMLFixCollTypes() = delete;
+    XMLFixCollTypes(const marlin::XMLFixCollTypes&) = delete;
+    XMLFixCollTypes& operator=(const marlin::XMLFixCollTypes&) = delete;
   };
 
 } // end namespace marlin 
