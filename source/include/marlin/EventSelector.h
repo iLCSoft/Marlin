@@ -60,11 +60,11 @@ class EventSelector : public Processor {
 
   /** Input collection name.
    */
-  IntVec _evtList ;
-  SET _evtSet ;
+  IntVec _evtList{};
+  SET _evtSet{};
 
-  int _nRun ;
-  int _nEvt ;
+  int _nRun=-1;
+  int _nEvt=-1;
 } ;
 
 #endif
