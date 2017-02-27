@@ -17,7 +17,7 @@ namespace marlin{
   StdHepReader aStdHepReader ;
   
   
-  StdHepReader::StdHepReader() : DataSourceProcessor("StdHepReader") {
+  StdHepReader::StdHepReader() : DataSourceProcessor("StdHepReader"),_fileName("") {
     
     _description = "Reads StdHep files as input and creates LCIO events with MCParticle collections."
       " Make sure to not specify any LCIOInputFiles in the steering in order to read StdHep files." ;
