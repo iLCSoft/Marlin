@@ -184,17 +184,19 @@ namespace marlin{
     void processconditions( TiXmlNode* current , const std::string& conditions ) ;
 
 
-    mutable StringParametersMap _map ;
+    mutable StringParametersMap _map{};
     StringParameters* _current ;
     TiXmlDocument* _doc ;
 
     std::string _fileName ;
 
   private:
-    XMLParser() ;
+    XMLParser() = delete;
+    XMLParser(const marlin::XMLParser&) = delete;
+    XMLParser& operator=(const marlin::XMLParser&) = delete;
     bool _forCCheck; //boolean variable set to true if parser is used for consistency checking
 
-    CommandLineParametersMap _cmdlineparams ;
+    CommandLineParametersMap _cmdlineparams{};
 
   };
 
