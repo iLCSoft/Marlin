@@ -10,19 +10,17 @@ namespace marlin{
   //constructor
   CCProcessor::CCProcessor( bool status, const string& name, const string& type, StringParameters* p ):
     _status(status),
+    _error(MAX_ERRORS, false),
     _name(name),
     _type(type),
     _param(0),
-    _proc(0)
+    _proc(0),
+    _errors{},
+    _conditions(),
+    _cols(),
+    _types(),
+    _optParams()
   {
-    _error[0] = _error[1] = _error[2] = false;
- 
-    //FIXME: this has to be global
-    //if( _error_desc.size() == 0 ){
-    _error_desc.push_back( "Processor has no Parameters" );
-    _error_desc.push_back( "Processor not available!" );
-    _error_desc.push_back( "Some Collections have Errors" );
-    //}
 
     setError( NO_PARAMETERS );
     
@@ -40,24 +38,31 @@ namespace marlin{
   }
 
   //copy constructor
-  CCProcessor::CCProcessor( CCProcessor &p) : _param(0), _proc(p._proc) {
-      _status=p._status;
-      _name=p._name;
-      _type=p._type;
-      _types=p._types;
-      _optParams=p._optParams;
-      _conditions=p._conditions;
+  CCProcessor::CCProcessor( CCProcessor &p) :
+    _status(p._status),
+    _error(p._error),
+    _name(p._name),
+    _type(p._type),
+    _param(NULL), //copied later
+    _proc(p._proc),
+    _errors(p._errors),
+    _conditions(p._conditions),
+    _cols(p._cols),
+    _types(p._types),
+    _optParams(p._optParams)
+  {
       
-      for( int i=0; i<MAX_ERRORS; i++ ){
-	_error[i] = false;
-        _error_desc.push_back( p._error_desc[i] );
-      }
-      
-      for( int i=0; i<MAX_ERRORS; i++ ){
-	if(p._error[i]){
-	    setError(i);
-	}
-      }
+      // for( int i=0; i<MAX_ERRORS; i++ ){
+      // 	_error[i] = false;
+      //   _error_desc.push_back( p._error_desc[i] );
+      // }
+
+    // copied in initialiser list
+      // for( int i=0; i<MAX_ERRORS; i++ ){
+      // 	if(p._error[i]){
+      // 	    setError(i);
+      // 	}
+      // }
 
       if( p._param != NULL ){
 	p.writeColsToParam();
