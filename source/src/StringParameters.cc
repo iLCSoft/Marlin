@@ -11,9 +11,9 @@ StringParameters::StringParameters(){
 
 }
 
-StringParameters::StringParameters( const StringParameters& sp ){
-    _map=sp._map;
-}
+  StringParameters::StringParameters( const StringParameters& sp ):
+    _map(sp._map){
+  }
 
 StringParameters::~StringParameters(){
 
