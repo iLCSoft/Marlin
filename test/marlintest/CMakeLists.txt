@@ -8,10 +8,6 @@ SET( libname marlintest )
 INCLUDE_DIRECTORIES( ./include ${PROJECT_SOURCE_DIR}/source/include  ${PROJECT_BINARY_DIR} )
 #INSTALL_DIRECTORY( ./include DESTINATION . FILES_MATCHING PATTERN "*.h" )
 
-# definitions to pass to the compiler
-ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
-ADD_DEFINITIONS( "-Wno-long-long" )
-
 # add library
 AUX_SOURCE_DIRECTORY( ./src library_sources )
 ADD_SHARED_LIBRARY( ${libname} ${library_sources} )
