@@ -51,6 +51,8 @@ class AIDAProcessor : public marlin::Processor {
 
   
   AIDAProcessor() ;
+  AIDAProcessor(const marlin::AIDAProcessor&) = delete;
+  AIDAProcessor& operator=(const marlin::AIDAProcessor&) = delete;
 
   /** Called at the begin of the job before anything is read.
    * Use to initialize the processor, e.g. book histograms.
