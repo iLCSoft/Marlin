@@ -76,8 +76,9 @@ namespace marlin{
     
     
     SimpleFastMCProcessor() ;
-    
-        
+    SimpleFastMCProcessor(const marlin::SimpleFastMCProcessor&) = delete;
+    SimpleFastMCProcessor& operator=(const marlin::SimpleFastMCProcessor&) = delete;
+
     /** Initializes ...
      */
     virtual void init() ;
@@ -102,29 +103,29 @@ namespace marlin{
   protected:
     
     /**  Input collection name */
-    std::string _inputCollectionName ;
+    std::string _inputCollectionName{};
 
     /**  Ouput collection names */
-    std::string _recoParticleCollectionName ;
-    std::string _mcTruthCollectionName ;
+    std::string _recoParticleCollectionName{};
+    std::string _mcTruthCollectionName{};
 
     /** Momentum cut in GeV */
-    float _momentumCut ;
+    float _momentumCut=0.0;
 
     /** Resolutions of charged particles */
-    FloatVec _initChargedRes ;
+    FloatVec _initChargedRes{};
 
     /** Resolutions of photons */
-    FloatVec _initPhotonRes ;
+    FloatVec _initPhotonRes{};
 
     /** Resolutions of photons */
-    FloatVec _initNeutralHadronRes ;
+    FloatVec _initNeutralHadronRes{};
 
     /** The particle factory */
-    IRecoParticleFactory* _factory ;
+    IRecoParticleFactory* _factory=NULL;
 
-    int _nRun ;
-    int _nEvt ;
+    int _nRun=-1;
+    int _nEvt=-1;
     
   } ;
   
