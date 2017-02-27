@@ -61,12 +61,12 @@ class TestProcessorEventSeeder : public Processor {
 
   /** Input collection name.
    */
-  std::string _colName ;
+  std::string _colName="";
 
-  std::map< unsigned long long, unsigned int>  _seeds; 
+  std::map< unsigned long long, unsigned int>  _seeds{};
 
-  int _nRun ;
-  int _nEvt ;
+  int _nRun=-1;
+  int _nEvt=-1;
 } ;
 
 #endif

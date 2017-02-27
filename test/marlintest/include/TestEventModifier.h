@@ -75,10 +75,10 @@ class TestEventModifier : public Processor, public EventModifier {
 
   /** Input collection name.
    */
-  std::string _colName ;
+  std::string _colName="";
 
-  int _nRun ;
-  int _nEvt ;
+  int _nRun=-1;
+  int _nEvt=-1;
 } ;
 
 #endif
