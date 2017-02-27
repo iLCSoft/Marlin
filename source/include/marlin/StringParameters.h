@@ -60,7 +60,7 @@ public:
   virtual ~StringParameters() ; 
   
 protected:
-  ParametersMap _map ;
+  ParametersMap _map{};
 
 };
 
