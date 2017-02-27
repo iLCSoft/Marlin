@@ -664,17 +664,17 @@ namespace marlin{
 	else
 	  _aProc[i]->setConditions( "true" ); // fix for old steering files
 	  
-	  for( sSet::const_iterator p=_aProc[i]->getConditions().begin();
-		  p!=_aProc[i]->getConditions().end(); p++ ){
-	    _pConditions.insert( *p );
-	  }
+	for( sSet::const_iterator p=_aProc[i]->getConditions().begin();
+	     p!=_aProc[i]->getConditions().end(); p++ ){
+	  _pConditions.insert( *p );
+	}
 	  
-	  if( !_aProc[i]->isInstalled() ){
-	      _errors.insert("Some Active Processors are not installed");
-	  }
-	  if( _aProc[i]->hasErrorCols() ){
-	      _errors.insert("Some Active Processors have collection errors");
-	  }
+	if( !_aProc[i]->isInstalled() ){
+	  _errors.insert("Some Active Processors are not installed");
+	}
+	if( _aProc[i]->hasErrorCols() ){
+	  _errors.insert("Some Active Processors have collection errors");
+	}
       }
       for( unsigned int i=0; i<_iProc.size(); i++ ){
 	  if( !_iProc[i]->isInstalled() ){
