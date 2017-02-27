@@ -20,21 +20,22 @@ using namespace CLHEP ;
 namespace marlin{
 
 
-  SimpleTrackSmearer::SimpleTrackSmearer(const std::vector<float>& resVec ){
-    
+  SimpleTrackSmearer::SimpleTrackSmearer(const std::vector<float>& resVec ):
+    _resVec(0)
+  {
+
+    const unsigned int size = resVec.size() / ( sizeof(TrackResolution)  / sizeof(float) );  // ==3
+    _resVec.reserve(size);
     // copy the resolution vector parameters into a more structured vector 
-    
-    _resVec.resize(  resVec.size() / ( sizeof( TrackResolution)  / sizeof(float) )  ) ;  // ==3
-    
     int index = 0 ;
     
-    for( unsigned int i=0 ; i <  _resVec.size() ; i++ ){
+    for( unsigned int i=0 ; i < size ; i++ ){
       
       float dPP   =  resVec[ index++ ] ;
       float thMin =  resVec[ index++ ] ;
       float thMax =  resVec[ index++ ] ;
       
-      _resVec[i] = TrackResolution( dPP, thMin, thMax ) ;      
+      _resVec.push_back( TrackResolution( dPP, thMin, thMax ) );
     }
   }
   
