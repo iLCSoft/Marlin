@@ -66,13 +66,15 @@ protected:
   int readNextValidLine( std::string& str , std::istream& stream) ;
 
 
-  mutable StringParametersMap _map ;
+  mutable StringParametersMap _map{};
   StringParameters* _current ;
 
   std::string _fileName ;
 
 private:
-  Parser() ;
+  Parser() = delete;
+  Parser(const marlin::Parser&) = delete;
+  Parser&  operator=(const marlin::Parser&) = delete;
 
 };
 

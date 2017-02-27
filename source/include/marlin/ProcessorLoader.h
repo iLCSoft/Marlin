@@ -36,10 +36,10 @@ namespace marlin{
     
   protected:
     
-    LibVec _libs ;
+    LibVec _libs{};
 
   private:
-    bool _loadError;
+    bool _loadError=false;
   };
 
 } // end namespace marlin 

@@ -119,14 +119,14 @@ protected:
 
 private:
   static ProcessorMgr*  _me ;
-  ProcessorMap _map ;
-  ProcessorMap _activeMap ;
-  ProcessorList _list ;
-  SkippedEventMap _skipMap ;
+  ProcessorMap _map{};
+  ProcessorMap _activeMap{};
+  ProcessorList _list{};
+  SkippedEventMap _skipMap{};
 
-  ProcessorList _eventModifierList ;
+  ProcessorList _eventModifierList{};
 
-  LogicalExpressions _conditions ;
+  LogicalExpressions _conditions{};
 //   LCIOOutputProcessor* _outputProcessor ;
 
 };

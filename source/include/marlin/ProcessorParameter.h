@@ -30,7 +30,9 @@ namespace marlin{
     
   public:
     
-    ProcessorParameter() : _setSize(0), _optional(false), _valueSet(false) {} 
+    ProcessorParameter() :
+      _description(""), _name(""),
+      _setSize(0), _optional(false), _valueSet(false) {}
     
     virtual ~ProcessorParameter() {} 
     

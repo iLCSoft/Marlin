@@ -68,8 +68,8 @@ namespace marlin{
 
   private:
     //prevent users from making (default) copies of processors
-    Processor(const Processor& /*typeName*/) {}
-    void operator=(const Processor& /*typeName*/) { }
+    Processor(const Processor& /*typeName*/) = delete;
+    Processor& operator=(const Processor& /*typeName*/) = delete;
 
   public:
 
@@ -338,11 +338,11 @@ namespace marlin{
      *  @deprecated  
      */
     template <class T>
-    void message(  const std::string& message ) const {
+    void message(  const std::string& m ) const {
       
 
       if( streamlog::out.template write<T>() ) 
-	streamlog::out() << message << std::endl ;
+	streamlog::out() << m << std::endl ;
       
     }
     
@@ -432,20 +432,20 @@ namespace marlin{
 
     /**Describes what the processor does. Set in constructor.
      */
-    std::string _description ;
-    std::string _typeName  ;
-    std::string _processorName ;
-    StringParameters* _parameters ;
+    std::string _description="";
+    std::string _typeName="";
+    std::string _processorName="";
+    StringParameters* _parameters=NULL;
 
-    ProcParamMap _map ;  
-    bool _isFirstEvent ;
-    LCIOTypeMap   _inTypeMap ;
-    LCIOTypeMap   _outTypeMap ;
+    ProcParamMap _map{};
+    bool _isFirstEvent = false;
+    LCIOTypeMap   _inTypeMap{};
+    LCIOTypeMap   _outTypeMap{};
 
-    std::string _logLevelName ;
+    std::string _logLevelName{};
     
   private:
-    mutable std::stringstream* _str ;
+    mutable std::stringstream* _str=NULL;
 
     Processor() ; 
   
