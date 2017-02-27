@@ -16,7 +16,7 @@ EventSelector aEventSelector ;
 EventSelector::EventSelector() : Processor("EventSelector") {
   
   // modify processor description
-  _description = "EventSelector returns true if given event was specified in EvenList" ;
+  _description = "EventSelector returns true if given event was specified in EventList" ;
   
   IntVec evtsExample ;
   // evtsExample.push_back( 42 );
