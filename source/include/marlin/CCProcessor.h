@@ -48,6 +48,9 @@ namespace marlin {
     
     // Destructor
     ~CCProcessor();
+
+    // assignment operator, unused, verboten
+    CCProcessor& operator=( const CCProcessor &) = delete;
     
     /** Returns true if the processor has errors */
     bool hasErrors();
@@ -160,18 +163,18 @@ namespace marlin {
     // VARIABLES
     ///////////////////////////////////////////////////////////////////////////////
     bool _status;		    // false = INACTIVE ; true = ACTIVE
-    bool _error[MAX_ERRORS];	    // 0 = proc has no parameters; 1 = proc is not build in this marlin installation; 2 = unavailable collections
+    std::vector<bool> _error;	    // 0 = proc has no parameters; 1 = proc is not build in this marlin installation; 2 = unavailable collections
     std::string _name;		    // name of the processor
     std::string _type;		    // type of the processor
     StringParameters* _param;	    // parameters from processor
     Processor* _proc;		    // associated Marlin processor
  
-    StringVec _error_desc;	    // error descriptions for all processors
-    StringVec _errors;		    // list of errors found in a processor
+    const StringVec _error_desc{ "Processor has no Parameters", "Processor not available!", "Some Collections have Errors"}; // error descriptions for all processors
+    StringVec _errors{};	    // list of errors found in a processor
 
     sSet _conditions;		    // processor's conditions
   
-    ssColVecMap _cols;		    // first key for Types INPUT : OUTPUT : UNAVAILABLE : DUPLICATE
+    ssColVecMap _cols;	    // first key for Types INPUT : OUTPUT : UNAVAILABLE : DUPLICATE
 				    // for INPUT/OUPUT the second key is for Collection Names
 				    // for UNAVAILABLE/DUPLICATE the second key is for Collection Types
 
