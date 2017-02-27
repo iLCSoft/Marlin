@@ -10,7 +10,7 @@
 namespace marlin{
 
 
-  ProcessorEventSeeder::ProcessorEventSeeder() : _global_seed(0), _global_seed_set(false), _eventProcessingStarted(false) 
+  ProcessorEventSeeder::ProcessorEventSeeder() : _global_seed(0), _global_seed_set(false), _eventProcessingStarted(false), _seed_map()
   {
   } 
 
