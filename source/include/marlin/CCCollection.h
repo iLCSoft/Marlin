@@ -26,6 +26,9 @@ namespace marlin {
     
     //destructor
     ~CCCollection();
+
+    // assignment operator, not needed, verboten
+    CCCollection& operator=( const CCCollection & ) = delete;
     
     const std::string& getValue() const { return _value; }
     const std::string& getType() const { return _type; }
