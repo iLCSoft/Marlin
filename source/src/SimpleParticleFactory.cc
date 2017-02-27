@@ -32,9 +32,7 @@ using namespace lcio ;
 namespace marlin{
   
   SimpleParticleFactory::SimpleParticleFactory() :
-    _momentumCut( 0.0000000001 )  {
-
-    _smearingVec.resize( NUMBER_OF_FASTMCPARTICLETYPES ) ;
+    _smearingVec(NUMBER_OF_FASTMCPARTICLETYPES, NULL), _momentumCut( 0.0000000001 )   {
   }
   
 
