@@ -174,8 +174,8 @@ namespace marlin{
     /** helper function for finding return values, that actually have been set by their corresponding processor - throws exception if not set */ 
     bool getValue( const std::string& key );
   
-    ConditionsMap _condMap ;
-    ResultMap _resultMap ;
+    ConditionsMap _condMap{};
+    ResultMap _resultMap{};
 
   } ;
 } // end namespace 
