@@ -76,6 +76,9 @@ namespace marlin {
     // Constructor
     MarlinSteerCheck( const char* steerFileName=NULL, const CommandLineParametersMap * cmdlineparams=NULL );
 
+    MarlinSteerCheck(const marlin::MarlinSteerCheck&) = delete;
+    MarlinSteerCheck operator=(const marlin::MarlinSteerCheck&) = delete;
+
     // Destructor
     ~MarlinSteerCheck();
 
@@ -205,7 +208,7 @@ namespace marlin {
     //VARIABLES
     /////////////////////////////////////////////////////
 
-    sSet _errors;			//XML File parsing error
+    sSet _errors{};			//XML File parsing error
 					//LCIO Files loading error
 					//GEAR File loading error
 					//Some Processors have no parameters
@@ -217,20 +220,20 @@ namespace marlin {
     StringParameters* _gparam;		//global parameters (without LCIO Files)
     
     std::string _steeringFile;		//steering file name + path as passed by the user in the command line
-    std::string _XMLFileName;		//steering file name
-    std::string _XMLFileAbsPath;	//steering file (absolute path without filename)
-    std::string _XMLFileRelPath;	//steering file (relative path without filename)
+    std::string _XMLFileName="";	//steering file name
+    std::string _XMLFileAbsPath="";	//steering file (absolute path without filename)
+    std::string _XMLFileRelPath="";	//steering file (relative path without filename)
 
-    ProcVec _aProc;			//active processors
-    ProcVec _iProc;			//inactive processors
-    sColVecMap _lcioCols;		//LCIO collections
-    StringVec _lcioFiles;		//LCIO filenames
+    ProcVec _aProc{};			//active processors
+    ProcVec _iProc{};			//inactive processors
+    sColVecMap _lcioCols{};		//LCIO collections
+    StringVec _lcioFiles{};		//LCIO filenames
     
-    sSet _colValues;			//all available collection values for a given type (use in ComboBox)
+    sSet _colValues{};			//all available collection values for a given type (use in ComboBox)
 
-    sSet _pConditions;			//all processor's conditions
+    sSet _pConditions{};		//all processor's conditions
 
-    CMProcessor* _marlinProcs;		//Sigleton class containing all marlin processors
+    CMProcessor* _marlinProcs =NULL;		//Sigleton class containing all marlin processors
   };
 
 } // namespace
