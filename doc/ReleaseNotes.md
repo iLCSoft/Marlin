@@ -1,12 +1,4 @@
-
- ======================
-  Marlin release notes
- ======================
-
-
- --------
-| v01-10 |
- --------
+# v01-10
 
 F.Gaede	
 
@@ -27,9 +19,7 @@ D.Hynds
       on anything else )
 
 
- --------
-| v01-09 |
- --------
+# v01-09
 
 F. Gaede
    - made compatible with c++11
@@ -42,32 +32,24 @@ A. Sailer
 R. Simoniello
    - removed -Wall etc from mymarlin example for c++11
 
- --------
-| v01-08 |
- --------
+# v01-08
 
    M /Marlin/trunk/source/include/marlin/Processor.h
   - commented out old define for m_out (conflicts with a boost header )
 
 
- --------
-| v01-07 |
- --------
+# v01-07
      - introduced global flag: AllowToModifyEvent
        allowing to modify LCIO collections that have
        been read from an input file in the processEvent()
        method
 
- --------
-| v01-06 |
- --------
+# v01-06
     - added Statusmonitor processer (A.Sailer)
       - print run and event number every n-th event 
  
 
- --------
-| v01-05 |
- --------
+# v01-05
 
       - new optional global parameter: "LCIOReadCollectionNames"
         allows to restrict the collection that are read from the 
@@ -81,14 +63,10 @@ R. Simoniello
         do not call dlclose on shared libraries anymmore
         (A.Sailer)
         
- ----------
-| v01-04-01 |
- ----------
+# v01-04-01
    -  Ch. Rosemann: coverity bug fixes
 
- --------
-| v01-04 |
- --------
+# v01-04
    -  added EventSelector processor  
       - use Marlin -x and uncomment lines with EventSelector and <if>
         and specify run and event number in MyEventSelector
@@ -97,24 +75,19 @@ R. Simoniello
       also for modifyEvent() which is needed for BG Overlay
    -  prevent implicit copy c'tors and assignment operators for Processors 
 
- --------
-| v01-03 |
- --------
+# v01-03
    - changed error handling:
      have global try-catch block in main in order to not have to rely on
      std::terminate/std::unexpeted (machine dependent and not compatible with ROOT)
    - fixed DEBUG printouts in startup phase (e.g. Marlin -x ...)
 
- -----------
-| v01-02-01 |
- ----------
+
+# v01-02-01
       - bug fixes: 
            - fixed new streamlog levels DEBUG5-DEBUG9, MESSAGE5-MESSAGE9,....ERROR9
 	   - local streamlog level was not used in modifyEvent() and modifyRunHeader()
  
- --------
-| v01-02 |
- --------
+# v01-02
      - made command line options case sensitive
 
      - check spelling of command line options
@@ -124,9 +97,7 @@ R. Simoniello
      - increased verbosity threshold levels - added:
        DEBUG5-DEBUG9, MESSAGE5,....,ERROR9
 
- --------
-| v01-01 |
- --------
+# v01-01
 
     - Added dynamic command line options (see example by calling Marlin -h)
     - Added checking of duplicate processor entries in the steering file
@@ -137,9 +108,7 @@ R. Simoniello
         - made gcc 4.4.3 compliant
         - removed compiler warnings
 
- --------
-| v01-00 |
- --------
+# v01-00
 
         - Added a global random seed for Marlin processors. 
           This is used to provide individual pseudo-random numbers to Processors on
@@ -190,9 +159,7 @@ R. Simoniello
 
 
  
- --------
-| v00-13 |
- --------
+# v00-13
 
         -  added macro streamlog_level( MLEVEL ) for use in if() statements with VERBOSITY, e.g.
           if( streamlog_level( DEBUG ) && x ) {
@@ -211,9 +178,7 @@ R. Simoniello
             - BUILD_WITH not needed anymore to configure Marlin
             - simplified mymarlin example
 
- --------
-| v00-12 |
- --------
+# v00-12
      * new features:
        - processors can have local "Verbosity" parameter (overwrites global parameter for given processor)
 
@@ -227,9 +192,7 @@ R. Simoniello
         - exit Marlin if active Processor is undefined (i.e. no parameters defined for that processor)
         - made gcc 4.4.1 compliant
 
- --------
-| v00-11 |
- --------
+# v00-11
 
     * new features  (  JIRA issues MAR-37 MAR-43 MAR-45 )
            - Marlin stops processing if requested Processor does not exist
@@ -243,37 +206,37 @@ R. Simoniello
        - gui: global parameter not saved if edit box still in focus
        - gui: applied patch to build on MAC
 
- -----------
-| v00-10-06 |
- -----------
+
+# v00-10-06
+
 
    * README: updated documentation (README)
    * bug fix: streamlog/source/include/streamlog/logbuffer.h:
          added #include <cstdio> for gcc 4.4.1
 
- -----------
-| v00-10-05 |
- -----------
+
+# v00-10-05
+
     * added BEFORE to INCLUDE_DIRECTORIES(...) statements in CMakeLists.txt
     * removed old GNU makefiles
     * removed old .steer example files
     
- -----------
-| v00-10-04 |
- -----------
+
+# v00-10-04
+
     * made cmake 2.6 compatible
     * added 32 bit compatibility build option
     * added LIBRARY_DIRS
 
- -----------
-| v00-10-03 |
- -----------
+
+# v00-10-03
+
       * added timing of Processor::processEvent() methods 
       -> printout at end of job
 
- -----------
-| v00-10-02 |
- -----------
+
+# v00-10-02
+
 
      * check detector model in gear file (if present) for consistency w/ 
 	   detector name in lcio file 
@@ -287,14 +250,14 @@ R. Simoniello
      
      * made compatible with gcc 4.3.x (Aplin/Bulgheroni)
    
- -----------
-| v00-10-01 |
- -----------
+
+# v00-10-01
+
       - inconsistent tag -> DON'T USE !
 
- -----------
-| v00-10-00 |
- -----------
+
+# v00-10-00
+
     * LCIOOutputProcesser:
       new parameters added: 
         KeepCollectionNames: collections are kept unconditionally 
@@ -315,9 +278,9 @@ R. Simoniello
         - allow multiple paths in CMAKE_MODULE_PATH
 
 
- -----------
-| v00-09-10 |
- -----------
+
+# v00-09-10
+
 
      - updated documentation
      - improved cmake files
@@ -325,9 +288,9 @@ R. Simoniello
        ( requires CMakeModules v01-05 )
 
 
- -----------
-| v00-09-09 |
- -----------
+
+# v00-09-09
+
     - introduced EventModifier interface for modifying the LCIO input (e.g. for overlay)
 
     - printParameters() now on MESSAGE level - or templated: printParameters<DEBUG>() ;
@@ -342,9 +305,9 @@ R. Simoniello
 
    - made compatible with CLHEP versions >=1.9.3.0/2.0.3.0 (Martin Killenberg)
 
- -----------
-| v00-09-08 |
- -----------
+
+# v00-09-08
+
 
   - CMake is now default build tool  - see README for details
 
@@ -380,9 +343,9 @@ R. Simoniello
 
 
 
- -----------
-| v00-09-07 |
- -----------
+
+# v00-09-07
+
 
   - optionally create a .dot file with a flow chart that shows processors 
     with their input and output collections (author: Ben Jeffrery, Oxford)
@@ -404,9 +367,9 @@ R. Simoniello
     are loaded at program start up	
 
 
- -----------
-| v00-09-06 |
- -----------
+
+# v00-09-06
+
  - first release of MarlinGUI that helps to create/modify xml steering files
    interactively -> see $MARLIN/gui/README for details
 
@@ -426,45 +389,43 @@ R. Simoniello
 
  - switched to  latest version of tinyxml:  2.5.2
 
- -----------
-| v00-09-05 |
- -----------
+
+# v00-09-05
+
   - introduced bool processor parameters
   - allow to skip first N events (global parameter: SkipNEvents) requires LCIO > v01-05
   
 
- -----------
-| v00-09-04 |
- -----------
+
+# v00-09-04
+
   - made compliant for use with RAIDA 
   - no new functionality, only minor fixes and documentation
 
- -----------
-| v00-09-03 |
- -----------
+
+# v00-09-03
+
 
  - beta code for split files if given size exceeded in LCIOOutputprocessor
 
  - bug fix in LCIOOutputprocessor for DropCollectionNames
 
- -----------
-| v00-09-02 |
- -----------
+
+# v00-09-02
+
   - updated documentation
 
   - some code cosmetics
 
- -----------
-| v00-09-01 |
- -----------
+
+# v00-09-01
+
  
   first usage of GEAR
   
   introduced userlib.gmk for USERINCLUDES and USERLIBS
 
- --------
-| v00-09 |
- --------
+# v00-09
 
   added Exceptions and Exception handler that prints error message when an
   uncaught exception is thrown
@@ -510,9 +471,8 @@ R. Simoniello
   bug fixes:
    empty lines containing whitspaces or tabs are ignored now (no seg.fault)
    processors end() method now called in reverse order of initialization !
- --------
-| v00-08 |
- --------
+
+# v00-08
 
   improved API doc
   
@@ -520,7 +480,7 @@ R. Simoniello
 
   improved example/mymarlin/src/GNUmakefile
 
- v00-07
+# v00-07
     
   added ConditionsProcessor for LCCD
    
@@ -530,7 +490,7 @@ R. Simoniello
    
   fixed problems with registered vector parameters
 
- v00-06 
+# v00-06
 
   added examples directory that can serve as a template for user projects
 
@@ -540,11 +500,11 @@ R. Simoniello
 
   renamed Processr::dump() to Processr::printDescription()
 
- v00-05
+# v00-05
 
   added Processr::check()  to be used for checkplots in reco processors
  
- v00-04    (changes wrt. to v00-03):
+# v00-04    (changes wrt. to v00-03):
   
    * generates warning instead of error message if less than MaxRecordNumber records read
 
