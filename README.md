@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/iLCSoft/Marlin.svg?branch=master)](https://travis-ci.org/iLCSoft/Marlin)
 
 The idea is that every computing task is implemented as a processor (module) that analyzes data in an LCEvent and creates additional output collections that are added to the event. The framework allows to define the processors (and their order) that are executed at runtime in a simple steering file. Via the steering file you can also define named parameters (string, float, int - single and arrays) for every processor as well as for the global scope. By using the framework users don't have to write any code that deals with the IO they simply write processors with defined callbacks, i.e. init(), processRunHeader(), processEvent(), end().
+
 Marlin is distributed under the [GPLv3 License](http://www.gnu.org/licenses/gpl-3.0.en.html)
 
 [![License](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
@@ -63,13 +64,11 @@ if needed check DEPENDENCIES for additional required / optional packages
 
 compile your new plugin as described above for the mymarlin example under "Loading plugins/processors dynamically"
 
-##License and Copyright
-Copyright (C) 2004-2016 DESY, Deutsches Elektronen Synchrotron
+## License and Copyright
+Copyright (C), Marlin Authors
 
 Marlin is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License long with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Marlin is a C++ software framework for ILC software. It uses the LCIO data model and can be used for all tasks that involve processing of LCIO files, e.g. reconstruction and analysis.
