@@ -43,11 +43,11 @@ void MemoryMonitor::init() {
 }
 
 
-void MemoryMonitor::processRunHeader( LCRunHeader* run) {
+void MemoryMonitor::processRunHeader( LCRunHeader* ) {
 	_runNumber++ ;
 }
 
-void MemoryMonitor::processEvent( LCEvent* evt ) {
+void MemoryMonitor::processEvent( LCEvent* ) {
 	
 
   if (_eventNumber % _howOften == 0) {
@@ -86,7 +86,7 @@ void MemoryMonitor::processEvent( LCEvent* evt ) {
 	
 }
 
-void MemoryMonitor::check( LCEvent * evt ) {
+void MemoryMonitor::check( LCEvent* ) {
 	// nothing to check here - could be used to fill checkplots in reconstruction processor
 }
 
