@@ -37,11 +37,11 @@ public:
 	
 protected:
 	
-  int _howOften;
+  int _howOften=1;
 	
-	// Run and event counters
-	int _eventNumber ;
-	int _runNumber ;
+  // Run and event counters
+  int _eventNumber=-1;
+  int _runNumber=-1;
   
   int parseLine(char* line){
     int i = strlen(line);
