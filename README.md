@@ -1,5 +1,6 @@
 # Marlin (Modular Analysis and Reconstruction for the LINear Collider )
 [![Build Status](https://travis-ci.org/iLCSoft/Marlin.svg?branch=master)](https://travis-ci.org/iLCSoft/Marlin)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/11089/badge.svg)](https://scan.coverity.com/projects/ilcsoft-marlin)
 
 The idea is that every computing task is implemented as a processor (module) that analyzes data in an LCEvent and creates additional output collections that are added to the event. The framework allows to define the processors (and their order) that are executed at runtime in a simple steering file. Via the steering file you can also define named parameters (string, float, int - single and arrays) for every processor as well as for the global scope. By using the framework users don't have to write any code that deals with the IO they simply write processors with defined callbacks, i.e. init(), processRunHeader(), processEvent(), end().
 
