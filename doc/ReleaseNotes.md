@@ -1,3 +1,19 @@
+# v01-11
+
+* 2017-02-27 Andre Sailer ([PR#8](https://github.com/iLCSoft/Marlin/pull/8))
+  - Fix warnings for GCC
+  - moved tinyXML to separate library
+
+* 2016-12-07 Marko Petric ([PR#6](https://github.com/iLCSoft/Marlin/pull/6))
+  - Made CI configuration generic and usable for all packages without modifications
+
+* 2016-12-07 Andre Sailer ([PR#4](https://github.com/iLCSoft/Marlin/pull/4))
+  - Add travis configuration to repository, enable testing for PRs
+
+* 2016-11-25 Frank Gaede ([PR#3](https://github.com/iLCSoft/Marlin/pull/3))
+  - Fix warnings for clang
+  - ignore warnings from external headers
+
 # v01-10
 
 F.Gaede	
