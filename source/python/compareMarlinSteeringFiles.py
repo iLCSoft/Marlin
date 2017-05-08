@@ -26,6 +26,25 @@ def getProcessors( tree ):
       paramDict[paramName] = getValue( param , "<This Value did not Exist in this file or was empty>" )
     processors[procName] = paramDict
 
+  groupElements = tree.findall('group')
+  for group in groupElements:
+    groupParam = dict()
+    parameters = group.findall('parameter')
+    for param in parameters:
+      paramName = param.attrib.get('name')
+      groupParam[paramName] = getValue( param , "<This Value did not Exist in this file or was empty>" )
+
+    procElements = group.findall("processor")
+    for proc in procElements:
+      procName = proc.attrib.get("name")
+      paramDict = deepcopy(groupParam)
+      parameters = proc.findall('parameter')
+      for param in parameters:
+        paramName = param.attrib.get('name')
+        paramDict[paramName] = getValue( param , "<This Value did not Exist in this file or was empty>" )
+      processors[procName] = paramDict
+
+
   return processors
 
 
@@ -75,6 +94,9 @@ def compareExecutingProcessors( tree1, tree2 ):
     print "Mismatch in number of executing processors!", len(exec1), "vs", len(exec2)
 
   for index, proc1 in enumerate( exec1 ):
+    if index >= len(exec2):
+      print "More processors in first file than in second"
+      break
     proc2 = exec2[index]
     name1 = proc1.get('name')
     name2 = proc2.get('name')
@@ -83,8 +105,41 @@ def compareExecutingProcessors( tree1, tree2 ):
       print "Check the order of processor execution!"
       break
 
+def compareExecutingGroups( tree1, tree2 ):
+  """ compare the list of groups to execute, order matters """
+  exec1 = tree1.findall('execute/group')
+  exec2 = tree2.findall('execute/group')
+  if len(exec1) != len(exec2):
+    print "Mismatch in number of executing groups!", len(exec1), "vs", len(exec2)
 
-def compareTrees( tree1, tree2 ):
+  for index, grp1 in enumerate( exec1 ):
+    if index >= len(exec2):
+      print "More groups in first file than in second"
+      break
+    grp2 = exec2[index]
+    name1 = grp1.get('name')
+    name2 = grp2.get('name')
+    if name1 != name2:
+      print "Difference in executing groups", name1, "does not match group", name2
+      print "Check the order of group execution!"
+      break
+
+def __keepOnlySelected( processors, selectedProcessors ):
+  """ keep only those processors we want to compare """
+  if not selectedProcessors:
+    return
+
+  for processor in processors.keys():
+    keep = False
+    for procString in selectedProcessors:
+      if procString.lower() in processor.lower():
+        keep=True
+        break
+
+    if not keep:
+      del processors[processor]
+
+def compareTrees( tree1, tree2, selectedProcessors=None ):
   """compare the content of the two xml trees, as these are marlin steering
   files we only look for processors, get their parameters and then compare the
   value of all the processor parameters
@@ -93,6 +148,9 @@ def compareTrees( tree1, tree2 ):
 
   processors1 = getProcessors( tree1 )
   processors2 = getProcessors( tree2 )
+
+  __keepOnlySelected( processors1, selectedProcessors )
+  __keepOnlySelected( processors2, selectedProcessors )
 
   ### we need a copy so we can remove all parameters/processors that are equal
   procCopy1 = deepcopy(processors1)
@@ -124,14 +182,15 @@ def compareTrees( tree1, tree2 ):
 
 def run():
   args = sys.argv
-  if len(args) != 3:
-    print "incorrect number of input files, need two marlin steering files as argument"
-    print "compareMarlinSteeringFiles.py file1.xml file2.xml"
+  if len(args) < 3:
+    print "incorrect number of input files, need two marlin steering files as argument and optionally select processors to compare"
+    print "compareMarlinSteeringFiles.py file1.xml file2.xml [processor1] [...]"
     exit(1)
 
   try:
     tree1 = getTree( args[1] )
     tree2 = getTree( args[2] )
+    selectedProcessors = args[3:]
   except Exception as ex:
     print "Exception when getting trees: %r " % ex
     exit(1)
@@ -139,9 +198,11 @@ def run():
   print "\n++++ Start comparing"
   compareExecutingProcessors( tree1, tree2 )
   print ""
+  compareExecutingGroups( tree1, tree2 )
+  print ""
   compareGlobalParameters( tree1, tree2 )
   print ""
-  compareTrees( tree1, tree2 )
+  compareTrees( tree1, tree2, selectedProcessors)
   print "\n++++ Done comparing"
 
 
