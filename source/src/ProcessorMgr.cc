@@ -374,7 +374,11 @@ namespace marlin{
       Global::EVENTSEEDER->refreshSeeds( evt ) ;
 
       for( ProcessorList::iterator it = _eventModifierList.begin();  it !=  _eventModifierList.end()  ; ++ it) {
-      
+
+        if( not( _conditions.conditionIsTrue( (*it)->name() ) )) {
+          continue;
+        }
+
         streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
 	
 	scope.setLevel( (*it)->logLevelName() ) ;
