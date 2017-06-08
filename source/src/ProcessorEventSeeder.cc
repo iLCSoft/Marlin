@@ -6,11 +6,12 @@
 
 #include <stdlib.h>
 #include <limits>
+#include <algorithm>
 
 namespace marlin{
 
 
-  ProcessorEventSeeder::ProcessorEventSeeder() : _global_seed(0), _global_seed_set(false), _eventProcessingStarted(false), _seed_map()
+  ProcessorEventSeeder::ProcessorEventSeeder() : _global_seed(0), _global_seed_set(false), _eventProcessingStarted(false), _vector_pair_proc_seed()
   {
   } 
 
@@ -35,8 +36,10 @@ namespace marlin{
     srand( _global_seed );
     streamlog_out(DEBUG) << "ProcessorEventSeeder: srand initialised with global seed " << _global_seed << std::endl; 
 
-    _seed_map[proc] = rand();
-    streamlog_out(DEBUG) << "ProcessorEventSeeder: Processor " << proc->name() << " registered for random seed service. Allocated " <<  _seed_map[proc] << " as initial seed." << std::endl; 
+    _vector_pair_proc_seed.push_back( std::make_pair( proc, rand() ) );
+    streamlog_out(DEBUG) << "ProcessorEventSeeder: Processor " << proc->name()
+                         << " registered for random seed service. Allocated "
+                         <<  _vector_pair_proc_seed.back().second << " as initial seed." << std::endl;
 
   }
 
@@ -65,19 +68,19 @@ namespace marlin{
     srand( seed );
 
     // fill map with seeds for each registered processor using rand() 
-    std::map<Processor*, unsigned int >::iterator it = _seed_map.begin();
-    for( /* it initialised above */; it != _seed_map.end(); ++it) 
-      {
-	it->second = rand();
-      } 
+    for (auto& pairProcSeed : _vector_pair_proc_seed ) {
+      pairProcSeed.second = rand();
+    }
     
   }
   
   unsigned int ProcessorEventSeeder::getSeed( Processor* proc ) {
     
-    std::map<Processor*, unsigned int>::iterator it = _seed_map.find(proc);
+    typedef std::pair<Processor*, unsigned int> Pair;
     
-    return ( it != _seed_map.end() ? it->second : throw ) ;
+    auto it = find_if( _vector_pair_proc_seed.begin(), _vector_pair_proc_seed.end(), [&](Pair const& pair){ return pair.first == proc; } );
+
+    return ( it != _vector_pair_proc_seed.end() ? it->second : throw ) ;
 
   }
 

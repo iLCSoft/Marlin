@@ -3,6 +3,7 @@
 
 #include "lcio.h"
 #include "EVENT/LCEvent.h"
+#include <vector>
 #include <map>
 
 using namespace lcio ;
@@ -96,9 +97,9 @@ namespace marlin{
      */
     bool _eventProcessingStarted ;
 
-    /** Map to hold pointers to the registered processors and their assigned seeds
+    /** vector to hold pair of pointers to the registered processors and their assigned seeds
      */
-    std::map<Processor*, unsigned int> _seed_map ;
+    std::vector< std::pair<Processor*, unsigned int> > _vector_pair_proc_seed;
 
   } ;
 
