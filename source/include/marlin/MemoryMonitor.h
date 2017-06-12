@@ -11,6 +11,19 @@
 using namespace lcio ;
 using namespace marlin ;
 
+
+/** MemoryMonitor is a memory monitoring application for Marlin
+ *  <h4>Input - Prerequisites</h4>
+ *  No input needed for this processor.
+ *
+ *  <h4>Output</h4>
+ *  none
+ *
+ * @param howOften  prints memory consumption every 'howOften' events
+ *
+ * @author N. Nikiforou, CERN,
+ */
+
 class MemoryMonitor : public Processor {
 		
 public:
