@@ -32,7 +32,7 @@
 
 #include <cstring>
 #include <algorithm>
-
+#include <memory>
 
 #include "gearimpl/Util.h"
 #include "gearxml/GearXML.h"
@@ -268,7 +268,7 @@ int main(int argc, char** argv ){
 
 
 
-    IParser* parser ;
+    std::unique_ptr<IParser> parser;
 
     // for now allow xml and old steering
     std::string filen(  steeringFileName ) ;
@@ -276,11 +276,11 @@ int main(int argc, char** argv ){
     if( filen.rfind(".xml") == std::string::npos ||  // .xml not found at all
             !(  filen.rfind(".xml")
                 + strlen(".xml") == filen.length() ) ) {  
-        parser = new Parser( steeringFileName ) ;
+        parser = std::unique_ptr<IParser> ( new Parser( steeringFileName ) );
 
     } else {
 
-        parser = new XMLParser( steeringFileName ) ;
+        parser = std::unique_ptr<IParser>( new XMLParser(steeringFileName) ) ;
 
         // tell parser to take into account any options defined on the command line
         parser->setCmdLineParameters( cmdlineparams ) ;
