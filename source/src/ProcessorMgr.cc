@@ -68,8 +68,6 @@ namespace marlin{
   
   
   ProcessorMgr::~ProcessorMgr(){
-    delete Global::EVENTSEEDER ;
-    Global::EVENTSEEDER = NULL ;
   }
 
     void ProcessorMgr::registerProcessor( Processor* processor ){
@@ -219,7 +217,7 @@ namespace marlin{
 
     bool ProcessorMgr::addActiveProcessor( const std::string& processorType , 
             const std::string& processorName , 
-            StringParameters* parameters ,
+            std::shared_ptr<StringParameters> parameters ,
             const std::string condition) {
 
         Processor* processor = getProcessor( processorType ) ;
@@ -612,7 +610,18 @@ namespace marlin{
 
         streamlog_out(MESSAGE) << " --------------------------------------------------------- "  << std::endl ;
 
+        //delete _me;
+        //_me = nullptr;
+
+
+        delete Global::EVENTSEEDER ;
+        Global::EVENTSEEDER = nullptr ;
+
+        for (auto& pair : _activeMap ) {
+          delete pair.second;
+        }
     }
+
   
 
     } // namespace marlin

@@ -8,7 +8,7 @@ namespace marlin{
     typedef std::set< std::string > sSet;
     typedef std::map< std::string, bool > sbMap;
     typedef std::map< std::string, std::string > ssMap;
-    typedef std::map< std::string, StringParameters* > sSPMap;
+    typedef std::map< std::string, std::shared_ptr<StringParameters> > sSPMap;
     
  /**
  * This singleton class contains an instance
@@ -34,11 +34,11 @@ namespace marlin{
 	ssMap getProcDesc(){ return _mpDescriptions; }
 
 	/** returns the parameters for the processor of the given type */
-	StringParameters* getSParams( const std::string& type );
+        std::shared_ptr<StringParameters> getSParams( const std::string& type );
 	
 	/** merges the given parameters with the default ones 
 	 *  from the processor with the given type */
-	StringParameters* mergeParams( const std::string& type, StringParameters* sp );
+	std::shared_ptr<StringParameters> mergeParams( const std::string& type, std::shared_ptr<StringParameters> sp );
 	
 	/** returns the parameter with the given key
 	 *  of the processor with the given type */

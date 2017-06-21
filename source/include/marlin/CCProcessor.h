@@ -41,7 +41,7 @@ namespace marlin {
   public:
 
     // Constructor
-    CCProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL);
+    CCProcessor( bool status, const std::string& name, const std::string& type, std::shared_ptr<StringParameters> p);
 
     // Copy Constructor
     CCProcessor( CCProcessor &p );
@@ -100,7 +100,7 @@ namespace marlin {
     bool isParamOptional( const std::string& key );
     
     /** Returns the string parameters for this processor */
-    StringParameters* getParameters(){ return _param; }
+    std::shared_ptr<StringParameters> getParameters(){ return _param; }
     
     /** Returns a map with collection names and their respective types for INPUT/OUTPUT collections of this processor */
     const ssMap& getColHeaders( const std::string& iotype ){ return _types[iotype]; }
@@ -153,7 +153,7 @@ namespace marlin {
     ///////////////////////////////////////////////////////////////////////////////
     // METHODS
     ///////////////////////////////////////////////////////////////////////////////
-    void addColsFromParam( StringParameters* p );
+    void addColsFromParam( std::shared_ptr<StringParameters> p );
     void writeColsToParam();
     void clearParameters();
     void setMarlinProc();	    //sets error flag NOT_INSTALLED if processor couldn't be set
@@ -166,7 +166,7 @@ namespace marlin {
     std::vector<bool> _error;	    // 0 = proc has no parameters; 1 = proc is not build in this marlin installation; 2 = unavailable collections
     std::string _name;		    // name of the processor
     std::string _type;		    // type of the processor
-    StringParameters* _param;	    // parameters from processor
+    std::shared_ptr<StringParameters> _param;	    // parameters from processor
     Processor* _proc;		    // associated Marlin processor
  
     const StringVec _error_desc{ "Processor has no Parameters", "Processor not available!", "Some Collections have Errors"}; // error descriptions for all processors

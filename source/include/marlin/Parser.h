@@ -15,7 +15,7 @@ namespace marlin{
 class LCTokenizer ;
 
 
-typedef std::map< std::string ,  StringParameters* > StringParametersMap ;
+typedef std::map< std::string ,  std::shared_ptr<StringParameters> > StringParametersMap;
 
 
 /** Simple parser class for Marlin.
@@ -45,7 +45,7 @@ public:
   Parser( const std::string& fileName ) ;
   virtual ~Parser() ; 
 
-  StringParameters* getParameters( const std::string& sectionName ) const ;
+  std::shared_ptr<StringParameters> getParameters( const std::string& sectionName ) const ;
 
     /** set command line parameters */
     void setCmdLineParameters( const CommandLineParametersMap &  ){

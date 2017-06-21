@@ -59,7 +59,7 @@ public:
    *  of active processors including a condition for the execution of the processEvent() method.
    */
   bool addActiveProcessor( const std::string& processorType , const std::string& processorName ,
-			   StringParameters* parameters , const std::string condition="true" ) ;
+			   std::shared_ptr<StringParameters> parameters , const std::string condition="true" ) ;
   
   /** Remove processor with name from list of active processors.
    */

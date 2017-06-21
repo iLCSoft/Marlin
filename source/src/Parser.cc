@@ -51,8 +51,8 @@ namespace marlin{
 	  std::cerr << " Parser::parse : section has to have a name: .begin sectionName " << std::endl ;
 	  exit(1) ;
 	}
-	_current = new StringParameters() ;
-	_map[ tokens[1] ] = _current ;
+	_map[ tokens[1] ] = std::make_shared<StringParameters>();
+	_current = _map[ tokens[1] ].get() ;
 	//       std::cout << " Parser::parse: >>> creating new map entry : " <<  tokens[1] << std::endl ;
 
       } else if (  tokens[0] == ".end"   ) {
@@ -87,7 +87,7 @@ namespace marlin{
 
       std::string name = iter->first ; 
 
-      StringParameters* p = iter->second ;
+      StringParameters* p = iter->second.get() ;
 
       std::string type = p->getStringVal("ProcessorType") ;
 
@@ -110,7 +110,7 @@ namespace marlin{
   }
 
 
-  StringParameters* Parser::getParameters( const std::string& sectionName ) const {
+  std::shared_ptr<StringParameters> Parser::getParameters( const std::string& sectionName ) const {
 
     for( StringParametersMap::const_iterator iter = _map.begin() ; iter != _map.end() ; iter++){
       //     std::cout << " parameter section " << iter->first 

@@ -21,6 +21,7 @@
 #include "streamlog/streamlog.h"
 
 #include <map>
+#include <memory>
 
 // ----- define some useful macros-----------
 // for backward compatibility - use streamlog_out( MESSAGE )  instead 
@@ -137,7 +138,7 @@ namespace marlin{
 
     /** Return parameters defined for this Processor.
      */
-    virtual StringParameters* parameters() { return _parameters ; } 
+    virtual std::shared_ptr<StringParameters> parameters() { return _parameters ; }
 
 
     /** Print information about this processor in ASCII steering file format.
@@ -402,7 +403,7 @@ namespace marlin{
   private: // called by ProcessorMgr
     
     /** Allow friend class CCProcessor to change/reset processor parameters */
-    virtual void setProcessorParameters( StringParameters* parameters) {
+    virtual void setProcessorParameters( std::shared_ptr<StringParameters> parameters) {
 	setParameters( parameters ) ;
     }
     
@@ -413,7 +414,7 @@ namespace marlin{
     virtual void setName( const std::string & name) { _processorName = name ; }
     
     /** Initialize the parameters */
-    virtual void setParameters( StringParameters* parameters) ; 
+    virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
     
     /** Sets the registered steering parameters before calling init() 
      */
@@ -451,7 +452,7 @@ namespace marlin{
     std::string _description="";
     std::string _typeName="";
     std::string _processorName="";
-    StringParameters* _parameters=NULL;
+    std::shared_ptr<StringParameters> _parameters{};
 
     ProcParamMap _map{};
     bool _isFirstEvent = false;
