@@ -289,7 +289,7 @@ int main(int argc, char** argv ){
 
     parser->parse() ;
 
-    Global::parameters = parser->getParameters("Global")  ;
+    Global::parameters = parser->getParameters("Global").get();
 
     //fg: can't use assert, as this generates no code when compiled with NDEBUG
     if( Global::parameters  == 0 ) {
@@ -588,7 +588,7 @@ void createProcessors( const IParser&  parser) {
     //     for( StringVec::iterator m = activeProcessors.begin() ; m != activeProcessors.end() ; m++){
     for(unsigned int i=0 ; i<  activeProcessors.size() ; i++ ) {
 
-        StringParameters* p = parser.getParameters( activeProcessors[i] )  ;
+        std::shared_ptr<StringParameters> p = parser.getParameters( activeProcessors[i] );
 
         if( p!=0 ){
             std::string type = p->getStringVal("ProcessorType") ;
@@ -615,8 +615,8 @@ void  createProcessors(Parser&  parser) {
     //for( StringVec::iterator m = activeProcessors.begin() ; m != activeProcessors.end() ; m++){
     for(unsigned int i=0 ; i<  activeProcessors.size() ; i++ ) {
 
-        //StringParameters* p = parser.getParameters( *m )  ;
-        StringParameters* p = parser.getParameters( activeProcessors[i] )  ;
+        //std::shared_ptr<StringParameters> p = parser.getParameters( *m )  ;
+        std::shared_ptr<StringParameters> p = parser.getParameters( activeProcessors[i] );
 
 
         streamlog_out( MESSAGE ) << " Parameters for processor " << activeProcessors[i]

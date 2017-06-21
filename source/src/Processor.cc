@@ -35,10 +35,6 @@ namespace marlin{
 
   Processor::~Processor() {
 
-    if( _parameters != 0 ){
-      delete _parameters ;
-    }
-
     if( _str !=0 )
       delete _str ;
   
@@ -55,12 +51,8 @@ namespace marlin{
   }
 
 
-  void Processor::setParameters( StringParameters* parameters) {
+  void Processor::setParameters( std::shared_ptr<StringParameters> parameters) {
 
-    if( _parameters != 0 ){
-      delete _parameters ;
-      _parameters = 0 ;
-    }
     _parameters = parameters ;
 
     updateParameters();
@@ -233,7 +225,7 @@ namespace marlin{
 
     for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
 
-      i->second->setValue( _parameters ) ;
+      i->second->setValue( _parameters.get() ) ;
     }
   }
 

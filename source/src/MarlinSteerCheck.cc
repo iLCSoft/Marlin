@@ -41,7 +41,7 @@ namespace marlin{
 
     //create Global Parameters
     else{
-	_gparam = new StringParameters;
+        _gparam = std::make_shared<StringParameters>();
 	StringVec value;
 	value.push_back("5001");
 	_gparam->add("MaxRecordNumber", value);
@@ -115,10 +115,6 @@ namespace marlin{
 	delete _parser;
 	_parser=NULL;
     }
-    if(_gparam){
-	delete _gparam;
-	_gparam=NULL;
-    }
   }
 
   // Returns a list of all available Collections of a given Type
@@ -133,7 +129,7 @@ namespace marlin{
 	v = findMatchingCols( getAllCols(), proc, type );
 	for( unsigned int i=0; i<v.size(); i++ ){
 	    //check if collection already exists
-	    CCProcessor tmp(ACTIVE, "Temporary", "Temporary");
+	    CCProcessor tmp(ACTIVE, "Temporary", "Temporary", std::shared_ptr<StringParameters>());
 	    if( findMatchingCols( proc->getCols( INPUT ), &tmp, type, v[i]->getValue(), name ).size() == 0 ){
 		_colValues.insert( v[i]->getValue() );
 	    }
@@ -154,7 +150,7 @@ namespace marlin{
 	}
 	
 	//create temporary processor to find matching collections
-	CCProcessor tmp(ACTIVE, "Temporary", "Temporary");
+	CCProcessor tmp(ACTIVE, "Temporary", "Temporary", std::shared_ptr<StringParameters>());
 	
 	for( unsigned int i=0; i<v.size(); i++ ){
 	    if( v[i]->getType() == type ){
@@ -238,7 +234,7 @@ namespace marlin{
 	  LCCollection* col = evt->getCollection( *name ) ;
 	 
 	  //check if collection already exists
-	  CCProcessor tmp(ACTIVE, "Temporary", "Temporary");
+	  CCProcessor tmp(ACTIVE, "Temporary", "Temporary", std::shared_ptr<StringParameters>());
 	  if( findMatchingCols(newCols, &tmp, col->getTypeName(), *name).size() == 0 ){
 	      //store the LCIO Filename in the unused name variable from the processor parameters
 	      CCCollection* newCol = new CCCollection( *name, col->getTypeName(), file);
@@ -325,7 +321,7 @@ namespace marlin{
   }
 
   // Add a new Processor
-  void MarlinSteerCheck::addProcessor( bool status, const string& name, const string& type, StringParameters* p ){
+  void MarlinSteerCheck::addProcessor( bool status, const string& name, const string& type, std::shared_ptr<StringParameters> p ){
 
     CCProcessor* newProc = new CCProcessor(status, name, type, p);
    
@@ -538,7 +534,7 @@ namespace marlin{
       cerr << "parseXMLFile: Failed to load file: " << e.what() << endl;
       return false;
     }
-      _gparam = _parser->getParameters( "Global" );
+    _gparam = _parser->getParameters( "Global" );
       
       //============================================================
       //READ PARAMETERS
@@ -621,7 +617,7 @@ namespace marlin{
       for( unsigned int i=0; i<availableProcs.size(); i++ ){
 	    
 	//get StringParameters from xml file for the name of the Processor
-	StringParameters* p = _parser->getParameters( availableProcs[i] );
+	std::shared_ptr<StringParameters> p = _parser->getParameters( availableProcs[i] );
 	    
 	//get type of processor from the parameters
 	string type = p->getStringVal( "ProcessorType" );
@@ -645,7 +641,7 @@ namespace marlin{
 	//if processor has no parameters set the type to "Undefined!!"
 	if( !found ){
 	  //add the processor to the active processors
-	  addProcessor( ACTIVE, activeProcs[i], "Undefined!!");
+	  addProcessor( ACTIVE, activeProcs[i], "Undefined!!",  std::shared_ptr<StringParameters>() );
 	  _errors.insert("Some Processors have no parameters");
 	}
       }

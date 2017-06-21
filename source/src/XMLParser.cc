@@ -15,7 +15,7 @@ namespace marlin{
 
     // open steering file with processor names 
     XMLParser::XMLParser( const std::string&  fileName, bool forCCheck ) :
-        _current(NULL) , _doc(NULL), _fileName( fileName ), _forCCheck( forCCheck ) {
+        _current(NULL) , _fileName( fileName ), _forCCheck( forCCheck ) {
         }
 
     XMLParser::~XMLParser(){
@@ -24,7 +24,7 @@ namespace marlin{
     void XMLParser::parse(){
 
 
-        _doc = new TiXmlDocument ;
+        _doc = std::unique_ptr<TiXmlDocument>( new TiXmlDocument );
         bool loadOkay = _doc->LoadFile(_fileName  ) ;
 
         if( !loadOkay ) {
@@ -50,13 +50,13 @@ namespace marlin{
         TiXmlNode* section = 0 ;
 
 
-        StringParameters*  globalParameters = new StringParameters() ;
-        _map[ "Global" ] = globalParameters ;
+        _map[ "Global" ] = std::make_shared<StringParameters>();
+        StringParameters*  globalParameters = _map[ "Global" ].get();
 
         section = root->FirstChild("global")  ;
 
         if( section != 0  ){
-            _current =  _map[ "Global" ] ;
+            _current =  _map[ "Global" ].get() ;
             parametersFromNode( section ) ;
 
         }  else {
@@ -172,10 +172,9 @@ namespace marlin{
 
             // std::cout << " processor found: " << section->Value() << std::endl ;
 
-            _current = new StringParameters() ;
-
             std::string name( getAttribute( section, "name") ) ;
-            _map[ name  ] =  _current ;
+            _map[ name  ] = std::make_shared<StringParameters>();
+            _current = _map[ name  ].get();
 
             // exit if processor defined more than once in the execute section
             if( procList.find( name ) != procList.end() ){
@@ -442,7 +441,7 @@ namespace marlin{
     //   TiXmlElement* child2 = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).Child( "Child", 1 ).Element();
     //   if ( child2 ){}
 
-    StringParameters* XMLParser::getParameters( const std::string& sectionName ) const {
+    std::shared_ptr<StringParameters> XMLParser::getParameters( const std::string& sectionName ) const {
 
         //     for( StringParametersMap::iterator iter = _map.begin() ; iter != _map.end() ; iter++){
         //       //     std::cout << " parameter section " << iter->first 

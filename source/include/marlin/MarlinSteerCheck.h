@@ -107,7 +107,7 @@ namespace marlin {
     sSet& getColsSet( const std::string& type, const std::string& name, CCProcessor* proc );
 
     /** Returns the Global Parameters */
-    StringParameters* getGlobalParameters(){ return _gparam; }
+    std::shared_ptr<StringParameters> getGlobalParameters(){ return _gparam; }
     
     /** Writes the collection errors for the active processor with given index to the given stream */
     void dumpColErrors( unsigned int i, std::ostream& stream, bool separators=false );
@@ -122,7 +122,7 @@ namespace marlin {
     void changeLCIOFilePos( unsigned int pos, unsigned int newPos );
  
     /** Add a new processor */
-    void addProcessor( bool status, const std::string& name, const std::string& type, StringParameters* p=NULL );
+    void addProcessor( bool status, const std::string& name, const std::string& type, std::shared_ptr<StringParameters> p );
 
     /** Remove processor with the given status at the given index */
     void remProcessor( unsigned int index, bool status );
@@ -217,7 +217,7 @@ namespace marlin {
 					//Warning: Some Inactive Processors are not installed
 
     IParser* _parser;			//parser
-    StringParameters* _gparam;		//global parameters (without LCIO Files)
+    std::shared_ptr<StringParameters> _gparam;		//global parameters (without LCIO Files)
     
     std::string _steeringFile;		//steering file name + path as passed by the user in the command line
     std::string _XMLFileName="";	//steering file name

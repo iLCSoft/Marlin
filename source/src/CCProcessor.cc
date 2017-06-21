@@ -8,7 +8,7 @@ using namespace std;
 namespace marlin{
 
   //constructor
-  CCProcessor::CCProcessor( bool status, const string& name, const string& type, StringParameters* p ):
+  CCProcessor::CCProcessor( bool status, const string& name, const string& type, std::shared_ptr<StringParameters> p ):
     _status(status),
     _error(MAX_ERRORS, false),
     _name(name),
@@ -66,7 +66,7 @@ namespace marlin{
 
       if( p._param != NULL ){
 	p.writeColsToParam();
-	_param=new StringParameters( *p._param );
+	_param= std::make_shared<StringParameters>( *p._param );
 	addColsFromParam( _param );
 	p.clearParameters();
         clearParameters();
@@ -74,10 +74,6 @@ namespace marlin{
   }
  
   CCProcessor::~CCProcessor(){
-      if( _param != NULL){
-	  delete _param;
-	  _param=NULL;
-      }
       for( ssColVecMap::const_iterator q=_cols.begin(); q!=_cols.end(); q++ ){
 	 if( q->first != UNAVAILABLE && q->first != DUPLICATE ){
 	    for( sColVecMap::const_iterator r=q->second.begin(); r!=q->second.end(); r++ ){
@@ -89,7 +85,7 @@ namespace marlin{
       }
   }
 
-  void CCProcessor::addColsFromParam( StringParameters* p ){
+  void CCProcessor::addColsFromParam( std::shared_ptr<StringParameters> p ){
     if( p == NULL ){
 	setError( NO_PARAMETERS );
 	return;

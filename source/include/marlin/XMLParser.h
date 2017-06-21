@@ -3,17 +3,19 @@
 
 #include "IParser.h"
 #include "StringParameters.h"
+#include "marlin/tinyxml.h"
 
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <memory>
 
 class TiXmlNode ;
 class TiXmlDocument ;
 
 namespace marlin{
 
-  typedef std::map< std::string , StringParameters* > StringParametersMap ;
+  typedef std::map< std::string , std::shared_ptr<StringParameters> > StringParametersMap;
 
   /** XML parser for Marlin steering files.
    *  Marlin XML steering files have the following form (use <b>Marlin -x > example.xml</b> to 
@@ -157,7 +159,7 @@ namespace marlin{
     void parse() ;
 
     /** Return the StringParameters for the section as read from the xml file */
-    StringParameters* getParameters( const std::string& sectionName ) const ;
+    std::shared_ptr<StringParameters> getParameters( const std::string& sectionName ) const ;
   
 
   protected:
@@ -186,7 +188,7 @@ namespace marlin{
 
     mutable StringParametersMap _map{};
     StringParameters* _current ;
-    TiXmlDocument* _doc ;
+    std::unique_ptr<TiXmlDocument> _doc{};
 
     std::string _fileName ;
 

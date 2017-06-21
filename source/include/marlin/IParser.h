@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 namespace marlin{
 
@@ -28,7 +29,7 @@ namespace marlin{
     virtual void setCmdLineParameters( const CommandLineParametersMap & cmdlineparams ) = 0 ;
 
     /** Return the StringParameters defined for this section of the steering file */
-    virtual StringParameters* getParameters( const std::string& sectionName ) const =0 ;
+    virtual std::shared_ptr<StringParameters> getParameters( const std::string& sectionName ) const =0 ;
     
   };
 

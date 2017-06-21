@@ -36,7 +36,7 @@ namespace marlin{
 		_mpDescriptions[ (*p) ] = pp->description();
 
 		//create new string parameters for each processor
-		_mpSParameters[ (*p) ] = new StringParameters;
+		_mpSParameters[ (*p) ] = std::make_shared<StringParameters>();
 
 		//set the parameters keys
 		_mProcs[ (*p) ]->setProcessorParameters( _mpSParameters[ (*p) ] );
@@ -96,14 +96,14 @@ namespace marlin{
 	return NULL;
     }
     
-    StringParameters* CMProcessor::getSParams( const string& type ){
+    std::shared_ptr<StringParameters> CMProcessor::getSParams( const string& type ){
 	if( isInstalled( type )){
 	    return _mpSParameters[ type ];
 	}
 	return NULL;
     }
     
-    StringParameters* CMProcessor::mergeParams( const string& type, StringParameters* sp ){
+    std::shared_ptr<StringParameters> CMProcessor::mergeParams( const string& type, std::shared_ptr<StringParameters> sp ){
 	if( isInstalled( type )){
 	    if( sp ){
 		StringVec keys;
@@ -140,7 +140,7 @@ namespace marlin{
 	    }
 	    //if processor is installed and no parameters were passed (from the xml file)
 	    //create a copy from the default parameters for this processor and return it
-	    StringParameters *defaultSP= new StringParameters( *_mpSParameters[ type ] );
+	    std::shared_ptr<StringParameters> defaultSP= std::make_shared<StringParameters>( *(_mpSParameters[ type ].get()) );
 
 	    return defaultSP;
 	}
