@@ -249,18 +249,7 @@ namespace marlin{
  				    T& parameter,
  				    const T& defaultVal,
 				    int setSize=0 ) {
-
-       auto paraIt = _map.find( name );
-
-       if (paraIt != _map.end() ) {
-         std::stringstream errorMessage;
-         errorMessage << "Parameter " << name
-                      << " already defined for processor "
-                      << this->type()
-                      << std::endl;
-         throw std::logic_error(  errorMessage.str() );
-       }
-
+       checkForExistingParameter( name );
        _map[ name ] = new ProcessorParameter_t<T>( name , description, 
 						   parameter, defaultVal, 
 						   false , setSize) ;
@@ -320,7 +309,8 @@ namespace marlin{
 				   T& parameter,
 				   const T& defaultVal,
 				   int setSize=0 ) {
-      
+
+      checkForExistingParameter( name );
       _map[ name ] = new ProcessorParameter_t<T>( name , description, 
 						  parameter, defaultVal, 
 						  true , setSize) ;
@@ -330,7 +320,22 @@ namespace marlin{
      */
     bool parameterSet( const std::string& name ) ;
     
-    
+    /** Tests whether the parameter has been registered before
+     *
+     * @param name name of the parameter to check
+     * @throw logic_error if parameter has been registered before
+     */
+    void checkForExistingParameter( const std::string& name ) {
+       auto paraIt = _map.find( name );
+       if (paraIt != _map.end() ) {
+         std::stringstream errorMessage;
+         errorMessage << "Parameter " << name
+                      << " already defined for processor "
+                      << this->type()
+                      << std::endl;
+         throw std::logic_error(  errorMessage.str() );
+       }
+    }
 
     /** Print message according to  verbosity level of the templated parameter (one of
      *  DEBUG, MESSAGE, WARNING, ERROR ) and the global parameter "Verbosity".
