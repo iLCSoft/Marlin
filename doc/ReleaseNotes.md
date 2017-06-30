@@ -1,3 +1,31 @@
+# v01-12
+
+* 2017-06-29 Andre Sailer ([PR#16](https://github.com/iLCSoft/Marlin/pull/16))
+  - XMLParser: cleanup member objects, make StringParameters shared pointers to simplify ownership
+     Previously some were owned by the Processors, others were still owned by the XMLParser object
+     adapted interfaces
+  - Processors: functions using `StringParameter*` now use or return `shared_ptr<StringParameters>` instead
+
+* 2017-06-09 Andre Sailer ([PR#12](https://github.com/iLCSoft/Marlin/pull/12))
+  - EventSeeder: make event seed truly constant in space and time
+
+* 2017-06-14 Andre Sailer ([PR#13](https://github.com/iLCSoft/Marlin/pull/13))
+  - Added MemoryMonitor processor to print out memory consumption of Marlin
+
+* 2017-06-30 Frank Gaede ([PR#17](https://github.com/iLCSoft/Marlin/pull/17))
+  - adapt MarlinGUi to new usage of shared_ptr<StringParameters>
+   - remove duplicate entry in ReleaseNotes.md
+
+* 2017-05-29 Andre Sailer ([PR#11](https://github.com/iLCSoft/Marlin/pull/11))
+  - Add possibility to use conditions also for eventModify processors. The processor setting the conditions must also run under modifyEvent!
+
+* 2017-05-29 Andre Sailer ([PR#10](https://github.com/iLCSoft/Marlin/pull/10))
+  - compareMarlinSteeringFiles.py: add treatment for processor groups
+  - compareMarlinSteeringFiles.py: add option to compare only selected processors
+
+* 2017-06-23 Andre Sailer ([PR#15](https://github.com/iLCSoft/Marlin/pull/15))
+  - Processor: throw exception if parameter is already defined
+
 # v01-11
 
 * 2017-02-27 Andre Sailer ([PR#8](https://github.com/iLCSoft/Marlin/pull/8))
