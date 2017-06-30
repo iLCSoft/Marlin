@@ -4,6 +4,7 @@
 
 #include "marlin/MarlinSteerCheck.h"
 #include "marlin/CMProcessor.h"
+#include <memory>
 
 using namespace std;
 
@@ -108,7 +109,7 @@ void APDialog::addProcessor(){
 
     if( !existsProc ){
 	//add new processor
-	_msc->addProcessor( ACTIVE, le->displayText().toStdString(), cb->currentText().toStdString() );
+      _msc->addProcessor( ACTIVE, le->displayText().toStdString(), cb->currentText().toStdString() , std::shared_ptr<StringParameters>() );
 	
 	//edit processor
 	emit( editProcessor( (int)_msc->getAProcs().size()-1 ));

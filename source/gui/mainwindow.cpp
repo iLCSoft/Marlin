@@ -602,7 +602,7 @@ void MainWindow::setMarlinSteerCheck( const char* filename )
     updateConds();
 
     //Delegate
-    GParamDelegate *gpDelegate = new GParamDelegate( msc->getGlobalParameters(), this, globalSectionTable );
+    GParamDelegate *gpDelegate = new GParamDelegate( msc->getGlobalParameters().get() , this, globalSectionTable );
     globalSectionTable->setItemDelegate( gpDelegate );
 }
 
