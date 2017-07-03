@@ -281,6 +281,8 @@ void LCIOOutputProcessor::end(){
 			      << std::endl ;
   
   _lcWrt->close() ;
+  delete _lcWrt;
+  _lcWrt = nullptr;
 
 }
 
