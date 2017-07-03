@@ -620,6 +620,10 @@ namespace marlin{
         for (auto& pair : _activeMap ) {
           delete pair.second;
         }
+
+        _activeMap.clear();
+        _map.clear();
+        _list.clear();
     }
 
   
