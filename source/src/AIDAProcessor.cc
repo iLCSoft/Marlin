@@ -168,6 +168,8 @@ namespace marlin {
     delete _histoFactory ;
     delete _tupleFactory ;
     delete _dataPointSetFactory ;
+
+    delete _tree;
     
   }
    AIDA::IAnalysisFactory* AIDAProcessor::GetIAnalysisFactory( const Processor* proc )
