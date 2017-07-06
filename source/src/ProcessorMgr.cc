@@ -610,10 +610,6 @@ namespace marlin{
 
         streamlog_out(MESSAGE) << " --------------------------------------------------------- "  << std::endl ;
 
-        //delete _me;
-        //_me = nullptr;
-
-
         delete Global::EVENTSEEDER ;
         Global::EVENTSEEDER = nullptr ;
 
@@ -624,6 +620,10 @@ namespace marlin{
         _activeMap.clear();
         _map.clear();
         _list.clear();
+
+        delete _me;
+        _me = nullptr;
+
     }
 
   
