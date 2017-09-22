@@ -47,6 +47,8 @@ namespace marlin{
                     + _fileName  ) ;
         }
 
+        processIncludeElements( root ) ;
+
         TiXmlNode* section = 0 ;
 
 
@@ -511,6 +513,91 @@ namespace marlin{
 
     }
 
+
+
+
+    void XMLParser::processIncludeElements( TiXmlElement* element )
+    {
+        TiXmlElement* child = element->FirstChildElement() ;
+
+        while( 1 )
+        {
+            if( ! child )
+                break ;
+
+            if( child->Value() != std::string("include") )
+            {
+                processIncludeElements( child ) ;
+                child = child->NextSiblingElement() ;
+                continue ;
+            }
+
+            if( ! child->Attribute("ref") )
+            {
+                std::stringstream str ;
+                str  << "XMLParser::processIncludeElements missing attribute \"" << "ref"
+                    << "\" in element <" << child->Value() << "/> in file " << _fileName  ;
+                throw ParseException( str.str() ) ;
+            }
+
+            const std::string ref ( child->Attribute("ref") ) ;
+
+            if( ref.size() < 5 || ref.substr( ref.size() - 4 ) != ".xml" )
+            {
+                std::stringstream str ;
+                str  << "XMLParser::processIncludeElements invalid ref file name \"" << ref
+                    << "\" in element <" << child->Value() << "/> in file " << _fileName  ;
+                throw ParseException( str.str() ) ;
+            }
+
+            std::string refFileName ;
+
+            if( ref.at(0) != '/' )
+            {
+                // relative path case
+                // prepend with current file path
+                size_t idx = _fileName.find_last_of("/") ;
+                std::string baseFileName ;
+
+                if( idx != std::string::npos )
+                {
+                    baseFileName = _fileName.substr( 0 , idx ) + "/" ;
+                }
+
+                refFileName = baseFileName + ref ;
+            }
+            else
+            {
+                refFileName = ref ;
+            }
+
+            TiXmlDocument document ;
+            bool loadOkay = document.LoadFile( refFileName ) ;
+
+            if( !loadOkay ) {
+
+                std::stringstream str ;              
+                str  << "XMLParser::processIncludeElements error in file [" << refFileName
+                    << ", row: " << document.ErrorRow() << ", col: " << document.ErrorCol() << "] : "
+                    << document.ErrorDesc() ;
+                throw ParseException( str.str() ) ;
+
+            }
+
+            TiXmlNode *includeAfter( child ) ;
+
+            for( TiXmlElement *includeElement = document.FirstChildElement() ; includeElement ; includeElement =  includeElement->NextSiblingElement() )
+            {
+                includeAfter = element->InsertAfterChild( includeAfter, *includeElement ) ;
+            }
+
+            // tricky lines : 
+            // 1) Remove the include element
+            element->RemoveChild(child) ;
+            // 2) Go to the next sibling element of the last included element to skip nested <include> elements
+            child = includeAfter->NextSiblingElement() ;
+        }
+    }
 
 
     void XMLParser::replacegroups(TiXmlNode* section) {

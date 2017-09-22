@@ -185,6 +185,10 @@ namespace marlin{
      */
     void processconditions( TiXmlNode* current , const std::string& conditions ) ;
 
+    /** Helper method - recursively replace all <include ref="..."> with the corresponding 
+     *  file content
+     */
+    void processIncludeElements( TiXmlElement* element );
 
     mutable StringParametersMap _map{};
     StringParameters* _current ;
@@ -210,4 +214,3 @@ namespace marlin{
  * where name and type are required attibutes.
  * 
  */
- 
