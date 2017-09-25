@@ -50,7 +50,15 @@ namespace marlin{
         processIncludeElements( root ) ;
 
         TiXmlNode* section = 0 ;
-
+        
+        section = root->FirstChild("constants") ;
+        std::map<std::string, std::string> constants ;
+        
+        if( section != 0 ) {
+            processConstants( section , constants ) ;
+        } else {
+          std::cout << "XMLParser::parse : no <constants/> section found in " << _fileName << std::endl ;
+        }
 
         _map[ "Global" ] = std::make_shared<StringParameters>();
         StringParameters*  globalParameters = _map[ "Global" ].get();
@@ -59,7 +67,7 @@ namespace marlin{
 
         if( section != 0  ){
             _current =  _map[ "Global" ].get() ;
-            parametersFromNode( section ) ;
+            parametersFromNode( section , constants ) ;
 
         }  else {
 
@@ -199,7 +207,7 @@ namespace marlin{
 
             std::pair<unsigned,unsigned> currentCount( typeCount ) ;
 
-            parametersFromNode( section , &typeCount ) ;
+            parametersFromNode( section , constants, &typeCount ) ;
 
             if( typeCount.first > currentCount.first || typeCount.second > currentCount.second ){
                 ++typedProcCount ; // at least one type info attribute found in processor
@@ -294,7 +302,7 @@ namespace marlin{
     }  
 
 
-    void XMLParser::parametersFromNode(TiXmlNode* section, std::pair<unsigned,unsigned>*typeCount) { 
+    void XMLParser::parametersFromNode(TiXmlNode* section, std::map<std::string, std::string>& constants, std::pair<unsigned,unsigned>*typeCount) { 
 
         TiXmlNode* par = 0 ;
 
@@ -349,6 +357,16 @@ namespace marlin{
                 if( par->FirstChild() )
                     inputLine =  par->FirstChild()->Value() ;
             }
+            
+            try {
+                performConstantReplacement( inputLine , constants );
+            }
+            catch(ParseException) {
+                
+            }
+            
+
+            
             //       if( par->ToElement()->Attribute("value") != 0 ) {
             // 	inputLine = par->ToElement()->Attribute("value") ;
             //       }
@@ -514,8 +532,6 @@ namespace marlin{
     }
 
 
-
-
     void XMLParser::processIncludeElements( TiXmlElement* element )
     {
         TiXmlElement* child = element->FirstChildElement() ;
@@ -599,6 +615,99 @@ namespace marlin{
         }
     }
 
+
+    void XMLParser::processConstants( TiXmlNode* node , std::map<std::string, std::string>& constants )
+    {
+        
+        for( TiXmlElement* child = node->FirstChildElement() ; child ; child = child->NextSiblingElement() ) {
+          
+            if( std::string( child->Value() ) == "constant" ) {
+                
+                if( ! child->Attribute("name") ) {
+                  
+                  std::cout << "XMLParser::processConstants : constant element without name. Skipping ..." << std::endl ;
+                  continue ;
+                }
+                
+                const std::string name( child->Attribute("name") ) ;
+                
+                if( name.empty() ) {
+                    std::cout << "XMLParser::processConstants : parsed empty constant name !" << std::endl ;
+                    continue ;
+                }
+                
+                // std::cout << "Found constant with name : " << name << std::endl;
+                
+                if( constants.end() != constants.find( name ) ) {
+                    std::stringstream str ;
+                    str << "XMLParser::processConstants : constant \"" << name << "\" defined twice !" << std::endl ;
+                    throw ParseException( str.str() ) ;
+                }
+                
+                std::string value ;
+                
+                if( child->Attribute("value") ) {
+                  
+                    value = child->Attribute("value") ;
+                }
+                else {
+
+                    if( child->FirstChild() )
+                        value = child->FirstChild()->Value() ;
+                }
+                
+                try { performConstantReplacement( value, constants ) ;                  
+                }
+                catch( ParseException & e ) {
+                    std::cout << "XMLParser::processConstants : Couldn't parse constant \"" << name << "\"" << std::endl ;
+                    throw e ;
+                }
+                
+                if( ! constants.insert( std::map<std::string, std::string>::value_type( name , value ) ).second ) {
+                    std::stringstream str ;
+                    str << "XMLParser::processConstants : couldn't add constant \"" << name << "\" to constant map !" << std::endl ;
+                    throw ParseException( str.str() ) ;
+                }
+                
+                std::cout << "Added constant \"" << name << "\" , value = \"" << value << "\"" << std::endl ;
+            }  
+          
+        }
+        
+    }
+    
+    
+    std::string &XMLParser::performConstantReplacement( std::string& value, std::map<std::string, std::string>& constants ) {
+        
+        size_t pos = value.find_first_of("${") ;
+        
+        while( pos != std::string::npos ) {
+          
+            size_t pos2 = value.find_first_of( "}", pos+2 ) ;
+            
+            if( pos2 == std::string::npos ) {
+              
+                throw ParseException( "XMLParser::performConstantReplacement : couldn't parse constant value !" ) ;
+            }
+            
+            const std::string key( value.substr( pos+2 , pos2-pos-2 )) ;
+            auto findConstant = constants.find( key ) ;
+            const std::string replacementValue( findConstant != constants.end() ? findConstant->second : "" ) ;
+            
+            if( replacementValue.empty() ) {
+              
+                std::cout << "XMLParser::performConstantReplacement : constant \"" << key << "\" not found in available constants !" << std::endl ; 
+            }
+            
+            value.replace( pos , (pos2+1-pos) , replacementValue ) ;
+            pos2 = pos + replacementValue.size() ; // new end position after replace
+            
+            pos = value.find_first_of("${") ; // find next possible key to replace
+        }
+        
+        return value ;
+    }
+    
 
     void XMLParser::replacegroups(TiXmlNode* section) {
 

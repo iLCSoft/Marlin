@@ -166,7 +166,7 @@ namespace marlin{
 
     /** Extracts all parameters from the given node and adss them to the current StringParameters object
      */
-    void parametersFromNode(TiXmlNode* section, std::pair<unsigned,unsigned>* typeCount=0) ;
+    void parametersFromNode(TiXmlNode* section, std::map<std::string, std::string>& constants, std::pair<unsigned,unsigned>* typeCount=0) ;
 
     /** Return named attribute - throws ParseException if attribute doesn't exist */
     const char* getAttribute( TiXmlNode* node , const std::string& name ) ;
@@ -189,6 +189,10 @@ namespace marlin{
      *  file content
      */
     void processIncludeElements( TiXmlElement* element );
+
+    void processConstants( TiXmlNode* node , std::map<std::string, std::string>& constants ) ;
+    
+    std::string &performConstantReplacement( std::string& value, std::map<std::string, std::string>& constants ) ;
 
     mutable StringParametersMap _map{};
     StringParameters* _current ;
