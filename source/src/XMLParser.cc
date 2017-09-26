@@ -727,7 +727,9 @@ namespace marlin{
             
             if( replacementValue.empty() ) {
               
-                std::cout << "XMLParser::performConstantReplacement : constant \"" << key << "\" not found in available constants !" << std::endl ; 
+                std::stringstream str ;
+                str << "XMLParser::performConstantReplacement : constant \"" << key << "\" not found in available constants !" ;
+                throw ParseException( str.str() ) ;
             }
             
             value.replace( pos , (pos2+1-pos) , replacementValue ) ;
