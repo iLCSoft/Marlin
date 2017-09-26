@@ -58,7 +58,7 @@ namespace marlin{
           std::cout << "XMLParser::parse : no <constants/> section found in " << _fileName << std::endl ;
         }
 
-        processIncludeElements( root ) ;
+        processIncludeElements( root , constants ) ;
 
         _map[ "Global" ] = std::make_shared<StringParameters>();
         StringParameters*  globalParameters = _map[ "Global" ].get();
@@ -532,7 +532,7 @@ namespace marlin{
     }
 
 
-    void XMLParser::processIncludeElements( TiXmlElement* element )
+    void XMLParser::processIncludeElements( TiXmlElement* element , const std::map<std::string, std::string>& constants )
     {
         TiXmlElement* child = element->FirstChildElement() ;
 
@@ -540,70 +540,29 @@ namespace marlin{
         {
             if( ! child )
                 break ;
-
-            if( child->Value() != std::string("include") )
-            {
-                processIncludeElements( child ) ;
+                
+            if( child->Value() == std::string("constants") ) {
+              
                 child = child->NextSiblingElement() ;
                 continue ;
             }
 
-            if( ! child->Attribute("ref") )
-            {
-                std::stringstream str ;
-                str  << "XMLParser::processIncludeElements missing attribute \"" << "ref"
-                    << "\" in element <" << child->Value() << "/> in file " << _fileName  ;
-                throw ParseException( str.str() ) ;
+            if( child->Value() != std::string("include") ) {
+              
+                processIncludeElements( child , constants ) ;
+                child = child->NextSiblingElement() ;
+                continue ;
             }
+            
+            // process the include and returns the first and last elements found in the include
+            TiXmlDocument document ; 
+            processIncludeElement( child , constants , document ) ;
 
-            const std::string ref ( child->Attribute("ref") ) ;
-
-            if( ref.size() < 5 || ref.substr( ref.size() - 4 ) != ".xml" )
-            {
-                std::stringstream str ;
-                str  << "XMLParser::processIncludeElements invalid ref file name \"" << ref
-                    << "\" in element <" << child->Value() << "/> in file " << _fileName  ;
-                throw ParseException( str.str() ) ;
-            }
-
-            std::string refFileName ;
-
-            if( ref.at(0) != '/' )
-            {
-                // relative path case
-                // prepend with current file path
-                size_t idx = _fileName.find_last_of("/") ;
-                std::string baseFileName ;
-
-                if( idx != std::string::npos )
-                {
-                    baseFileName = _fileName.substr( 0 , idx ) + "/" ;
-                }
-
-                refFileName = baseFileName + ref ;
-            }
-            else
-            {
-                refFileName = ref ;
-            }
-
-            TiXmlDocument document ;
-            bool loadOkay = document.LoadFile( refFileName ) ;
-
-            if( !loadOkay ) {
-
-                std::stringstream str ;              
-                str  << "XMLParser::processIncludeElements error in file [" << refFileName
-                    << ", row: " << document.ErrorRow() << ", col: " << document.ErrorCol() << "] : "
-                    << document.ErrorDesc() ;
-                throw ParseException( str.str() ) ;
-
-            }
-
+            // add them to the xml tree
             TiXmlNode *includeAfter( child ) ;
 
-            for( TiXmlElement *includeElement = document.FirstChildElement() ; includeElement ; includeElement =  includeElement->NextSiblingElement() )
-            {
+            for( TiXmlElement *includeElement = document.FirstChildElement() ; includeElement ; includeElement =  includeElement->NextSiblingElement() ) {
+
                 includeAfter = element->InsertAfterChild( includeAfter, *includeElement ) ;
             }
 
@@ -614,90 +573,109 @@ namespace marlin{
             child = includeAfter->NextSiblingElement() ;
         }
     }
+    
+    
+    void XMLParser::processIncludeElement( TiXmlElement* element , const std::map<std::string, std::string>& constants , TiXmlDocument &document) {
+      
+        std::pair<TiXmlElement*, TiXmlElement*> firstAndLastElements(nullptr, nullptr) ;
+        
+        if( ! element->Attribute("ref") ) {
+          
+            std::stringstream str ;
+            str  << "XMLParser::processIncludeElement missing attribute \"" << "ref"
+                << "\" in element <" << element->Value() << "/> in file " << _fileName  ;
+            throw ParseException( str.str() ) ;
+        }
+
+        std::string ref ( element->Attribute("ref") ) ;
+
+        if( ref.size() < 5 || ref.substr( ref.size() - 4 ) != ".xml" ) {
+          
+            std::stringstream str ;
+            str  << "XMLParser::processIncludeElement invalid ref file name \"" << ref
+                << "\" in element <" << element->Value() << "/> in file " << _fileName  ;
+            throw ParseException( str.str() ) ;
+        }
+        
+        try { performConstantReplacement( ref, constants ) ;                  
+        }
+        catch( ParseException & e ) {
+            std::cout << "XMLParser::processIncludeElement : Couldn't parse include ref \"" << ref << "\"" << std::endl ;
+            throw e ;
+        }
+
+        std::cout << "Ref = " << ref << std::endl ;
+        std::string refFileName ;
+
+        if( ref.at(0) != '/' ) {
+          
+            // relative path case
+            // prepend with current file path
+            size_t idx = _fileName.find_last_of("/") ;
+            std::string baseFileName ;
+
+            if( idx != std::string::npos )
+            {
+                baseFileName = _fileName.substr( 0 , idx ) + "/" ;
+            }
+
+            refFileName = baseFileName + ref ;
+        }
+        else {
+            refFileName = ref ;
+        }
+
+        bool loadOkay = document.LoadFile( refFileName ) ;
+
+        if( !loadOkay ) {
+
+            std::stringstream str ;              
+            str  << "XMLParser::processIncludeElement error in file [" << refFileName
+                << ", row: " << document.ErrorRow() << ", col: " << document.ErrorCol() << "] : "
+                << document.ErrorDesc() ;
+            throw ParseException( str.str() ) ;
+
+        }
+    
+    }
 
 
-    void XMLParser::processConstants( TiXmlNode* node , std::map<std::string, std::string>& constants )
-    {
-        // try and get a map of overwritten cmd line parameters for this constant
+    void XMLParser::processConstants( TiXmlNode* node , std::map<std::string, std::string>& constants ) {
+      
+        for( TiXmlElement* child = node->FirstChildElement() ; child ; child = child->NextSiblingElement() ) {
+          
+            if( std::string( child->Value() ) == "constant" ) {
+                
+                // process single constant
+                processConstant( child , constants ) ;
+            }
+            // need to process includes in constants section since some
+            // constants may be defined in includes and could then be
+            // used in next constant values
+            else if ( std::string( child->Value() ) == "include" ) {
+              
+                std::cout << "Found an include element in constants section" << std::endl;
+                
+                // process the include and returns the first and last elements found in the include
+                TiXmlDocument document ;
+                processIncludeElement( child , constants , document ) ;
+
+                for( TiXmlElement *elt = document.FirstChildElement() ; elt ; elt =  elt->NextSiblingElement() ) {
+                  
+                    if ( elt->Value() == std::string( "constant" ) )
+                        processConstant( elt , constants ) ;
+                }
+            }
+          
+        }
+        
+        // check the cmd line constant map. It should be empty now ...
         typedef CommandLineParametersMap::mapped_type ValMap ;
         ValMap* clp_map = 0 ; 
         CommandLineParametersMap::iterator clp_it = _cmdlineparams.find( "constant" ) ;
         
         if( clp_it != _cmdlineparams.end() ){  // found some command line parameters for the constants section
             clp_map = &( clp_it->second ) ;
-        }
-      
-        for( TiXmlElement* child = node->FirstChildElement() ; child ; child = child->NextSiblingElement() ) {
-          
-            if( std::string( child->Value() ) == "constant" ) {
-                
-                if( ! child->Attribute("name") ) {
-                  
-                  std::cout << "XMLParser::processConstants : constant element without name. Skipping ..." << std::endl ;
-                  continue ;
-                }
-                
-                const std::string name( child->Attribute("name") ) ;
-                
-                if( name.empty() ) {
-                    std::cout << "XMLParser::processConstants : parsed empty constant name !" << std::endl ;
-                    continue ;
-                }
-                
-                // std::cout << "Found constant with name : " << name << std::endl;
-                
-                if( constants.end() != constants.find( name ) ) {
-                    std::stringstream str ;
-                    str << "XMLParser::processConstants : constant \"" << name << "\" defined twice !" << std::endl ;
-                    throw ParseException( str.str() ) ;
-                }
-                
-                std::string value ;
-                
-                if( child->Attribute("value") ) {
-                  
-                    value = child->Attribute("value") ;
-                }
-                else {
-
-                    if( child->FirstChild() )
-                        value = child->FirstChild()->Value() ;
-                }
-                
-                // ---- check we have a cmd line constant overwrite 	    
-                if( clp_map != 0 ) {   
-
-                    ValMap::iterator vm_it = clp_map->find(  name ) ;
-
-                    if( vm_it != clp_map->end() ) {
-
-                        std::string cmdlinevalues = vm_it->second ;
-
-                        if( cmdlinevalues.compare( "" ) != 0 ){
-
-                            value = cmdlinevalues ; // overwrite steering file constant with command line ones
-                            clp_map->erase( vm_it ) ;
-                        }
-                    }
-                }
-
-                
-                try { performConstantReplacement( value, constants ) ;                  
-                }
-                catch( ParseException & e ) {
-                    std::cout << "XMLParser::processConstants : Couldn't parse constant \"" << name << "\"" << std::endl ;
-                    throw e ;
-                }
-                
-                if( ! constants.insert( std::map<std::string, std::string>::value_type( name , value ) ).second ) {
-                    std::stringstream str ;
-                    str << "XMLParser::processConstants : couldn't add constant \"" << name << "\" to constant map !" << std::endl ;
-                    throw ParseException( str.str() ) ;
-                }
-                
-                std::cout << "Read constant \"" << name << "\" , value = \"" << value << "\"" << std::endl ;
-            }  
-          
         }
         
         // if we did have cmd line parameters and have used all of them, we delete the corresponding submap ... 
@@ -708,7 +686,87 @@ namespace marlin{
     }
     
     
-    std::string &XMLParser::performConstantReplacement( std::string& value, std::map<std::string, std::string>& constants ) {
+    
+    void XMLParser::processConstant( TiXmlElement* element , std::map<std::string, std::string>& constants ) {
+      
+        // try and get a map of overwritten cmd line parameters for this constant
+        typedef CommandLineParametersMap::mapped_type ValMap ;
+        ValMap* clp_map = 0 ; 
+        CommandLineParametersMap::iterator clp_it = _cmdlineparams.find( "constant" ) ;
+        
+        if( clp_it != _cmdlineparams.end() ){  // found some command line parameters for the constants section
+            clp_map = &( clp_it->second ) ;
+        }
+      
+        if( ! element->Attribute("name") ) {
+          
+          throw ParseException( "XMLParser::processConstant : constant element without name. Skipping ..." ) ;
+        }
+        
+        const std::string name( element->Attribute("name") ) ;
+        
+        if( name.empty() ) {
+          
+            throw ParseException( "XMLParser::processConstant : parsed empty constant name !" ) ;
+        }
+        
+        // std::cout << "Found constant with name : " << name << std::endl;
+        
+        if( constants.end() != constants.find( name ) ) {
+            std::stringstream str ;
+            str << "XMLParser::processConstant : constant \"" << name << "\" defined twice !" << std::endl ;
+            throw ParseException( str.str() ) ;
+        }
+        
+        std::string value ;
+        
+        if( element->Attribute("value") ) {
+          
+            value = element->Attribute("value") ;
+        }
+        else {
+
+            if( element->FirstChild() )
+                value = element->FirstChild()->Value() ;
+        }
+        
+        // ---- check we have a cmd line constant overwrite 	    
+        if( clp_map != 0 ) {   
+
+            ValMap::iterator vm_it = clp_map->find(  name ) ;
+
+            if( vm_it != clp_map->end() ) {
+
+                std::string cmdlinevalues = vm_it->second ;
+
+                if( cmdlinevalues.compare( "" ) != 0 ){
+
+                    value = cmdlinevalues ; // overwrite steering file constant with command line ones
+                    clp_map->erase( vm_it ) ;
+                }
+            }
+        }
+
+        
+        try { performConstantReplacement( value, constants ) ;                  
+        }
+        catch( ParseException & e ) {
+            std::cout << "XMLParser::processConstant : Couldn't parse constant \"" << name << "\"" << std::endl ;
+            throw e ;
+        }
+        
+        if( ! constants.insert( std::map<std::string, std::string>::value_type( name , value ) ).second ) {
+            std::stringstream str ;
+            str << "XMLParser::processConstant : couldn't add constant \"" << name << "\" to constant map !" << std::endl ;
+            throw ParseException( str.str() ) ;
+        }
+        
+        std::cout << "Read constant \"" << name << "\" , value = \"" << value << "\"" << std::endl ;
+    }
+    
+    
+    
+    std::string &XMLParser::performConstantReplacement( std::string& value, const std::map<std::string, std::string>& constants ) {
         
         size_t pos = value.find_first_of("${") ;
         
