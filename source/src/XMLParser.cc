@@ -618,7 +618,15 @@ namespace marlin{
 
     void XMLParser::processConstants( TiXmlNode* node , std::map<std::string, std::string>& constants )
     {
+        // try and get a map of overwritten cmd line parameters for this constant
+        typedef CommandLineParametersMap::mapped_type ValMap ;
+        ValMap* clp_map = 0 ; 
+        CommandLineParametersMap::iterator clp_it = _cmdlineparams.find( "constant" ) ;
         
+        if( clp_it != _cmdlineparams.end() ){  // found some command line parameters for the constants section
+            clp_map = &( clp_it->second ) ;
+        }
+      
         for( TiXmlElement* child = node->FirstChildElement() ; child ; child = child->NextSiblingElement() ) {
           
             if( std::string( child->Value() ) == "constant" ) {
@@ -656,6 +664,24 @@ namespace marlin{
                         value = child->FirstChild()->Value() ;
                 }
                 
+                // ---- check we have a cmd line constant overwrite 	    
+                if( clp_map != 0 ) {   
+
+                    ValMap::iterator vm_it = clp_map->find(  name ) ;
+
+                    if( vm_it != clp_map->end() ) {
+
+                        std::string cmdlinevalues = vm_it->second ;
+
+                        if( cmdlinevalues.compare( "" ) != 0 ){
+
+                            value = cmdlinevalues ; // overwrite steering file constant with command line ones
+                            clp_map->erase( vm_it ) ;
+                        }
+                    }
+                }
+
+                
                 try { performConstantReplacement( value, constants ) ;                  
                 }
                 catch( ParseException & e ) {
@@ -669,9 +695,14 @@ namespace marlin{
                     throw ParseException( str.str() ) ;
                 }
                 
-                std::cout << "Added constant \"" << name << "\" , value = \"" << value << "\"" << std::endl ;
+                std::cout << "Read constant \"" << name << "\" , value = \"" << value << "\"" << std::endl ;
             }  
           
+        }
+        
+        // if we did have cmd line parameters and have used all of them, we delete the corresponding submap ... 
+        if( clp_map != 0 && clp_map->size() == 0 ) { 
+            _cmdlineparams.erase( clp_it ) ;
         }
         
     }
