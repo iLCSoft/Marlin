@@ -361,8 +361,9 @@ namespace marlin{
             try {
                 performConstantReplacement( inputLine , constants );
             }
-            catch(ParseException) {
-                
+            catch(ParseException &e) {
+              std::cout << "XMLParser::parse : Couldn't parse parameter \"" << name << "\"" << std::endl ;
+              throw e ;
             }
             
 
@@ -604,7 +605,6 @@ namespace marlin{
             throw ParseException( str.str() ) ;
         }
 
-        std::cout << "Ref = " << ref << std::endl ;
         std::string refFileName ;
 
         if( ref.at(0) != '/' ) {
@@ -653,8 +653,6 @@ namespace marlin{
             // constants may be defined in includes and could then be
             // used in next constant values
             else if ( std::string( child->Value() ) == "include" ) {
-              
-                std::cout << "Found an include element in constants section" << std::endl;
                 
                 // process the include and returns the first and last elements found in the include
                 TiXmlDocument document ;
@@ -768,7 +766,8 @@ namespace marlin{
     
     std::string &XMLParser::performConstantReplacement( std::string& value, const std::map<std::string, std::string>& constants ) {
         
-        size_t pos = value.find_first_of("${") ;
+        size_t pos = value.find("${") ;
+        std::string original(value);
         
         while( pos != std::string::npos ) {
           
@@ -793,7 +792,7 @@ namespace marlin{
             value.replace( pos , (pos2+1-pos) , replacementValue ) ;
             pos2 = pos + replacementValue.size() ; // new end position after replace
             
-            pos = value.find_first_of("${") ; // find next possible key to replace
+            pos = value.find("${", pos2) ; // find next possible key to replace
         }
         
         return value ;
