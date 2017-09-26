@@ -167,7 +167,8 @@ int main(int argc, char** argv ){
             // save dynamic options into map
             cmdlineparams[ cmdlinekey[0] ][ cmdlinekey[1] ] = cmdlinearg[1] ;
 
-            cout << "<!-- steering file parameter: [ " << cmdlinekey[0] << "." << cmdlinekey[1] << " ] will be OVERWRITTEN with value: [\"" << cmdlinearg[1] << "\"] -->" << endl;
+            std::string type = cmdlinekey[0] == "constant" ? "constant" : "parameter" ;
+            cout << "<!-- steering file " << type << ": [ " << cmdlinekey[0] << "." << cmdlinekey[1] << " ] will be OVERWRITTEN with value: [\"" << cmdlinearg[1] << "\"] -->" << endl;
 
             // erase dynamic options from **argv
             for( int j = i ; j < argc-1 ; j++ ){
