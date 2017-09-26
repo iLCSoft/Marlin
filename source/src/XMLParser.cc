@@ -589,19 +589,19 @@ namespace marlin{
 
         std::string ref ( element->Attribute("ref") ) ;
 
+        try { performConstantReplacement( ref, constants ) ;                  
+        }
+        catch( ParseException & e ) {
+            std::cout << "XMLParser::processIncludeElement : Couldn't parse include ref \"" << ref << "\"" << std::endl ;
+            throw e ;
+        }
+        
         if( ref.size() < 5 || ref.substr( ref.size() - 4 ) != ".xml" ) {
           
             std::stringstream str ;
             str  << "XMLParser::processIncludeElement invalid ref file name \"" << ref
                 << "\" in element <" << element->Value() << "/> in file " << _fileName  ;
             throw ParseException( str.str() ) ;
-        }
-        
-        try { performConstantReplacement( ref, constants ) ;                  
-        }
-        catch( ParseException & e ) {
-            std::cout << "XMLParser::processIncludeElement : Couldn't parse include ref \"" << ref << "\"" << std::endl ;
-            throw e ;
         }
 
         std::cout << "Ref = " << ref << std::endl ;
