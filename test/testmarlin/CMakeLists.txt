@@ -42,6 +42,21 @@ SET_TESTS_PROPERTIES( t_processoreventseeder PROPERTIES FAIL_REGULAR_EXPRESSION 
 
 SET_TESTS_PROPERTIES( t_processoreventseeder PROPERTIES PASS_REGULAR_EXPRESSION ". ERROR .TestProcessorEventSeeder.. ProcessorEventSeeder:registerProcessor" )
 
+#---------------------------------------------------------------------------------------
+SET( MARLIN_STEERING_FILE base-eventmodifier.xml )
+
+SET( MARLIN_INPUT_FILES 
+  ${CMAKE_CURRENT_SOURCE_DIR}/${MARLIN_STEERING_FILE}
+  ${CMAKE_CURRENT_SOURCE_DIR}/gear_simjob.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/simjob.slcio
+  ${CMAKE_CURRENT_SOURCE_DIR}/include-eventmodifier.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/constants-eventmodifier.xml
+)
+CONFIGURE_FILE( runmarlin.cmake.in includeandconstants.cmake @ONLY ) 
+
+ADD_TEST( t_includeandconstants "${CMAKE_COMMAND}" -P includeandconstants.cmake )
+SET_TESTS_PROPERTIES( t_includeandconstants PROPERTIES PASS_REGULAR_EXPRESSION "TestEventModifier modified 3 events in 1 run" )
+
 # the order of the match printed out on failure seems to go from last to first. So using the first of the two SET_TESTS_PROPERTIES below is more useful when trying to see when a specified test failed, in this case the test containing" Seeds don't match".  
 #SET_TESTS_PROPERTIES( t_processoreventseeder PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR .TestProcessorEventSeeder.;ERROR .TestProcessorEventSeeder.* Seeds don't match" )
 #SET_TESTS_PROPERTIES( t_processoreventseeder PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR .TestProcessorEventSeeder.* Seeds don't match;ERROR .TestProcessorEventSeeder."   )
