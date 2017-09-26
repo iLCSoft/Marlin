@@ -188,11 +188,14 @@ namespace marlin{
     /** Helper method - recursively replace all <include ref="..."> with the corresponding 
      *  file content
      */
-    void processIncludeElements( TiXmlElement* element );
+    void processIncludeElements( TiXmlElement* element , const std::map<std::string, std::string>& constants );
+    
+    void processIncludeElement( TiXmlElement* element , const std::map<std::string, std::string>& constants , TiXmlDocument &document);
 
     void processConstants( TiXmlNode* node , std::map<std::string, std::string>& constants ) ;
+    void processConstant( TiXmlElement* element , std::map<std::string, std::string>& constants ) ;
     
-    std::string &performConstantReplacement( std::string& value, std::map<std::string, std::string>& constants ) ;
+    std::string &performConstantReplacement( std::string& value, const std::map<std::string, std::string>& constants ) ;
 
     mutable StringParametersMap _map{};
     StringParameters* _current ;
