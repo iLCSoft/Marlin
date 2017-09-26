@@ -46,9 +46,7 @@ namespace marlin{
             throw ParseException(std::string( "XMLParser::parse : no root tag <marlin>...</marlin> found in  ") 
                     + _fileName  ) ;
         }
-
-        processIncludeElements( root ) ;
-
+        
         TiXmlNode* section = 0 ;
         
         section = root->FirstChild("constants") ;
@@ -59,6 +57,8 @@ namespace marlin{
         } else {
           std::cout << "XMLParser::parse : no <constants/> section found in " << _fileName << std::endl ;
         }
+
+        processIncludeElements( root ) ;
 
         _map[ "Global" ] = std::make_shared<StringParameters>();
         StringParameters*  globalParameters = _map[ "Global" ].get();
