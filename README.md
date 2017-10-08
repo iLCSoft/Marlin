@@ -65,6 +65,38 @@ if needed check DEPENDENCIES for additional required / optional packages
 
 compile your new plugin as described above for the mymarlin example under "Loading plugins/processors dynamically"
 
+### A Quick way to create a new Marlin Processor
+
+   find a script "copy_new_processor.sh" in the examples folder
+   ` ./copy_new_processor.sh  new_processor_name`
+
+   This script can be decomposed by following steps:
+
+   - Copy an example processer that supplied by ILCSoft  with .cc and .h file into a new folder and change the processer.
+   - Change the processor class name into the  new name!! 
+   NOTE: this is important, or it may conflict with existed processors.
+   - Put ./action.sh into the bin folder, change the PROJECTNAME in the action, and run
+   ./bin/action.sh
+   - When running this action.sh, six folders will be created, and all files will be put into their specific folder.
+
+    |   folder   |  meaning                |
+    |:----------:|:-----------------------:|
+    |  build     |  all compling file      |
+    |  src       |  source file            |
+    |  include   |  head file              |
+    |  xml       |  steering file          |
+    |  lib       |  your processor library |
+    |  bin       |  execute file           |
+
+   - go to xml folder, a default steering file has been created, change this steering file with the processors you want, then run it with
+   ` Marlin mysteer.xml`
+   - in the next time, when you change something for this processor and need to recompile it, just run `./bin/action.sh`.
+
+
+   The copy_new_processor.sh script can also be used for copy any other exist processor to a new one by
+   ` ./copy_new_processor.sh  old_processor_name new_processor_name`
+   then a new processor folder will be copied, the file name and the class name in the file will be changed to the new processor name automatically.
+
 ## License and Copyright
 Copyright (C), Marlin Authors
 
