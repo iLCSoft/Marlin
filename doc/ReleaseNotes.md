@@ -1,3 +1,38 @@
+# v01-13
+
+* 2017-09-27 Ete Remi ([PR#20](https://github.com/iLCSoft/Marlin/pull/20))
+  - Added a constants section in XMLParser parsing : 
+     - Allows to write constants and refer to in processor parameter values and global parameter values
+     - Makes use of ${constantName} to refer to a constant
+     - Use command line argument to override a constant
+     - example:
+  ```xml
+    <constants>
+      <constant name="MCParticleCollection" value="MCParticle"/>
+      <constant name="FilePath" value="../../test/testmarlin"/>
+      <constant name="InputFile" value="${FilePath}/simjob.slcio"/>
+    </constants>
+  ```
+  ```shell
+  Marlin --constant.InputFile=aDifferentFile.slcio  marlin.xml
+  ```
+
+* 2017-07-10 Andre Sailer ([PR#18](https://github.com/iLCSoft/Marlin/pull/18))
+  - AIDAProcessor: delete file (_tree) at the end
+  - LCIOOutputProcessor: delete lcWriter at the end
+  - ProcessorMgr: clear maps and list at the end; delete static instance at the end
+
+* 2017-09-25 Ete Remi ([PR#19](https://github.com/iLCSoft/Marlin/pull/19))
+  - Added <include> element feature to read external xml file and replace in main Marlin steering file
+  - Added an include mechanism to the `XMLParser` class, allowing to load xml files into the main Marlin steering file. Note that :
+    - Nested includes will not be processed in the current version (include of include does not work)
+     - Exceptions are thrown if something goes wrong with the xml element (wrong name, no file, etc ...)
+     - Includes are processed iteratively in the document inside the root element.
+
+* 2017-10-12 YancyW ([PR#21](https://github.com/iLCSoft/Marlin/pull/21))
+  - add "copy_new_Processor.sh" and "action.sh" to the example folder. The former is for copying an old processor to the new one and it can also copy the example processor to user's directory. The latter for compiling the code. 
+  - change the README.md, add usage for this two scripts.
+
 # v01-12
 
 * 2017-06-29 Andre Sailer ([PR#16](https://github.com/iLCSoft/Marlin/pull/16))
