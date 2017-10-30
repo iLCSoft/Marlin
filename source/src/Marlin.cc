@@ -247,6 +247,20 @@ int main(int argc, char** argv ){
                 return(1);
             }
         }
+        else if( std::string(argv[1]) == "-p" ){
+          if( argc == 4 ){
+            std::unique_ptr<XMLParser> parser = std::unique_ptr<XMLParser>( new XMLParser(argv[2]) ) ;
+            // tell parser to take into account any options defined on the command line
+            parser->setCmdLineParameters( cmdlineparams ) ;
+            parser->parse();
+            parser->write( argv[3] );
+            return(0);
+          }
+          else{
+              std::cout << "  usage: Marlin -p steering.xml poststeering.xml" << std::endl << std::endl;
+              return(1);
+          }
+        }
         else if( std::string(argv[1]) == "-h"  || std::string(argv[1]) == "-?" ){
 
             return printUsage() ;

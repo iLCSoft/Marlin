@@ -160,8 +160,9 @@ namespace marlin{
 
     /** Return the StringParameters for the section as read from the xml file */
     std::shared_ptr<StringParameters> getParameters( const std::string& sectionName ) const ;
-  
-
+    
+    /** Write the parsed XML tree in an other file */
+    void write(const std::string &filen) const ;
   protected:
 
     /** Extracts all parameters from the given node and adss them to the current StringParameters object
