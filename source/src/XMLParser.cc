@@ -280,6 +280,14 @@ namespace marlin{
 	//===================================================================
     }
 
+    void XMLParser::write(const std::string &filen) const{
+        
+        if( ! _doc ){
+            throw ParseException( "XMLParser::write: file not opened. Couldn't write to disk !" );
+        }
+        
+        _doc->SaveFile(filen);
+    }
 
     const char* XMLParser::getAttribute( TiXmlNode* node , const std::string& name ){
 
@@ -401,6 +409,17 @@ namespace marlin{
 		}
 	      }
 	    }
+      
+      try{  
+        getAttribute( par , "value" ) ;
+        if( par->ToElement() )
+          par->ToElement()->SetAttribute( "value", inputLine );
+      }      
+      catch( ParseException ) {
+
+          if( par->FirstChild() )
+              par->FirstChild()->SetValue( inputLine ) ;
+      }
 
             // std::cout << " values : " << inputLine << std::endl ;
 
@@ -642,29 +661,49 @@ namespace marlin{
 
     void XMLParser::processConstants( TiXmlNode* node , std::map<std::string, std::string>& constants ) {
       
-        for( TiXmlElement* child = node->FirstChildElement() ; child ; child = child->NextSiblingElement() ) {
+        TiXmlElement *previous(nullptr);
+        TiXmlElement *child(nullptr);
+        
+        while(1) {
           
-            if( std::string( child->Value() ) == "constant" ) {
-                
-                // process single constant
-                processConstant( child , constants ) ;
-            }
-            // need to process includes in constants section since some
-            // constants may be defined in includes and could then be
-            // used in next constant values
-            else if ( std::string( child->Value() ) == "include" ) {
-                
-                // process the include and returns the first and last elements found in the include
-                TiXmlDocument document ;
-                processIncludeElement( child , constants , document ) ;
+          if( ! child )
+              child = node->FirstChildElement();
+          else
+              child = child->NextSiblingElement();
+          
+          if( ! child )
+              break;
+          
+          if( std::string( child->Value() ) == "constant" ) {
+              
+              // process single constant
+              processConstant( child , constants ) ;
+          }
+          // need to process includes in constants section since some
+          // constants may be defined in includes and could then be
+          // used in next constant values
+          else if ( std::string( child->Value() ) == "include" ) {
+              
+              // process the include and returns the first and last elements found in the include
+              TiXmlDocument document ;
+              processIncludeElement( child , constants , document ) ;
+              
+              // add them to the xml tree
+              TiXmlNode *includeAfter( child ) ;
 
-                for( TiXmlElement *elt = document.FirstChildElement() ; elt ; elt =  elt->NextSiblingElement() ) {
-                  
-                    if ( elt->Value() == std::string( "constant" ) )
-                        processConstant( elt , constants ) ;
-                }
-            }
+              for( TiXmlElement *elt = document.FirstChildElement() ; elt ; elt =  elt->NextSiblingElement() ) {
+                
+                  if ( elt->Value() == std::string( "constant" ) ) {
+                      // processConstant( elt , constants ) ;
+                      includeAfter = node->InsertAfterChild( includeAfter, *elt ) ;
+                  }
+              }
+              
+              node->RemoveChild(child);
+              child = previous;
+          }
           
+          previous = child;
         }
         
         // check the cmd line constant map. It should be empty now ...
@@ -757,6 +796,17 @@ namespace marlin{
             std::stringstream str ;
             str << "XMLParser::processConstant : couldn't add constant \"" << name << "\" to constant map !" << std::endl ;
             throw ParseException( str.str() ) ;
+        }
+        
+        // replace the processed constant in the XML element
+        if( element->Attribute("value") ) {
+          
+            element->SetAttribute("value", value) ;
+        }
+        else {
+
+            if( element->FirstChild() )
+                element->FirstChild()->SetValue(value) ;
         }
         
         std::cout << "Read constant \"" << name << "\" , value = \"" << value << "\"" << std::endl ;
