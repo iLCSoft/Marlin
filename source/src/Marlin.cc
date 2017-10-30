@@ -247,17 +247,23 @@ int main(int argc, char** argv ){
                 return(1);
             }
         }
-        else if( std::string(argv[1]) == "-p" ){
+        else if( std::string(argv[1]) == "-p" || std::string(argv[1]) == "-n" ){
           if( argc == 4 ){
-            std::unique_ptr<XMLParser> parser = std::unique_ptr<XMLParser>( new XMLParser(argv[2]) ) ;
+            std::unique_ptr<XMLParser> parser = std::unique_ptr<XMLParser>( new XMLParser(argv[3]) ) ;
             // tell parser to take into account any options defined on the command line
             parser->setCmdLineParameters( cmdlineparams ) ;
             parser->parse();
-            parser->write( argv[3] );
-            return(0);
+            parser->write( argv[2] );
+            
+            // option -p : write and exit
+            if( std::string(argv[1]) == "-n" )
+              return(0);
+            // option -n : write and steering file for further processing
+            else
+              steeringFileName = argv[3] ;
           }
           else{
-              std::cout << "  usage: Marlin -p steering.xml poststeering.xml" << std::endl << std::endl;
+              std::cout << "  usage: Marlin " << argv[1] << " poststeering.xml steering.xml" << std::endl << std::endl;
               return(1);
           }
         }
@@ -265,10 +271,10 @@ int main(int argc, char** argv ){
 
             return printUsage() ;
         }
-
-
-        // one argument given: the steering file for normal running :
-        steeringFileName = argv[1] ;
+        else{
+            // one argument given: the steering file for normal running :
+            steeringFileName = argv[1] ;          
+        }
 
     } else {
 
