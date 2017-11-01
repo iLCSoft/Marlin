@@ -56,6 +56,9 @@ public:
   /** Parse the input file
    */
   void parse() ;
+  
+  /** Write down the parsed file in a new file. For this implementation, just copy paste the steering file */
+  void write(const std::string& fname) const ;
 
 
 protected:
