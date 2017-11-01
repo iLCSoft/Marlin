@@ -31,6 +31,9 @@ namespace marlin{
     /** Return the StringParameters defined for this section of the steering file */
     virtual std::shared_ptr<StringParameters> getParameters( const std::string& sectionName ) const =0 ;
     
+    /** Write down the parsed file in a new file */
+    virtual void write(const std::string& fname) const =0 ;
+    
   };
 
 }
