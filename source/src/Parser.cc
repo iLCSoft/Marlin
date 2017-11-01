@@ -157,6 +157,29 @@ namespace marlin{
 
     return 0 ;
   }
+  
+  
+  
+  void Parser::write(const std::string& fname) const{
+    std::ifstream inFile( _fileName.c_str()  ) ;
+    
+    if( ! inFile ){
+      std::cerr << "Parser::write:  couldn't open input file: " << _fileName  << std::endl ;
+      return ;
+    }
+    
+    std::ofstream outFile( fname.c_str()  ) ;
+    
+    if( ! outFile ){
+      std::cerr << "Parser::write:  couldn't open output file: " << fname  << std::endl ;
+      return ;
+    }
+    
+    outFile << inFile.rdbuf() ;
+    inFile.close() ;
+    outFile.close() ;
+  } 
+  
 
 
 
