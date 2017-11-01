@@ -251,11 +251,12 @@ int main(int argc, char** argv ){
         }
         else if( std::string(argv[1]) == "-n" ){
           if( argc == 3 ){
-            dryRun = true;
+            dryRun = true ;
+            steeringFileName = argv[2] ;
           }
           else{
-              std::cout << "  usage: Marlin " << argv[1] << " steering.xml" << std::endl << std::endl;
-              return(1);
+              std::cout << "  usage: Marlin " << argv[1] << " steering.xml" << std::endl << std::endl ;
+              return(1) ;
           }
         }
         else if( std::string(argv[1]) == "-h"  || std::string(argv[1]) == "-?" ){
@@ -311,14 +312,14 @@ int main(int argc, char** argv ){
         return(1) ;
     }
 
-    std::string parsedFileName = Global::parameters->getStringVal( "ParsedFileName" ) ;
+    std::string outputSteeringFile = Global::parameters->getStringVal( "OutputSteeringFile" ) ;
     
-    if( parsedFileName.size() > 0 ){
-      parser->write( parsedFileName ) ;
+    if( outputSteeringFile.size() > 0 ){
+      parser->write( outputSteeringFile ) ;
     }
     
     if( dryRun ){
-      std::cout << "Marlin in dry-run mode. Exiting ..." << std::endl ;
+      std::cout << "Marlin running in dry-run mode (-n option). Exiting ..." << std::endl ;
       return(0) ;
     }
 
