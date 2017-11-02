@@ -366,13 +366,7 @@ namespace marlin{
                     inputLine =  par->FirstChild()->Value() ;
             }
             
-            try {
-                performConstantReplacement( inputLine , constants );
-            }
-            catch(ParseException &e) {
-              std::cout << "XMLParser::parse : Couldn't parse parameter \"" << name << "\"" << std::endl ;
-              throw e ;
-            }
+
             
 
             
@@ -410,6 +404,7 @@ namespace marlin{
 	      }
 	    }
       
+      // replace the pre-processed parameter value in the xml tree 
       try{  
         getAttribute( par , "value" ) ;
         if( par->ToElement() )
@@ -419,6 +414,15 @@ namespace marlin{
 
           if( par->FirstChild() )
               par->FirstChild()->SetValue( inputLine ) ;
+      }
+      
+      // evaluate constant value
+      try {
+          performConstantReplacement( inputLine , constants );
+      }
+      catch(ParseException &e) {
+        std::cout << "XMLParser::parse : Couldn't parse parameter \"" << name << "\"" << std::endl ;
+        throw e ;
       }
 
             // std::cout << " values : " << inputLine << std::endl ;
@@ -802,8 +806,19 @@ namespace marlin{
                 }
             }
         }
-
         
+        // replace the pre-processed constant in the XML element
+        if( element->Attribute("value") ) {
+          
+            element->SetAttribute("value", value) ;
+        }
+        else {
+
+            if( element->FirstChild() )
+                element->FirstChild()->SetValue(value) ;
+        }
+
+        // evaluate constant value
         try { performConstantReplacement( value, constants ) ;                  
         }
         catch( ParseException & e ) {
@@ -815,17 +830,6 @@ namespace marlin{
             std::stringstream str ;
             str << "XMLParser::processConstant : couldn't add constant \"" << name << "\" to constant map !" << std::endl ;
             throw ParseException( str.str() ) ;
-        }
-        
-        // replace the processed constant in the XML element
-        if( element->Attribute("value") ) {
-          
-            element->SetAttribute("value", value) ;
-        }
-        else {
-
-            if( element->FirstChild() )
-                element->FirstChild()->SetValue(value) ;
         }
         
         std::cout << "Read constant \"" << name << "\" , value = \"" << value << "\"" << std::endl ;
