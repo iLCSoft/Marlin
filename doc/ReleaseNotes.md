@@ -1,3 +1,20 @@
+# v01-14
+
+* 2017-11-02 Ete Remi ([PR#22](https://github.com/ilcsoft/Marlin/pull/22))
+  - Added write() method to XMLParser (resp. Parser) to write the loaded xml tree (resp. same file) in a new file.
+  - Many methods adapted in XMLParser to make parameter/constant replacements persistent in the XML tree
+  - New global parameter "OutputSteeringFile" introduced to write down a new steering file after processing
+  - Added command line option -n for a Marlin dry-run
+  - Example : 
+  ```shell
+  # take the output file name from steering file and run Marlin as usual
+  Marlin steeringFile.xml 
+  # same but exit after writing the output steering file
+  Marlin -n steeringFile.xml 
+  # change the output file name
+  Marlin steeringFile.xml --global.OutputSteeringFile=MyParsedSteeringFile.xml 
+  ```
+
 # v01-13
 
 * 2017-09-27 Ete Remi ([PR#20](https://github.com/iLCSoft/Marlin/pull/20))
