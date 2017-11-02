@@ -655,7 +655,26 @@ namespace marlin{
             throw ParseException( str.str() ) ;
 
         }
+        
+        checkForNestedIncludes( &document ) ;
     
+    }
+    
+    
+    void XMLParser::checkForNestedIncludes( const TiXmlNode *node ){
+        
+        for(const TiXmlElement *child = node->FirstChildElement() ; child ; child = child->NextSiblingElement()){
+          
+          if( child->Value() == std::string("include") ) {
+            std::stringstream ss;
+            ss << "Nested includes are not allowed [in file: " << node->GetDocument()->Value() << ", line: " << child->Row() << "] !" ;
+            throw ParseException( ss.str() ) ;            
+          }
+          
+          checkForNestedIncludes( child ) ;
+
+        }
+        
     }
 
 

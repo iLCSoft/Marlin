@@ -197,6 +197,8 @@ namespace marlin{
     void processConstant( TiXmlElement* element , std::map<std::string, std::string>& constants ) ;
     
     std::string &performConstantReplacement( std::string& value, const std::map<std::string, std::string>& constants ) ;
+    
+    void checkForNestedIncludes( const TiXmlNode *node );
 
     mutable StringParametersMap _map{};
     StringParameters* _current ;
