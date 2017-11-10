@@ -368,6 +368,8 @@ namespace marlin{
 
     void ProcessorMgr::modifyEvent( LCEvent* evt ){ 
     
+      _conditions.clear() ;
+      
       // refresh the seeds for this event
       Global::EVENTSEEDER->refreshSeeds( evt ) ;
 
