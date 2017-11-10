@@ -51,6 +51,9 @@ class EventSelector : public Processor {
   virtual void check( LCEvent * evt ) ; 
   
   
+  virtual void modifyEvent( LCEvent *evt ) ;
+  
+  
   /** Called after data processing for clean up.
    */
   virtual void end() ;
