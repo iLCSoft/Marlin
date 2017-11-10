@@ -2,6 +2,7 @@
 #define EventSelector_h 1
 
 #include "marlin/Processor.h"
+#include "marlin/EventModifier.h"
 #include "lcio.h"
 #include <string>
 #include <set>
@@ -23,7 +24,7 @@ using namespace marlin ;
  * @version $Id:$ 
  */
 
-class EventSelector : public Processor {
+class EventSelector : public Processor, public marlin::EventModifier {
   
   typedef std::set< std::pair< int, int > > SET ;
 
@@ -57,6 +58,8 @@ class EventSelector : public Processor {
   /** Called after data processing for clean up.
    */
   virtual void end() ;
+  
+  virtual const std::string & name() const { return Processor::name() ; }
   
   
  protected:
