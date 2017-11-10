@@ -116,6 +116,8 @@ namespace marlin{
                 activeProcs.push_back( procName ) ;
 
                 std::string condition(  getAttribute( proc,"condition")  ) ;
+                 
+                performConstantReplacement( condition, constants ) ;
 
                 if( condition.size() == 0 ) 
                     condition += "true" ;
