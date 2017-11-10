@@ -1,3 +1,30 @@
+# v01-15
+
+* 2017-11-10 Ete Remi ([PR#24](https://github.com/iLCSoft/Marlin/pull/24))
+  - EventSelector inherits from EventModifier and call processEvent() from modifyEvent()
+  - Added safety clear of conditions in ProcessorMgr::modifyEvent
+
+* 2017-11-10 Ete Remi ([PR#23](https://github.com/iLCSoft/Marlin/pull/23))
+  - Added constants replacement for condition attributes in the execute section
+    - Allows permanent conditions at runtime (not depending on processor return values)
+    - Allows to refer to constants in conditions in the execute section, e.g : 
+  ```xml
+  <constants>
+    <constant name="RunOverlay" value="false" />
+  </constants>
+  
+  <execute>
+    <if condition="${RunOverlay}">
+      <processor name="MyOverlayBg"/>
+    </if>
+  </execute>
+  ```
+  and run : 
+  ```shell
+  Marlin steering.xml --constant.RunOverlay=true
+  ```
+  to change the behavior.
+
 # v01-14
 
 * 2017-11-02 Ete Remi ([PR#22](https://github.com/ilcsoft/Marlin/pull/22))
