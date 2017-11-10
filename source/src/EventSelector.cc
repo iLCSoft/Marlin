@@ -54,6 +54,11 @@ void EventSelector::processRunHeader( LCRunHeader* ) {
   _nRun++ ;
 } 
 
+
+void EventSelector::modifyEvent( LCEvent *evt ) {
+  processEvent( evt );
+}
+
 void EventSelector::processEvent( LCEvent * evt ) { 
 
   // if no events specifiec - always return true
