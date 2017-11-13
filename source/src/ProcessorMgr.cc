@@ -319,18 +319,23 @@ namespace marlin{
 
         if( doConsistencyCheck  && lcioDetName != gearDetName ) {
 
-            std::stringstream sstr ;
-
-            sstr  << std::endl
-                << " ============================================================= " << std::endl
-                << " ProcessorMgr::processRunHeader : inconsistent detector models : " << std::endl 
-                << " in lcio : " << lcioDetName << " <=> in gear file : "  << gearDetName << std::endl
-                << " ============================================================= " << std::endl
-                << std::endl ;
+            // std::stringstream sstr ;
+            // 
+            // sstr  << std::endl
+            //     << " ============================================================= " << std::endl
+            //     << " ProcessorMgr::processRunHeader : inconsistent detector models : " << std::endl 
+            //     << " in lcio : " << lcioDetName << " <=> in gear file : "  << gearDetName << std::endl
+            //     << " ============================================================= " << std::endl
+            //     << std::endl ;
 
             //throw lcio::Exception( sstr.str() )  ;
 
-            throw ProcMgrStopProcessing( sstr.str() ) ;
+            // throw ProcMgrStopProcessing( sstr.str() ) ;
+            
+            streamlog_out(WARNING) << " ============================================================= " << std::endl ;
+            streamlog_out(WARNING) << " ProcessorMgr::processRunHeader : inconsistent detector models : " << std::endl ;
+            streamlog_out(WARNING) << " in lcio : " << lcioDetName << " <=> in gear file : "  << gearDetName << std::endl ;
+            streamlog_out(WARNING) << " ============================================================= " << std::endl ;
         }
 
 
