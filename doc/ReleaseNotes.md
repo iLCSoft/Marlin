@@ -1,3 +1,8 @@
+# v01-15-01
+
+* 2017-11-15 Ete Remi ([PR#25](https://github.com/ilcsoft/Marlin/pull/25))
+  - remove exception thrown in ProcessorMgr::processRunHeader() if gear detector name is different from the one in the lcio file, and just warn the user
+
 # v01-15
 
 * 2017-11-10 Ete Remi ([PR#24](https://github.com/iLCSoft/Marlin/pull/24))
