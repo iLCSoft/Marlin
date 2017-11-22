@@ -74,7 +74,23 @@ namespace marlin{
             throw ParseException(std::string( "XMLParser::parse : no <global/> section found in  ") 
                     + _fileName  ) ;
         }
+        
+        for( TiXmlElement *p = section->FirstChildElement( "parameter" ) ; p ; p = p->NextSiblingElement( "parameter" ) ) {
 
+            const char* attr = p->Attribute( "name" );
+            
+            if( attr != 0 && std::string( attr ) == "OutputSteeringFile" ) {
+                // in case the file name is not in the attribute 
+                // "value" but in the element text
+                // The clear method clears only the child elements, not the element itself
+                p->Clear() ;
+                // Overwrite this value to make sure we don't re-generate
+                // inifinitely steering files
+                p->SetAttribute( "value" , "" );
+                
+                break;
+            }
+        }
 
         // create global parameter ActiveProcessors from <execute> section
         //     TiXmlElement activeProcessorItem( "parameter" );
