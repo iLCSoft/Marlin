@@ -1,3 +1,9 @@
+# v01-15-02
+
+* 2017-11-22 Ete Remi ([PR#26](https://github.com/ilcsoft/Marlin/pull/26))
+  - Added specific xml tree parsing to remove the output steering file name from the xml tree after parsing
+    - avoid to re-generate repeatably parsed steering files after a first parsing
+
 # v01-15-01
 
 * 2017-11-15 Ete Remi ([PR#25](https://github.com/ilcsoft/Marlin/pull/25))
