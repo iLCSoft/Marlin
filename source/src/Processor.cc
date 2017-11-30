@@ -51,9 +51,9 @@ namespace marlin{
   }
 
 
-  void Processor::setParameters( std::shared_ptr<StringParameters> parameters) {
+  void Processor::setParameters( std::shared_ptr<StringParameters> processorParameters) {
 
-    _parameters = parameters ;
+    _parameters = processorParameters ;
 
     updateParameters();
 
@@ -201,9 +201,9 @@ namespace marlin{
   //       return 0 ;
   //   }
 
-  bool Processor::parameterSet( const std::string& name ) {
+  bool Processor::parameterSet( const std::string& parameterName ) {
 
-    ProcParamMap::iterator it = _map.find(name) ;
+    ProcParamMap::iterator it = _map.find(parameterName) ;
 
     if( it != _map.end() )
       return it->second->valueSet() ;    
@@ -268,9 +268,9 @@ namespace marlin{
     return _outTypeMap.find( pName ) != _outTypeMap.end() ;
   }
 
-  void Processor::setReturnValue( const std::string& name, bool val ){
+  void Processor::setReturnValue( const std::string& keyName, bool val ){
   
-    ProcessorMgr::instance()->setProcessorReturnValue(  this , val , name ) ;
+    ProcessorMgr::instance()->setProcessorReturnValue(  this , val , keyName ) ;
   }
 
 

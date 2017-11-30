@@ -119,22 +119,22 @@ namespace marlin{
     
   public:
     
-    ProcessorParameter_t( const std::string& name,
-			  const std::string& description, 
+    ProcessorParameter_t( const std::string& parameterName,
+			  const std::string& parameterDescription, 
 			  T& parameter ,    
- 			  const T& defaultValue,
+ 			  const T& parameterDefaultValue,
 			  bool optional,
-			  int setSize=0) :     
+			  int parameterSetSize=0) :     
 
       _parameter( parameter ),
-      _defaultValue( defaultValue ) 
+      _defaultValue( parameterDefaultValue ) 
     {
-      _name = name ;
-      _parameter = defaultValue ;
-      _description = description ;
+      _name = parameterName ;
+      _parameter = parameterDefaultValue ;
+      _description = parameterDescription ;
       _optional = optional ;
       _valueSet = false ;
-      _setSize = setSize ;
+      _setSize = parameterSetSize ;
     }
 
     virtual ~ProcessorParameter_t() {}

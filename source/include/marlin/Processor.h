@@ -245,13 +245,13 @@ namespace marlin{
      *  This can be used if the parameter values are expected to come in sets of fixed size. 
      */
      template<class T>
-     void registerProcessorParameter(const std::string& name, 
- 				    const std::string& description,
+     void registerProcessorParameter(const std::string& parameterName, 
+ 				    const std::string& parameterDescription,
  				    T& parameter,
  				    const T& defaultVal,
 				    int setSize=0 ) {
-       checkForExistingParameter( name );
-       _map[ name ] = new ProcessorParameter_t<T>( name , description, 
+       checkForExistingParameter( parameterName );
+       _map[ parameterName ] = new ProcessorParameter_t<T>( parameterName , parameterDescription, 
 						   parameter, defaultVal, 
 						   false , setSize) ;
      }
@@ -259,43 +259,43 @@ namespace marlin{
     /** Specialization of registerProcessorParameter() for a parameter that defines an 
      *  input collection - can be used fo checking the consistency of the steering file.
      */
-    void registerInputCollection(const std::string& type,
-				 const std::string& name, 
-				 const std::string& description,
+    void registerInputCollection(const std::string& collectionType,
+				 const std::string& parameterName, 
+				 const std::string& parameterDescription,
 				 std::string& parameter,
 				 const std::string& defaultVal,
 				 int setSize=0 ) {
       
-      setLCIOInType( name , type ) ;
-      registerProcessorParameter( name, description, parameter, defaultVal, setSize ) ; 
+      setLCIOInType( parameterName , collectionType ) ;
+      registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
     }
     
     /** Specialization of registerProcessorParameter() for a parameter that defines an 
      *  output collection - can be used fo checking the consistency of the steering file.
      */
-    void registerOutputCollection(const std::string& type,
-				  const std::string& name, 
-				  const std::string& description,
+    void registerOutputCollection(const std::string& collectionType,
+				  const std::string& parameterName, 
+				  const std::string& parameterDescription,
 				  std::string& parameter,
 				  const std::string& defaultVal,
 				  int setSize=0 ) {
       
-      setLCIOOutType( name , type ) ;
-      registerProcessorParameter( name, description, parameter, defaultVal, setSize ) ; 
+      setLCIOOutType( parameterName , collectionType ) ;
+      registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
     }
 
     /** Specialization of registerProcessorParameter() for a parameter that defines one or several 
      *  input collections - can be used fo checking the consistency of the steering file.
      */
-    void registerInputCollections(const std::string& type,
-				  const std::string& name, 
-				  const std::string& description,
+    void registerInputCollections(const std::string& collectionType,
+				  const std::string& parameterName, 
+				  const std::string& parameterDescription,
 				  StringVec& parameter,
 				  const StringVec& defaultVal,
 				  int setSize=0 ) {
       
-      setLCIOInType( name , type ) ;
-      registerProcessorParameter( name, description, parameter, defaultVal, setSize ) ; 
+      setLCIOInType( parameterName , collectionType ) ;
+      registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
     }
     
     /** Same as  registerProcessorParameter except that the parameter is optional.
@@ -305,14 +305,14 @@ namespace marlin{
      *  file.
      */
     template<class T>
-    void registerOptionalParameter(const std::string& name, 
-				   const std::string& description,
+    void registerOptionalParameter(const std::string& parameterName, 
+				   const std::string& parameterDescription,
 				   T& parameter,
 				   const T& defaultVal,
 				   int setSize=0 ) {
 
-      checkForExistingParameter( name );
-      _map[ name ] = new ProcessorParameter_t<T>( name , description, 
+      checkForExistingParameter( parameterName );
+      _map[ parameterName ] = new ProcessorParameter_t<T>( parameterName , parameterDescription, 
 						  parameter, defaultVal, 
 						  true , setSize) ;
     }
@@ -326,11 +326,11 @@ namespace marlin{
      * @param name name of the parameter to check
      * @throw logic_error if parameter has been registered before
      */
-    void checkForExistingParameter( const std::string& name ) {
-       auto paraIt = _map.find( name );
+    void checkForExistingParameter( const std::string& parameterName ) {
+       auto paraIt = _map.find( parameterName );
        if (paraIt != _map.end() ) {
          std::stringstream errorMessage;
-         errorMessage << "Parameter " << name
+         errorMessage << "Parameter " << parameterName
                       << " already defined for processor "
                       << this->type()
                       << std::endl;
@@ -403,15 +403,15 @@ namespace marlin{
   private: // called by ProcessorMgr
     
     /** Allow friend class CCProcessor to change/reset processor parameters */
-    virtual void setProcessorParameters( std::shared_ptr<StringParameters> parameters) {
-	setParameters( parameters ) ;
+    virtual void setProcessorParameters( std::shared_ptr<StringParameters> processorParameters) {
+	setParameters( processorParameters ) ;
     }
     
     /** Allow friend class CCProcessor to update processor parameters */
     virtual void updateParameters();
 
     /** Set processor name */
-    virtual void setName( const std::string & name) { _processorName = name ; }
+    virtual void setName( const std::string & processorName) { _processorName = processorName ; }
     
     /** Initialize the parameters */
     virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
@@ -421,7 +421,7 @@ namespace marlin{
     virtual void baseInit() ;
     
     /** Called by ProcessorMgr */
-    void setFirstEvent( bool isFirstEvent ) { _isFirstEvent =  isFirstEvent ; }
+    void setFirstEvent( bool firstEvent ) { _isFirstEvent =  firstEvent ; }
 
     // called internally
     
