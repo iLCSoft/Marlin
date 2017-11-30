@@ -191,10 +191,10 @@ void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) {
       
       LCCollectionVec*  col =  dynamic_cast<LCCollectionVec*> (evt->getCollection( *it ) ) ;
       
-      std::string type  = col->getTypeName() ;
+      std::string collectionType  = col->getTypeName() ;
       
       if( parameterSet("DropCollectionTypes") && std::find( _dropCollectionTypes.begin(), 
-							    _dropCollectionTypes.end(), type ) 
+							    _dropCollectionTypes.end(), collectionType ) 
 	  != _dropCollectionTypes.end()  ) {
 	
 	col->setTransient( true ) ;
@@ -229,13 +229,13 @@ void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) {
 
 
       // don't store hit pointers if hits are droped
-      if(  type == LCIO::TRACK && trackerHitsDroped ){
+      if(  collectionType == LCIO::TRACK && trackerHitsDroped ){
 	
 	std::bitset<32> flag( col->getFlag() ) ;
 	flag[ LCIO::TRBIT_HITS ] = 0 ;
  	col->setFlag( flag.to_ulong() ) ;
       }
-      if(  type == LCIO::CLUSTER && calorimeterHitsDroped ){
+      if(  collectionType == LCIO::CLUSTER && calorimeterHitsDroped ){
 	
 	std::bitset<32> flag( col->getFlag() ) ;
 	flag[ LCIO::CLBIT_HITS ] = 0 ;
