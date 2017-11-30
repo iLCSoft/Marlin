@@ -48,7 +48,7 @@ namespace marlin{
 				std::string("outputfile.slcio") ) ;
     
     registerProcessorParameter( "LCIOWriteMode" , 
-				"write mode for output file:  WRITE_APPEND or WRITE_NEW"  ,
+				"write mode for output file:  WRITE_APPEND, WRITE_NEW or None"  ,
 				_lcioWriteMode ,
 				std::string("None") ) ;
 
