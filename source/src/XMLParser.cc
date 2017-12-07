@@ -120,7 +120,8 @@ namespace marlin{
             while( ( proc = section->IterateChildren( "processor", proc ) )  != 0  ){
 
                 std::string procName( getAttribute( proc, "name") );
-                
+                performConstantReplacement( procName, constants ) ;
+
                 //std::cout << "looping over processor " + procName << std::endl;
 
                 // exit if processor defined more than once in the execute section
