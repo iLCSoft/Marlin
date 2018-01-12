@@ -26,6 +26,8 @@ class NParamVecSet : public QWidget
     Q_OBJECT
 
 public:
+    NParamVecSet(const NParamVecSet&) = default ;
+    NParamVecSet& operator=(const NParamVecSet&) = default ;
     //constructor
     NParamVecSet(
 	    MarlinSteerCheck* msc,
@@ -43,13 +45,13 @@ private slots:
 
 private:
     //Variables
-    MarlinSteerCheck* _msc;
-    CCProcessor* _p;
-    QTableWidget* _parent;
-    QTableWidget* valTable;
-    QDialog* _dialog;
+    MarlinSteerCheck* _msc{};
+    CCProcessor* _p{};
+    QTableWidget* _parent{};
+    QTableWidget* valTable{};
+    QDialog* _dialog{};
     
-    QVBoxLayout *mainLayout; 
+    QVBoxLayout *mainLayout{}; 
 };
 
 #endif

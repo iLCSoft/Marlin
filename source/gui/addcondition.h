@@ -23,6 +23,8 @@ class ACDialog : public QDialog
     Q_OBJECT
 
 public:
+    ACDialog(const ACDialog&) = default;
+    ACDialog& operator=(const ACDialog&) = default;
     ACDialog(MarlinSteerCheck* msc, QWidget *parent = 0, Qt::WFlags f = 0);
 
 signals:
@@ -33,11 +35,11 @@ private slots:
 
 private:
     //Variables
-    QMainWindow* _parent;
-    QLineEdit *le;
-    QVBoxLayout *mainLayout; 
+    QMainWindow* _parent{};
+    QLineEdit *le{};
+    QVBoxLayout *mainLayout{}; 
     
-    MarlinSteerCheck* _msc;
+    MarlinSteerCheck* _msc{};
 };
 
 #endif

@@ -22,6 +22,8 @@ class GParamDelegate : public QItemDelegate
     Q_OBJECT
 
 public:
+    GParamDelegate(const GParamDelegate&) = default ;
+    GParamDelegate& operator=(const GParamDelegate&) = default ;
     GParamDelegate(StringParameters* p, QMainWindow* mw, QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -29,9 +31,9 @@ public:
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
 private:
-    StringParameters* _p;
-    QMainWindow* _mw;
-    QTableWidget* _parent;
+    StringParameters* _p{};
+    QMainWindow* _mw{};
+    QTableWidget* _parent{};
 };
 
 #endif

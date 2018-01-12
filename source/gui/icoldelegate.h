@@ -22,6 +22,8 @@ class IColDelegate : public QItemDelegate
     Q_OBJECT
 
 public:
+    IColDelegate(const IColDelegate&) = default ;
+    IColDelegate& operator=(const IColDelegate&) = default ;
     IColDelegate(CCProcessor* p, MarlinSteerCheck* msc, const QString& name, const QString& type, QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -33,11 +35,11 @@ public slots:
     void remCollection();
 
 private:
-    std::string _name;
-    std::string _type;
-    CCProcessor* _p;
-    MarlinSteerCheck* _msc;
-    QTableWidget* _parent;
+    std::string _name{};
+    std::string _type{};
+    CCProcessor* _p{};
+    MarlinSteerCheck* _msc{};
+    QTableWidget* _parent{};
 };
 
 #endif

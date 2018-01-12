@@ -25,7 +25,9 @@ class APDialog : public QDialog
 {
     Q_OBJECT
 
-public:
+ public:
+    APDialog(const APDialog&) = default ;
+    APDialog& operator=(const APDialog&) = default ;
     APDialog(MarlinSteerCheck* msc, QWidget *parent = 0, Qt::WFlags f = 0);
 
 signals:
@@ -40,14 +42,14 @@ private slots:
 
 private:
     //Variables
-    ssMap procTypes;
-    QMainWindow* _parent;
-    QComboBox *cb;
-    QLabel *procLabel;
-    QLineEdit *le;
-    QVBoxLayout *mainLayout; 
+    ssMap procTypes{};
+    QMainWindow* _parent{};
+    QComboBox *cb{};
+    QLabel *procLabel{};
+    QLineEdit *le{};
+    QVBoxLayout *mainLayout{}; 
     
-    MarlinSteerCheck* _msc;
+    MarlinSteerCheck* _msc{};
 };
 
 #endif

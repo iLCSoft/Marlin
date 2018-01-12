@@ -52,7 +52,7 @@ void IColTDelegate::setEditorData(QWidget *editor, const QModelIndex &index) con
 	}
 	else{
 	    comboBox->addItem(index.model()->data(index).toString());
-	    int pos = comboBox->findText(index.model()->data(index).toString(), Qt::MatchExactly);
+	    pos = comboBox->findText(index.model()->data(index).toString(), Qt::MatchExactly);
 	    comboBox->setCurrentIndex(pos);
 	}
 	

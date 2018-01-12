@@ -37,6 +37,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    MainWindow(const MainWindow&) = default ;
+    MainWindow& operator=(const MainWindow&) = default ;
     MainWindow();
 
     void setMarlinSteerCheck( const char* filename=NULL );
@@ -107,47 +109,47 @@ private:
     void checkCurrentStyle();
 
     //variables
-    bool _modified;
-    bool _saved;
-    std::string _file;
-    MarlinSteerCheck* msc;
+    bool _modified{};
+    bool _saved{};
+    std::string _file{};
+    MarlinSteerCheck* msc{};
 
     //group boxes
-    QGroupBox *aProcErrorsGBox;
-    QGroupBox *viewButtonsGBox;
-    QGroupBox *aProcButtonsGBox;
-    QGroupBox *iProcButtonsGBox;
-    QGroupBox *aProcGBox;
-    QGroupBox *iProcGBox;
-    QGroupBox *condGBox;
-    QGroupBox *lcioFilesGBox;
-    QGroupBox *lcioColsGBox;
-    QGroupBox *globalSectionGBox;
+    QGroupBox *aProcErrorsGBox{};
+    QGroupBox *viewButtonsGBox{};
+    QGroupBox *aProcButtonsGBox{};
+    QGroupBox *iProcButtonsGBox{};
+    QGroupBox *aProcGBox{};
+    QGroupBox *iProcGBox{};
+    QGroupBox *condGBox{};
+    QGroupBox *lcioFilesGBox{};
+    QGroupBox *lcioColsGBox{};
+    QGroupBox *globalSectionGBox{};
     
     //tables
-    QTableWidget *aProcTable;
-    QTableWidget *iProcTable;
-    QTableWidget *globalSectionTable;
-    QTableWidget *lcioColsTable;
-    QTableWidget *condTable;
-    QListWidget *lcioFilesList;
+    QTableWidget *aProcTable{};
+    QTableWidget *iProcTable{};
+    QTableWidget *globalSectionTable{};
+    QTableWidget *lcioColsTable{};
+    QTableWidget *condTable{};
+    QListWidget *lcioFilesList{};
 
     //toggle buttons
-    QPushButton *hideProcs;
-    QPushButton *hideErrors;
-    QPushButton *showCond;
+    QPushButton *hideProcs{};
+    QPushButton *hideErrors{};
+    QPushButton *showCond{};
     
     //splitters
-    QSplitter *vSplitter;
-    QSplitter *hSplitter;
-    QList<int> hSizes;
-    int hSplitterSize;
+    QSplitter *vSplitter{};
+    QSplitter *hSplitter{};
+    QList<int> hSizes{};
+    int hSplitterSize{};
     
     //other
-    QTextEdit *aProcErrors;
-    QString saveChangesMsg;
-    QString aboutGUIMsg;
-    QActionGroup *styleActionGroup;
+    QTextEdit *aProcErrors{};
+    QString saveChangesMsg{};
+    QString aboutGUIMsg{};
+    QActionGroup *styleActionGroup{};
 };
 
 #endif

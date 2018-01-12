@@ -24,6 +24,8 @@ class NParamVecSetD : public QItemDelegate
     Q_OBJECT
 
 public:
+    NParamVecSetD(const NParamVecSetD&) = default ;
+    NParamVecSetD& operator=(const NParamVecSetD&) = default ;
     //constructor
     NParamVecSetD(
 	    MarlinSteerCheck *msc,

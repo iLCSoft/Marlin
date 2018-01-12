@@ -18,10 +18,12 @@ class GUIHelp : public QWidget
     Q_OBJECT
 
 public:
+    GUIHelp(const GUIHelp&) = default ;
+    GUIHelp& operator=(const GUIHelp&) = default ;
     GUIHelp(QString path="/gui/help/index.html", QWidget* parent=0, Qt::WFlags f=0 );
     
 private:
-    QTextBrowser *browser;
+    QTextBrowser *browser{};
 };
 
 #endif

@@ -15,6 +15,9 @@ class AProcDelegate : public QItemDelegate
     Q_OBJECT
 
 public:
+    AProcDelegate(const AProcDelegate&) = default ;
+    AProcDelegate& operator=(const AProcDelegate&) = default ;
+
     AProcDelegate(QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -22,7 +25,7 @@ public:
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
 private:
-    QObject* _parent;
+  QObject* _parent{};
 };
 
 #endif
