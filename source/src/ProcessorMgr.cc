@@ -142,24 +142,30 @@ namespace marlin{
         typedef ProcessorMap::iterator MI ;
 
         std::cout  << "<!--##########################################" << std::endl
-            << "    #                                        #" << std::endl
-            << "    #     Example steering file for marlin   #" << std::endl
-            << "    #                                        #" << std::endl
-            << "    ##########################################-->" << std::endl
-            <<  std::endl ;
+		   << "    #                                        #" << std::endl
+		   << "    #     Example steering file for marlin   #" << std::endl
+		   << "    #                                        #" << std::endl
+		   << "    ##########################################-->" << std::endl
+		   <<  std::endl ;
 
         std::cout  <<  std::endl 
             << "<marlin xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
             << "xsi:noNamespaceSchemaLocation=\"http://ilcsoft.desy.de/marlin/marlin.xsd\">"
             <<  std::endl ;
 
+        std::cout  <<  " <constants>" << std::endl
+		   <<  "  <!-- define constants here - use in steering file as ${ConstantName} --> "  << std::endl
+		   <<  "  <!--constant name=\"DetectorModel\" value=\"ILD_l5_o1_v02\" /-->" << std::endl
+		   <<  " </constants>" << std::endl
+		   << std::endl ;
+
         std::cout  <<  " <execute>" << std::endl 
-		   << "  <XXprocessor name=\"MyEventSelector\"/> " << std::endl 
-		   << "  <XXif condition=\"MyEventSelector\">    " << std::endl 
+		   <<  "  <!--processor name=\"MyEventSelector\"/--> " << std::endl
+		   <<  "  <!--if condition=\"MyEventSelector\"-->    " << std::endl
 		   <<  "   <processor name=\"MyAIDAProcessor\"/>" << std::endl
 		   <<  "   <processor name=\"MyTestProcessor\"/>  " << std::endl
 		   <<  "   <processor name=\"MyLCIOOutputProcessor\"/>  " << std::endl
-		   << "  </XXif>                                 " << std::endl  
+		   << "  <!--/if-->                                 " << std::endl
 		   <<  " </execute>" << std::endl
 		   << std::endl ;
 
@@ -170,7 +176,7 @@ namespace marlin{
 		   <<  "  <parameter name=\"SkipNEvents\" value=\"0\" />  " << std::endl
 		   <<  "  <parameter name=\"SupressCheck\" value=\"false\" />  " << std::endl
 		   <<  "  <parameter name=\"AllowToModifyEvent\" value=\"false\" />  " << std::endl
-		   <<  "  <parameter name=\"GearXMLFile\"> gear_ldc.xml </parameter>  " << std::endl
+		   <<  "  <parameter name=\"GearXMLFile\"></parameter>  " << std::endl
 		   <<  "  <parameter name=\"Verbosity\" options=\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\"> DEBUG  </parameter> " << std::endl
 		   <<  "  <parameter name=\"RandomSeed\" value=\"1234567890\" />" << std::endl
 		   <<  "  <!-- optionally limit the collections that are read from the input file: -->  " << std::endl
