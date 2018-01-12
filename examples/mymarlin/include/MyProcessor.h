@@ -62,10 +62,10 @@ class MyProcessor : public Processor {
 
   /** Input collection name.
    */
-  std::string _colName ;
+  std::string _colName{} ;
 
-  int _nRun ;
-  int _nEvt ;
+  int _nRun{} ;
+  int _nEvt{} ;
 } ;
 
 #endif
