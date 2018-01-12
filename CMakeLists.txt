@@ -136,7 +136,7 @@ DISPLAY_STD_VARIABLES()
 
 
 # generate and install following configuration files
-GENERATE_PACKAGE_CONFIGURATION_FILES( MarlinConfig.cmake MarlinConfigVersion.cmake MarlinLibDeps.cmake )
+GENERATE_PACKAGE_CONFIGURATION_FILES( MarlinConfig.cmake MarlinConfigVersion.cmake )
 
 
 
