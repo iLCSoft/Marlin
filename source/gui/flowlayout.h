@@ -49,7 +49,7 @@ public:
 private:
     int doLayout(const QRect &rect, bool testOnly) const;
 
-    QList<QLayoutItem *> itemList;
+    QList<QLayoutItem *> itemList{};
 };
 
 #endif

@@ -23,6 +23,8 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
+    Dialog(const Dialog&) = default ;
+    Dialog& operator=(const Dialog&) = default ;
     Dialog(CCProcessor* p, MarlinSteerCheck* msc, QWidget *parent = 0, Qt::WFlags f = 0);
 
 public slots:
@@ -37,12 +39,12 @@ private:
     void setupViews();
     
     //variables
-    QVBoxLayout *mainLayout;
-    QTableWidget *paramTable;
-    QTableWidget *optParamTable;
+    QVBoxLayout *mainLayout{};
+    QTableWidget *paramTable{};
+    QTableWidget *optParamTable{};
     
-    CCProcessor* _p;
-    MarlinSteerCheck* _msc;
+    CCProcessor* _p{};
+    MarlinSteerCheck* _msc{};
 };
 
 #endif

@@ -23,6 +23,8 @@ class ECDialog : public QDialog
     Q_OBJECT
 
 public:
+    ECDialog(const ECDialog&) = default ;
+    ECDialog& operator=(const ECDialog&) = default ;
     ECDialog(MarlinSteerCheck* msc, const std::string& oldCond, QWidget *parent = 0, Qt::WFlags f = 0);
 
 signals:
@@ -33,12 +35,12 @@ private slots:
 
 private:
     //Variables
-    QMainWindow* _parent;
-    QLineEdit *le;
-    QVBoxLayout *mainLayout; 
+    QMainWindow* _parent{};
+    QLineEdit *le{};
+    QVBoxLayout *mainLayout{}; 
     
-    MarlinSteerCheck* _msc;
-    std::string _oldCond;
+    MarlinSteerCheck* _msc{};
+    std::string _oldCond{};
 };
 
 #endif

@@ -22,6 +22,8 @@ class IColTDelegate : public QItemDelegate
     Q_OBJECT
 
 public:
+    IColTDelegate(const IColTDelegate&) = default ;
+    IColTDelegate& operator=(const IColTDelegate&) = default ;
     IColTDelegate(CCProcessor* p, MarlinSteerCheck* msc, QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -29,9 +31,9 @@ public:
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
 private:
-    CCProcessor* _p;
-    MarlinSteerCheck* _msc;
-    QTableWidget* _parent;
+    CCProcessor* _p{};
+    MarlinSteerCheck* _msc{};
+    QTableWidget* _parent{};
 };
 
 #endif
