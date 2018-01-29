@@ -396,8 +396,19 @@ namespace marlin{
 	//        (*it)->logLevelName()   ;
       
         streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-      
+
+        start_t = clock(); // start timer
+
         (  dynamic_cast<EventModifier*>( *it )  )->modifyEvent( evt ) ;
+
+        end_t = clock(); // stop timer
+
+        TimeMap::iterator itT = tMap.find( *it );
+
+        itT->second.first += double( end_t - start_t  );
+        //do not increase event count, because this is done after processEvent again
+        //itT->second.second++;
+
       }
     
       
