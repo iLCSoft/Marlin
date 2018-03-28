@@ -1,3 +1,25 @@
+# v01-16
+
+* 2017-12-07 Andre Sailer ([PR#28](https://github.com/iLCSoft/Marlin/pull/28))
+  - XMLParsing: Replace constants in processor names: allows switching at initialisation time, e.g.:
+  ```
+  <processor name="BeamCalReco${BCReco}"/>
+  ```
+     and `Marlin --constant.BCReco=350GeV` to chose which BeamCalReco processor to run
+
+* 2018-01-12 Frank Gaede ([PR#29](https://github.com/iLCSoft/Marlin/pull/29))
+  - fix last compiler warnings in MarlinGUI and example (gcc5.4) 
+  - don't create MarlinLibDeps.cmake 
+  - rm Gear file from example steering and add <constants/> section 
+  - rm deprecated options (-l,-f,-o) involving old steering files
+
+* 2017-12-01 Ete Remi ([PR#27](https://github.com/iLCSoft/Marlin/pull/27))
+  - Fixed warning (mostly -Weff and -Wshadow)
+  - LCIOOutputProcessor: updated documentation line for LCIOWriteMode parameter
+
+* 2018-01-29 Andre Sailer ([PR#31](https://github.com/iLCSoft/Marlin/pull/31))
+  - Also count the modifyEvent function in the processor running time information
+
 # v01-15-02
 
 * 2017-11-22 Ete Remi ([PR#26](https://github.com/ilcsoft/Marlin/pull/26))
