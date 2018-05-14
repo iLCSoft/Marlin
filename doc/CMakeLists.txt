@@ -51,7 +51,7 @@ ELSE()
     # --- out-of-source installations ---
     SET( DOC_INSTALL_PREFIX doc/${PROJECT_NAME} )
 
-    INSTALL( FILES marlin_overview.gif release.notes  DESTINATION ${DOC_INSTALL_PREFIX} )
+    INSTALL( FILES marlin_overview.gif ReleaseNotes.md  DESTINATION ${DOC_INSTALL_PREFIX} )
 
 ENDIF( CMAKE_INSTALL_PREFIX STREQUAL "${PROJECT_SOURCE_DIR}" )
 
