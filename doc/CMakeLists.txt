@@ -9,7 +9,7 @@
 SET( DOC_SRC_DIR "${PROJECT_SOURCE_DIR}/doc" )
 SET( DOC_BIN_DIR "${PROJECT_BINARY_DIR}/docbuild" )
 
-SET( DOX_INPUT overview.html ../source ) 
+SET( DOX_INPUT overview.txt ../source )
 
 # custom command to build documentation
 ADD_CUSTOM_COMMAND(
