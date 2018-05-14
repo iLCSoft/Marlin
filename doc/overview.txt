@@ -116,7 +116,7 @@ This will create the following output:
 
 <h3>Release Notes</h3>
 Marlin is under development and there are frequent releases. Please check the 
-<a href="../release.notes">./release.notes</a>
+<a href="../ReleaseNotes.md">./ReleaseNotes.md</a>
 
 <hr>
 <p>
