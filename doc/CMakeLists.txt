@@ -11,6 +11,11 @@ SET( DOC_BIN_DIR "${PROJECT_BINARY_DIR}/docbuild" )
 
 SET( DOX_INPUT overview.txt ../source )
 
+FILE(GLOB_RECURSE marlin_source_files
+  ../source/include/marlin/*
+  ../source/src/*
+  )
+
 # custom command to build documentation
 ADD_CUSTOM_COMMAND(
     OUTPUT  "${DOC_BIN_DIR}/html/index.html" #"${DOC_BIN_DIR}/latex/index.tex"
@@ -21,9 +26,7 @@ ADD_CUSTOM_COMMAND(
             "${DOXYGEN_EXECUTABLE}"
     WORKING_DIRECTORY "${DOC_SRC_DIR}"
     COMMENT "Building API Documentation..."
-    DEPENDS Doxyfile CMakeLists.txt
-        ../source/include/marlin/*
-        ../source/src/*
+    DEPENDS Doxyfile CMakeLists.txt ${marlin_source_files}
 )
 
 ADD_CUSTOM_TARGET( doc DEPENDS "${DOC_BIN_DIR}/html/index.html" ) # "${DOC_BIN_DIR}/latex/index.tex" )
