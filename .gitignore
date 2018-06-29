@@ -4,8 +4,9 @@ MarlinConfigVersion.cmake
 bin/
 build/
 build_env.sh
-doc/README
+doc/README.md
 doc/html/
+doc/latex/
 include/
 lib/
 *~
