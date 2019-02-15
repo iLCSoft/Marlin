@@ -1,14 +1,14 @@
-.dependencies
-MarlinConfig.cmake
-MarlinConfigVersion.cmake
-bin/
-build/
-build_env.sh
-doc/README.md
-doc/html/
-doc/latex/
-include/
-lib/
-*~
+/.dependencies
+/MarlinConfig.cmake
+/MarlinConfigVersion.cmake
+/bin/
+/build/
+/build_env.sh
+/doc/README.md
+/doc/html/
+/doc/latex/
+/include/
+/lib/
+/*~
 
 
