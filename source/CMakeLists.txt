@@ -9,7 +9,7 @@ INCLUDE_DIRECTORIES( BEFORE "${PROJECT_BINARY_DIR}" ) # generated MarlinConfig.h
 
 
 # install header files
-FILE( GLOB marlin_headers RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" ./include/marlin/*.h ./tinyxml/include/marlin/*.h )
+FILE( GLOB marlin_headers RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" ./include/marlin/*.h ./tinyxml/include/marlin/*.h ./include/marlin/concurrency/*.h )
 
 IF( NOT MARLIN_AIDA )
     LIST( REMOVE_ITEM marlin_headers ./include/marlin/AIDAProcessor.h )
@@ -45,6 +45,7 @@ ENDIF()
 
 
 AUX_SOURCE_DIRECTORY( ./src library_sources )
+AUX_SOURCE_DIRECTORY( ./src/concurrency library_sources )
 AUX_SOURCE_DIRECTORY( ./tinyxml/src tinyxml_sources )
 INCLUDE_DIRECTORIES( SYSTEM tinyxml/include )
 
@@ -61,7 +62,7 @@ INSTALL_SHARED_LIBRARY( MarlinXML DESTINATION lib )
 INSTALL_SHARED_LIBRARY( Marlin DESTINATION lib )
 TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} MarlinXML ${Marlin_DEPENDS_LIBRARIES}
   ## Note: it is not a problem if any variables is empty because package not found
-  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} )
+  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
 
 
 

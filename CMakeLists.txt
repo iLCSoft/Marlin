@@ -27,6 +27,7 @@ INCLUDE( ilcsoft_default_settings )
 # required packages
 FIND_PACKAGE( LCIO REQUIRED )
 FIND_PACKAGE( GEAR REQUIRED )
+FIND_PACKAGE( Threads REQUIRED )
 
 # export Marlin_DEPENDS_INCLUDE_DIRS to MarlinConfig.cmake
 SET( Marlin_DEPENDS_INCLUDE_DIRS ${LCIO_INCLUDE_DIRS} ${GEAR_INCLUDE_DIRS} ${streamlog_INCLUDE_DIRS} )
