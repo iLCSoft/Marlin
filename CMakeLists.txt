@@ -63,9 +63,15 @@ IF( MARLIN_LCCD )
     ENDIF()
 ENDIF()
 
+OPTION( MARLIN_DD4HEP  "Set to ON to build Marlin with DD4hep" OFF )
+IF( MARLIN_DD4HEP )
+  FIND_PACKAGE( DD4hep )
+  IF( NOT DD4hep_FOUND )
+    MESSAGE( SEND_ERROR "DD4HEP not found. Please set MARLIN_DD4HEP to OFF or DD4hep_DIR=/path/to/DD4HEP" )
+  ENDIF()
+ENDIF()
 
-
-FOREACH( pkg AIDA CLHEP LCCD )
+FOREACH( pkg AIDA CLHEP LCCD DD4hep )
     IF( ${pkg}_FOUND )
         INCLUDE_DIRECTORIES( SYSTEM ${${pkg}_INCLUDE_DIRS} )
         #ADD_DEFINITIONS ( ${${pkg}_DEFINITIONS} )
@@ -120,9 +126,9 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake/MarlinConfig.h.cmake.in"
     "${PROJECT_BINARY_DIR}/marlin/MarlinConfig.h" @ONLY )
 
 INSTALL( FILES "${PROJECT_BINARY_DIR}/marlin/MarlinConfig.h" DESTINATION "include/marlin/" )
-INSTALL( FILES "${PROJECT_SOURCE_DIR}/source/python/compareMarlinSteeringFiles.py" DESTINATION "bin" 
+INSTALL( FILES "${PROJECT_SOURCE_DIR}/source/python/compareMarlinSteeringFiles.py" DESTINATION "bin"
   PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
-	      OWNER_READ GROUP_READ WORLD_READ 
+	      OWNER_READ GROUP_READ WORLD_READ
 	      OWNER_WRITE )
 # -----------------------------------------------------------------------------
 
@@ -138,6 +144,3 @@ DISPLAY_STD_VARIABLES()
 
 # generate and install following configuration files
 GENERATE_PACKAGE_CONFIGURATION_FILES( MarlinConfig.cmake MarlinConfigVersion.cmake )
-
-
-
