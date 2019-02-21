@@ -149,7 +149,7 @@ int main(int argc, char** argv ){
             // split first arg by '.'
             // --global.LCIOInputFiles --> global , LCIOInputFiles
             s = cmdlinearg[0] ;
-            LCTokenizer t2( cmdlinekey, '.' ) ;
+            LCTokenizer t2( cmdlinekey, '.', 2 ) ;
 
             for_each( s.begin(), s.end(), t2 ) ;
 
