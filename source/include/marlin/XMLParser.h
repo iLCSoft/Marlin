@@ -116,17 +116,18 @@ namespace marlin{
       std::vector< std::string >& _tokens ;
       char _del ;
       char _last ;
+      size_t _max ;
     public:
 
-      LCTokenizer( std::vector< std::string >& tokens, char del ) : _tokens(tokens) , _del(del), _last(del) {
+      LCTokenizer( std::vector< std::string >& tokens, char del, size_t max=-1 ) : _tokens(tokens) , _del(del), _last(del), _max(max) {
       }
 
 
       void operator()(const char& c) { 
 
-	if( c != _del  ) {
+	if( c != _del or _tokens.size() >= _max ) {
 
-	  if( _last == _del  ) {
+	  if( _last == _del and _tokens.size() < _max ) {
 	    _tokens.push_back("") ; 
 	  }
 	  _tokens.back() += c ;
