@@ -54,7 +54,7 @@ AUX_SOURCE_DIRECTORY( ./tinyxml/src tinyxml_sources )
 INCLUDE_DIRECTORIES( SYSTEM tinyxml/include )
 
 # need to remove ProcessorLoader.cc and Marlin.cc from library sources
-LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc )
+LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc ./src/concurrency/MarlinMT.cc )
 
 # create library
 ADD_SHARED_LIBRARY( Marlin ${library_sources} )
@@ -76,6 +76,14 @@ ADD_EXECUTABLE( bin_Marlin ./src/Marlin.cc ./src/ProcessorLoader.cc )
 SET_TARGET_PROPERTIES( bin_Marlin PROPERTIES OUTPUT_NAME Marlin )
 TARGET_LINK_LIBRARIES( bin_Marlin Marlin )
 INSTALL( TARGETS bin_Marlin DESTINATION bin )
+# ----------------------------------------------------------------------------
+
+# ----- MarlinMT executable ----------------------------------------------------
+ADD_EXECUTABLE( bin_MarlinMT ./src/concurrency/MarlinMT.cc )
+# avoid name conflict between Marlin library and Marlin application
+SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
+TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin )
+INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
 # ----------------------------------------------------------------------------
 
 
