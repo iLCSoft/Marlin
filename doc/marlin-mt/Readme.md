@@ -2,12 +2,12 @@ Make a parallel version of Marlin. This issue keep track of important features t
 
 - [ ] Implement simple task scheduling for processor chain
    - Run event processing in parallel
-   - Run run header processing serially: 
+   - Run run header processing serially:
       - wait for all pending task to finish
       - process run header
       - restart file reading and parallel execution of next events
    - Implement specialized version of scheduler for single thread execution to avoid task scheduling overhead
-- [ ] Provide service for writing event to file. 
+- [ ] Provide service for writing event to file.
    - This can't be done in a processor anymore as writing in parallel would lead to data races.
    - Writer facility could be prepared as an output plugin configured at runtime via XML, e.g:
 ```xml
@@ -19,14 +19,14 @@ Make a parallel version of Marlin. This issue keep track of important features t
          <parameter name="KeepEventOrdering"> true </parameter>
        </output>
        <!-- Standard lcio output DST file -->
-       <output type="StdHepFile">
+       <output type="LCIOFile">
          <parameter name="FileName"> my_output_DST.slcio </parameter>
          <parameter name="KeepEventOrdering"> true </parameter>
          <parameter name="DropCollectionTypes"> CalorimeterHit </parameter>
        </output>
    </global>
 </marlin>
-``` 
+```
 - [ ] Provide access to Marlin application in processors, e.g:
 ```cpp
 void MyProcessor::init() {
@@ -46,7 +46,7 @@ This application will avoid use of singletons such `ProcessorManager`
 - [ ] Provide a mechanism to load geometry as a global instance
    - Provide global application extensions that users can populate/access at runtime ?
 - [ ] Provide mechanism to pass condition together with an event
-   - Attach condition to event via an event extension ? 
+   - Attach condition to event via an event extension ?
 - [ ] Review current XML parser features and issues in order to make a better use of it
 - [ ] Allow for different possible source of records, e.g:
    - LCIO file reader
@@ -59,23 +59,23 @@ This could be implemented as plugins and steered in the XML file, e.g:
   <global>
     <!-- Standard lcio input file -->
     <input type="LCIOFile">
-      <parameter name="FileName"> my_input.slcio </parameter> 
+      <parameter name="FileName"> my_input.slcio </parameter>
     </input>
     <!-- STDHEP input file -->
     <input type="StdHepFile">
-      <parameter name="FileName"> my_input.stdhep </parameter> 
+      <parameter name="FileName"> my_input.stdhep </parameter>
     </input>
     <!-- Remote lcio input file -->
     <input type="LCIOFile">
-      <parameter name="FileUrl"> http://myhostname.org/public/data/my_input.slcio </parameter> 
+      <parameter name="FileUrl"> http://myhostname.org/public/data/my_input.slcio </parameter>
     </input>
     <!-- Why not a database ? -->
     <input type="MySQLDB">
-      <parameter name="Host"> http://myhostname.org </parameter> 
+      <parameter name="Host"> http://myhostname.org </parameter>
       <parameter name="User"> ilc </parameter>
       <parameter name="Password"> $ENV{ILC_DB_PASSWORD} </parameter>
       <parameter name="Database"> Proto_Run42 </parameter>  
     </input>
   </global>
 </marlin>
-``` 
+```
