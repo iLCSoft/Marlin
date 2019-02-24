@@ -76,6 +76,11 @@ namespace marlin {
        */
       std::shared_ptr<Processor> create( const std::string &type, const std::string &name );
 
+      /**
+       *  @brief  Dump plugin manager content in console
+       */
+      void dump() const ;
+
     private:
       /// The map of processor factories
       FactoryMap              _factories {} ;

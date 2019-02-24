@@ -67,6 +67,23 @@ namespace marlin {
       return iter->second->create( name );
     }
 
+    //--------------------------------------------------------------------------
+
+    void PluginManager::dump() const {
+      std::cout << "------------------------------------" << std::endl ;
+      std::cout << " ** MarlinMT plugin manager dump ** " << std::endl ;
+      if ( _factories.empty() ) {
+        std::cout << " No processor registered ..." << std::endl ;
+      }
+      else {
+        std::cout << " + Registered processors: " << std::endl ;
+        for ( auto iter : _factories ) {
+          std::cout << "   - " << iter.first << std::endl ;
+        }
+      }
+      std::cout << "----------------------------------" << std::endl ;
+    }
+
   } // namespace concurrency
 
 } // namespace marlin
