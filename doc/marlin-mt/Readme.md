@@ -34,6 +34,10 @@ void MyProcessor::init() {
 }
 ```
 This application will avoid use of singletons such `ProcessorManager`
+- [ ] Develop a simple/use existing thread safe logging library. It is possible with Marlin to set the verbosity level for each processor independently. This is not possible with streamlog in the parallel version as the verbosity is global in streamlog and the verbosity level has to be thread local to avoid data race condition or unexpected logging behaviour.
+   - Modify streamlog ?
+   - Re-implement simple version of streamlog but thread safe and allowing for thread local verbosity ?
+   - Using a new logging library ? 
 - [ ] Random number generation
    - Make sure the random seed generation using event number and run number still works
    - Results based on this random seeds must be re-producible
