@@ -14,6 +14,10 @@ namespace marlin {
      */
     class Application {
     public:
+      // traits
+      typedef std::vector<std::string> CmdLineArguments ;
+
+    public:
       /**
        *  @brief  Constructor
        */
@@ -29,9 +33,28 @@ namespace marlin {
        */
       Parameters &global() ;
 
+      /**
+       *  @brief  Initialize the application
+       *
+       *  @param  argc argc from main function
+       *  @param  argv argv from main function
+       */
+      void init( int argc, char **argv ) ;
+
+      /**
+       *  @brief  Run the Marlin application
+       */
+      void run() ;
+
     private:
       /// Global parameters of the application
       Parameters            _global {} ;
+      /// The program name. Initialized on init()
+      std::string           _programName {} ;
+      /// The arguments from the main function after init has been called
+      CmdLineArguments      _arguments {} ;
+      /// Whether the application has been initialized
+      bool                  _initialized {false} ;
     };
 
   } // end namespace concurrency
