@@ -67,14 +67,14 @@ namespace marlin {
        *
        *  @brief  header the run header to process
        */
-      virtual void processorRunHeader( std::shared_ptr<EVENT::LCRunHeader> /*header*/ ) { /* nop */ }
+      virtual void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> /*header*/ ) { /* nop */ }
 
       /**
        *  @brief  Called for every event
        *
        *  @brief  event the event to process
        */
-      virtual void processorEvent( std::shared_ptr<Event<EVENT::LCEvent>> /*event*/ ) const { /* nop */ }
+      virtual void processEvent( std::shared_ptr<Event> /*event*/ ) const { /* nop */ }
 
       /**
        *  @brief  Called at application termination.
