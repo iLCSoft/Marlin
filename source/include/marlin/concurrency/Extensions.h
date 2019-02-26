@@ -21,7 +21,7 @@ namespace marlin {
     class ExtensionBase {
     protected:
       ExtensionBase() = default ;
-      ExtensionBase(const Extension &) = default ;
+      ExtensionBase(const ExtensionBase &) = default ;
 
     public:
       /**
@@ -48,25 +48,7 @@ namespace marlin {
        *  @brief  Helper function to dynamic cast the extension pointer
        */
       template <typename T>
-      const T *dynamic_cast() const { return dynamic_cast<const T*>( raw() ); }
-
-      /**
-       *  @brief  Helper function to dynamic cast the extension pointer
-       */
-      template <typename T>
-      T *dynamic_cast() { return dynamic_cast<T*>( raw() ); }
-
-      /**
-       *  @brief  Helper function to static cast the extension pointer
-       */
-      template <typename T>
-      const T *static_cast() const { return static_cast<const T*>( raw() ); }
-
-      /**
-       *  @brief  Helper function to static cast the extension pointer
-       */
-      template <typename T>
-      T *static_cast() { return static_cast<T*>( raw() ); }
+      T *cast() { return dynamic_cast<T*>( raw() ); }
     };
 
     //--------------------------------------------------------------------------
@@ -99,7 +81,7 @@ namespace marlin {
       // from base
       void destruct() { delete _ptr ; }
       void *raw() { return _ptr ; }
-      unsigned long long hash64() const { HashHelper::typeHash64<IFACE>() ; }
+      unsigned long long hash64() const { return HashHelper::typeHash64<IFACE>() ; }
 
     private:
       /// User extension pointer (owned by this extension)
@@ -136,7 +118,7 @@ namespace marlin {
       // from base
       void destruct() { /* nop */ }
       void *raw() { return _ptr ; }
-      unsigned long long hash64() const { HashHelper::typeHash64<IFACE>() ; }
+      unsigned long long hash64() const { return HashHelper::typeHash64<IFACE>() ; }
 
     private:
       /// User extension pointer (owned by the user)
@@ -200,9 +182,9 @@ namespace marlin {
         if ( iter == _extensions.end() ) {
           throw Exception( "Extensions::removeExtension: no such extension !" ) ;
         }
-        IFACE *ptr = iter->second->dynamic_cast<IFACE>() ;
+        IFACE *ptr = iter->second->template cast<IFACE>() ;
         if ( destroy ) {
-          iter->second->destroy() ;
+          iter->second->destruct() ;
         }
         _extensions.erase( iter ) ;
         return ptr ;
@@ -218,7 +200,7 @@ namespace marlin {
         if ( iter == _extensions.end() ) {
           throw Exception( "Extensions::extension: no such extension !" ) ;
         }
-        return iter->second->dynamic_cast<IFACE*>() ;
+        return iter->second->template cast<IFACE>() ;
       }
 
       /**
@@ -226,7 +208,7 @@ namespace marlin {
        */
       void clear() {
         for ( auto iter : _extensions ) {
-          iter.second->destroy() ;
+          iter.second->destruct() ;
         }
         _extensions.clear() ;
       }
