@@ -29,7 +29,7 @@ namespace marlin {
        *
        *  @param  event the user event to hold
        */
-      Event( EventPtr event ) :
+      Event( EventPtr evt ) :
         _event(evt) {
         /* nop */
       }
