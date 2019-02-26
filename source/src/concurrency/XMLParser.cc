@@ -5,6 +5,12 @@ namespace marlin {
 
   namespace concurrency {
 
+    XMLParser::XMLParser() {
+      _options.set();
+    }
+
+    //----------------------------------------------------------------------------------------------------
+
     void XMLParser::parse(const std::string &fname) {
       reset() ;
       _fileName = fname ;
@@ -15,13 +21,13 @@ namespace marlin {
         _document.ErrorCol() << "] : " << _document.ErrorDesc() ;
         throw Exception( ss.str() ) ;
       }
-      if ( processIncludes() ) {
+      if ( option( Option::INCLUDES ) ) {
         resolveIncludes() ;
       }
-      if ( processConstants() ) {
+      if ( option( Option::CONSTANTS ) ) {
         resolveConstants() ;
       }
-      if( processForLoops() ) {
+      if( option( Option::FOR_LOOPS ) ) {
         resolveForLoops() ;
       }
     }
@@ -60,62 +66,14 @@ namespace marlin {
 
     //----------------------------------------------------------------------------------------------------
 
-    void XMLParser::setProcessIncludes(bool process) {
-      _processIncludes = process ;
+    void XMLParser::setOption( Option opt, bool set ) {
+      _options.set( static_cast<std::size_t>(opt) , set );
     }
 
     //----------------------------------------------------------------------------------------------------
 
-    bool XMLParser::processIncludes() const {
-      return _processIncludes ;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    void XMLParser::setAllowNestedIncludes(bool allow) {
-      _allowNestedIncludes = allow ;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    bool XMLParser::allowNestedIncludes() const {
-      return _allowNestedIncludes ;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    void XMLParser::setProcessConstants(bool process) {
-      _processConstants = process ;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    bool XMLParser::processConstants() const {
-      return _processConstants ;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    void XMLParser::setAllowEnvVariables(bool allow) {
-      _allowEnvVariables = allow ;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    bool XMLParser::allowEnvVariables() const {
-      return _allowEnvVariables ;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    void XMLParser::setProcessForLoops(bool process) {
-      _processForLoops = process ;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-
-    bool XMLParser::processForLoops() const {
-      return _processForLoops;
+    bool XMLParser::option( Option opt ) const {
+      return _options.test( static_cast<std::size_t>(opt) );
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -223,7 +181,7 @@ namespace marlin {
         throw Exception( ss.str() ) ;
       }
       // process nested includes if enabled
-      if ( allowNestedIncludes() ) {
+      if ( option( Option::NESTED_INCLUDES ) ) {
         std::string includeReferencePath ;
         getFilePath( refFileName, includeReferencePath ) ;
         resolveIncludes( includeReferencePath, &doc ) ;
@@ -335,7 +293,7 @@ namespace marlin {
     //----------------------------------------------------------------------------------------------------
 
     void XMLParser::performEnvVariableReplacement(std::string &value) {
-      if ( not allowEnvVariables() ) {
+      if ( not option( Option::ENV_VARS ) ) {
         return;
       }
       size_t pos = value.find("$ENV{") ;
@@ -367,7 +325,7 @@ namespace marlin {
       for (TiXmlAttribute *attribute = element->FirstAttribute(); attribute != nullptr; attribute = attribute->Next()) {
         std::string value( attribute->ValueStr() ) ;
         performConstantReplacement( value ) ;
-        if ( allowEnvVariables() ) {
+        if ( option( Option::ENV_VARS ) ) {
           performEnvVariableReplacement( value ) ;
         }
         attribute->SetValue( value ) ;
@@ -381,7 +339,7 @@ namespace marlin {
           TiXmlText *child = node->ToText() ;
           std::string value( child->ValueStr() ) ;
           performConstantReplacement( value ) ;
-          if ( allowEnvVariables() ) {
+          if ( option( Option::ENV_VARS ) ) {
             performEnvVariableReplacement(value) ;
           }
           child->SetValue( value ) ;
