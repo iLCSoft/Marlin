@@ -29,6 +29,9 @@ namespace marlin {
       virtual std::shared_ptr<Processor> create( const std::string &name ) const = 0 ;
     };
 
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+
     /**
      *  @brief  ProcessorFactoryT class
      *  Concrete template implementation of processor factory
