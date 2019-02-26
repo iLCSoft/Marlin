@@ -353,7 +353,7 @@ namespace marlin {
     template <typename T>
     inline void Parameter::set( const T &value ) {
       _parameter.resize(1);
-      _parameter = StringUtil::typeToString( value ) ;
+      _parameter[0] = StringUtil::typeToString<T>( value ) ;
       _initialized = true ;
       _type = std::type_index( typeid( T ) ) ;
     }
@@ -488,7 +488,7 @@ namespace marlin {
     inline Parameter &Parameters::set( const std::string &name , const T & value ) {
       auto iter = _parameters.find( name ) ;
       if ( _parameters.end() != iter ) {
-        iter = _parameters.insert( map_type::value_type( name, Parameter(value) ) ) ;
+        iter = _parameters.insert( map_type::value_type( name, Parameter(value) ) ).first ;
         return iter->second ;
       }
       iter->second = value ;
@@ -501,7 +501,7 @@ namespace marlin {
     inline Parameter &Parameters::set( const std::string &name , const std::vector<T> &values ) {
       auto iter = _parameters.find( name ) ;
       if ( _parameters.end() != iter ) {
-        iter = _parameters.insert( map_type::value_type( name, Parameter(values) ) ) ;
+        iter = _parameters.insert( map_type::value_type( name, Parameter(values) ) ).first ;
         return iter->second ;
       }
       iter->second = values ;
