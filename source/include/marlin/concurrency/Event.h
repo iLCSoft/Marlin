@@ -6,10 +6,11 @@
 #include <string>
 
 // -- lcio headers
-#include <LCRTRelations.h>
+#include <EVENT/LCEvent.h>
 
 // -- marlin headers
 #include "marlin/concurrency/Internal.h"
+#include "marlin/concurrency/Extensions.h"
 
 namespace marlin {
 
@@ -17,45 +18,56 @@ namespace marlin {
 
     /**
      *  @brief  Event class
-     *  Hold a user event and provide extension mechanism to attach
-     *  runtime object to an event
-     *  @see lcrtrel::LCRTRelations
      */
-    template <typename T>
-    class Event : lcrtrel::LCRTRelations {
+    class Event {
+    public:
+      typedef std::shared_ptr<EVENT::LCEvent> EventPtr;
+
     public:
       /**
        *  @brief  Constructor with user event
        *
        *  @param  event the user event to hold
        */
-      Event( std::shared_ptr<T> event ) ;
+      Event( EventPtr event ) :
+        _event(evt) {
+        /* nop */
+      }
 
       /**
        *  @brief  Get the user event
        */
-      std::shared_ptr<T> event() const;
+      EVENT::LCEvent* event() {
+        return _event.get() ;
+      }
+
+      /**
+       *  @brief  Get the user event
+       */
+      const EVENT::LCEvent* event() const {
+        return _event.get() ;
+      }
+
+      /**
+       *  @brief  Get the runtime event extensions
+       */
+      const Extensions &extensions() const {
+        return _extensions ;
+      }
+
+      /**
+       *  @brief  Get the runtime event extensions
+       */
+      Extensions &extensions() {
+        return _extensions ;
+      }
 
     private:
       /// The user event to hold
-      std::shared_ptr<T>      _event {nullptr} ;
+      EventPtr      _event {nullptr} ;
+      /// The runtime event extensions
+      Extensions    _extensions {} ;
     };
-
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-
-    template <typename T>
-    Event<T>::Event( std::shared_ptr<T> evt ) :
-      _event(evt) {
-
-    }
-
-    //--------------------------------------------------------------------------
-
-    template <typename T>
-    std::shared_ptr<T> Event<T>::event() const {
-      return _event ;
-    }
 
   } // end namespace concurrency
 
