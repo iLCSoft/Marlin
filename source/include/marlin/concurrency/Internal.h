@@ -1,9 +1,12 @@
 #ifndef MARLIN_CONCURRENCY_INTERNAL_h
 #define MARLIN_CONCURRENCY_INTERNAL_h 1
 
+// -- std headers
 #include <map>
 #include <string>
+#include <typeinfo>
 
+// -- marlin headers
 #include "marlin/Exceptions.h"
 
 namespace EVENT {
@@ -16,6 +19,45 @@ namespace marlin {
   namespace concurrency {
 
     using Exception = lcio::Exception ;
+
+    /**
+     *  @brief  HashHelper class
+     *  Helper class to generate hash 64 id
+     */
+    class HashHelper {
+    private:
+      /// Init value for hash 64
+      static const unsigned long long int hashinit = 14695981039346656037ull ;
+
+    public:
+      static constexpr unsigned long long int doByte(unsigned long long int hash, unsigned char val) {
+        return (hash ^ val) * 1099511628211ull ;
+      }
+
+      /**
+       *  @brief  Generate a hash 64 from a string
+       *
+       *  @param  key the input string key
+       */
+      static unsigned long long int hash64( const char *key ) {
+        unsigned char* str = (unsigned char*)key ;
+        unsigned long long int hash = hashinit ;
+        for ( ; *str; ++str) hash = doByte(hash, *str) ;
+        return hash ;
+      }
+
+      /**
+       *  @brief  Generate a hash 64 from the typeid name
+       */
+      template <typename T>
+      static unsigned long long int typeHash64() {
+        static unsigned long long int code = hash64(typeid(T).name()) ;
+        return code ;
+      }
+    };
+
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      *  @brief  StringUtil class
