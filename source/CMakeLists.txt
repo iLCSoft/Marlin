@@ -19,10 +19,6 @@ IF( NOT MARLIN_LCCD )
     LIST( REMOVE_ITEM marlin_headers ./include/marlin/ConditionsProcessor.h )
 ENDIF()
 
-IF( NOT MARLIN_DD4HEP )
-    LIST( REMOVE_ITEM marlin_headers ./include/marlin/concurrency/DD4hepExtensions.h )
-ENDIF()
-
 IF( NOT MARLIN_CLHEP )
     LIST( REMOVE_ITEM marlin_headers
         ./include/marlin/IFourVectorSmearer.h
@@ -66,7 +62,7 @@ INSTALL_SHARED_LIBRARY( MarlinXML DESTINATION lib )
 INSTALL_SHARED_LIBRARY( Marlin DESTINATION lib )
 TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} MarlinXML ${Marlin_DEPENDS_LIBRARIES}
   ## Note: it is not a problem if any variables is empty because package not found
-  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} ${DD4hep_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
+  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
 
 
 
