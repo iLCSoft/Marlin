@@ -9,6 +9,8 @@
 #include "marlin/concurrency/Event.h"
 #include "marlin/concurrency/Parameters.h"
 
+class TiXmlElement ;
+
 namespace marlin {
 
   namespace concurrency {
@@ -33,16 +35,9 @@ namespace marlin {
 
     public:
       /**
-       *  @brief  Constructor
-       *
-       *  @param  t the processor type
-       */
-      Processor( const std::string &t ) ;
-
-      /**
        *  @brief  Destructor
        */
-      virtual ~Processor() ;
+      virtual ~Processor() = default ;
 
       /**
        *  @brief  Get the processor type
@@ -106,23 +101,26 @@ namespace marlin {
 
     protected:
       /**
+       *  @brief  Constructor
+       *
+       *  @param  t the processor type
+       */
+      Processor( const std::string &t ) ;
+
+      /**
        *  @brief  Register a processor parameter.
        *  The parameter is not initialized. If the steering file
-       *  does not set the parameter, an exception is thrown on
-       *  parameter access. Parameters are accessed in processor
-       *  methods as:
+       *  does not set the parameter, an exception is thrown on parsing
+       *  Parameters are accessed in processor methods as:
        *  \code{cpp}
-       *  // this throws an exception if the parameter is
-       *  // not set in the steering file
-       *  auto intParam = parameters().get<int>("MyIntParameters") ;
-       *  // use a fallback value to avoid this
-       *  auto safeParam = parameters().get<int>("MyIntParameters", 42) ;
+       *  auto intParam = parameters().get<int>("MyIntParameter") ;
+       *  auto vecParam = parameters().getVector<float>("MyFloatParameters") ;
        *  \endcode
        *
        *  @param parameterName the parameter name
        *  @param parameterDescription the parameter description
        */
-      void registerProcessorParameter( const std::string &parameterName,
+      void registerParameter( const std::string &parameterName,
         const std::string &parameterDescription );
 
       /**
@@ -134,7 +132,7 @@ namespace marlin {
        *  @param  value the default parameter value
        */
       template <typename T>
-      void registerProcessorParameter( const std::string &parameterName,
+      void registerOptionalParameter( const std::string &parameterName,
         const std::string &parameterDescription,
         const T &value);
 
@@ -150,6 +148,20 @@ namespace marlin {
        *  @param  application the Marlin application
        */
       void setApp( Application *application ) ;
+
+      /**
+       *  @brief  Parse the XML element containing processor parameters
+       *
+       *  @param  element the XML element to parse
+       */
+      void parseParameters( const TiXmlElement *const element ) ;
+
+      /**
+       *  @brief  Populate the XML element with all registered parameters
+       *
+       *  @param  element the XML element to populate
+       */
+      void populateXMLParameters( TiXmlElement *element ) const ;
 
     protected:
       /// The processor description
@@ -170,7 +182,7 @@ namespace marlin {
     //--------------------------------------------------------------------------
 
     template <typename T>
-    inline void Processor::registerProcessorParameter( const std::string &parameterName,
+    inline void Processor::registerOptionalParameter( const std::string &parameterName,
       const std::string &parameterDescription,
       const T &value ) {
       if ( _parameters.exists( parameterName ) ) {
