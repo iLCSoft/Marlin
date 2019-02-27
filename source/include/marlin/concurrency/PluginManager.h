@@ -66,7 +66,7 @@ namespace marlin {
        *  @brief  Get the list of registered processor factories
        *  The list of returned names corresponds to the processor types
        */
-      std::vector<std::string> factoryNames() const ;
+      std::vector<std::string> processorFactoryNames() const ;
 
       /**
        *  @brief  Create a processor instance

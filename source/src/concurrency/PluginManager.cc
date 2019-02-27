@@ -11,7 +11,7 @@ namespace marlin {
 
   namespace concurrency {
 
-    std::vector<std::string> PluginManager::factoryNames() const {
+    std::vector<std::string> PluginManager::processorFactoryNames() const {
       std::vector<std::string> names ;
       for ( auto iter : _factories ) {
         names.push_back( iter.first ) ;
