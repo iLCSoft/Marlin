@@ -1,5 +1,8 @@
 #include "marlin/concurrency/Parameters.h"
 
+// -- std headers
+#include <sstream>
+
 namespace marlin {
 
   namespace concurrency {
@@ -23,7 +26,7 @@ namespace marlin {
       _initialized = rhs._initialized ;
       _type = rhs._type ;
       _parameter = rhs._parameter ;
-      return *this ; 
+      return *this ;
     }
 
     //--------------------------------------------------------------------------
@@ -56,6 +59,57 @@ namespace marlin {
 
     const std::string &Parameter::description() const {
       return _description;
+    }
+
+    //--------------------------------------------------------------------------
+
+    std::string Parameter::asString() const {
+      std::ostringstream oss ;
+      print(oss) ;
+      return oss.str() ;
+    }
+
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+
+    bool Parameters::isList( const std::string &name ) const {
+      auto iter = _parameters.find( name ) ;
+      if( _parameters.end() == iter ) {
+        throw Exception( "Parameters::isList: parameter '" + name + "' not found!" ) ;
+      }
+      return iter->second.isList() ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    std::string Parameters::description( const std::string &name ) const {
+      auto iter = _parameters.find( name ) ;
+      if( _parameters.end() == iter ) {
+        throw Exception( "Parameters::description: parameter '" + name + "' not found!" ) ;
+      }
+      return iter->second.description() ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    std::string Parameters::asString( const std::string &name ) const {
+      auto iter = _parameters.find( name ) ;
+      if( _parameters.end() == iter ) {
+        throw Exception( "Parameters::asString: parameter '" + name + "' not found!" ) ;
+      }
+      return iter->second.asString() ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    std::vector<std::string> Parameters::uninitializedParameterNames() const  {
+      std::vector<std::string> params {} ;
+      for ( auto iter : _parameters ) {
+        if ( not iter.second.isInitialized() ) {
+          params.push_back( iter.first ) ;
+        }
+      }
+      return params ;
     }
 
   } // namespace concurrency

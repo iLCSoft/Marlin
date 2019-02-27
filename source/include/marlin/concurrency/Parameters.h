@@ -161,7 +161,19 @@ namespace marlin {
        *
        *  @param  os the output stream
        */
-      void print(std::ostream &os = std::cout) ;
+      void print(std::ostream &os = std::cout) const ;
+
+      /**
+       *  @brief  Whether the parameter is a list.
+       *  The check is perform using the type info
+       *  and not the size of the parameter list
+       */
+      bool isList() const ;
+
+      /**
+       *  @brief  Get a string representation of the parameter value
+       */
+      std::string asString() const ;
 
     private:
       /// The parameter container
@@ -184,7 +196,7 @@ namespace marlin {
      */
     class Parameters {
     public:
-      typedef std::map< std::string, Parameter >  map_type ;
+      typedef std::map< std::string, Parameter >  ParameterMap ;
 
     public:
       /**
@@ -257,7 +269,7 @@ namespace marlin {
        *  @param  name the parameter name
        */
       template <typename T>
-      std::vector<T> get( const std::string &name ) const ;
+      std::vector<T> getVector( const std::string &name ) const ;
 
       /**
        *  @brief  Get the parameter values (vector) as specified type.
@@ -267,12 +279,27 @@ namespace marlin {
        *  @param  fallback the fallback value if not found
        */
       template <typename T>
-      std::vector<T> get( const std::string &name , const std::vector<T> &fallback ) const ;
+      std::vector<T> getVector( const std::string &name , const std::vector<T> &fallback ) const ;
+
+      /**
+       *  @brief  Get a string description of the parameter value
+       *  If the parameter is a list, the values are concatenated
+       *  using spaces in a string. Throws an exception if the
+       *  parameter doesn't exists.
+       *
+       *  @param  name the parameter name
+       */
+      std::string asString( const std::string &name ) const ;
 
       /**
        *  @brief  Get the parameter names
        */
       std::vector<std::string> names() const ;
+
+      /**
+       *  @brief  Get the names of parameters that have not been initialized yet
+       */
+      std::vector<std::string> uninitializedParameterNames() const ;
 
       /**
        *  @brief  Remove a parameter
@@ -296,6 +323,22 @@ namespace marlin {
       bool isInitialized( const std::string &name ) const ;
 
       /**
+       *  @brief  Check whether the given parameter is a list.
+       *  Throw an exception if it doesn't exists
+       *
+       *  @param  name the parameter name
+       */
+      bool isList( const std::string &name ) const ;
+
+      /**
+       *  @brief  Get the parameter description.
+       *  Throw an exception if it doesn't exists
+       *
+       *  @param  name the parameter name
+       */
+      std::string description( const std::string &name ) const ;
+
+      /**
        *  @brief  Clear the parameter list
        */
       void clear() ;
@@ -312,7 +355,7 @@ namespace marlin {
 
     private:
       /// Parameter map
-      map_type         _parameters {} ;
+      ParameterMap         _parameters {} ;
     };
 
     //--------------------------------------------------------------------------
@@ -465,13 +508,20 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
 
-    inline void Parameter::print( std::ostream &os ) {
+    inline void Parameter::print( std::ostream &os ) const {
       if ( not isInitialized() ) {
         return;
       }
       for ( auto str : _parameter ) {
         os << str << " ";
       }
+    }
+
+    //--------------------------------------------------------------------------
+
+    inline bool Parameter::isList() const {
+      std::string typeName = _type.name();
+      return (typeName.find( "vector" ) != std::string::npos);
     }
 
     //--------------------------------------------------------------------------
@@ -488,7 +538,7 @@ namespace marlin {
     inline Parameter &Parameters::set( const std::string &name , const T & value ) {
       auto iter = _parameters.find( name ) ;
       if ( _parameters.end() != iter ) {
-        iter = _parameters.insert( map_type::value_type( name, Parameter(value) ) ).first ;
+        iter = _parameters.insert( ParameterMap::value_type( name, Parameter(value) ) ).first ;
         return iter->second ;
       }
       iter->second = value ;
@@ -501,7 +551,7 @@ namespace marlin {
     inline Parameter &Parameters::set( const std::string &name , const std::vector<T> &values ) {
       auto iter = _parameters.find( name ) ;
       if ( _parameters.end() != iter ) {
-        iter = _parameters.insert( map_type::value_type( name, Parameter(values) ) ).first ;
+        iter = _parameters.insert( ParameterMap::value_type( name, Parameter(values) ) ).first ;
         return iter->second ;
       }
       iter->second = values ;
@@ -514,7 +564,7 @@ namespace marlin {
     inline Parameter &Parameters::add( const std::string &name , const T & value ) {
       auto iter = _parameters.find( name ) ;
       if ( _parameters.end() != iter ) {
-        iter = _parameters.insert( map_type::value_type( name, {} ) ) ;
+        iter = _parameters.insert( ParameterMap::value_type( name, {} ) ) ;
         return iter->second ;
       }
       iter->second.add( value );
@@ -527,7 +577,7 @@ namespace marlin {
     inline Parameter &Parameters::add( const std::string &name , const std::vector<T> &values ) {
       auto iter = _parameters.find( name ) ;
       if ( _parameters.end() != iter ) {
-        iter = _parameters.insert( map_type::value_type( name, Parameter(values) ) ) ;
+        iter = _parameters.insert( ParameterMap::value_type( name, Parameter(values) ) ) ;
         return iter->second ;
       }
       iter->second.add( values );
@@ -559,7 +609,7 @@ namespace marlin {
     //--------------------------------------------------------------------------
 
     template <typename T>
-    inline std::vector<T> Parameters::get( const std::string &name ) const {
+    inline std::vector<T> Parameters::getVector( const std::string &name ) const {
       auto iter = _parameters.find( name ) ;
       if ( _parameters.end() == iter ) {
         throw Exception( "Parameter '" + name + "' not found!" );
@@ -570,7 +620,7 @@ namespace marlin {
     //--------------------------------------------------------------------------
 
     template <typename T>
-    inline std::vector<T> Parameters::get( const std::string &name , const std::vector<T> &fallback ) const {
+    inline std::vector<T> Parameters::getVector( const std::string &name , const std::vector<T> &fallback ) const {
       auto iter = _parameters.find( name ) ;
       if ( _parameters.end() == iter ) {
         return fallback;
