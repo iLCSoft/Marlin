@@ -4,6 +4,7 @@
 // -- marlin headers
 #include "marlin/Exceptions.h"
 #include "marlin/concurrency/Parameters.h"
+#include "marlin/concurrency/AppParser.h"
 
 namespace marlin {
 
