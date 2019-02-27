@@ -1,4 +1,5 @@
 #include "marlin/concurrency/AppParser.h"
+#include "marlin/concurrency/XMLHelper.h"
 
 // -- std headers
 #include <thread>
@@ -38,46 +39,23 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
 
-    void AppParser::processorParameters( const std::string &name, Parameters &parameters ) const {
-      auto processor = processorElement( name ) ;
+    void AppParser::processorParameters( const std::string &pname, Parameters &parameters ) const {
+      auto processor = processorElement( pname ) ;
       if ( nullptr == processor ) {
         return ;
       }
-      for (const TiXmlElement *parameter = processor->FirstChildElement("parameter"); parameter != nullptr;
-        parameter = parameter->NextSiblingElement("parameter")) {
-        if (parameter->Attribute("name") == nullptr) {
-          throw Exception( "AppParser::processorParameters: parameter element without name !" ) ;
-        }
-        std::string pname( parameter->Attribute("name") ) ;
-        if ( pname.empty() ) {
-          throw Exception( "AppParser::processorParameters: parsed empty parameter name !" ) ;
-        }
-        if ( parameters.exists( pname ) ) {
-          throw Exception( "AppParser::processorParameters: duplicate parameter name '" + pname + "' !" );
-        }
-        std::string value ;
-        if (parameter->Attribute("value") != nullptr) {
-          value = parameter->Attribute("value") ;
-        }
-        else {
-          if (parameter->FirstChild() != nullptr) {
-            value = parameter->FirstChild()->Value() ;
-          }
-        }
-        // Check whether the parameter value is
-        std::string isListStr ;
-        if (parameter->Attribute("list") != nullptr) {
-          isListStr = parameter->Attribute("list") ;
-        }
-        bool isList = StringUtil::stringToType<bool>( isListStr ) ;
+      XMLHelper::iterateParameters( processor , [&parameters](const TiXmlElement *const child, const std::string &name, const std::string &value){
+        // Check whether the parameter value is a list
+        bool isList = XMLHelper::readAttribute<bool>( child, "list", false ) ;
         if ( isList ) {
           auto tokens = StringUtil::split<std::string>( value ) ;
-          parameters.set( name, tokens );
+          parameters.set( name, tokens ) ;
         }
         else {
-          parameters.set( name, value );
+          parameters.set( name, value ) ;
         }
-      }
+        return true ;
+      }) ;
     }
 
     //--------------------------------------------------------------------------
@@ -92,53 +70,13 @@ namespace marlin {
       if ( nullptr == exec ) {
         return ccy ;
       }
-      if (exec->Attribute("concurrency") != nullptr) {
-        exec->QueryValueAttribute<unsigned int>( "concurrency", &ccy ) ;
-      }
-      return ccy ;
+      return XMLHelper::readAttribute( exec, "concurrency", ccy ) ;
     }
 
     //--------------------------------------------------------------------------
 
     void AppParser::clear() {
       _parser.reset() ;
-    }
-
-    //--------------------------------------------------------------------------
-
-    std::string AppParser::globalParameter( const std::string &name ) const {
-      const TiXmlElement *root = _parser.document().RootElement() ;
-      if ( nullptr == root ) {
-        throw Exception( "AppParser::globalParameter: invalid root element!" ) ;
-      }
-      const TiXmlElement *glob = root->FirstChildElement( "global" ) ;
-      if ( nullptr == glob ) {
-        throw Exception( "AppParser::globalParameter: no global section found in document!" ) ;
-      }
-      for (const TiXmlElement *parameter = glob->FirstChildElement("parameter"); parameter != nullptr;
-        parameter = parameter->NextSiblingElement("parameter")) {
-        if (parameter->Attribute("name") == nullptr) {
-          throw Exception( "AppParser::globalParameter: parameter element without name !" ) ;
-        }
-        std::string pname( parameter->Attribute("name") ) ;
-        if ( pname.empty() ) {
-          throw Exception( "AppParser::globalParameter: parsed empty parameter name !" ) ;
-        }
-        if ( pname != name ) {
-          continue ;
-        }
-        std::string value ;
-        if (parameter->Attribute("value") != nullptr) {
-          value = parameter->Attribute("value") ;
-        }
-        else {
-          if (parameter->FirstChild() != nullptr) {
-            value = parameter->FirstChild()->Value() ;
-          }
-        }
-        return value ;
-      }
-      throw Exception( "AppParser::globalParameter: global parameter '" + name + "' not found!" ) ;
     }
 
     //--------------------------------------------------------------------------

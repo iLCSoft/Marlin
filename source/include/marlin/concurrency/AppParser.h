@@ -34,23 +34,6 @@ namespace marlin {
       void parse( const std::string &fname ) ;
 
       /**
-       *  @brief  Get the global parameter value
-       *
-       *  @param  name the parameter name
-       */
-      template <typename T>
-      T global( const std::string &name ) const ;
-
-      /**
-       *  @brief  Get the global parameter value
-       *
-       *  @param  name the parameter name
-       *  @param  fallback the fallback value if the global parameter doesn't exists
-       */
-      template <typename T>
-      T global( const std::string &name , const T &fallback ) const ;
-
-      /**
        *  @brief  Check whether the processor configuration exists
        *
        *  @param  name the procesor name
@@ -99,7 +82,6 @@ namespace marlin {
       void clear();
 
     private:
-      std::string globalParameter( const std::string &name ) const ;
       const TiXmlElement *processorElement( const std::string &name ) const ;
 
     private:
@@ -120,25 +102,6 @@ namespace marlin {
     template <typename T>
     inline T AppParser::constant( const std::string &name , const T &fallback ) const {
       return _parser.constantAs<T>( name, fallback );
-    }
-
-    //--------------------------------------------------------------------------
-
-    template <typename T>
-    inline T AppParser::global( const std::string &name ) const {
-      return StringUtil::stringToType<T>( globalParameter( name ) ) ;
-    }
-
-    //--------------------------------------------------------------------------
-
-    template <typename T>
-    inline T AppParser::global( const std::string &name , const T &fallback ) const {
-      try {
-        return global<T>( name );
-      }
-      catch(...) {
-      }
-      return fallback ;
     }
 
   } // end namespace concurrency
