@@ -17,6 +17,7 @@ namespace marlin {
     public:
       // traits
       typedef std::vector<std::string> CmdLineArguments ;
+      typedef std::map<std::string, std::map<std::string, std::string>> CommandLineParametersMap ;
 
     public:
       /**
@@ -64,17 +65,34 @@ namespace marlin {
       template <typename T>
       T constant( const std::string &name , const T &fallback ) const ;
 
+      /**
+       *  @brief  Print command line usage
+       */
+      void printUsage() const ;
+
+    private:
+      /**
+       *  @brief  Parse the command line arguments
+       */
+      void parseCommandLine();
+
     private:
       /// Global parameters of the application
-      Parameters            _global {} ;
+      Parameters                 _global {} ;
       /// The program name. Initialized on init()
-      std::string           _programName {} ;
+      std::string                _programName {} ;
       /// The arguments from the main function after init has been called
-      CmdLineArguments      _arguments {} ;
+      CmdLineArguments           _arguments {} ;
       /// Whether the application has been initialized
-      bool                  _initialized {false} ;
+      bool                       _initialized {false} ;
       /// The application specific steering file parser
-      AppParser             _parser {} ;
+      AppParser                  _parser {} ;
+      /// The command line options to replace in the steering file
+      CommandLineParametersMap   _cmdLineOptions {} ;
+      /// The steering file name
+      std::string                _steeringFileName {} ;
+      /// The concurrency as read from the command line or steering file
+      unsigned int               _concurrency {0};
     };
 
     //--------------------------------------------------------------------------
