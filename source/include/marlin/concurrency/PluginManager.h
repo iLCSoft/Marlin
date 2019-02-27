@@ -11,7 +11,7 @@
 
 // registration macros
 #define MARLIN_REGISTER_PROCESSOR_NAME( Class, Name ) \
-  { PluginManager::instance().registerFactory<Class>( Name ) ; }
+  { PluginManager::instance().registerProcessorFactory<Class>( Name ) ; }
 
 #define MARLIN_REGISTER_PROCESSOR( Class ) \
   MARLIN_REGISTER_PROCESSOR_NAME( Class, #Class )
@@ -47,7 +47,7 @@ namespace marlin {
        *  @param  name the factory
        */
       template <typename T>
-      void registerFactory( const std::string &name ) ;
+      void registerProcessorFactory( const std::string &name ) ;
 
     public:
       /**
@@ -92,7 +92,7 @@ namespace marlin {
     //--------------------------------------------------------------------------
 
     template <typename T>
-    inline void PluginManager::registerFactory( const std::string &name ) {
+    inline void PluginManager::registerProcessorFactory( const std::string &name ) {
       auto iter = _factories.find( name ) ;
       if ( _factories.end() != iter ) {
         throw Exception( "PluginManager::registerFactory: factory '" + name + "' already registered!" );
