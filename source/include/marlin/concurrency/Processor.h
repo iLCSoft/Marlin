@@ -25,6 +25,8 @@ namespace marlin {
       // friendship for creation through PluginManager
       template<typename T>
       friend class ProcessorFactoryT;
+
+    private:
       // no copy, no assignment
       Processor(const Processor &) = delete ;
       Processor& operator=(const Processor &) = delete ;
