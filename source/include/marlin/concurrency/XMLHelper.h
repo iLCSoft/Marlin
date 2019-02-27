@@ -8,6 +8,7 @@
 
 // -- marlin headers
 #include "marlin/Exceptions.h"
+#include "marlin/tinyxml.h"
 
 namespace marlin {
 
