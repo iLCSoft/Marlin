@@ -24,16 +24,6 @@ namespace marlin {
       Application() ;
 
       /**
-       *  @brief  Get the global parameters (const version)
-       */
-      const Parameters &global() const ;
-
-      /**
-       *  @brief  Get the global parameters (non-const version)
-       */
-      Parameters &global() ;
-
-      /**
        *  @brief  Initialize the application
        *
        *  @param  argc argc from main function
@@ -46,6 +36,33 @@ namespace marlin {
        */
       void run() ;
 
+      /**
+       *  @brief  Get the program name
+       */
+      const std::string &program() const { return _programName ; }
+
+      /**
+       *  @brief  Get the command line arguments
+       */
+      const CmdLineArguments &arguments() const { return _arguments ; }
+
+      /**
+       *  @brief  Get a specific constant
+       *
+       *  @param  name the constant name
+       */
+      template <typename T>
+      T constant( const std::string &name ) const ;
+
+      /**
+       *  @brief  Get a specific constant
+       *
+       *  @param  name the constant name
+       *  @param  fallback the fallback value if the constant doesn't exists
+       */
+      template <typename T>
+      T constant( const std::string &name , const T &fallback ) const ;
+
     private:
       /// Global parameters of the application
       Parameters            _global {} ;
@@ -55,7 +72,24 @@ namespace marlin {
       CmdLineArguments      _arguments {} ;
       /// Whether the application has been initialized
       bool                  _initialized {false} ;
+      /// The application specific steering file parser
+      AppParser             _parser {} ;
     };
+
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+
+    template <typename T>
+    inline T Application::constant( const std::string &name ) const {
+      return _parser.constant<T>( name );
+    }
+
+    //--------------------------------------------------------------------------
+
+    template <typename T>
+    inline T Application::constant( const std::string &name , const T &fallback ) const {
+      return _parser.constant<T>( name, fallback );
+    }
 
   } // end namespace concurrency
 
