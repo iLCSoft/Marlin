@@ -59,7 +59,7 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
 
-    std::shared_ptr<Processor> PluginManager::create( const std::string &type, const std::string &name ) {
+    std::shared_ptr<Processor> PluginManager::createProcessor( const std::string &type, const std::string &name ) {
       auto iter = _factories.find( type ) ;
       if ( _factories.end() == iter ) {
         return nullptr;

@@ -74,7 +74,7 @@ namespace marlin {
        *  @param  type the processor type
        *  @param  name the processor name
        */
-      std::shared_ptr<Processor> create( const std::string &type, const std::string &name );
+      std::shared_ptr<Processor> createProcessor( const std::string &type, const std::string &name );
 
       /**
        *  @brief  Dump plugin manager content in console
