@@ -98,6 +98,15 @@ namespace marlin {
        *  @brief  Print processor parameters in console
        */
       void printParameters() const ;
+      
+      /**
+       *  @brief  Whether the method Processor::processEvent should be executed in a critical section.
+       *  This option can be set in the steering file and allows to execute the processEvent 
+       *  method in a critical section (using a mutex).
+       *  
+       *  @warning By setting this flag to true, you may experience performance issues.
+       */
+      bool isCritical() const ;
 
     protected:
       /**
@@ -166,6 +175,8 @@ namespace marlin {
     protected:
       /// The processor description
       std::string            _description {} ;
+      /// Whether the method Processor::processEvent is executed in a critical section 
+      bool                   _isCritical {false} ;
 
     private:
       /// The processor type

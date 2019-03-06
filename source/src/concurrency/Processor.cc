@@ -68,9 +68,19 @@ namespace marlin {
     //--------------------------------------------------------------------------
 
     void Processor::printParameters () const {
-      std::cout << "---- " << name() << " -  parameters:" << std::endl ;
+      std::cout << "---- " << name() ;
+      if ( _isCritical ) {
+        std::cout << " [critical]" ;
+      }
+      std::cout << " -  parameters:" << std::endl ;
       _parameters.print() ;
       std::cout << "-------------------------------------------------" << std::endl ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    bool Processor::isCritical() const {
+      return _isCritical ;
     }
 
     //--------------------------------------------------------------------------
