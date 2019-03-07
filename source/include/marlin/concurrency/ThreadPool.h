@@ -13,6 +13,7 @@
 #include <condition_variable>
 
 // -- marlin headers
+#include "marlin/Exceptions.h"
 #include "marlin/concurrency/Queue.h"
 
 namespace marlin {
@@ -24,6 +25,18 @@ namespace marlin {
      *  Implement a thread pool pattern.
      */
     class ThreadPool {
+    public:
+      /**
+       *  @brief  Options struct
+       *  Holds the input thread pool options 
+       */
+      struct Options {
+        /// The number of workers in the thread pool
+        unsigned int      _nThreads {std::thread::hardware_concurrency()} ;
+        /// Whether to wait for a free worker when enqueuing a new task
+        bool              _waitForFreeWorker {true} ;
+      };
+      
     private:
       /**
        *  @brief  Worker class
@@ -41,11 +54,6 @@ namespace marlin {
          *  @param  pool the parent thread pool
          */
         Worker( ThreadPool &pool ) ;
-        
-        /**
-         *  @brief  Whether the worker is executing a task
-         */
-        bool taskRunning() const ;
         
         /**
          *  @brief  Get the worker thread id
@@ -67,23 +75,21 @@ namespace marlin {
       private:
         /// The parent thread pool
         ThreadPool          &_pool ;
-        /// Whether the worker is dealing with a task
-        std::atomic_bool     _running {false} ;
         /// The worker thread
         std::thread          _thread {} ;
       };
       
     public:
       typedef std::vector<std::shared_ptr<Worker>>    Workers ;
-      typedef Queue<Worker::Function>                 TaskQueue ;
-      
+      typedef std::deque<Worker::Function>            TaskQueue ;
+            
     public:
       /**
        *  @brief  Constructor
        *
-       *  @param  nthreads the number of threads in the thread pool
+       *  @param  options the thread pool options
        */
-      ThreadPool( unsigned int nthreads = std::thread::hardware_concurrency() ) ;
+      ThreadPool( const Options &options ) ;
       
       /**
        *  @brief  Destructor
@@ -123,6 +129,11 @@ namespace marlin {
       std::size_t nRunningTasks() const ;
       
       /**
+       *  @brief  Get the pool size (number of worker threads)
+       */
+      std::size_t size() const ;
+      
+      /**
        *  @brief  Whether the thread pool has been initialized
        */
       bool initialized() const ;
@@ -137,9 +148,13 @@ namespace marlin {
       /// The queue of pending tasks to execute
       TaskQueue                 _pendingTasks {} ;
       /// The pending task condition variable
-      std::condition_variable   _condition {} ;
+      std::condition_variable   _queueCondition {} ;
       /// The thread pool access mutex
-      std::mutex                _mutex {} ;
+      mutable std::mutex        _queueMutex {} ;
+      /// The number of running tasks
+      std::atomic<std::size_t>  _nRunningTasks {0} ;
+      /// The thread pool options
+      Options                   _options {} ;
     };
     
     //--------------------------------------------------------------------------
@@ -147,6 +162,9 @@ namespace marlin {
     
     template <typename Function, typename ...Args>
     inline auto ThreadPool::submit( Function&& func, Args&& ...args ) -> std::future<decltype(func(args...))> {
+      if ( not _initialized ) {
+        throw Exception( "ThreadPool::submit: thread pool not started, can't accept any task submission!" ) ;
+      }
       // Create a function with bounded parameters ready to execute
       std::function<decltype(func(args...))()> localFunc = std::bind( std::forward<Function>(func), std::forward<Args>(args)... ) ;
       // Encapsulate it into a shared ptr in order to be able to copy construct / assign 
@@ -155,10 +173,19 @@ namespace marlin {
       Worker::Function wrapper_func = [task_ptr]() {
         (*task_ptr)() ;
       } ;
-      // Enqueue generic wrapper function
-      _pendingTasks.push( wrapper_func ) ;
-      // Wake up one thread if its waiting
-      _condition.notify_one() ;
+      // Wait for a free worker if set in the options
+      if ( _options._waitForFreeWorker ) {
+        while ( _nRunningTasks.load() == _workers.size() ) {
+          std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) ) ;
+        }
+      }
+      {
+        // Enqueue generic wrapper function
+        // Wake up one thread if its waiting
+        std::lock_guard<std::mutex> lock( _queueMutex ) ;
+        _pendingTasks.push_back( wrapper_func ) ;
+        _queueCondition.notify_one() ;
+      }
       // Return future from promise
       return task_ptr->get_future() ;
     }

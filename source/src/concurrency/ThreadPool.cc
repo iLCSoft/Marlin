@@ -14,27 +14,25 @@ namespace marlin {
 
     void ThreadPool::Worker::loop() {
       Function func {nullptr} ;
-      bool dequeued {false} ;
       while ( not _pool._shutdown ) {
         {
-          std::unique_lock<std::mutex> lock( _pool._mutex ) ;
-          if ( _pool._pendingTasks.empty() ) {
-            _pool._condition.wait( lock ) ;
-          }
-          dequeued = _pool._pendingTasks.pop( func ) ;
+          func = nullptr ;
+          // wait for a task to be queued
+          std::unique_lock<std::mutex> ulock( _pool._queueMutex ) ;
+          _pool._queueCondition.wait( ulock , [this, &func]() {
+            if ( not _pool._pendingTasks.empty() ) {
+              func = _pool._pendingTasks.front() ;
+              _pool._pendingTasks.pop_front() ;              
+            }
+            return ( ( nullptr != func ) || _pool._shutdown ) ;
+          } ) ;
         }
-        if ( dequeued ) {
-          _running = true ;
+        if ( func ) {
+          _pool._nRunningTasks ++ ;
           func() ;
-          _running = false ;
+          _pool._nRunningTasks -- ;
         }
       }
-    }
-    
-    //--------------------------------------------------------------------------
-    
-    bool ThreadPool::Worker::taskRunning() const {
-      return _running ;
     }
     
     //--------------------------------------------------------------------------
@@ -54,8 +52,9 @@ namespace marlin {
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
 
-    ThreadPool::ThreadPool( unsigned int nthreads ) {
-      _workers.resize( nthreads ) ;
+    ThreadPool::ThreadPool( const Options &options ) :
+    _options(options) {
+      _workers.resize( _options._nThreads ) ;
     }
 
     //--------------------------------------------------------------------------
@@ -72,6 +71,7 @@ namespace marlin {
       if ( _initialized ) {
         throw Exception( "ThreadPool::init: already initialized!" ) ;
       }
+      _shutdown = false ;
       // start worker threads
       for ( std::size_t i=0 ; i<_workers.size() ; ++i ) {
         _workers[ i ] = std::make_shared<Worker>( *this ) ;
@@ -87,22 +87,30 @@ namespace marlin {
       }
       // drop all pending tasks and terminate properly
       if ( dropPending ) {
+        std::lock_guard<std::mutex> lock( _queueMutex ) ;
         _pendingTasks.clear() ;
+        _shutdown = true ;
+        _queueCondition.notify_all() ;
       }
       // wait for all pending tasks to be 
       // executed and terminate properly
       else {
-        while ( not _pendingTasks.empty() ) {
+        while ( 0 == _nRunningTasks ) {
+          {
+            std::lock_guard<std::mutex> lock( _queueMutex ) ;
+            _shutdown = true ;
+            _queueCondition.notify_one() ;
+          }
           std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) ) ;
         }
       }
-      _shutdown = true ;
-      _condition.notify_all() ;
+      std::cout << "joining threads" << std::endl ;
       for (unsigned int i=0 ; i<_workers.size() ; i++ ) {
         // join the worker thread and clear
         _workers[ i ]->join() ;
         _workers[ i ] = nullptr ;
       }
+      // no lock needed here, as no worker is running anymore
       _pendingTasks.clear() ;
       _initialized = false ;
     }
@@ -110,19 +118,20 @@ namespace marlin {
     //--------------------------------------------------------------------------
     
     std::size_t ThreadPool::nPendingTasks() const {
+      std::lock_guard<std::mutex> lock( _queueMutex ) ;
       return _pendingTasks.size() ;
     }
     
     //--------------------------------------------------------------------------
     
     std::size_t ThreadPool::nRunningTasks() const {
-      std::size_t count {0} ;
-      for ( auto &w : _workers ) {
-        if( w->taskRunning() ) {
-          ++ count ;
-        }
-      }
-      return count ;
+      return _nRunningTasks ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    std::size_t ThreadPool::size() const {
+      return _workers.size() ;
     }
     
     //--------------------------------------------------------------------------
