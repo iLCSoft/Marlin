@@ -82,6 +82,12 @@ namespace marlin {
     bool Processor::isCritical() const {
       return _isCritical ;
     }
+    
+    //--------------------------------------------------------------------------
+    
+    bool Processor::allowsDataModification() const {
+      return _allowsDataModification ;
+    }
 
     //--------------------------------------------------------------------------
 

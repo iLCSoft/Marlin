@@ -27,6 +27,11 @@ namespace marlin {
       // friendship for creation through PluginManager
       template<typename T>
       friend class ProcessorFactoryT;
+      
+    public:
+      typedef std::shared_ptr<EVENT::LCRunHeader>   RunHeaderType ;
+      typedef std::shared_ptr<Event>                EventType ;
+
 
     private:
       // no copy, no assignment
@@ -58,20 +63,42 @@ namespace marlin {
        *  @brief  Initialize the processor.
        */
       virtual void init() { /* nop */ }
+      
+      /**
+       *  @brief  Called at start of new run, before processing the run header.
+       *  This method is called only if the method allowsDataModification()
+       *  returns true.
+       *  
+       *  @param  header the run header to modify
+       *
+       *  @see allowsDataModification
+       */
+      virtual void modifyRunHeader( RunHeaderType /* header */ ) { /* nop */ }
+      
+      /**
+       *  @brief  Called for every event, before processing the event.
+       *  This method is called only if the method allowsDataModification()
+       *  returns true.
+       *  
+       *  @param  event the event to modify
+       *
+       *  @see allowsDataModification
+       */
+      virtual void modifyEvent( EventType /* event */ ) const { /* nop */ }
 
       /**
        *  @brief  Called at start of new run
        *
-       *  @brief  header the run header to process
+       *  @param  header the run header to process
        */
-      virtual void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> /*header*/ ) { /* nop */ }
+      virtual void processRunHeader( RunHeaderType /*header*/ ) { /* nop */ }
 
       /**
        *  @brief  Called for every event
        *
-       *  @brief  event the event to process
+       *  @param  event the event to process
        */
-      virtual void processEvent( std::shared_ptr<Event> /*event*/ ) const { /* nop */ }
+      virtual void processEvent( EventType /*event*/ ) const { /* nop */ }
 
       /**
        *  @brief  Called at application termination.
@@ -107,6 +134,14 @@ namespace marlin {
        *  @warning By setting this flag to true, you may experience performance issues.
        */
       bool isCritical() const ;
+      
+      /**
+       *  @brief  Whether the processor is allowed to modify data (run header and event)
+       *  If this flag is set to true, the methods modifyRunHeader() and modifyEvent() will
+       *  be called and allows for data modification (whereas processRunHeader() and processEvent()
+       *  do not allow for it !)
+       */
+      bool allowsDataModification() const ;
 
     protected:
       /**
@@ -177,6 +212,8 @@ namespace marlin {
       std::string            _description {} ;
       /// Whether the method Processor::processEvent is executed in a critical section 
       bool                   _isCritical {false} ;
+      /// Whether the processor is allowed to modify data
+      bool                   _allowsDataModification {false} ;
 
     private:
       /// The processor type
