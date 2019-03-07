@@ -89,22 +89,21 @@ namespace marlin {
       if ( dropPending ) {
         std::lock_guard<std::mutex> lock( _queueMutex ) ;
         _pendingTasks.clear() ;
-        _shutdown = true ;
-        _queueCondition.notify_all() ;
       }
+      _shutdown = true ;
       // wait for all pending tasks to be 
       // executed and terminate properly
-      else {
-        while ( 0 == _nRunningTasks ) {
-          {
-            std::lock_guard<std::mutex> lock( _queueMutex ) ;
-            _shutdown = true ;
-            _queueCondition.notify_one() ;
-          }
-          std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) ) ;
+      while ( 0 != _nRunningTasks ) {
+        {
+          std::lock_guard<std::mutex> lock( _queueMutex ) ;
+          _queueCondition.notify_one() ;
         }
+        std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) ) ;
       }
-      std::cout << "joining threads" << std::endl ;
+      {
+        std::lock_guard<std::mutex> lock( _queueMutex ) ;
+        _queueCondition.notify_all() ;
+      }
       for (unsigned int i=0 ; i<_workers.size() ; i++ ) {
         // join the worker thread and clear
         _workers[ i ]->join() ;
