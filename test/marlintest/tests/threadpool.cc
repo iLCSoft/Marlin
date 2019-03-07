@@ -10,8 +10,9 @@ using namespace marlin::concurrency ;
 int main() {
   
   marlin::test::UnitTest test( "Marlin thread pool" ) ;
-  
-  ThreadPool pool ;
+
+  ThreadPool::Options options ;
+  ThreadPool pool(options) ;
 
   try {
     pool.init() ;
@@ -55,16 +56,19 @@ int main() {
     test.test( "terminate", false ) ;
   }
   
-  // submit tasks again but the thread pool is off
-  // so normally nothing should be processed
-  for ( unsigned int i=0 ; i<100 ; i++ ) {
-    futures.push_back( pool.submit( [&](int id) {
+  try {
+    auto f = pool.submit( [&](int id) {
       printMutex.lock() ;
       std::cout << "Hello from task " << id << std::endl ;
       printMutex.unlock() ;
       counter++ ;
-    }, i ) ) ;
+    }, 0 ) ;
+    test.test( "submit while not initialized", false ) ;
   }
+  catch(Exception &e) {
+    test.test( "submit while not initialized", true ) ;
+  }
+  
   // wait a bit
   std::this_thread::sleep_for( std::chrono::milliseconds(500) ) ;
 
