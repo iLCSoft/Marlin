@@ -14,7 +14,6 @@
 
 // -- marlin headers
 #include "marlin/Exceptions.h"
-#include "marlin/concurrency/Queue.h"
 
 namespace marlin {
 
