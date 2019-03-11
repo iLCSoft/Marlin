@@ -10,6 +10,7 @@
 #include <utility>
 #include <memory>
 #include <future>
+#include <deque>
 #include <condition_variable>
 
 // -- marlin headers
