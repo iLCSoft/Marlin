@@ -2,6 +2,7 @@
 #include "marlin/XMLParser.h"
 #include "marlin/Exceptions.h"
 #include "marlin/tinyxml.h"
+#include "marlin/Utils.h"
 
 #include <algorithm>
 
@@ -10,6 +11,7 @@
 
 
 #include <memory>
+#include <thread>
 
 namespace marlin{
 
@@ -49,11 +51,17 @@ namespace marlin{
         
         TiXmlNode* section = 0 ;
         
+        _map[ "Constants" ] = std::make_shared<StringParameters>() ;
+        StringParameters*  constantsParameters = _map[ "Constants" ].get() ;
+        
         section = root->FirstChild("constants") ;
         std::map<std::string, std::string> constants ;
         
         if( section != 0 ) {
             processConstants( section , constants ) ;
+            for ( auto cst : constants ) {
+              constantsParameters->add( cst.first, {cst.second} ) ;
+            }
         } else {
           std::cout << "XMLParser::parse : no <constants/> section found in " << _fileName << std::endl ;
         }
@@ -113,6 +121,22 @@ namespace marlin{
 
             // process processor conditions:
             processconditions( section , "" ) ;
+            
+            try {
+              std::string ccyStr = getAttribute( section, "concurrency" ) ;
+              if( ccyStr == "auto" ) {
+                unsigned int ccy = std::thread::hardware_concurrency() ;
+                globalParameters->add( "Concurrency", {std::to_string(ccy)} );
+              }
+              else {
+                // just in case the conversion fails 
+                (void)StringUtil::stringToType<unsigned int>( ccyStr ) ;                
+                globalParameters->add( "Concurrency", {ccyStr} );
+              }
+            }
+            catch(...){
+              globalParameters->add( "Concurrency", {"0"} );
+            }
 
             //       std::cout <<  " execute after group replacement : " << *section << std::
 
