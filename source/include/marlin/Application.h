@@ -1,116 +1,107 @@
-#ifndef MARLIN_CONCURRENCY_APPLICATION_h
-#define MARLIN_CONCURRENCY_APPLICATION_h 1
+#ifndef MARLIN_APPLICATION_h
+#define MARLIN_APPLICATION_h 1
 
 // -- marlin headers
 #include "marlin/Exceptions.h"
-#include "marlin/concurrency/Parameters.h"
-#include "marlin/concurrency/AppParser.h"
+#include "marlin/XMLParser.h"
 
 namespace marlin {
 
-  namespace concurrency {
+  /**
+   *  @brief  Application class
+   */
+  class Application {
+  public:
+    // traits
+    typedef std::vector<std::string> CmdLineArguments ;
+
+  public:
+    /**
+     *  @brief  Constructor
+     */
+    Application() ;
 
     /**
-     *  @brief  Application class
+     *  @brief  Initialize the application
+     *
+     *  @param  argc argc from main function
+     *  @param  argv argv from main function
      */
-    class Application {
-    public:
-      // traits
-      typedef std::vector<std::string> CmdLineArguments ;
-      typedef std::map<std::string, std::map<std::string, std::string>> CommandLineParametersMap ;
+    void init( int argc, char **argv ) ;
 
-    public:
-      /**
-       *  @brief  Constructor
-       */
-      Application() ;
+    /**
+     *  @brief  Run the Marlin application
+     */
+    void run() ;
 
-      /**
-       *  @brief  Initialize the application
-       *
-       *  @param  argc argc from main function
-       *  @param  argv argv from main function
-       */
-      void init( int argc, char **argv ) ;
+    /**
+     *  @brief  Get the program name
+     */
+    const std::string &program() const { return _programName ; }
 
-      /**
-       *  @brief  Run the Marlin application
-       */
-      void run() ;
+    /**
+     *  @brief  Get the command line arguments
+     */
+    const CmdLineArguments &arguments() const { return _arguments ; }
 
-      /**
-       *  @brief  Get the program name
-       */
-      const std::string &program() const { return _programName ; }
+    /**
+     *  @brief  Print command line usage
+     */
+    void printUsage() const ;
+    
+    /**
+     *  @brief  Get the global section parameters
+     */
+    std::shared_ptr<StringParameters> globalParameters () const ;
+    
+    /**
+     *  @brief  Get the processor parameters
+     *
+     *  @param  name the processor name
+     */
+    std::shared_ptr<StringParameters> processorParameters ( const std::string &name ) const ;
+    
+    /**
+     *  @brief  Get the XML constants
+     */
+    std::shared_ptr<StringParameters> constants () const ;
+    
+    /**
+     *  @brief  Get the active processor list
+     */
+    StringVec activeProcessors () const ;
+    
+    /**
+     *  @brief  Get the active processor conditions list
+     */
+    StringVec processorConditions () const ;
+    
+    /**
+     *  @brief  Get the concurrency level under which the application should run
+     *  This initialized after calling init, else returns 0
+     */
+    unsigned int concurrencyLevel() const ;
 
-      /**
-       *  @brief  Get the command line arguments
-       */
-      const CmdLineArguments &arguments() const { return _arguments ; }
+  private:
+    /**
+     *  @brief  Parse the command line arguments
+     */
+    void parseCommandLine( CommandLineParametersMap &cmdLineOptions ) ;
 
-      /**
-       *  @brief  Get a specific constant
-       *
-       *  @param  name the constant name
-       */
-      template <typename T>
-      T constant( const std::string &name ) const ;
-
-      /**
-       *  @brief  Get a specific constant
-       *
-       *  @param  name the constant name
-       *  @param  fallback the fallback value if the constant doesn't exists
-       */
-      template <typename T>
-      T constant( const std::string &name , const T &fallback ) const ;
-
-      /**
-       *  @brief  Print command line usage
-       */
-      void printUsage() const ;
-
-    private:
-      /**
-       *  @brief  Parse the command line arguments
-       */
-      void parseCommandLine();
-
-    private:
-      /// Global parameters of the application
-      Parameters                 _global {} ;
-      /// The program name. Initialized on init()
-      std::string                _programName {} ;
-      /// The arguments from the main function after init has been called
-      CmdLineArguments           _arguments {} ;
-      /// Whether the application has been initialized
-      bool                       _initialized {false} ;
-      /// The application specific steering file parser
-      AppParser                  _parser {} ;
-      /// The command line options to replace in the steering file
-      CommandLineParametersMap   _cmdLineOptions {} ;
-      /// The steering file name
-      std::string                _steeringFileName {} ;
-      /// The concurrency as read from the command line or steering file
-      unsigned int               _concurrency {0};
-    };
-
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-
-    template <typename T>
-    inline T Application::constant( const std::string &name ) const {
-      return _parser.constant<T>( name );
-    }
-
-    //--------------------------------------------------------------------------
-
-    template <typename T>
-    inline T Application::constant( const std::string &name , const T &fallback ) const {
-      return _parser.constant<T>( name, fallback );
-    }
-
-  } // end namespace concurrency
+  private:
+    /// The program name. Initialized on init()
+    std::string                _programName {} ;
+    /// The arguments from the main function after init has been called
+    CmdLineArguments           _arguments {} ;
+    /// Whether the application has been initialized
+    bool                       _initialized {false} ;
+    /// The steering file name
+    std::string                _steeringFileName {} ;
+    /// The concurrency as read from the command line or steering file
+    unsigned int               _concurrency {0};
+    /// The XML steering file parser
+    std::shared_ptr<XMLParser> _parser {nullptr} ;
+  };
 
 } // end namespace marlin
 
