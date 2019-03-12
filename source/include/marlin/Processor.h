@@ -36,6 +36,7 @@ using namespace lcio ;
 namespace marlin{
 
   class ProcessorMgr ;
+  class PluginManager ;
   //  class ProcessorParameter ;
   class XMLFixCollTypes ;
 
@@ -64,6 +65,7 @@ namespace marlin{
   class Processor {
     
     friend class ProcessorMgr ;
+    friend class PluginManager ;
     friend class CMProcessor ;
     friend class XMLFixCollTypes ;
 
