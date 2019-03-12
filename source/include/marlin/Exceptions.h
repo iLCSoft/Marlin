@@ -6,7 +6,9 @@
 
 // define some exceptions for Marlin
 
-namespace marlin{
+namespace marlin {
+  
+  using Exception = lcio::Exception ;
 
   /**ParseException used for parse errors, e.g. when reading the steering file.
    * 
