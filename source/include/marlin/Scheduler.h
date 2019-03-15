@@ -53,8 +53,7 @@ namespace marlin {
      *  @brief  Constructor
      */
     Scheduler() ;
-    
-  private:
+
     /**
      *  @brief  Initialize the scheduler with the application
      * 
