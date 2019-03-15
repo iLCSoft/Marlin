@@ -6,7 +6,7 @@
 
 // -- marlin headers
 #include <marlin/Exceptions.h>
-#include <jenkinsHash.h>
+#include "jenkinsHash.h"
 
 // -- std headers
 #include <iostream>
@@ -85,7 +85,7 @@ namespace marlin {
     /** 
      *  @brief  Constructor
      */
-    RandomSeedGenerator() ;
+    RandomSeedGenerator() = default ;
     
     /**
      *  @brief  Constructor with global seed
