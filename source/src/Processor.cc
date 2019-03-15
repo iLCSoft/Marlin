@@ -1,12 +1,11 @@
 #include "marlin/Processor.h"
 #include "marlin/PluginManager.h"
 #include "marlin/Scheduler.h"
-#include "marlin/Global.h"
 #include "marlin/VerbosityLevels.h"
 
 using namespace lcio ;
 
-namespace marlin{
+namespace marlin {
 
   Processor::Processor( const std::string& typeName ) :
     _description(" description not set by author ") ,
