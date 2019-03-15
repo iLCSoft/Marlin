@@ -191,7 +191,6 @@ namespace marlin{
   //--------------------------------------------------------------------------
 
   std::string Processor::getLCIOInType( const std::string& colName ) {
-
     if( isInputCollectionName( colName )  )
       return _inTypeMap[ colName ] ;
     else
@@ -201,7 +200,6 @@ namespace marlin{
   //--------------------------------------------------------------------------
 
   std::string Processor::getLCIOOutType( const std::string& colName ) {
-
     if( isOutputCollectionName( colName )  )
       return _outTypeMap[ colName ] ;
     else

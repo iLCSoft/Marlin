@@ -121,22 +121,22 @@ namespace marlin {
     /** 
      *  @brief  Return type name for the processor (as set in constructor).
      */
-    virtual const std::string & type() const { return _typeName ; } 
+    virtual const std::string & type() const ;
 
     /** 
      *  @brief  Return the name of this  processor.
      */
-    virtual const std::string & name() const { return _processorName ; } 
+    virtual const std::string & name() const ;
 
     /** 
      *  @brief  Return the name of the local verbosity level of this  processor - "" if not set.
      */
-    virtual const std::string & logLevelName() const { return _logLevelName ; } 
+    virtual const std::string & logLevelName() const ;
 
     /** 
      *  @brief  Return the parameters defined for this Processor.
      */
-    virtual std::shared_ptr<StringParameters> parameters() { return _parameters ; }
+    virtual std::shared_ptr<StringParameters> parameters() ;
 
     /** 
      *  @brief  Print information about this processor in ASCII steering file format.
@@ -152,22 +152,7 @@ namespace marlin {
      *  @brief  Print the parameters and their values depending on the given verbosity level.
      */
     template <class T>
-    void printParameters() {
-      if( streamlog::out.template write<T>() ) {
-	      typedef ProcParamMap::iterator PMI ;
-	      streamlog::out()  << std::endl << "---- " << name()  <<" -  parameters: " << std::endl ;
-        for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
-      	  if( ! i->second->isOptional() || i->second->valueSet() ){
-      	    streamlog::out.template write<T>() ;
-      	    streamlog::out() << "\t"   << i->second->name()   
-      			     << ":  "  << i->second->value() 
-      			     << std::endl ;
-      	  }
-      	}
-        streamlog::out.template write<T>() ;
-        streamlog::out() << "-------------------------------------------------" << std::endl ;
-      }
-    }
+    void printParameters() ;
 
     /** 
      *  @brief  Print the parameters and their values with verbosity level MESSAGE.
@@ -177,13 +162,12 @@ namespace marlin {
     /** 
      *  @brief  Description of processor.
      */
-    const std::string& description() { return _description ; }
-
+    const std::string& description() ;
 
     /** 
      *  @brief  True if first event in processEvent(evt) - use this e.g. to initialize histograms etc.
      */
-    bool isFirstEvent() { return _isFirstEvent ; }
+    bool isFirstEvent() ;
     
     /** 
      *  @brief  Return the LCIO input type for the collection colName - empty string if colName is
@@ -209,7 +193,6 @@ namespace marlin {
     bool isOutputCollectionName( const std::string& parameterName  ) ;  
     
   protected:
-
     /** 
      *  @brief  Set the return value for this processor - typically at end of processEvent(). 
      *  The value can be used in a condition in the steering file referred to by the name
@@ -239,12 +222,7 @@ namespace marlin {
  				    const std::string& parameterDescription,
  				    T& parameter,
  				    const T& defaultVal,
-				    int setSize=0 ) {
-       checkForExistingParameter( parameterName );
-       _map[ parameterName ] = new ProcessorParameter_t<T>( parameterName , parameterDescription, 
-						   parameter, defaultVal, 
-						   false , setSize) ;
-     }
+				    int setSize=0 );
     
     /** 
      *  @brief  Specialization of registerProcessorParameter() for a parameter that defines an 
@@ -255,10 +233,7 @@ namespace marlin {
 				 const std::string& parameterDescription,
 				 std::string& parameter,
 				 const std::string& defaultVal,
-				 int setSize=0 ) {
-      setLCIOInType( parameterName , collectionType ) ;
-      registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
-    }
+				 int setSize=0 ) ;
     
     /** 
      *  @brief  Specialization of registerProcessorParameter() for a parameter that defines an 
@@ -269,10 +244,7 @@ namespace marlin {
 				  const std::string& parameterDescription,
 				  std::string& parameter,
 				  const std::string& defaultVal,
-				  int setSize=0 ) {
-      setLCIOOutType( parameterName , collectionType ) ;
-      registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
-    }
+				  int setSize=0 ) ;
 
     /** 
      *  @brief  Specialization of registerProcessorParameter() for a parameter that defines one or several 
@@ -283,10 +255,7 @@ namespace marlin {
 				  const std::string& parameterDescription,
 				  EVENT::StringVec& parameter,
 				  const EVENT::StringVec& defaultVal,
-				  int setSize=0 ) {
-      setLCIOInType( parameterName , collectionType ) ;
-      registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
-    }
+				  int setSize=0 ) ;
     
     /** 
      *  @brief  Same as registerProcessorParameter except that the parameter is optional.
@@ -300,12 +269,7 @@ namespace marlin {
 				   const std::string& parameterDescription,
 				   T& parameter,
 				   const T& defaultVal,
-				   int setSize=0 ) {
-      checkForExistingParameter( parameterName );
-      _map[ parameterName ] = new ProcessorParameter_t<T>( parameterName , parameterDescription, 
-						  parameter, defaultVal, 
-						  true , setSize) ;
-    }
+				   int setSize=0 ) ;
     
     /**
      *  @brief  Tests whether the parameter has been set in the steering file
@@ -318,17 +282,7 @@ namespace marlin {
      *  @param name name of the parameter to check
      *  @throw logic_error if parameter has been registered before
      */
-    void checkForExistingParameter( const std::string& parameterName ) {
-       auto paraIt = _map.find( parameterName );
-       if (paraIt != _map.end() ) {
-         std::stringstream errorMessage;
-         errorMessage << "Parameter " << parameterName
-                      << " already defined for processor "
-                      << this->type()
-                      << std::endl;
-         throw std::logic_error(  errorMessage.str() );
-       }
-    }
+    void checkForExistingParameter( const std::string& parameterName ) ;
 
     /** 
      *  @brief  Print message according to  verbosity level of the templated parameter (one of
@@ -348,12 +302,7 @@ namespace marlin {
      *  @deprecated  
      */
     template <class T>
-    void message(  const std::string& m ) const {
-      if( streamlog::out.template write<T>() ) { 
-	      streamlog::out() << m << std::endl ;
-      }
-    }
-    
+    void message(  const std::string& m ) const ;
 
     /**
      *  @brief  Same as  message(const std::string& message) except that it allows the output of 
@@ -371,15 +320,7 @@ namespace marlin {
      * @see std::stringstream& log()
      */
     template <class T>
-    inline void message( const std::basic_ostream<char, std::char_traits<char> >& m) const {
-      if( T::active ){  // allow the compiler to optimize this away ...
-        try {
-	        const std::stringstream& mess = dynamic_cast<const std::stringstream&>( m ) ; 
-	        this->template message<T>( mess.str() ) ;
-        }
-        catch( std::bad_cast ) {}
-      }
-    }
+    inline void message( const std::basic_ostream<char, std::char_traits<char> >& m) const ;
 
     /** 
      *  @brief  Returns an empty stringstream that is used by the message method.
@@ -390,15 +331,13 @@ namespace marlin {
 
   private:
     /** Allow friend class CCProcessor to change/reset processor parameters */
-    virtual void setProcessorParameters( std::shared_ptr<StringParameters> processorParameters) {
-	     setParameters( processorParameters ) ;
-    }
+    virtual void setProcessorParameters( std::shared_ptr<StringParameters> processorParameters) ;
     
     /** Allow friend class CCProcessor to update processor parameters */
     virtual void updateParameters();
 
     /** Set processor name */
-    virtual void setName( const std::string & processorName) { _processorName = processorName ; }
+    virtual void setName( const std::string & processorName) ;
     
     /** Initialize the parameters */
     virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
@@ -408,7 +347,7 @@ namespace marlin {
     virtual void baseInit() ;
     
     /** Called by ProcessorMgr */
-    void setFirstEvent( bool firstEvent ) { _isFirstEvent =  firstEvent ; }
+    void setFirstEvent( bool firstEvent ) ;
 
     // called internally
     
@@ -425,7 +364,7 @@ namespace marlin {
     void setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) ;
     
     /** Helper function for fixing old steering files */
-    const ProcParamMap& procMap() { return _map ; }  
+    const ProcParamMap& procMap() ;
 
     /**
      *  @brief  Set the scheduler instance in which this processor is scheduled at runtime 
@@ -460,6 +399,187 @@ namespace marlin {
     /// WTF is this ???
     mutable std::stringstream*         _str {nullptr} ;
   };
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+  
+  template <class T>
+  inline void Processor::printParameters() {
+    if( streamlog::out.template write<T>() ) {
+      typedef ProcParamMap::iterator PMI ;
+      streamlog::out()  << std::endl << "---- " << name()  <<" -  parameters: " << std::endl ;
+      for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
+        if( ! i->second->isOptional() || i->second->valueSet() ){
+          streamlog::out.template write<T>() ;
+          streamlog::out() << "\t"   << i->second->name()   
+               << ":  "  << i->second->value() 
+               << std::endl ;
+        }
+      }
+      streamlog::out.template write<T>() ;
+      streamlog::out() << "-------------------------------------------------" << std::endl ;
+    }
+  }
+  
+  //--------------------------------------------------------------------------
+
+  inline const std::string & Processor::type() const {
+    return _typeName ; 
+  } 
+
+  //--------------------------------------------------------------------------
+  
+  inline const std::string & Processor::name() const { 
+    return _processorName ; 
+  } 
+
+  //--------------------------------------------------------------------------
+
+  inline const std::string & Processor::logLevelName() const { 
+    return _logLevelName ; 
+  } 
+
+  //--------------------------------------------------------------------------
+
+  inline std::shared_ptr<StringParameters> Processor::parameters() { 
+    return _parameters ; 
+  }
+  
+  //--------------------------------------------------------------------------
+
+  inline const std::string& Processor::description() { 
+    return _description ; 
+  }
+
+  //--------------------------------------------------------------------------
+
+  inline bool Processor::isFirstEvent() { 
+    return _isFirstEvent ; 
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  template<class T>
+  inline void Processor::registerProcessorParameter(const std::string& parameterName, 
+         const std::string& parameterDescription,
+         T& parameter,
+         const T& defaultVal,
+         int setSize ) {
+    checkForExistingParameter( parameterName );
+    _map[ parameterName ] = new ProcessorParameter_t<T>( parameterName , parameterDescription, 
+            parameter, defaultVal, 
+            false , setSize) ;
+  }
+
+  //--------------------------------------------------------------------------
+
+  inline void Processor::registerInputCollection(const std::string& collectionType,
+       const std::string& parameterName, 
+       const std::string& parameterDescription,
+       std::string& parameter,
+       const std::string& defaultVal,
+       int setSize ) {
+    setLCIOInType( parameterName , collectionType ) ;
+    registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
+  }
+  
+  //--------------------------------------------------------------------------
+
+  inline void Processor::registerOutputCollection(const std::string& collectionType,
+        const std::string& parameterName, 
+        const std::string& parameterDescription,
+        std::string& parameter,
+        const std::string& defaultVal,
+        int setSize ) {
+    setLCIOOutType( parameterName , collectionType ) ;
+    registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
+  }
+
+  //--------------------------------------------------------------------------
+
+  inline void Processor::registerInputCollections(const std::string& collectionType,
+        const std::string& parameterName, 
+        const std::string& parameterDescription,
+        EVENT::StringVec& parameter,
+        const EVENT::StringVec& defaultVal,
+        int setSize ) {
+    setLCIOInType( parameterName , collectionType ) ;
+    registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ; 
+  }
+
+  //--------------------------------------------------------------------------
+
+  template<class T>
+  inline void Processor::registerOptionalParameter(const std::string& parameterName, 
+         const std::string& parameterDescription,
+         T& parameter,
+         const T& defaultVal,
+         int setSize ) {
+    checkForExistingParameter( parameterName );
+    _map[ parameterName ] = new ProcessorParameter_t<T>( parameterName , parameterDescription, 
+            parameter, defaultVal, 
+            true , setSize) ;
+  }
+  
+  //--------------------------------------------------------------------------
+
+  inline void Processor::checkForExistingParameter( const std::string& parameterName ) {
+     auto paraIt = _map.find( parameterName );
+     if (paraIt != _map.end() ) {
+       std::stringstream errorMessage;
+       errorMessage << "Parameter " << parameterName
+                    << " already defined for processor "
+                    << this->type()
+                    << std::endl;
+       throw std::logic_error(  errorMessage.str() );
+     }
+  }
+  
+  //--------------------------------------------------------------------------
+
+  template <class T>
+  inline void Processor::message(  const std::string& m ) const {
+    if( streamlog::out.template write<T>() ) { 
+      streamlog::out() << m << std::endl ;
+    }
+  }
+
+  //--------------------------------------------------------------------------
+
+  template <class T>
+  inline void Processor::message( const std::basic_ostream<char, std::char_traits<char> >& m) const {
+    if( T::active ){  // allow the compiler to optimize this away ...
+      try {
+        const std::stringstream& mess = dynamic_cast<const std::stringstream&>( m ) ; 
+        this->template message<T>( mess.str() ) ;
+      }
+      catch( std::bad_cast ) {}
+    }
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  inline void Processor::setProcessorParameters( std::shared_ptr<StringParameters> processorParameters) {
+     setParameters( processorParameters ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+
+  inline void Processor::setName( const std::string & processorName) { 
+    _processorName = processorName ; 
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  inline void Processor::setFirstEvent( bool firstEvent ) { 
+    _isFirstEvent =  firstEvent ; 
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  inline const ProcParamMap& Processor::procMap() {
+    return _map ;
+  }
  
 } // end namespace marlin 
 
