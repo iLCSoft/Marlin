@@ -81,7 +81,7 @@ Use for hash table lookup, or anything where one collision in 2^^32 is
 acceptable.  Do NOT use for cryptographic purposes.
 --------------------------------------------------------------------
 */
-unsigned jenkins_hash ( unsigned char *k, unsigned length, unsigned initval )
+inline unsigned jenkins_hash ( unsigned char *k, unsigned length, unsigned initval )
 {
   unsigned a, b;
   unsigned c = initval;
