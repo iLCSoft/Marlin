@@ -1,5 +1,6 @@
 #include "marlin/Processor.h"
 #include "marlin/PluginManager.h"
+#include "marlin/Scheduler.h"
 #include "marlin/Global.h"
 #include "marlin/VerbosityLevels.h"
 
