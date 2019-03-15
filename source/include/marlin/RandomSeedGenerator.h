@@ -216,7 +216,7 @@ namespace marlin {
     std::cout << "RandomSeedGenerator: Refresh seeds using " << seed << " as new random seed" << std::endl ;
     _generator.seed( seed ) ;
     // fill map with seeds for each registered instance using random number generator 
-    for (auto iter : _randomSeeds ) {
+    for (auto& iter : _randomSeeds ) {
       iter.second = getRandom() ;
     }
   }
