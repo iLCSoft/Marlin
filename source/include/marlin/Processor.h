@@ -22,8 +22,6 @@
 #include <map>
 #include <memory>
 
-using namespace lcio ; // TODO remove this
-
 namespace marlin {
 
   class ProcessorMgr ;
@@ -86,7 +84,7 @@ namespace marlin {
      */
     virtual Processor* newProcessor() = 0 ;
   
-    /** 
+    /**
      *  @brief  Initialize the processor.
      *  Called at the begin of the job before anything is read.
      *  Use to initialize the processor, e.g. book histograms.
