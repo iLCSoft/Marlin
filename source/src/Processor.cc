@@ -2,8 +2,6 @@
 #include "marlin/PluginManager.h"
 #include "marlin/Scheduler.h"
 
-using namespace lcio ;
-
 namespace marlin {
 
   Processor::Processor( const std::string& typeName ) :
