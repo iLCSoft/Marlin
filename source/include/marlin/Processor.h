@@ -2,10 +2,6 @@
 #define MARLIN_PROCESSOR_h 1
 
 // -- lcio headers
-#include "lcio.h"
-#include "IO/LCRunListener.h"
-#include "IO/LCEventListener.h"
-#include "IO/LCReader.h"
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCRunHeader.h"
 
@@ -20,7 +16,10 @@
 
 // -- std headers
 #include <map>
+#include <string>
 #include <memory>
+#include <iostream>
+#include <sstream>
 
 namespace marlin {
 
@@ -54,7 +53,7 @@ namespace marlin {
    *  @version $Id: Processor.h,v 1.38 2008-06-26 10:25:36 gaede Exp $ 
    */
   class Processor {
-    friend class ProcessorMgr ;
+    friend class ProcessorMgr ; // TODO to be removed
     friend class PluginManager ;
     friend class Scheduler ;
     friend class CMProcessor ;
@@ -276,7 +275,7 @@ namespace marlin {
      */
     bool parameterSet( const std::string& name ) ;
     
-    /** 
+    /**
      *  @brief  Tests whether the parameter has been registered before
      *
      *  @param name name of the parameter to check
