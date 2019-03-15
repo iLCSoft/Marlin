@@ -2,11 +2,11 @@
 #include <memory>
 
 // -- marlin headers
-#include "marlin/concurrency/PluginManager.h"
-#include "marlin/concurrency/Application.h"
+#include "marlin/PluginManager.h"
+#include "marlin/Application.h"
 
-using PluginManager = marlin::concurrency::PluginManager ;
-using Application = marlin::concurrency::Application ;
+using PluginManager = marlin::PluginManager ;
+using Application = marlin::Application ;
 
 int main(int argc, char** argv ) {
 
