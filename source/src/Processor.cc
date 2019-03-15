@@ -1,5 +1,4 @@
 #include "marlin/Processor.h"
-#include "marlin/ProcessorMgr.h" 
 #include "marlin/PluginManager.h"
 #include "marlin/Global.h"
 #include "marlin/VerbosityLevels.h"
@@ -13,11 +12,8 @@ namespace marlin{
     _typeName( typeName ) ,
     _parameters(0) ,
     _isFirstEvent( true ),
-    _logLevelName(""),
-    _str(0) {
-    //register processor in map
-    // TODO remove this line and keep only the plugin manager
-    ProcessorMgr::instance()->registerProcessor( this ) ;
+    _logLevelName("") {
+    //register processor
     PluginManager::instance().registerProcessorFactory( this ) ;
     // verbosity default parameter
     registerOptionalParameter( "Verbosity" , 
@@ -29,9 +25,6 @@ namespace marlin{
   //--------------------------------------------------------------------------
 
   Processor::~Processor() {
-    if( _str != nullptr ) {
-      delete _str ;
-    }
     for( auto i = _map.begin() ; i != _map.end() ; i ++ ) {
       delete i->second ;
     }
@@ -51,11 +44,9 @@ namespace marlin{
   //--------------------------------------------------------------------------
   
   std::stringstream& Processor::log() const {
-    if( _str != 0 ) {
-      delete _str ;
-    }
-    _str = new std::stringstream ;
-    return *_str ;
+    _str.str("") ;
+    _str.clear() ;
+    return _str ;
   }
   
   //--------------------------------------------------------------------------
@@ -178,8 +169,11 @@ namespace marlin{
   
   //--------------------------------------------------------------------------
 
-  void Processor::setReturnValue( bool val) {
-    ProcessorMgr::instance()->setProcessorReturnValue(  this , val ) ;
+  void Processor::setReturnValue( bool val ) {
+    if ( nullptr == _scheduler ) {
+      throw Exception( "Processor::setReturnValue: Processor not initialized !" ) ;
+    }
+    _scheduler->runtimeConditions()->setValue( name(), val ) ;
   }
   
   //--------------------------------------------------------------------------
@@ -227,7 +221,11 @@ namespace marlin{
   //--------------------------------------------------------------------------
 
   void Processor::setReturnValue( const std::string& keyName, bool val ) {
-    ProcessorMgr::instance()->setProcessorReturnValue(  this , val , keyName ) ;
+    if ( nullptr == _scheduler ) {
+      throw Exception( "Processor::setReturnValue: Processor not initialized !" ) ;
+    }
+    std::string valName = name() + "." + keyName ;
+    _scheduler->runtimeConditions()->setValue( valName, val ) ;
   }
 
 } // namespace marlin

@@ -342,8 +342,7 @@ namespace marlin {
     /** Initialize the parameters */
     virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
     
-    /** Sets the registered steering parameters before calling init() 
-     */
+    /** Sets the registered steering parameters before calling init() */
     virtual void baseInit() ;
     
     /** Called by ProcessorMgr */
@@ -392,8 +391,8 @@ namespace marlin {
   private:
     /// The scheduler managing the processor
     Scheduler *                        _scheduler {nullptr} ;
-    /// WTF is this ???
-    mutable std::stringstream*         _str {nullptr} ;
+    /// An internal stringstream used for logging (to be removed one day ...)
+    mutable std::stringstream          _str {} ;
   };
   
   //--------------------------------------------------------------------------
