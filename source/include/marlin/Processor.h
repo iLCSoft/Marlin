@@ -24,6 +24,7 @@
 namespace marlin {
 
   class ProcessorMgr ;
+  class ProcessorEventSeeder ;
   class PluginManager ;
   class Scheduler ;
   class XMLFixCollTypes ;
@@ -54,6 +55,7 @@ namespace marlin {
    */
   class Processor {
     friend class ProcessorMgr ; // TODO to be removed
+    friend class ProcessorEventSeeder ; // TODO to be removed
     friend class PluginManager ;
     friend class Scheduler ;
     friend class CMProcessor ;
