@@ -1,14 +1,11 @@
 #ifndef PROCESSOREVENTSEEDER_H
 #define PROCESSOREVENTSEEDER_H 1
 
-#include "lcio.h"
-#include "EVENT/LCEvent.h"
-#include <vector>
-#include <map>
+namespace EVENT {
+  class LCEvent ;
+}
 
-using namespace lcio ;
-
-namespace marlin{
+namespace marlin {
 
   class ProcessorMgr;  
   class Processor;
@@ -53,15 +50,16 @@ namespace marlin{
    *      an exception will be thrown.
    *
    *  @author S.J. Aplin, DESY
+   *  @deprecated
    */
   class ProcessorEventSeeder {
+    friend class ProcessorMgr ; // for creation
+    ProcessorEventSeeder(const ProcessorEventSeeder&) = delete ;	// prevent copying
+    ProcessorEventSeeder& operator=(const ProcessorEventSeeder&) = delete ; // prevent assignment
     
   public:
-
-    friend class ProcessorMgr;
-
     /** Destructor */
-    ~ProcessorEventSeeder() { } ;
+    ~ProcessorEventSeeder() = default ;
     
     /** Called by Processors to register themselves for the seeding service. 
      */
@@ -74,33 +72,12 @@ namespace marlin{
   private:
 
     /** Constructor */
-    ProcessorEventSeeder() ;
+    ProcessorEventSeeder() = default ;
 
     /** Create new set of seeds for registered Processors for the given event.
      *  This method should only be called from ProcessorMgr::processEvent
      */
-    void refreshSeeds( LCEvent * evt ) ;
-    
-    ProcessorEventSeeder(const ProcessorEventSeeder&);	// prevent copying
-    ProcessorEventSeeder& operator=(const ProcessorEventSeeder&); // prevent assignment
-
-    /** Global seed for current Job. Set in steering file.
-     */
-    int _global_seed ;
-
-    /** Global seed has been set for current Job.
-     */
-    bool _global_seed_set ;
-
-    /** bool to ensure no calls of registerProcessor( Processor* proc ) 
-     *	after Event Processesing has started
-     */
-    bool _eventProcessingStarted ;
-
-    /** vector to hold pair of pointers to the registered processors and their assigned seeds
-     */
-    std::vector< std::pair<Processor*, unsigned int> > _vector_pair_proc_seed;
-
+    void refreshSeeds( EVENT::LCEvent * evt ) ;
   } ;
 
 } // end namespace marlin 
