@@ -193,7 +193,7 @@ namespace marlin {
          << std::endl ;
       throw Exception("RandomSeedGenerator: Instance not registered !") ;
     }
-    return iter->second.load() ;
+    return iter->second ;
   }
 
   //--------------------------------------------------------------------------
