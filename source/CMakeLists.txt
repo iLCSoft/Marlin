@@ -45,12 +45,15 @@ ENDIF()
 
 
 AUX_SOURCE_DIRECTORY( ./src library_sources )
-AUX_SOURCE_DIRECTORY( ./src/concurrency library_sources )
 AUX_SOURCE_DIRECTORY( ./tinyxml/src tinyxml_sources )
+IF( MARLIN_MT )
+  AUX_SOURCE_DIRECTORY( ./src/concurrency library_sources )
+  LIST( REMOVE_ITEM library_sources ./src/concurrency/MarlinMT.cc )
+ENDIF()
 INCLUDE_DIRECTORIES( SYSTEM tinyxml/include )
 
 # need to remove ProcessorLoader.cc and Marlin.cc from library sources
-LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc ./src/concurrency/MarlinMT.cc )
+LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc )
 
 # create library
 ADD_SHARED_LIBRARY( Marlin ${library_sources} )
@@ -74,13 +77,15 @@ TARGET_LINK_LIBRARIES( bin_Marlin Marlin )
 INSTALL( TARGETS bin_Marlin DESTINATION bin )
 # ----------------------------------------------------------------------------
 
-# ----- MarlinMT executable ----------------------------------------------------
-ADD_EXECUTABLE( bin_MarlinMT ./src/concurrency/MarlinMT.cc )
-# avoid name conflict between Marlin library and Marlin application
-SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
-TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin )
-INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
-# ----------------------------------------------------------------------------
+IF( MARLIN_MT )
+  # ----- MarlinMT executable ----------------------------------------------------  
+  ADD_EXECUTABLE( bin_MarlinMT ./src/concurrency/MarlinMT.cc )
+  # avoid name conflict between MarlinMT library and MarlinMT application
+  SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
+
+  TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin )
+  INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
+ENDIF()
 
 
 
