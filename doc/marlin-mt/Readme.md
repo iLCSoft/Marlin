@@ -27,20 +27,23 @@ Make a parallel version of Marlin. This issue keep track of important features t
    </global>
 </marlin>
 ```
-- [ ] Provide access to Marlin application in processors, e.g:
+- [x] Provide access to Marlin application in processors, e.g:
 ```cpp
 void MyProcessor::init() {
   auto infiles = app().globals().get<std::string>("LCIOInputFiles") ;
 }
 ```
 This application will avoid use of singletons such `ProcessorManager`
-- [ ] Develop a simple/use existing thread safe logging library. It is possible with Marlin to set the verbosity level for each processor independently. This is not possible with streamlog in the parallel version as the verbosity is global in streamlog and the verbosity level has to be thread local to avoid data race condition or unexpected logging behaviour.
+
+**Solution**: an instance of a Scheduler class is assigned to the Processor object, not an Application object though.
+- [x] Develop a simple/use existing thread safe logging library. It is possible with Marlin to set the verbosity level for each processor independently. This is not possible with streamlog in the parallel version as the verbosity is global in streamlog and the verbosity level has to be thread local to avoid data race condition or unexpected logging behaviour.
    - Modify streamlog ?
    - Re-implement simple version of streamlog but thread safe and allowing for thread local verbosity ?
-   - Using a new logging library ? 
-- [ ] Random number generation
+   - **Solution**: streamlog has been re-implemented with thread safety, but logging initialization is broken and must be changed.
+- [x] Random number generation
    - Make sure the random seed generation using event number and run number still works
    - Results based on this random seeds must be re-producible
+   - **Solution**: local random seed generator has been re-implemented. Now, the global processor event seeder instance just forward the calls to the local processor instance, which is thread safe. 
 - [ ] Histogram/Tuple library
    - Think about how to handle histograms/graphs/tuples in parallel processing.
    - ROOT is not thread safe. Solutions:
