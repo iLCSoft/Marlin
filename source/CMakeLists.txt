@@ -65,7 +65,7 @@ INSTALL_SHARED_LIBRARY( MarlinXML DESTINATION lib )
 INSTALL_SHARED_LIBRARY( Marlin DESTINATION lib )
 TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} MarlinXML ${Marlin_DEPENDS_LIBRARIES}
   ## Note: it is not a problem if any variables is empty because package not found
-  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
+  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} )
 
 
 
@@ -78,12 +78,14 @@ INSTALL( TARGETS bin_Marlin DESTINATION bin )
 # ----------------------------------------------------------------------------
 
 IF( MARLIN_MT )
+  FIND_PACKAGE( Threads REQUIRED )
+  
   # ----- MarlinMT executable ----------------------------------------------------  
   ADD_EXECUTABLE( bin_MarlinMT ./src/concurrency/MarlinMT.cc )
   # avoid name conflict between MarlinMT library and MarlinMT application
   SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
 
-  TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin )
+  TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin ${CMAKE_THREAD_LIBS_INIT} )
   INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
 ENDIF()
 
