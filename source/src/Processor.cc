@@ -13,12 +13,14 @@ namespace marlin {
     //register processor
     PluginManager::instance().registerProcessorFactory( this ) ;
     // verbosity default parameter
-    registerOptionalParameter( "Verbosity" , 
+    registerOptionalParameter( "Verbosity" ,
 			       "verbosity level of this processor (\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\")"  ,
-			       _logLevelName ,  
+			       _logLevelName ,
 			       std::string("DEBUG") ) ;
+    _logger = Logging::createLogger( _typeName + "_NOTINIT" ) ;
+    _logger->setLevel( "DEBUG" );
   }
-  
+
   //--------------------------------------------------------------------------
 
   Processor::~Processor() {
@@ -26,32 +28,27 @@ namespace marlin {
       delete i->second ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
 
   void Processor::setParameters( std::shared_ptr<StringParameters> processorParameters) {
     _parameters = processorParameters ;
     updateParameters();
-    // need to reset the log level name in case it has not been set by the user 
+    // need to reset the log level name in case it has not been set by the user
     if( not parameterSet("Verbosity") ) {
       _logLevelName = "" ;
-    }    
+    }
+    else {
+      _logger->setLevel( _logLevelName ) ;
+    }
   }
-  
-  //--------------------------------------------------------------------------
-  
-  std::stringstream& Processor::log() const {
-    _str.str("") ;
-    _str.clear() ;
-    return _str ;
-  }
-  
+
   //--------------------------------------------------------------------------
 
-  void Processor::printParameters() { 
+  void Processor::printParameters() {
     printParameters<MESSAGE>() ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   void Processor::printDescription() {
@@ -59,43 +56,43 @@ namespace marlin {
     std::cout << "#---" << description() << std::endl ;
     for( auto i = _map.begin() ; i != _map.end() ; i ++ ) {
       ProcessorParameter* p = i->second ;
-      std::cout << std::endl 
-		    << "#\t"  << p->description() << std::endl 
-		    << "#\t type: " << " [" <<  p->type() << "]" 
+      std::cout << std::endl
+		    << "#\t"  << p->description() << std::endl
+		    << "#\t type: " << " [" <<  p->type() << "]"
 		    << std::endl ;
       if( p->isOptional() ) {
       	std::cout << "#\t example: " << std::endl ;
-      	std::cout << "#\t"   << p->name()   
-      		  << "   "  << p->defaultValue() 
-      		  << std::endl 
+      	std::cout << "#\t"   << p->name()
+      		  << "   "  << p->defaultValue()
+      		  << std::endl
       		  << std::endl ;
       }
       else {
-      	std::cout << "#\t default: " << p->defaultValue() 
+      	std::cout << "#\t default: " << p->defaultValue()
       		  << std::endl ;
-      	
-      	std::cout << "\t"   << p->name()   
-      		  << "   "  << p->defaultValue() 
-      		  << std::endl 
+
+      	std::cout << "\t"   << p->name()
+      		  << "   "  << p->defaultValue()
+      		  << std::endl
       		  << std::endl ;
       }
     }
-    std::cout << ".end -------------------------------------------------" 
-	      << std::endl 
+    std::cout << ".end -------------------------------------------------"
+	      << std::endl
 	      << std::endl ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   void Processor::printDescriptionXML(std::ostream& stream) {
     if(&stream == &std::cout){
-      stream << " <processor name=\"My" <<  type()  << "\"" 
-	     << " type=\"" <<  type() << "\">" 
+      stream << " <processor name=\"My" <<  type()  << "\""
+	     << " type=\"" <<  type() << "\">"
 	     << std::endl ;
     }
     else {
-      stream << " <processor name=\"" <<  name()  << "\"" 
-	     << " type=\"" <<  type() << "\">" 
+      stream << " <processor name=\"" <<  name()  << "\""
+	     << " type=\"" <<  type() << "\">"
 	     << std::endl ;
     }
     stream << " <!--" << description() << "-->" << std::endl ;
@@ -103,7 +100,7 @@ namespace marlin {
       ProcessorParameter* p = i->second ;
       stream << "  <!--" << p->description() << "-->" << std::endl ;
       if( p->isOptional() ) {
-	      stream << "  <!--parameter name=\"" << p->name() << "\" " 
+	      stream << "  <!--parameter name=\"" << p->name() << "\" "
 	      << "type=\"" << p->type() ;
 	      if ( isInputCollectionName( p->name() ) ) {
 	        stream << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
@@ -112,12 +109,12 @@ namespace marlin {
 	       stream << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
         }
       	stream << "\">"
-      	       << p->defaultValue() 
+      	       << p->defaultValue()
       	       << " </parameter-->"
       	       << std::endl ;
-      } 
+      }
       else {
-	      stream << "  <parameter name=\"" << p->name() << "\" " 
+	      stream << "  <parameter name=\"" << p->name() << "\" "
 	       << "type=\"" << p->type() ;
       	if ( isInputCollectionName( p->name() ) ) {
       	  stream << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
@@ -126,14 +123,14 @@ namespace marlin {
       	  stream << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
         }
       	stream  << "\">"
-      		<< p->defaultValue() 
+      		<< p->defaultValue()
       		<< " </parameter>"
       		<< std::endl ;
       }
     }
-    stream << "</processor>" 
-	   << std::endl 
-	   << std::endl ;    
+    stream << "</processor>"
+	   << std::endl
+	   << std::endl ;
   }
 
   //--------------------------------------------------------------------------
@@ -141,29 +138,29 @@ namespace marlin {
   bool Processor::parameterSet( const std::string& parameterName ) {
     auto it = _map.find(parameterName) ;
     if( it != _map.end() ) {
-      return it->second->valueSet() ;    
+      return it->second->valueSet() ;
     }
     else {
       return false ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Processor::baseInit() {
-    //fg: now in setParameters 
+    //fg: now in setParameters
     // updateParameters();
     init() ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Processor::updateParameters() {
     for( auto i = _map.begin() ; i != _map.end() ; i ++ ) {
       i->second->setValue( _parameters.get() ) ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
 
   void Processor::setReturnValue( bool val ) {
@@ -172,13 +169,13 @@ namespace marlin {
     }
     _scheduler->runtimeConditions()->setValue( name(), val ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Processor::setLCIOInType(const std::string& collectionName,  const std::string& lcioInType) {
     _inTypeMap[ collectionName ] = lcioInType ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   std::string Processor::getLCIOInType( const std::string& colName ) {
@@ -202,19 +199,19 @@ namespace marlin {
   bool Processor::isInputCollectionName( const std::string& pName  ) {
     return _inTypeMap.find( pName  ) != _inTypeMap.end() ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Processor::setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) {
     _outTypeMap[ collectionName ] = lcioOutType ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   bool Processor::isOutputCollectionName( const std::string& pName  ) {
     return _outTypeMap.find( pName ) != _outTypeMap.end() ;
   }
-  
+
   //--------------------------------------------------------------------------
 
   void Processor::setReturnValue( const std::string& keyName, bool val ) {
@@ -226,4 +223,3 @@ namespace marlin {
   }
 
 } // namespace marlin
-
