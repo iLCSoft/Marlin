@@ -3,24 +3,38 @@
 
 // -- marlin headers
 #include "marlin/Exceptions.h"
-#include "marlin/XMLParser.h"
+#include "marlin/IParser.h"
+#include "marlin/Logging.h"
 
 namespace marlin {
 
   /**
    *  @brief  Application class
+   *  Base application interface for running a Marlin application.
+   *  See daughter classes for details.
    */
   class Application {
   public:
     // traits
-    typedef std::vector<std::string> CmdLineArguments ;
+    using CmdLineArguments = std::vector<std::string> ;
+    using Logger = Logging::Logger ;
 
   public:
-    /**
-     *  @brief  Constructor
-     */
-    Application() ;
+    Application() = default ;
+    virtual ~Application() = default ;
 
+    /**
+     *  @brief  Run the Marlin application
+     */
+    virtual void run() = 0 ;
+
+  protected:
+    /**
+     *  @brief  Initialize the application
+     */
+    virtual void init() = 0;
+
+  public:
     /**
      *  @brief  Initialize the application
      *
@@ -30,9 +44,9 @@ namespace marlin {
     void init( int argc, char **argv ) ;
 
     /**
-     *  @brief  Run the Marlin application
+     *  @brief  Print command line usage
      */
-    void run() ;
+    virtual void printUsage() const = 0;
 
     /**
      *  @brief  Get the program name
@@ -45,62 +59,78 @@ namespace marlin {
     const CmdLineArguments &arguments() const { return _arguments ; }
 
     /**
-     *  @brief  Print command line usage
-     */
-    void printUsage() const ;
-    
-    /**
      *  @brief  Get the global section parameters
      */
     std::shared_ptr<StringParameters> globalParameters () const ;
-    
+
     /**
      *  @brief  Get the processor parameters
      *
      *  @param  name the processor name
      */
     std::shared_ptr<StringParameters> processorParameters ( const std::string &name ) const ;
-    
+
     /**
      *  @brief  Get the XML constants
      */
     std::shared_ptr<StringParameters> constants () const ;
-    
+
     /**
      *  @brief  Get the active processor list
      */
     StringVec activeProcessors () const ;
-    
+
     /**
      *  @brief  Get the active processor conditions list
      */
     StringVec processorConditions () const ;
-    
+
     /**
-     *  @brief  Get the concurrency level under which the application should run
-     *  This initialized after calling init, else returns 0
+     *  @brief  Whether the application has been initialized
      */
-    unsigned int concurrencyLevel() const ;
+    bool isInitialized() const ;
+
+    /**
+     *  @brief  Get the application logger instance
+     */
+    Logger logger() const ;
+
+  protected:
+    /**
+     *  @brief  Get the parser instance
+     */
+    std::shared_ptr<IParser> parser() const ;
 
   private:
     /**
      *  @brief  Parse the command line arguments
      */
-    void parseCommandLine( CommandLineParametersMap &cmdLineOptions ) ;
+    void parseCommandLine() ;
+
+    /**
+     *  @brief  Create the parser instance based on the steering file extension
+     */
+    std::shared_ptr<IParser> createParser() const ;
+
+  protected:
+    /// The arguments from main function after command line arguments have been removed
+    CmdLineArguments           _filteredArguments {} ;
 
   private:
     /// The program name. Initialized on init()
     std::string                _programName {} ;
-    /// The arguments from the main function after init has been called
+    /// The arguments from main function
     CmdLineArguments           _arguments {} ;
+    /// The command line parameter arguments (parameters and constants)
+    CommandLineParametersMap   _cmdLineOptions {} ;
     /// Whether the application has been initialized
     bool                       _initialized {false} ;
     /// The steering file name
     std::string                _steeringFileName {} ;
-    /// The concurrency as read from the command line or steering file
-    unsigned int               _concurrency {0};
     /// The XML steering file parser
-    std::shared_ptr<XMLParser> _parser {nullptr} ;
+    std::shared_ptr<IParser>   _parser {nullptr} ;
+    /// The application logger
+    Logger                     _logger {nullptr} ;
   };
 
 } // end namespace marlin
