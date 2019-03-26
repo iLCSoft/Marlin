@@ -62,7 +62,21 @@ IF( MARLIN_LCCD )
     ENDIF()
 ENDIF()
 
-FOREACH( pkg AIDA CLHEP LCCD )
+
+OPTION( MARLIN_DD4HEP "Set to ON to build Marlin with DD4hep" ON )
+IF( MARLIN_DD4HEP )
+    FIND_PACKAGE( ROOT REQUIRED )
+    FIND_PACKAGE( DD4hep COMPONENTS DDRec DDParsers )
+    IF( NOT DD4hep_FOUND )
+        MESSAGE( SEND_ERROR "DD4hep not found. Please set MARLIN_DD4HEP to OFF or DD4hep_DIR=/path/to/DD4hep" )
+    ENDIF()
+    IF( NOT ROOT_FOUND )
+        MESSAGE( SEND_ERROR "ROOT not found. Please set MARLIN_DD4HEP to OFF or ROOT_DIR=/path/to/ROOT" )
+    ENDIF()
+ENDIF()
+
+
+FOREACH( pkg AIDA CLHEP LCCD DD4hep ROOT )
     IF( ${pkg}_FOUND )
         INCLUDE_DIRECTORIES( SYSTEM ${${pkg}_INCLUDE_DIRS} )
         #ADD_DEFINITIONS ( ${${pkg}_DEFINITIONS} )
