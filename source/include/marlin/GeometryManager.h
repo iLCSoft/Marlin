@@ -4,13 +4,14 @@
 // -- std headers
 #include <typeindex>
 
-// -- streamlog headers
-#include <streamlog/streamlog.h>
+// -- marlin headers
+#include <marlin/Logging.h>
+#include <marlin/Exceptions.h>
+#include <marlin/GeometryPlugin.h>
 
 namespace marlin {
-  
+
   class Application ;
-  class GeometryPlugin ;
 
   /**
    *  @brief  GeometryManager class.
@@ -19,26 +20,26 @@ namespace marlin {
    */
   class GeometryManager {
   public:
-    using logger_ptr = Application::logger_ptr ;
-    
+    using Logger = Logging::Logger ;
+
   public:
     GeometryManager(const GeometryManager &) = delete ;
     GeometryManager& operator=(const GeometryManager &) = delete ;
     ~GeometryManager() = default ;
-    
+
     /**
      *  @brief  Default constructor
      */
     GeometryManager() ;
-    
+
     /**
      *  @brief  Initialize the geometry manager.
      *  Load the geometry plugin service and create the geometry
-     *  
+     *
      *  @param  app the application from which to get settings
      */
-    void init( const Application &app ) ;
-    
+    void init( const Application *app ) ;
+
     /**
      *  @brief  Get the underlying geometry handle
      *  Example:
@@ -52,22 +53,22 @@ namespace marlin {
      */
     template <typename T>
     const T *geometry() const ;
-    
+
     /**
      *  @brief  Get the underlying geometry type info
      */
-    std::type_index typeInfo() const ;
+    std::type_index typeIndex() const ;
 
     /**
      *  @brief  Clear the geometry content
      */
     void clear() ;
-    
+
     /**
      *  @brief  Whether the geometry has been initialized
      */
     bool isInitialized() const ;
-    
+
     /**
      *  @brief  Get the application in which the manager is running
      *  Valid only after initialization
@@ -80,12 +81,12 @@ namespace marlin {
     /// The application in which the geometry manager has been initialized
     const Application                   *_application {nullptr} ;
     /// The logger instance
-    logger_ptr                           _logger {nullptr} ;
+    Logger                               _logger {nullptr} ;
   };
-  
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
-  
+
   template <typename T>
   inline const T *GeometryManager::geometry() const {
     if ( nullptr == _plugin ) {
