@@ -19,6 +19,10 @@ IF( NOT MARLIN_LCCD )
     LIST( REMOVE_ITEM marlin_headers ./include/marlin/ConditionsProcessor.h )
 ENDIF()
 
+IF( NOT MARLIN_DD4HEP )
+    LIST( REMOVE_ITEM marlin_headers ./include/marlin/DD4hepGeometry.h )
+ENDIF()
+
 IF( NOT MARLIN_CLHEP )
     LIST( REMOVE_ITEM marlin_headers
         ./include/marlin/IFourVectorSmearer.h
@@ -36,6 +40,10 @@ INSTALL( FILES ${marlin_headers} DESTINATION include/marlin )
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long" )
 
+IF( ROOT_FOUND )
+  ADD_DEFINITIONS( "${ROOT_DEFINITIONS}" )
+ENDIF()
+
 # definitions
 # FIXME rather add to CMAKE_CXX_Debug_FLAGS ...
 IF( CMAKE_BUILD_TYPE STREQUAL "Debug" OR
@@ -49,6 +57,9 @@ AUX_SOURCE_DIRECTORY( ./tinyxml/src tinyxml_sources )
 IF( MARLIN_MT )
   AUX_SOURCE_DIRECTORY( ./src/concurrency library_sources )
   LIST( REMOVE_ITEM library_sources ./src/concurrency/MarlinMT.cc )
+ENDIF()
+IF( NOT MARLIN_DD4HEP )
+    LIST( REMOVE_ITEM library_sources ./src/DD4hepGeometry.cc )
 ENDIF()
 INCLUDE_DIRECTORIES( SYSTEM tinyxml/include )
 
@@ -65,7 +76,7 @@ INSTALL_SHARED_LIBRARY( MarlinXML DESTINATION lib )
 INSTALL_SHARED_LIBRARY( Marlin DESTINATION lib )
 TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} MarlinXML ${Marlin_DEPENDS_LIBRARIES}
   ## Note: it is not a problem if any variables is empty because package not found
-  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} )
+  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} ${DD4hep_LIBRARIES} ${ROOT_LIBRARIES} )
 
 
 
@@ -79,8 +90,8 @@ INSTALL( TARGETS bin_Marlin DESTINATION bin )
 
 IF( MARLIN_MT )
   FIND_PACKAGE( Threads REQUIRED )
-  
-  # ----- MarlinMT executable ----------------------------------------------------  
+
+  # ----- MarlinMT executable ----------------------------------------------------
   ADD_EXECUTABLE( bin_MarlinMT ./src/concurrency/MarlinMT.cc )
   # avoid name conflict between MarlinMT library and MarlinMT application
   SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
