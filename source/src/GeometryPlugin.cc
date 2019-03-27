@@ -40,11 +40,7 @@ namespace marlin {
   void GeometryPlugin::init( const Application *application ) {
     _application = application ;
     _logger->setLevel( _verbosity ) ;
-    // TODO get the application logger sink and configure
-    // the plugin logger with it
-    // _logger = app()->logger() ;
     loadGeometry() ;
-    print() ;
   }
 
   //--------------------------------------------------------------------------
