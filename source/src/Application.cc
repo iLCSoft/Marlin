@@ -116,6 +116,12 @@ namespace marlin {
   std::shared_ptr<StringParameters> Application::globalParameters () const {
     return (nullptr == _parser) ? nullptr : _parser->getParameters( "Global" ) ;
   }
+  
+  //--------------------------------------------------------------------------
+  
+  std::shared_ptr<StringParameters> Application::geometryParameters () const {
+    return (nullptr == _parser) ? nullptr : _parser->getParameters( "Geometry" ) ;
+  }
 
   //--------------------------------------------------------------------------
 

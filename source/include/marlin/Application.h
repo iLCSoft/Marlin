@@ -62,6 +62,11 @@ namespace marlin {
      *  @brief  Get the global section parameters
      */
     std::shared_ptr<StringParameters> globalParameters () const ;
+    
+    /**
+     *  @brief  Get the geometry section parameters
+     */
+    std::shared_ptr<StringParameters> geometryParameters () const ;
 
     /**
      *  @brief  Get the processor parameters
