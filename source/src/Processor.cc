@@ -11,7 +11,9 @@ namespace marlin {
     _isFirstEvent( true ),
     _logLevelName("") {
     //register processor
-    PluginManager::instance().registerProcessorFactory( this ) ;
+    PluginManager::instance().registerPlugin( PluginType::Processor, type(), [this](){
+      return std::shared_ptr<void>( this->newProcessor() ) ;
+    }, true ) ;
     // verbosity default parameter
     registerOptionalParameter( "Verbosity" ,
 			       "verbosity level of this processor (\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\")"  ,
