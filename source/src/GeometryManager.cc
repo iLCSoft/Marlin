@@ -20,7 +20,7 @@ namespace marlin {
     auto &mgr = PluginManager::instance() ;
     auto geometryParameters = app().geometryParameters() ;
     if ( nullptr == geometryParameters ) {
-      _logger->log<WARNING>() << "No geometry section found. Creating null geometry" << std::endl ;
+      _logger->log<WARNING>() << "No geometry section found. Creating empty geometry" << std::endl ;
       _plugin = mgr.create<GeometryPlugin>( PluginType::GeometryPlugin, "EmptyGeometry" ) ;
     }
     else {
