@@ -1,5 +1,8 @@
 #include "marlin/GeometryManager.h"
 
+// -- marlin headers
+#include "marlin/PluginManager.h"
+
 namespace marlin {
 
   GeometryManager::GeometryManager() {
@@ -13,12 +16,20 @@ namespace marlin {
       throw Exception( "GeometryManager::init: already initialized !" ) ;
     }
     _application = application ;
-    // _logger = _application->logger() ;
-    // TODO investigate how to create a geometry plugin nicely:
-    // - plugin inheritance
-    // - plugin manager interface
-    // - settings loading
-    // _plugin = createNicelyMyPlugin() ;
+    auto &mgr = PluginManager::instance() ;
+    auto geometryParameters = app().geometryParameters() ;
+    if ( nullptr == geometryParameters ) {
+      _logger->log<WARNING>() << "No geometry section found. Creating null geometry" << std::endl ;
+      _plugin = mgr.create<GeometryPlugin>( PluginType::GeometryPlugin, "EmptyGeometry" ) ;
+    }
+    else {
+      auto geometryType = geometryParameters->getStringVal( "GeometryType" ) ;
+      _plugin = mgr.create<GeometryPlugin>( PluginType::GeometryPlugin, geometryType ) ;
+      if ( nullptr == _plugin ) {
+        throw Exception( "GeometryManager::init: Couldn't find geometry plugin '" + geometryType + "'..." ) ;
+      }
+      _plugin->setParameters( geometryParameters ) ;
+    }
     _plugin->init( _application ) ;
     _plugin->print() ;
   }
