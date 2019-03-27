@@ -5,6 +5,7 @@
 #include "marlin/Exceptions.h"
 #include "marlin/IParser.h"
 #include "marlin/Logging.h"
+#include "marlin/GeometryManager.h"
 
 namespace marlin {
 
@@ -99,6 +100,11 @@ namespace marlin {
      *  @brief  Get the application logger instance
      */
     Logger logger() const ;
+    
+    /**
+     *  @brief  Get the geometry manager
+     */
+    const GeometryManager &geometryManager() const ;
 
   protected:
     /**
@@ -120,6 +126,8 @@ namespace marlin {
   protected:
     /// The arguments from main function after command line arguments have been removed
     CmdLineArguments           _filteredArguments {} ;
+    /// The geometry manager
+    GeometryManager            _geometryMgr {} ;
 
   private:
     /// The program name. Initialized on init()
