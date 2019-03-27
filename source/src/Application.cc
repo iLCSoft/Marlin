@@ -16,18 +16,16 @@ namespace marlin {
     for ( int i=1 ; i<argc ; i++ ) {
       _arguments.push_back( argv[i] ) ;
     }
-    _logger = Logging::createLogger( program() ) ;
-    _logger->setLevel( "MESSAGE" ) ; // set initial log level
+    _loggerMgr.mainLogger()->setName( program() ) ;
     parseCommandLine() ;
     // parse the steering file
     _parser = createParser() ;
     _parser->parse() ;
     // initialize logging
-    if ( not _verbosityFromCmdLine ) {
-      std::string verbosity = globalParameters()->getStringVal( "Verbosity" ) ;
-      if ( not verbosity.empty() ) {
-        _logger->setLevel( verbosity ) ;
-      }
+    _loggerMgr.init( this ) ;
+    // overwrite verbosity level if set from command line
+    if ( not _verbosityFromCmdLine.empty() ) {
+      logger()->setLevel( _verbosityFromCmdLine ) ;
     }
     // initialize geometry
     _geometryMgr.init( this ) ;
@@ -89,11 +87,9 @@ namespace marlin {
       else if ( arg == "-v" ) {
         iter = cmdLineArgs.erase( iter ) ;
         if ( cmdLineArgs.end() != iter ) {
-          std::string verbosityLevel = *iter ;
-          logger()->setLevel( verbosityLevel ) ;
+          _verbosityFromCmdLine = *iter ;
           iter = cmdLineArgs.erase( iter ) ;
-          _verbosityFromCmdLine = true ;
-          continue;        
+          continue;
         }
       }
       // last argument is steering file
@@ -118,9 +114,9 @@ namespace marlin {
   std::shared_ptr<StringParameters> Application::globalParameters () const {
     return (nullptr == _parser) ? nullptr : _parser->getParameters( "Global" ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   std::shared_ptr<StringParameters> Application::geometryParameters () const {
     return (nullptr == _parser) ? nullptr : _parser->getParameters( "Geometry" ) ;
   }
@@ -168,7 +164,19 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   Application::Logger Application::logger() const {
-    return _logger ;
+    return _loggerMgr.mainLogger() ;
+  }
+
+
+  //--------------------------------------------------------------------------
+
+  Application::Logger Application::createLogger( const std::string &name ) const {
+    if ( _loggerMgr.isInitialized() ) {
+      return _loggerMgr.createLogger( name ) ;
+    }
+    else {
+      return Logging::createLogger( name ) ;
+    }
   }
 
   //--------------------------------------------------------------------------

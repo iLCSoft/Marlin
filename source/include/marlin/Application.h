@@ -6,6 +6,7 @@
 #include "marlin/IParser.h"
 #include "marlin/Logging.h"
 #include "marlin/GeometryManager.h"
+#include "marlin/LoggerManager.h"
 
 namespace marlin {
 
@@ -63,7 +64,7 @@ namespace marlin {
      *  @brief  Get the global section parameters
      */
     std::shared_ptr<StringParameters> globalParameters () const ;
-    
+
     /**
      *  @brief  Get the geometry section parameters
      */
@@ -100,7 +101,17 @@ namespace marlin {
      *  @brief  Get the application logger instance
      */
     Logger logger() const ;
-    
+
+    /**
+     *  @brief  Create a new logger instance.
+     *  If the logger manager is initialized, the logger
+     *  will share the same sinks as the main logger,
+     *  else a fresh new logger is created.
+     *
+     *  @param  name the logger name
+     */
+    Logger createLogger( const std::string &name ) const ;
+
     /**
      *  @brief  Get the geometry manager
      */
@@ -128,6 +139,8 @@ namespace marlin {
     CmdLineArguments           _filteredArguments {} ;
     /// The geometry manager
     GeometryManager            _geometryMgr {} ;
+    /// The logger manager
+    LoggerManager              _loggerMgr {} ;
 
   private:
     /// The program name. Initialized on init()
@@ -138,14 +151,12 @@ namespace marlin {
     CommandLineParametersMap   _cmdLineOptions {} ;
     /// Whether the application has been initialized
     bool                       _initialized {false} ;
-    /// Whether the verbosity level has been set using a cmd line argument
-    bool                       _verbosityFromCmdLine {false} ;
+    /// The verbosity level read from cmd line argument
+    std::string                _verbosityFromCmdLine {} ;
     /// The steering file name
     std::string                _steeringFileName {} ;
     /// The XML steering file parser
     std::shared_ptr<IParser>   _parser {nullptr} ;
-    /// The application logger
-    Logger                     _logger {nullptr} ;
   };
 
 } // end namespace marlin
