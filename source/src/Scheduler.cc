@@ -48,7 +48,11 @@ namespace marlin {
         throw Exception( "Scheduler::init: undefined processor '" + procName + "'" ) ;
       }
       auto procType = processorParameters->getStringVal("ProcessorType") ;
-      std::shared_ptr<Processor> processor ( mgr.createProcessor( procType, procName ) ) ;
+      auto processor = mgr.create<Processor>( PluginType::Processor, procType ) ;
+      processor->setName( procName ) ;
+      if ( nullptr == processor ) {
+        throw Exception( "Scheduler::init: processor '" + procType + "' not registered !" ) ; 
+      }
       _processors.push_back( processor ) ;
       if ( useConditions ) {
         _runtimeConditions->addCondition( procName, processorConditions[ i ] ) ;
