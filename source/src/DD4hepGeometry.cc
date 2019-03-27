@@ -1,5 +1,8 @@
 #include "marlin/DD4hepGeometry.h"
 
+// -- marlin headers
+#include "marlin/PluginManager.h"
+
 // -- dd4hep headers
 #include "DD4hep/Detector.h"
 #include "DD4hep/DetType.h"
@@ -15,8 +18,6 @@ using namespace dd4hep::detail ;
 using namespace dd4hep::rec ;
 
 namespace marlin {
-
-  // FIXME: how to plug this class in the framework (PluginManager) ?
 
   DD4hepGeometry::DD4hepGeometry() :
     GeometryPlugin("DD4hep") {
@@ -197,5 +198,7 @@ namespace marlin {
     }
     _logger->log<DEBUG5>() << "############################################################################### "  << std::endl  << std::endl  ;
   }
+  
+  MARLIN_DECLARE_GEOPLUGIN( DD4hepGeometry )
 
 } // namespace marlin

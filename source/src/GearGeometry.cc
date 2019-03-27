@@ -1,4 +1,5 @@
 #include "marlin/GearGeometry.h"
+#include "marlin/PluginManager.h"
 
 // -- gear headers
 #include "gear/GearMgr.h"
@@ -47,4 +48,7 @@ namespace marlin {
     _logger->log<DEBUG5>() << *_gearMgr << std::endl ;
   }
 
+  MARLIN_DECLARE_GEOPLUGIN( GearGeometry )
+  
 } // namespace marlin
+
