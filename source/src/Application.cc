@@ -10,7 +10,9 @@
 namespace marlin {
 
   void Application::init( int argc, char **argv ) {
-    _programName = argv[0] ;
+    std::string pname = argv[0] ;
+    auto pos = pname.find_last_of("/") ;
+    _programName = pname.substr(pos+1) ;
     for ( int i=1 ; i<argc ; i++ ) {
       _arguments.push_back( argv[i] ) ;
     }
