@@ -21,6 +21,7 @@ namespace marlin {
 
   DD4hepGeometry::DD4hepGeometry() :
     GeometryPlugin("DD4hep") {
+      _description = "DD4hep geometry plugin. Use geoMgr->geometry<dd4hep::Detector>() to access the geometry" ;
     // compact file
     registerParameter( "CompactFile",
       "The DD4hep geometry compact XML file",
