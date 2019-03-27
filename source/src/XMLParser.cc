@@ -527,9 +527,10 @@ namespace marlin{
             condition = aCondition ;
 
         TiXmlNode* child = 0 ;
-        while( ( child = current->IterateChildren( "if" , child )  )  != 0  ){
-
-            processconditions( child , getAttribute( child, "condition") ) ;  
+        TiXmlNode* nextChild = current->IterateChildren("if" , child);
+        while((child = nextChild) != 0){
+            nextChild = current->IterateChildren("if" , child);
+            processconditions( child , getAttribute( child, "condition") ) ; // might clean child
         }
 
         while( ( child = current->IterateChildren( "processor" , child )  )  != 0  ) {
