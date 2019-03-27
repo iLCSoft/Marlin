@@ -23,9 +23,11 @@ namespace marlin {
     _parser = createParser() ;
     _parser->parse() ;
     // initialize logging
-    std::string verbosity = globalParameters()->getStringVal( "Verbosity" ) ;
-    if ( not verbosity.empty() ) {
-      _logger->setLevel( verbosity ) ;
+    if ( not _verbosityFromCmdLine ) {
+      std::string verbosity = globalParameters()->getStringVal( "Verbosity" ) ;
+      if ( not verbosity.empty() ) {
+        _logger->setLevel( verbosity ) ;
+      }
     }
     // sub-class initialization
     init() ;
@@ -35,12 +37,13 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void Application::parseCommandLine() {
+    logger()->log<MESSAGE>() << "Parsing command line ..." << std::endl ;
     _steeringFileName.clear() ;
     _cmdLineOptions.clear() ;
     auto cmdLineArgs = _arguments ;
     if ( cmdLineArgs.empty() ) {
       printUsage() ;
-      std::cerr << "No command line option provided. Expected at least a steering file..." << std::endl ;
+      logger()->log<ERROR>() << "No command line option provided. Expected at least a steering file..." << std::endl ;
       ::exit( 1 ) ;
     }
     auto iter = cmdLineArgs.begin() ;
@@ -51,13 +54,13 @@ namespace marlin {
         auto argVec = StringUtil::split<std::string>( arg.substr( 2 ) , "=" ) ;
         if ( argVec.size() != 2 ) {
           printUsage() ;
-          std::cerr << "*** invalid command line option: " << arg << std::endl ;
+          logger()->log<ERROR>() << "*** invalid command line option: " << arg << std::endl ;
           ::exit( 1 ) ;
         }
         auto argKey = StringUtil::split<std::string>( argVec[0] , "." ) ;
         if ( argKey.size() != 2 ) {
           printUsage() ;
-          std::cerr << "*** invalid command line option: " << arg << std::endl ;
+          logger()->log<ERROR>() << "*** invalid command line option: " << arg << std::endl ;
           ::exit( 1 ) ;
         }
         _cmdLineOptions[ argKey[0] ][ argKey[1] ] = argVec[1] ;
@@ -80,6 +83,17 @@ namespace marlin {
         printUsage() ;
         ::exit( 0 ) ;
       }
+      // verbosity level
+      else if ( arg == "-v" ) {
+        iter = cmdLineArgs.erase( iter ) ;
+        if ( cmdLineArgs.end() != iter ) {
+          std::string verbosityLevel = *iter ;
+          logger()->setLevel( verbosityLevel ) ;
+          iter = cmdLineArgs.erase( iter ) ;
+          _verbosityFromCmdLine = true ;
+          continue;        
+        }
+      }
       // last argument is steering file
       else if( std::next( iter ) == cmdLineArgs.end() ) {
         _steeringFileName = arg ;
@@ -87,12 +101,14 @@ namespace marlin {
       else {
         _filteredArguments.push_back( arg ) ;
       }
+      ++iter ;
     }
     if ( _steeringFileName.empty() ) {
       printUsage() ;
-      std::cerr << "No steering file provided ..." << std::endl ;
+      logger()->log<ERROR>() << "No steering file provided ..." << std::endl ;
       ::exit( 1 ) ;
     }
+    logger()->log<DEBUG2>() << "Parsing command line ... done" << std::endl ;
   }
 
   //--------------------------------------------------------------------------
@@ -158,9 +174,11 @@ namespace marlin {
   std::shared_ptr<IParser> Application::createParser() const {
     if( _steeringFileName.rfind(".xml") == std::string::npos // .xml not found at all
       || !(  _steeringFileName.rfind(".xml") + strlen(".xml") == _steeringFileName.length() ) ) {
+      logger()->log<DEBUG2>() << "createParser: create old steering file parser" << std::endl ;
       return std::make_shared<Parser>( _steeringFileName );
     }
     else {
+      logger()->log<DEBUG2>() << "createParser: create XML steering file parser" << std::endl ;
       auto parser = std::make_shared<XMLParser>( _steeringFileName ) ;
       // tell parser to take into account any options defined on the command line
       parser->setCmdLineParameters( _cmdLineOptions ) ;

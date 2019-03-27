@@ -125,6 +125,8 @@ namespace marlin {
     CommandLineParametersMap   _cmdLineOptions {} ;
     /// Whether the application has been initialized
     bool                       _initialized {false} ;
+    /// Whether the verbosity level has been set using a cmd line argument
+    bool                       _verbosityFromCmdLine {false} ;
     /// The steering file name
     std::string                _steeringFileName {} ;
     /// The XML steering file parser
