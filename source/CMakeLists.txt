@@ -54,10 +54,6 @@ ENDIF()
 
 AUX_SOURCE_DIRECTORY( ./src library_sources )
 AUX_SOURCE_DIRECTORY( ./tinyxml/src tinyxml_sources )
-IF( MARLIN_MT )
-  AUX_SOURCE_DIRECTORY( ./src/concurrency library_sources )
-  LIST( REMOVE_ITEM library_sources ./src/concurrency/MarlinMT.cc )
-ENDIF()
 IF( NOT MARLIN_DD4HEP )
     LIST( REMOVE_ITEM library_sources ./src/DD4hepGeometry.cc )
 ENDIF()
@@ -81,25 +77,39 @@ TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} MarlinXML ${Marlin_DEPENDS_LIBRAR
 
 
 
+# ----- MarlinDumpPlugins executable ----------------------------------------------------
+ADD_EXECUTABLE( bin_MarlinDumpPlugins ./main/MarlinDumpPlugins.cc )
+SET_TARGET_PROPERTIES( bin_MarlinDumpPlugins PROPERTIES OUTPUT_NAME MarlinDumpPlugins )
+TARGET_LINK_LIBRARIES( bin_MarlinDumpPlugins Marlin )
+INSTALL( TARGETS bin_MarlinDumpPlugins DESTINATION bin )
+# ----------------------------------------------------------------------------
+
 # ----- Marlin executable ----------------------------------------------------
-ADD_EXECUTABLE( bin_Marlin ./src/Marlin.cc ./src/ProcessorLoader.cc )
-# avoid name conflict between Marlin library and Marlin application
+ADD_EXECUTABLE( bin_Marlin ./main/Marlin.cc )
 SET_TARGET_PROPERTIES( bin_Marlin PROPERTIES OUTPUT_NAME Marlin )
 TARGET_LINK_LIBRARIES( bin_Marlin Marlin )
 INSTALL( TARGETS bin_Marlin DESTINATION bin )
 # ----------------------------------------------------------------------------
 
-IF( MARLIN_MT )
-  FIND_PACKAGE( Threads REQUIRED )
+# ----- Marlin executable ----------------------------------------------------
+# ADD_EXECUTABLE( bin_Marlin ./src/Marlin.cc ./src/ProcessorLoader.cc )
+# # avoid name conflict between Marlin library and Marlin application
+# SET_TARGET_PROPERTIES( bin_Marlin PROPERTIES OUTPUT_NAME Marlin )
+# TARGET_LINK_LIBRARIES( bin_Marlin Marlin )
+# INSTALL( TARGETS bin_Marlin DESTINATION bin )
+# ----------------------------------------------------------------------------
 
-  # ----- MarlinMT executable ----------------------------------------------------
-  ADD_EXECUTABLE( bin_MarlinMT ./src/concurrency/MarlinMT.cc )
-  # avoid name conflict between MarlinMT library and MarlinMT application
-  SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
-
-  TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin ${CMAKE_THREAD_LIBS_INIT} )
-  INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
-ENDIF()
+# IF( MARLIN_MT )
+#   FIND_PACKAGE( Threads REQUIRED )
+# 
+#   # ----- MarlinMT executable ----------------------------------------------------
+#   ADD_EXECUTABLE( bin_MarlinMT ./src/concurrency/MarlinMT.cc )
+#   # avoid name conflict between MarlinMT library and MarlinMT application
+#   SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
+# 
+#   TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin ${CMAKE_THREAD_LIBS_INIT} )
+#   INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
+# ENDIF()
 
 
 
