@@ -7,7 +7,7 @@
 namespace marlin {
 
   GeometryManager::GeometryManager() {
-    _logger = Logging::createLogger( "Geometry" ) ;
+    _logger = Logging::createLogger( "GeometryManager" ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -17,6 +17,7 @@ namespace marlin {
       throw Exception( "GeometryManager::init: already initialized !" ) ;
     }
     _application = application ;
+    _logger = app().createLogger( "GeometryManager" ) ;
     auto &mgr = PluginManager::instance() ;
     auto geometryParameters = app().geometryParameters() ;
     if ( nullptr == geometryParameters ) {

@@ -3,6 +3,7 @@
 // -- marlin headers
 #include "marlin/VerbosityLevels.h"
 #include "marlin/PluginManager.h"
+#include "marlin/Application.h"
 
 namespace marlin {
 
@@ -40,6 +41,7 @@ namespace marlin {
 
   void GeometryPlugin::init( const Application *application ) {
     _application = application ;
+    _logger = app().createLogger( "Geometry " + _type ) ;
     loadGeometry() ;
   }
 
@@ -51,7 +53,7 @@ namespace marlin {
     }
     return *_application ;
   }
-  
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
@@ -63,10 +65,10 @@ namespace marlin {
   public:
     EmptyGeometry(const EmptyGeometry &) = delete ;
     EmptyGeometry& operator=(const EmptyGeometry &) = delete ;
-    
+
   public:
     EmptyGeometry() : GeometryPlugin( "Empty" ) { /* nop */ }
-    
+
   protected:
     void loadGeometry() { /* nop */ }
     const void *handle() const { return nullptr ; }
