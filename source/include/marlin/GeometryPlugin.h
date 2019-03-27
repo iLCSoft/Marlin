@@ -2,8 +2,8 @@
 #define MARLIN_GEOMETRYPLUGIN_h 1
 
 // -- std headers
-#include <map>
 #include <string>
+#include <typeindex>
 
 // -- marlin headers
 #include "marlin/Exceptions.h"
