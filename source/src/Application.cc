@@ -32,28 +32,6 @@ namespace marlin {
     _initialized = true ;
   }
 
-  // //--------------------------------------------------------------------------
-  //
-  // void Application::printUsage() const {
-  //   std::cout << " Usage: MarlinMT [OPTION] [FILE]..." << std::endl
-  //       << "   runs a parallel Marlin application (MT)" << std::endl
-  //       << std::endl
-  //       << " Running the application with a given steering file:" << std::endl
-  //       << "   MarlinMT steer.xml   " << std::endl
-  //       << std::endl
-  //       << " Options:" << std::endl
-  //       << "   -p        dump the registered plugins and exit" << std::endl
-  //       << "   -j N      set the maximum number of concurrent tasks" << std::endl
-  //       << "   -h/-?     print this help information" << std::endl
-  //       << std::endl
-  //       << " Example: " << std::endl
-  //       << " To run a Marlin application on 8 cores, run" << std::endl
-  //       << "     MarlinMT -j 8 steer.xml" << std::endl
-  //       << " Dynamic command line options may be specified in order to overwrite individual steering file parameters, e.g.:" << std::endl
-  //       << "     MarlinMT --constant.Verbosity=DEBUG --input.FileName=inputfile.slcio steer.xml" << std::endl << std::endl
-  //       << std::endl ;
-  // }
-
   //--------------------------------------------------------------------------
 
   void Application::parseCommandLine() {
