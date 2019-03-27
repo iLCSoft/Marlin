@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <typeinfo>
+#include <memory>
 
 // -- marlin headers
 #include "marlin/StringParameters.h"
