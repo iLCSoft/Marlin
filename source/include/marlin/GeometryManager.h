@@ -77,7 +77,7 @@ namespace marlin {
 
   private:
     /// The geometry plugin created on init()
-    std::unique_ptr<GeometryPlugin>      _plugin {nullptr} ;
+    std::shared_ptr<GeometryPlugin>      _plugin {nullptr} ;
     /// The application in which the geometry manager has been initialized
     const Application                   *_application {nullptr} ;
     /// The logger instance
