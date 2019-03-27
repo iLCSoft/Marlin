@@ -29,6 +29,8 @@ namespace marlin {
         _logger->setLevel( verbosity ) ;
       }
     }
+    // initialize geometry
+    _geometryMgr.init( this ) ;
     // sub-class initialization
     init() ;
     _initialized = true ;
