@@ -2,6 +2,7 @@
 
 // -- marlin headers
 #include "marlin/PluginManager.h"
+#include "marlin/Application.h"
 
 namespace marlin {
 
