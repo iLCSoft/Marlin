@@ -106,8 +106,8 @@ namespace marlin {
     std::string         _description {"No description"} ;
     /// The application logger
     Logger              _logger {nullptr} ;
-    /// The verbosity level
-    std::string         _verbosity {} ;
+    /// Whether to dump the geometry on creation
+    bool                _dumpGeometry {false} ;
 
   private:
     /// The Marlin application

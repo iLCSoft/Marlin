@@ -10,11 +10,11 @@ namespace marlin {
     _type(gtype) {
     // create a standalone logger
     _logger = Logging::createLogger( "Geometry" ) ;
-    // verbosity level for this plugin
-    registerOptionalParameter( "Verbosity",
-      "the geometry plugin verbosity level",
-      _verbosity,
-      std::string("MESSAGE")) ;
+    // Whether to dump the geometry on creation
+    registerOptionalParameter( "DumpGeometry",
+      "Whether to dump the geometry on creation",
+      _dumpGeometry,
+      false) ;
   }
 
   //--------------------------------------------------------------------------
@@ -25,12 +25,13 @@ namespace marlin {
     _logger->log<MESSAGE>() << "-- Geometry plugin: " << type() << std::endl ;
     _logger->log<MESSAGE>() << "-- Description: " << description() << std::endl ;
     _logger->log<MESSAGE>() << "-- Handle at: " << handle() << std::endl ;
-    _logger->log<DEBUG5>()  << "-- Type index: " << std::endl ;
-    _logger->log<DEBUG5>()  << "---- name: " << typeidx.name() << std::endl ;
-    _logger->log<DEBUG5>()  << "---- hash: " << typeidx.hash_code() << std::endl ;
-    if ( _logger->wouldWrite<DEBUG5>() ) {
-      _logger->log<DEBUG5>() << "-- Geometry dump:" << std::endl ;
+    _logger->log<MESSAGE>()  << "-- Type index: " << std::endl ;
+    _logger->log<MESSAGE>()  << "---- name: " << typeidx.name() << std::endl ;
+    _logger->log<MESSAGE>()  << "---- hash: " << typeidx.hash_code() << std::endl ;
+    if ( _dumpGeometry ) {
+      _logger->log<MESSAGE>() << "-- Geometry dump:" << std::endl ;
       dumpGeometry() ;
+      _logger->log<MESSAGE>() << "-- End of geometry dump" << std::endl ;
     }
     _logger->log<MESSAGE>() << "----------------------------------------------------------" << std::endl ;
   }
@@ -39,7 +40,6 @@ namespace marlin {
 
   void GeometryPlugin::init( const Application *application ) {
     _application = application ;
-    _logger->setLevel( _verbosity ) ;
     loadGeometry() ;
   }
 
