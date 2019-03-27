@@ -7,13 +7,13 @@
 
 // -- marlin headers
 #include "marlin/Exceptions.h"
-#include "marlin/Application.h"
 #include "marlin/Parameter.h"
 #include "marlin/Logging.h"
 
 namespace marlin {
 
   class GeometryManager ;
+  class Application ;
 
   /**
    *  @brief  GeometryPlugin class
