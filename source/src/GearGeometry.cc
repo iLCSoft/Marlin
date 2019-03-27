@@ -46,7 +46,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void GearGeometry::dumpGeometry() const {
-    _logger->log<DEBUG5>() << *_gearMgr << std::endl ;
+    _logger->log<MESSAGE>() << *_gearMgr << std::endl ;
   }
 
   MARLIN_DECLARE_GEOPLUGIN( GearGeometry )
