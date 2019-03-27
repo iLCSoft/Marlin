@@ -99,6 +99,17 @@ namespace marlin{
                 break;
             }
         }
+        
+        // optional geometry section
+        section = root->FirstChildElement("geometry")  ;
+
+        if( section != 0  ) {
+            _map[ "Geometry" ] = std::make_shared<StringParameters>() ;
+            _current =  _map[ "Geometry" ].get() ;
+            parametersFromNode( section , constants ) ;
+            auto geotype = getAttribute( section , "type" ) ;
+            _current->add( "GeometryType", {geotype} );
+        }
 
         // create global parameter ActiveProcessors from <execute> section
         //     TiXmlElement activeProcessorItem( "parameter" );
