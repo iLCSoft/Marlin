@@ -62,9 +62,8 @@ namespace marlin {
     // TODO configure logging for this processor chain here
     // Initialize processors
     for ( auto processor : _processors ) {
-      // TODO configure processor logger here
       processor->setScheduler( this ) ;
-      processor->init() ;
+      processor->baseInit() ;
       _processorTimes[ processor->name() ] = TimeMetadata() ;
     }
   }
