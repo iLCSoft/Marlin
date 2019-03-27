@@ -157,7 +157,11 @@ namespace marlin{
         // preprocess groups: ---------------------------------------------------------------------------------
         // simply copy all group parameters to the processors
         // and then copy the processors to the root node <Marlin>
-        while( (section = root->IterateChildren( "group", section ) )  != 0  ){
+        // 'section' comes from above as first execute child, get the next section so we
+        // do not cleanup the execute section in loop body below, only the groups
+        TiXmlNode* nextSection = root->IterateChildren("group", section);
+        while((section = nextSection) != 0){
+            nextSection = root->IterateChildren("group", section);
 
             std::vector<TiXmlNode*> groupParams ;
 
