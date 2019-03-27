@@ -901,8 +901,9 @@ namespace marlin{
         }
 
         TiXmlNode* child = 0 ;
-        while( ( child = section->IterateChildren( child ) )  != 0  ){
-
+        TiXmlNode* nextChild = section->IterateChildren( child );
+        while((child = nextChild) != 0){
+            nextChild = section->IterateChildren(child);
             if( std::string( child->Value() )  == "group" ) {
 
                 // find group definition in root node 
