@@ -12,22 +12,52 @@
 
 namespace marlin {
   
-  void PluginManager::registerProcessorFactory( Processor *proc ) {
-    auto iter = _factories.find( proc->type() ) ;
-    if ( _factories.end() != iter ) {
-      throw Exception( "PluginManager::registerFactory: factory '" + proc->type() + "' already registered!" );
-    }
-    _factories.insert( FactoryMap::value_type( proc->name(), proc ) ) ;
+  PluginManager::PluginManager() {
+    _pluginFactories.insert( PluginFactoryMap::value_type(PluginType::Processor, FactoryMap()) ) ;
+    _pluginFactories.insert( PluginFactoryMap::value_type(PluginType::GeometryPlugin, FactoryMap()) ) ;
+    _logger = Logging::createLogger( "PluginManager" ) ;
+    _logger->setLevel<MESSAGE>() ;
   }
   
   //--------------------------------------------------------------------------
-
-  std::vector<std::string> PluginManager::processorTypes() const {
+  
+  void PluginManager::registerPlugin( PluginType type, const std::string &name, 
+    FactoryFunction factoryFunction, bool ignoreDuplicate ) {
+    lock_type lock( _mutex ) ;
+    auto typeIter = _pluginFactories.find( type ) ;
+    auto factoryIter = typeIter->second.find( name ) ;
+    if ( typeIter->second.end() != factoryIter ) {
+      if ( not ignoreDuplicate ) {
+        _logger->log<ERROR>() << "PluginManager::registerPlugin: plugin '" << name << "' already registered!" << std::endl ;
+        throw Exception( "PluginManager::registerPlugin: plugin '" + name + "' already registered!" ) ;
+      }
+      _logger->log<WARNING>() << "PluginManager::registerPlugin: plugin '" << name << "' already registered! Skipping ..." << std::endl ;
+    }
+    else {
+      typeIter->second.insert( FactoryMap::value_type( name, factoryFunction ) ) ;
+      auto typeStr = pluginTypeToString( type ) ;
+      _logger->log<DEBUG5>() << "New plugin registered: type '" << typeStr << "', name '" << name << "'" <<std::endl ;
+    }
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  std::vector<std::string> PluginManager::pluginNames( PluginType type ) const {
+    lock_type lock( _mutex ) ;
     std::vector<std::string> names ;
-    for ( auto iter : _factories ) {
+    auto typeIter = _pluginFactories.find( type ) ;
+    for ( auto iter : typeIter->second ) {
       names.push_back( iter.first ) ;
     }
     return names ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  bool PluginManager::pluginRegistered( PluginType type, const std::string &name ) const {
+    lock_type lock( _mutex ) ;
+    auto typeIter = _pluginFactories.find( type ) ;
+    return ( typeIter->second.find( name ) != typeIter->second.end() ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -39,7 +69,8 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  bool PluginManager::loadLibraries( const std::string &envvar )  {
+  bool PluginManager::loadLibraries( const std::string &envvar ) {
+    lock_type lock( _mutex ) ;
     char *marlinDll = getenv( envvar.c_str() );
     if ( nullptr == marlinDll ) {
       // TODO log a debug message here!
@@ -55,15 +86,16 @@ namespace marlin {
       size_t idx = library.find_last_of("/") ;
       // the library basename, i.e. /path/to/libBlah.so --> libBlah.so
       std::string libBaseName( library.substr( idx + 1 ) );
+      _logger->log<DEBUG5>() << "<!-- Loading shared library : " << library << " -->" << std::endl ;
       auto inserted = checkDuplicateLibs.insert( libBaseName ).second ;
       if ( not inserted ) {
-        std::cerr << std::endl << "<!-- ERROR loading shared library : " << library << std::endl
+        _logger->log<ERROR>() << std::endl << "<!-- ERROR loading shared library : " << library << std::endl
             << "    ->    Trying to load DUPLICATE library -->" << std::endl << std::endl ;
         return false ;
       }
       void* libPointer = dlopen( library.c_str() , RTLD_LAZY | RTLD_GLOBAL) ;
       if( nullptr == libPointer ) {
-        std::cerr << std::endl << "<!-- ERROR loading shared library : " << library << std::endl
+        _logger->log<ERROR>() << std::endl << "<!-- ERROR loading shared library : " << library << std::endl
                     << "    ->    "   << dlerror() << " -->" << std::endl << std::endl ;
         return false ;
       }
@@ -74,31 +106,39 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  Processor* PluginManager::createProcessor( const std::string &type, const std::string &name ) {
-    auto iter = _factories.find( type ) ;
-    if ( _factories.end() == iter ) {
-      return nullptr;
-    }
-    auto proc = iter->second->newProcessor() ;
-    proc->setName( name ) ;
-    return proc ;
-  }
-
-  //--------------------------------------------------------------------------
-
   void PluginManager::dump() const {
-    std::cout << "------------------------------------" << std::endl ;
-    std::cout << " ** MarlinMT plugin manager dump ** " << std::endl ;
-    if ( _factories.empty() ) {
-      std::cout << " No processor registered ..." << std::endl ;
-    }
-    else {
-      std::cout << " + Registered processors: " << std::endl ;
-      for ( auto iter : _factories ) {
-        std::cout << "   - " << iter.first << std::endl ;
+    lock_type lock( _mutex ) ;
+    _logger->log<MESSAGE>() << "------------------------------------" << std::endl ;
+    _logger->log<MESSAGE>() << " ** Marlin plugin manager dump ** " << std::endl ;
+    for ( auto pluginIter : _pluginFactories ) {
+      auto typeStr = pluginTypeToString( pluginIter.first ) ;
+      if ( pluginIter.second.empty() ) {
+        _logger->log<MESSAGE>() << " No " << typeStr << " plugin entry !" << std::endl ;
+      }
+      else {
+        _logger->log<MESSAGE>() << " " << typeStr << " plugins:" << std::endl ;
+        for ( auto iter : pluginIter.second ) {
+          _logger->log<MESSAGE>() << " - " << iter.first << std::endl ;
+        }
       }
     }
-    std::cout << "----------------------------------" << std::endl ;
+    _logger->log<MESSAGE>() << "----------------------------------" << std::endl ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  std::string PluginManager::pluginTypeToString( PluginType type ) {
+    switch ( type ) {
+      case PluginType::Processor: return "Processor" ;
+      case PluginType::GeometryPlugin: return "GeometryPlugin" ;
+      default: throw;
+    }
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  PluginManager::Logger PluginManager::logger() const {
+    return _logger ;
   }
 
 } // namespace marlin
