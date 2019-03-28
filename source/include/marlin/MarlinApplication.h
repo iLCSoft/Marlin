@@ -3,6 +3,14 @@
 
 // -- marlin headers
 #include "marlin/Application.h"
+#include "marlin/Scheduler.h"
+
+// -- lcio headers
+#include "LCIOSTLTypes.h"
+
+namespace IO {
+  class LCReader ;
+}
 
 namespace marlin {
 
@@ -17,29 +25,22 @@ namespace marlin {
     MarlinApplication() = default ;
     
   private:
-    void run() ;
+    void runApplication() ;
     void init() ;
+    void end() {}
     void printUsage() const ;
-
-  // protected:
-  //   /// The arguments from main function after command line arguments have been removed
-  //   CmdLineArguments           _filteredArguments {} ;
-  // 
-  // private:
-  //   /// The program name. Initialized on init()
-  //   std::string                _programName {} ;
-  //   /// The arguments from main function
-  //   CmdLineArguments           _arguments {} ;
-  //   /// The command line parameter arguments (parameters and constants)
-  //   CommandLineParametersMap   _cmdLineOptions {} ;
-  //   /// Whether the application has been initialized
-  //   bool                       _initialized {false} ;
-  //   /// The steering file name
-  //   std::string                _steeringFileName {} ;
-  //   /// The XML steering file parser
-  //   std::shared_ptr<IParser>   _parser {nullptr} ;
-  //   /// The application logger
-  //   Logger                     _logger {nullptr} ;
+    
+  private:
+    /// The processor scheduler
+    Scheduler                         _scheduler {} ;
+    /// The LCReader instance
+    std::shared_ptr<IO::LCReader>     _lcReader {nullptr} ;
+    /// The LCIO inout files to read and process
+    EVENT::StringVec                  _lcioInputFiles {} ;
+    /// The maximum number of record to read from files (events and run headers)
+    int                               _maxRecord {0} ;
+    /// The number of events to skip on file opening
+    int                               _skipNEvents {0} ;
   };
 
 } // end namespace marlin
