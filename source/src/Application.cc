@@ -3,6 +3,7 @@
 #include "marlin/Utils.h"
 #include "marlin/XMLParser.h"
 #include "marlin/Parser.h"
+#include "marlin/Parser.h"
 
 // -- std headers
 #include <cstring>
@@ -10,6 +11,7 @@
 namespace marlin {
 
   void Application::init( int argc, char **argv ) {
+    printBanner() ;
     std::string pname = argv[0] ;
     auto pos = pname.find_last_of("/") ;
     _programName = pname.substr(pos+1) ;
@@ -65,6 +67,10 @@ namespace marlin {
           ::exit( 1 ) ;
         }
         _cmdLineOptions[ argKey[0] ][ argKey[1] ] = argVec[1] ;
+        logger()->log<MESSAGE9>() 
+          << "steering file " << argKey[0] << ": "
+          << "[ " << argKey[0] << "." << argKey[1] << " ]"
+          << " will be OVERWRITTEN with value: [\"" << argVec[1] << "\"]"  << std::endl ;
         iter = cmdLineArgs.erase( iter ) ;
         continue;
       }
@@ -108,6 +114,26 @@ namespace marlin {
       ::exit( 1 ) ;
     }
     logger()->log<DEBUG2>() << "Parsing command line ... done" << std::endl ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  void Application::printBanner( std::ostream &out ) const {
+    out << std::endl ;
+    out << " __  __            _ _       " << std::endl ;
+    out << "|  \\/  | __ _ _ __| (_)_ __  " << std::endl ;
+    out << "| |\\/| |/ _` | '__| | | '_ \\" << std::endl ;
+    out << "| |  | | (_| | |  | | | | | |" << std::endl ;
+    out << "|_|  |_|\\__,_|_|  |_|_|_| |_|" << std::endl ;
+    out << std::endl ;
+    out << "      Version: " 
+      << MARLIN_MAJOR_VERSION << "." 
+      << MARLIN_MINOR_VERSION << "." 
+      << MARLIN_PATCH_LEVEL << std::endl ;
+    out << std::endl ;
+    out << "      LICENCE: GPLv3 " << std::endl ;
+    out << " Copyright (C), Marlin Authors" << std::endl ;
+    out << std::endl ;
   }
 
   //--------------------------------------------------------------------------

@@ -49,6 +49,13 @@ namespace marlin {
      *  @brief  Print command line usage
      */
     virtual void printUsage() const = 0;
+    
+    /**
+     *  @brief  Print the Marlin banner
+     *
+     *  @param  out the out stream for printout
+     */
+    void printBanner( std::ostream &out = std::cout ) const ;
 
     /**
      *  @brief  Get the program name
