@@ -61,7 +61,7 @@ void TestProcessorEventSeeder::processEvent( LCEvent * evt ) {
     Global::EVENTSEEDER->registerProcessor(this);
   }
   catch( lcio::Exception ) {
-  
+    log<ERROR>() << name() << " failed to register processor to event seed generator (TEST is OK)" << std::endl ;
   }
 
   unsigned long long runnum_and_eventnum = evt->getRunNumber() ; 
