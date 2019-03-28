@@ -51,6 +51,13 @@ namespace marlin {
      *  @param  name the logger name
      */
     Logger createLogger( const std::string &name ) const ;
+    
+    /**
+     *  @brief  Set the verbosity level of both the main and global loggers
+     * 
+     *  @param  level the verbosity level to set
+     */
+    void setLevel( const std::string &level ) ;
 
     /**
      *  @brief  Whether the logger manager has been initialized
