@@ -67,6 +67,17 @@ namespace marlin{
         }
 
         processIncludeElements( root , constants ) ;
+        
+        // optional geometry section
+        section = root->FirstChildElement("geometry")  ;
+
+        if( section != 0  ) {
+            _map[ "Geometry" ] = std::make_shared<StringParameters>() ;
+            _current =  _map[ "Geometry" ].get() ;
+            parametersFromNode( section , constants ) ;
+            auto geotype = getAttribute( section , "type" ) ;
+            _current->add( "GeometryType", {geotype} );
+        }
 
         _map[ "Global" ] = std::make_shared<StringParameters>();
         StringParameters*  globalParameters = _map[ "Global" ].get();
@@ -98,17 +109,6 @@ namespace marlin{
                 
                 break;
             }
-        }
-        
-        // optional geometry section
-        section = root->FirstChildElement("geometry")  ;
-
-        if( section != 0  ) {
-            _map[ "Geometry" ] = std::make_shared<StringParameters>() ;
-            _current =  _map[ "Geometry" ].get() ;
-            parametersFromNode( section , constants ) ;
-            auto geotype = getAttribute( section , "type" ) ;
-            _current->add( "GeometryType", {geotype} );
         }
 
         // create global parameter ActiveProcessors from <execute> section
