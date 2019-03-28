@@ -1,6 +1,9 @@
 #include "marlin/Processor.h"
+
+// -- marlin headers
 #include "marlin/PluginManager.h"
 #include "marlin/Scheduler.h"
+#include "marlin/Application.h"
 
 namespace marlin {
 
@@ -18,9 +21,10 @@ namespace marlin {
     registerOptionalParameter( "Verbosity" ,
 			       "verbosity level of this processor (\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\")"  ,
 			       _logLevelName ,
-			       std::string("DEBUG") ) ;
-    _logger = Logging::createLogger( _typeName + "_NOTINIT" ) ;
-    _logger->setLevel( "DEBUG" );
+			       std::string("") ) ;
+    std::stringstream ss ; ss << _typeName <<  "_" << (void*)this ;
+    _logger = Logging::createLogger( ss.str() ) ;
+    _logger->setLevel( "MESSAGE" );
   }
 
   //--------------------------------------------------------------------------
@@ -39,9 +43,6 @@ namespace marlin {
     // need to reset the log level name in case it has not been set by the user
     if( not parameterSet("Verbosity") ) {
       _logLevelName = "" ;
-    }
-    else {
-      _logger->setLevel( _logLevelName ) ;
     }
   }
 
@@ -149,9 +150,14 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void Processor::baseInit() {
-    //fg: now in setParameters
-    // updateParameters();
+  void Processor::baseInit( Application *application ) {
+    _application = application ;
+    _logger = app().createLogger( name() ) ;
+    log<DEBUG2>() << "Creating logger for processor " << name() << std::endl ;
+    if( parameterSet("Verbosity") ) {
+      _logger->setLevel( _logLevelName ) ;
+    }
+    log<DEBUG2>() << "Processor " << name() << ": init ..." << std::endl ;
     init() ;
   }
 
@@ -222,6 +228,15 @@ namespace marlin {
     }
     std::string valName = name() + "." + keyName ;
     _scheduler->runtimeConditions()->setValue( valName, val ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  const Application &Processor::app() const {
+    if ( nullptr == _application ) {
+      throw Exception( "Processor::app: app pointer not set!" ) ;
+    }
+    return *_application ;
   }
 
 } // namespace marlin

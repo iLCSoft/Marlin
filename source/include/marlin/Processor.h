@@ -23,6 +23,7 @@ namespace marlin {
   class ProcessorMgr ;
   class ProcessorEventSeeder ;
   class PluginManager ;
+  class Application ;
   class Scheduler ;
   class XMLFixCollTypes ;
 
@@ -331,6 +332,12 @@ namespace marlin {
      */
     template <class T>
     Logging::StreamType log() ;
+    
+    /**
+     *  @brief  Get the application in which the processor is running
+     *  Throws if the application is not set
+     */
+    const Application &app() const ;
 
   private:
     /** Allow friend class CCProcessor to change/reset processor parameters */
@@ -346,7 +353,7 @@ namespace marlin {
     virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
 
     /** Sets the registered steering parameters before calling init() */
-    virtual void baseInit() ;
+    virtual void baseInit( Application *application ) ;
 
     /** Called by ProcessorMgr */
     void setFirstEvent( bool firstEvent ) ;
@@ -393,9 +400,11 @@ namespace marlin {
 
   private:
     /// The scheduler managing the processor
-    Scheduler *                        _scheduler {nullptr} ;
+    Scheduler                         *_scheduler {nullptr} ;
     ///
     Logger                             _logger {nullptr} ;
+    ///
+    Application                       *_application {nullptr} ;
   };
 
   //--------------------------------------------------------------------------
