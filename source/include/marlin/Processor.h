@@ -331,7 +331,7 @@ namespace marlin {
      *  @endcode
      */
     template <class T>
-    Logging::StreamType log() ;
+    Logging::StreamType log() const ;
     
     /**
      *  @brief  Get the application in which the processor is running
@@ -562,7 +562,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   template <class T>
-  inline Logging::StreamType Processor::log() {
+  inline Logging::StreamType Processor::log() const {
     return _logger->log<T>() ;
   }
 
