@@ -1,5 +1,6 @@
 // -- marlin headers
 #include <marlin/MarlinApplication.h>
+#include <marlin/PluginManager.h>
 
 using namespace marlin ;
 
@@ -15,6 +16,13 @@ int main( int argc, char **argv ) {
   
   std::shared_ptr<Application> application {nullptr} ;
   
+  // load plugins first
+  auto &mgr = PluginManager::instance() ;
+  mgr.logger()->setLevel<MESSAGE>();
+  if ( not mgr.loadLibraries() ) {
+    throw Exception( "Couldn't load shared libraries from MARLIN_DLL !" ) ;
+  }
+  // configure and run application
   try {
     application = std::make_shared<MarlinApplication>() ;    
     application->init( argc, argv ) ;
