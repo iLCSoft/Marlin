@@ -31,7 +31,7 @@ namespace marlin {
         _logger->log<ERROR>() << "PluginManager::registerPlugin: plugin '" << name << "' already registered!" << std::endl ;
         throw Exception( "PluginManager::registerPlugin: plugin '" + name + "' already registered!" ) ;
       }
-      _logger->log<WARNING>() << "PluginManager::registerPlugin: plugin '" << name << "' already registered! Skipping ..." << std::endl ;
+      _logger->log<DEBUG2>() << "PluginManager::registerPlugin: plugin '" << name << "' already registered! Skipping ..." << std::endl ;
     }
     else {
       typeIter->second.insert( FactoryMap::value_type( name, factoryFunction ) ) ;
