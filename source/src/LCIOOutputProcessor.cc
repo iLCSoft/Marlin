@@ -273,7 +273,7 @@ void LCIOOutputProcessor::processEvent( LCEvent * evt ) {
 
 void LCIOOutputProcessor::end(){ 
 
-  streamlog_out( MESSAGE4 )   << std::endl 
+  log<MESSAGE4>()   << std::endl 
 			      << "LCIOOutputProcessor::end()  " << name() 
 			      << ": " << _nEvt << " events in " << _nRun << " runs written to file  " 
 			      <<  _lcioOutputFile  

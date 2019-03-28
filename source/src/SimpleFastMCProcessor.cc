@@ -144,7 +144,7 @@ namespace marlin{
 
     _factory = simpleFactory ;
     
-    streamlog_out( MESSAGE )  << " SimpleFastMCProcessor::init() : registering SimpleParticleFactory " << std::endl ;
+    log<MESSAGE>() << " SimpleFastMCProcessor::init() : registering SimpleParticleFactory " << std::endl ;
 
 #endif // MARLIN_CLHEP
 
@@ -256,7 +256,7 @@ namespace marlin{
     LCCollection* relCol = evt->getCollection( _mcTruthCollectionName ) ;
     
     if( relCol == 0 ) {
-      streamlog_out( WARNING ) << "SimpleFastMCProcessor::check no collection found: MCTruthMapping" << std::endl ;
+      log<WARNING>() << "SimpleFastMCProcessor::check no collection found: MCTruthMapping" << std::endl ;
       return ;
     }
     
@@ -330,7 +330,7 @@ namespace marlin{
   
   void SimpleFastMCProcessor::end(){ 
     
-    streamlog_out( MESSAGE4 )  << "SimpleFastMCProcessor::end()  " << name() 
+    log<MESSAGE4>()  << "SimpleFastMCProcessor::end()  " << name() 
 			       << " processed " << _nEvt << " events in " << _nRun << " runs "
 			       << std::endl ;
     

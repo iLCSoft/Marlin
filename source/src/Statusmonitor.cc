@@ -30,7 +30,7 @@ Statusmonitor::Statusmonitor() : Processor("Statusmonitor") {
 
 
 void Statusmonitor::init() { 
-  streamlog_out(DEBUG) << "INIT CALLED  " << std::endl ;
+  log<DEBUG>() << "INIT CALLED  " << std::endl ;
 
   // usually a good idea to
   printParameters() ;
@@ -47,7 +47,7 @@ void Statusmonitor::processRunHeader( LCRunHeader* ) {
 void Statusmonitor::processEvent( LCEvent *  ) { 
 
   if (_nEvt % _howOften == 0) {
-    streamlog_out(MESSAGE) 
+    log<MESSAGE>() 
       << " ===== Run  : " << std::setw(7) << _nRun
       << "  Event: " << std::setw(7) << _nEvt << endl;
   }
@@ -63,7 +63,7 @@ void Statusmonitor::check( LCEvent * ) {
 
 void Statusmonitor::end(){ 
   
-  streamlog_out(MESSAGE) << "Statusmonitor::end()  " << name()  << " processed " << _nEvt << " events in " << _nRun << " runs "	    << std::endl ;
+  log<MESSAGE>() << "Statusmonitor::end()  " << name()  << " processed " << _nEvt << " events in " << _nRun << " runs "	    << std::endl ;
 
 }
 

@@ -27,7 +27,7 @@ namespace marlin{
 
   void TestProcessor::init() { 
 
-    streamlog_out( MESSAGE ) << "TestProcessor::init()  " << name() 
+    log<MESSAGE>() << "TestProcessor::init()  " << name() 
 			     << std::endl 
 			     << "  parameters: " << std::endl 
 			     << *parameters()  
@@ -36,7 +36,7 @@ namespace marlin{
 
 #ifdef MARLIN_VERSION_GE
 #if MARLIN_VERSION_GE( 0, 9, 8 )    
-    streamlog_out( DEBUG ) << " marlin version is g.e. 0.9.8 " << std::endl ;
+    log<DEBUG>() << " marlin version is g.e. 0.9.8 " << std::endl ;
 #endif
 #endif
 
@@ -51,7 +51,7 @@ namespace marlin{
   void TestProcessor::processRunHeader( LCRunHeader* run) { 
 
 
-   streamlog_out( MESSAGE ) << " processRun() " 
+   log<MESSAGE>() << " processRun() " 
 			    << run->getRunNumber() 		  
 			    << std::endl ;
     
@@ -82,7 +82,7 @@ namespace marlin{
       _doCalibration = true ;
       _nLoops = 0 ;
 
-      streamlog_out( DEBUG ) << " initialize  _doCalibration  and  _nLoops in first event :  " << evt->getEventNumber() 
+      log<DEBUG>() << " initialize  _doCalibration  and  _nLoops in first event :  " << evt->getEventNumber() 
 			     << " run " << evt->getRunNumber() << std::endl ; 
     }
   
@@ -93,7 +93,7 @@ namespace marlin{
       setReturnValue( "Calibrating" , true ) ;
 
       //      message<MESSAGE>(  log()
-      streamlog_out( MESSAGE) << "processEvent()  ---CALIBRATING ------ "  
+      log<MESSAGE>() << "processEvent()  ---CALIBRATING ------ "  
 			      << " in event " << evt->getEventNumber() << " (run " 
 			      << evt->getRunNumber() << ") " 
 			      << std::endl ;
@@ -124,13 +124,13 @@ namespace marlin{
   
     //---------end example code  ----------------------------------------
 
-    streamlog_out(MESSAGE) << " processing event " << evt->getEventNumber() 
+    log<MESSAGE>() << " processing event " << evt->getEventNumber() 
 			   << "  in run "          << evt->getRunNumber() 
 			   << std::endl ;
     
     
-//     streamlog_out(DEBUG)   << "(DEBUG)   local verbosity level: " << logLevelName() << std::endl ;
-    streamlog_out(MESSAGE) << "(MESSAGE) local verbosity level: " << logLevelName() << std::endl ;
+//     log<DEBUG>()   << "(DEBUG)   local verbosity level: " << logLevelName() << std::endl ;
+    log<MESSAGE>() << "(MESSAGE) local verbosity level: " << logLevelName() << std::endl ;
 //     streamlog_out(WARNING) << "(WARNING) local verbosity level: " << logLevelName() << std::endl ;
 //     streamlog_out(ERROR)   << "(ERROR)   local verbosity level: " << logLevelName() << std::endl ;
 
@@ -148,7 +148,7 @@ namespace marlin{
   
   void TestProcessor::check( LCEvent * evt ) { 
     
-    streamlog_out(DEBUG) << " check() "  // << dummy_method() 
+    log<DEBUG>() << " check() "  // << dummy_method() 
 			 << evt->getEventNumber() 
 			 << " (run " << evt->getRunNumber() << ") "
 			 << std::endl ;
@@ -164,14 +164,10 @@ namespace marlin{
 
   void TestProcessor::printEndMessage() const {
 
-    streamlog_out(MESSAGE) << " end() "  
+    log<MESSAGE>() << " end() "  
 			   << " processed "     << _nEvt << " events in " 
 			   << _nRun << " runs " << std::endl 
 			   << std::endl ;
-    
-    
-    // test deprecated method message 
-    message<DEBUG>( " and this is really the final DEBUG message ....") ;
   }
   
 }// namespace marlin
