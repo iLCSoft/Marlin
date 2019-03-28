@@ -18,6 +18,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
   
   void Scheduler::init( Application *app ) {
+    app->logger()->log<DEBUG5>() << "Scheduler init ..." << std::endl ;
     // Extract global settings
     auto parameters = app->globalParameters() ;
     _suppressCheck = not (parameters->getStringVal( "SupressCheck" ) != "true" ) ;
@@ -43,6 +44,7 @@ namespace marlin {
     }
     for ( size_t i=0 ; i<activeProcessors.size() ; ++i ) {
       auto procName = activeProcessors[ i ] ;
+      app->logger()->log<DEBUG5>() << "Active processor " << procName << std::endl ;
       auto processorParameters = app->processorParameters( procName ) ;
       if ( nullptr == processorParameters ) {
         throw Exception( "Scheduler::init: undefined processor '" + procName + "'" ) ;
@@ -62,10 +64,12 @@ namespace marlin {
     // TODO configure logging for this processor chain here
     // Initialize processors
     for ( auto processor : _processors ) {
+      app->logger()->log<DEBUG5>() << "Init processor " << processor->name() << std::endl ;
       processor->setScheduler( this ) ;
-      processor->baseInit() ;
+      processor->baseInit( app ) ;
       _processorTimes[ processor->name() ] = TimeMetadata() ;
     }
+    app->logger()->log<DEBUG5>() << "Scheduler init ... DONE" << std::endl ;
   }
   
   //--------------------------------------------------------------------------
