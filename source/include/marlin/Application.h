@@ -25,16 +25,21 @@ namespace marlin {
     Application() = default ;
     virtual ~Application() = default ;
 
-    /**
-     *  @brief  Run the Marlin application
-     */
-    virtual void run() = 0 ;
-
   protected:
     /**
      *  @brief  Initialize the application
      */
     virtual void init() = 0;
+    
+    /**
+     *  @brief  Run the user application
+     */
+    virtual void runApplication() = 0 ;
+    
+    /**
+     *  @brief  End the application
+     */
+    virtual void end() = 0 ;
 
   public:
     /**
@@ -44,6 +49,11 @@ namespace marlin {
      *  @param  argv argv from main function
      */
     void init( int argc, char **argv ) ;
+    
+    /**
+     *  @brief  Run the application
+     */
+    void run() ;
 
     /**
      *  @brief  Print command line usage
@@ -158,8 +168,6 @@ namespace marlin {
     CommandLineParametersMap   _cmdLineOptions {} ;
     /// Whether the application has been initialized
     bool                       _initialized {false} ;
-    /// The verbosity level read from cmd line argument
-    std::string                _verbosityFromCmdLine {} ;
     /// The steering file name
     std::string                _steeringFileName {} ;
     /// The XML steering file parser
