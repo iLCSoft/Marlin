@@ -7,25 +7,32 @@
 // -- std headers
 #include <set>
 #include <algorithm>
+#include <iomanip>
 
 namespace marlin {
   
   Scheduler::Scheduler() {
     _runtimeConditions = std::make_shared<LogicalExpressions>() ;
     _rdmSeedGenerator = std::make_shared<SeedGeneratorType>() ;
+    std::stringstream ss ; ss << "Scheduler_" << (void*) this ;
+    _logger = Logging::createLogger( ss.str() ) ;
+    _logger->setLevel<MESSAGE>() ;
   }
   
   //--------------------------------------------------------------------------
   
-  void Scheduler::init( Application *app ) {
-    app->logger()->log<DEBUG5>() << "Scheduler init ..." << std::endl ;
+  void Scheduler::init( Application *application ) {
+    _application = application ;
+    std::stringstream ss ; ss << "Scheduler_" << (void*) this ;
+    _logger = app().createLogger( ss.str() ) ;
+    logger()->log<DEBUG5>() << "Scheduler init ..." << std::endl ;
     // Extract global settings
-    auto parameters = app->globalParameters() ;
+    auto parameters = app().globalParameters() ;
     _suppressCheck = not (parameters->getStringVal( "SupressCheck" ) != "true" ) ;
     _allowModify = ( parameters->getStringVal( "AllowToModifyEvent" ) == "true" ) ;
     // create list of active processors
-    auto activeProcessors = app->activeProcessors() ;
-    auto processorConditions = app->processorConditions() ;
+    auto activeProcessors = app().activeProcessors() ;
+    auto processorConditions = app().processorConditions() ;
     const bool useConditions = ( activeProcessors.size() == processorConditions.size() ) ;
     if ( activeProcessors.empty() ) {
       throw Exception( "Scheduler::init: Active processor list is empty !" ) ;
@@ -33,7 +40,7 @@ namespace marlin {
     auto &mgr = PluginManager::instance() ;
     std::set<std::string> duplicateCheck ( activeProcessors.begin() , activeProcessors.end() ) ;
     if ( duplicateCheck.size() != activeProcessors.size() ) {
-      std::cout << "Scheduler::init: the following list of active processors are found to be duplicated :" << std::endl ;
+      logger()->log<ERROR>() << "Scheduler::init: the following list of active processors are found to be duplicated :" << std::endl ;
       for ( auto procName : activeProcessors ) {
         auto c = std::count( activeProcessors.begin() , activeProcessors.end() , procName ) ;
         if( c > 1 ) {
@@ -44,8 +51,8 @@ namespace marlin {
     }
     for ( size_t i=0 ; i<activeProcessors.size() ; ++i ) {
       auto procName = activeProcessors[ i ] ;
-      app->logger()->log<DEBUG5>() << "Active processor " << procName << std::endl ;
-      auto processorParameters = app->processorParameters( procName ) ;
+      logger()->log<DEBUG5>() << "Active processor " << procName << std::endl ;
+      auto processorParameters = app().processorParameters( procName ) ;
       if ( nullptr == processorParameters ) {
         throw Exception( "Scheduler::init: undefined processor '" + procName + "'" ) ;
       }
@@ -61,15 +68,14 @@ namespace marlin {
       }
       processor->setParameters( processorParameters ) ;
     }
-    // TODO configure logging for this processor chain here
     // Initialize processors
     for ( auto processor : _processors ) {
-      app->logger()->log<DEBUG5>() << "Init processor " << processor->name() << std::endl ;
+      logger()->log<DEBUG5>() << "Init processor " << processor->name() << std::endl ;
       processor->setScheduler( this ) ;
-      processor->baseInit( app ) ;
+      processor->baseInit( application ) ;
       _processorTimes[ processor->name() ] = TimeMetadata() ;
     }
-    app->logger()->log<DEBUG5>() << "Scheduler init ... DONE" << std::endl ;
+    logger()->log<DEBUG5>() << "Scheduler init ... DONE" << std::endl ;
   }
   
   //--------------------------------------------------------------------------
@@ -87,7 +93,6 @@ namespace marlin {
         if ( not _runtimeConditions->conditionIsTrue( processor->name() ) ) {
           continue ;
         }
-        // TODO setup logger here
         auto startTime = clock() ;
         processor->processEvent( event ) ;
         if( not _suppressCheck ) {
@@ -133,8 +138,6 @@ namespace marlin {
       if ( not _runtimeConditions->conditionIsTrue( processor->name() ) ) {
         continue ;
       }
-      // TODO setup logger correctly here
-      // logger->setLogLevel() ;
       auto startTime = clock() ;
       eventModifier->modifyEvent( event ) ;
       auto endTime = clock() ;
@@ -154,7 +157,6 @@ namespace marlin {
         if ( not _runtimeConditions->conditionIsTrue( processor->name() ) ) {
           continue ;
         }
-        // TODO setup logger here
         auto startTime = clock() ;
         processor->processEvent( event ) ;
         if( not _suppressCheck ) {
@@ -182,7 +184,6 @@ namespace marlin {
   
   void Scheduler::modifyRunHeader( EVENT::LCRunHeader *header ) {
     for ( auto processor : _processors ) {
-      // TODO handle logging here
       auto eventModifier = dynamic_cast<EventModifier*>( processor.get() ) ;
       if ( eventModifier ) {
         eventModifier->modifyRunHeader( header ) ;
@@ -194,21 +195,20 @@ namespace marlin {
   
   void Scheduler::end() {
     for ( auto iter = _processors.rbegin(), endIter = _processors.rend() ; endIter != iter ; ++iter ) {
-      // TODO setup logger here
       auto processor = *iter ;
       processor->end() ;
     }
-    std::cout << " --------------------------------------------------------- " << std::endl ;
-    std::cout << "  Events skipped by processors : " << std::endl ;
+    logger()->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl ;
+    logger()->log<MESSAGE>() << "  Events skipped by processors : " << std::endl ;
     unsigned int nSkipped = 0 ;
     for( auto skip : _skipEventMap ) {
-      std::cout << "       " << skip.first << ": \t" << skip.second << std::endl ;
+      logger()->log<MESSAGE>() << "       " << skip.first << ": \t" << skip.second << std::endl ;
       nSkipped += skip.second ;	
     }
-    std::cout << "  Total: " << nSkipped  << std::endl ;
-    std::cout << " --------------------------------------------------------- "  << std::endl << std::endl ;
+    logger()->log<MESSAGE>() << "  Total: " << nSkipped  << std::endl ;
+    logger()->log<MESSAGE>() << " --------------------------------------------------------- "  << std::endl << std::endl ;
     
-    std::cout << " --------------------------------------------------------- " << std::endl
+    logger()->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl
               << "      Time used by processors ( in processEvent() ) :      " << std::endl 
                                                                                << std::endl ;
     std::list<TimeMap::value_type> timeList( _processorTimes.begin() , _processorTimes.end() ) ;
@@ -216,6 +216,47 @@ namespace marlin {
     timeList.sort( [](const elt &lhs, const elt &rhs) {
       return ( lhs.second._processingTime > rhs.second._processingTime ) ;
     }) ;
+    double timeTotal = 0.0 ;
+    int eventTotal = 0 ;
+    for( auto timeInfo : timeList ) {
+      std::string procName = timeInfo.first ;
+      procName.resize(40, ' ') ;
+      double timeProc = timeInfo.second._processingTime  / double(CLOCKS_PER_SEC) ;
+      timeTotal += timeProc ;
+      int eventProc = timeInfo.second._eventCounter ;
+      if( eventProc > eventTotal ){
+        eventTotal = eventProc ;
+      }
+      std::stringstream ss ;
+      if ( eventProc > 0 ) {
+        ss << timeProc / eventProc ;
+      }
+      else {
+        ss << "NaN" ;
+      }
+      logger()->log<MESSAGE>() 
+        //<< std::left << std::setw(30)
+        << procName
+        << std::setw(12) << std::scientific  << timeProc  << " s "
+        << "in " << std::setw(12) << eventProc 
+        << " events  ==> " 
+        << std::setw(12) << std::scientific << ss.str() << " [ s/evt.] "
+        << std::endl << std::endl ;
+    }
+    std::stringstream ss ;
+    if ( eventTotal > 0 ) {
+      ss << timeTotal / eventTotal ;
+    }
+    else {
+      ss << "NaN" ;
+    }
+    logger()->log<MESSAGE>() 
+      << "            Total:                   "
+      <<  std::setw(12) << std::scientific  << timeTotal << " s in "
+      <<  std::setw(12) << eventTotal << " events  ==> " 
+      <<  std::setw(12) << std::scientific << ss.str() << " [ s/evt.] "
+      << std::endl << std::endl ;
+    logger()->log<MESSAGE>()  << " --------------------------------------------------------- "  << std::endl ;
   }
   
   //--------------------------------------------------------------------------
@@ -228,6 +269,21 @@ namespace marlin {
   
   std::shared_ptr<Scheduler::SeedGeneratorType> Scheduler::randomSeedGenerator() const { 
     return _rdmSeedGenerator ; 
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  Scheduler::Logger Scheduler::logger() const {
+    return _logger ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  const Application &Scheduler::app() const {
+    if ( nullptr == _application ) {
+      throw Exception( "Scheduler::app: not initialized !" ) ;
+    }
+    return *_application ;
   }
 
 } // namespace marlin
