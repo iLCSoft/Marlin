@@ -8,6 +8,7 @@
 // -- marlin headers
 #include "marlin/LogicalExpressions.h"
 #include "marlin/RandomSeedGenerator.h"
+#include "marlin/Logging.h"
 
 // lcio forward declaration
 namespace EVENT {
@@ -43,6 +44,7 @@ namespace marlin {
     typedef std::map<std::string, TimeMetadata>               TimeMap ;
     typedef std::map< const std::string , int >               SkippedEventMap ;
     typedef RandomSeedGenerator<Processor>                    SeedGeneratorType ;
+    typedef Logging::Logger                                   Logger ;
     
   public:
     ~Scheduler() = default ;
@@ -104,6 +106,16 @@ namespace marlin {
      */
     std::shared_ptr<SeedGeneratorType> randomSeedGenerator() const ;
     
+    /**
+     *  @brief  Get the scheduler logger instance
+     */
+    Logger logger() const ;
+    
+    /**
+     *  @brief  Get the application in which the scheduler has been created
+     */
+    const Application &app() const ;
+    
   private:
     /// The processor chain
     ProcessorList                       _processors {} ;
@@ -119,6 +131,10 @@ namespace marlin {
     std::shared_ptr<LogicalExpressions> _runtimeConditions {} ;
     /// The processor event seeder mapping
     std::shared_ptr<SeedGeneratorType>  _rdmSeedGenerator {nullptr} ;
+    /// The application in which the scheduler is running
+    Application                        *_application {nullptr} ;
+    /// The scheduler logger
+    Logger                              _logger {nullptr} ;
   };
 
 } // end namespace marlin
