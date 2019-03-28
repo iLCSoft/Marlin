@@ -57,7 +57,7 @@ namespace marlin{
 
 
   ProcessorMgr* ProcessorMgr::instance() {
-
+    throw Exception( "ProcessorMgr class is obsolete!" ) ;
     if( _me == 0 ) {
       _me = new ProcessorMgr ;
     }
@@ -278,7 +278,7 @@ namespace marlin{
 
 	  // streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
-	  (*it)->baseInit() ;
+	  (*it)->baseInit(nullptr) ;
 
 	  tMap[ *it ] = std::make_pair( 0 , 0 )  ;
 
