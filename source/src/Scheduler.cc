@@ -251,7 +251,7 @@ namespace marlin {
       ss << "NaN" ;
     }
     logger()->log<MESSAGE>() 
-      << "            Total:                   "
+      << "Total:                                  "
       <<  std::setw(12) << std::scientific  << timeTotal << " s in "
       <<  std::setw(12) << eventTotal << " events  ==> " 
       <<  std::setw(12) << std::scientific << ss.str() << " [ s/evt.] "
