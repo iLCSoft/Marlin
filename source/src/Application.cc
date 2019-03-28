@@ -24,17 +24,27 @@ namespace marlin {
     // parse the steering file
     _parser = createParser() ;
     _parser->parse() ;
+    // write parsed steering file if global parameter is there
+    auto globals = globalParameters() ;
+    auto outputSteeringFile = globals->getStringVal( "OutputSteeringFile" ) ;
+    if ( not outputSteeringFile.empty() ) {
+      parser()->write( outputSteeringFile ) ;
+    }
     // initialize logging
     _loggerMgr.init( this ) ;
-    // overwrite verbosity level if set from command line
-    if ( not _verbosityFromCmdLine.empty() ) {
-      _loggerMgr.setLevel( _verbosityFromCmdLine ) ;
-    }
     // initialize geometry
     _geometryMgr.init( this ) ;
     // sub-class initialization
     init() ;
     _initialized = true ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  void Application::run() {
+    runApplication() ;
+    _geometryMgr.clear();
+    end() ;
   }
 
   //--------------------------------------------------------------------------
@@ -89,15 +99,6 @@ namespace marlin {
       else if ( arg == "-h" || arg == "-?" ) {
         printUsage() ;
         ::exit( 0 ) ;
-      }
-      // verbosity level
-      else if ( arg == "-v" ) {
-        iter = cmdLineArgs.erase( iter ) ;
-        if ( cmdLineArgs.end() != iter ) {
-          _verbosityFromCmdLine = *iter ;
-          iter = cmdLineArgs.erase( iter ) ;
-          continue;
-        }
       }
       // last argument is steering file
       else if( std::next( iter ) == cmdLineArgs.end() ) {
