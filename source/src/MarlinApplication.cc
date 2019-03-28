@@ -53,6 +53,9 @@ namespace marlin {
     };
   }
   
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+  
   void MarlinApplication::runApplication() {
     // Create and register a listener
     detail::MarlinLCListener listener( _scheduler ) ;
