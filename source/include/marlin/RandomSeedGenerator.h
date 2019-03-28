@@ -6,6 +6,7 @@
 
 // -- marlin headers
 #include <marlin/Exceptions.h>
+#include <marlin/Logging.h>
 #include "jenkinsHash.h"
 
 // -- std headers
@@ -153,7 +154,7 @@ namespace marlin {
   inline void RandomSeedGenerator<T>::addEntry( const T* entry ) {
     // event processing started, so disallow any more calls to addEntry
     if ( _eventProcessingStarted ) { 
-      std::cerr << "RandomSeedGenerator<T>::addEntry called from object: " 
+      streamlog_out(ERROR) << "RandomSeedGenerator<T>::addEntry called from object: " 
 			   << (void*)entry 
          << std::endl 
          << "The method addEntry must be called at initialization time" 
@@ -162,7 +163,7 @@ namespace marlin {
     }
     // just in case any body has called rand since we set the seed 
     _generator.seed( _globalSeed );
-    std::cout << "ProcessorEventSeeder: generator initialised with global seed " << _globalSeed << std::endl ;
+    streamlog_out(DEBUG6) << "ProcessorEventSeeder: generator initialised with global seed " << _globalSeed << std::endl ;
     auto iter = _randomSeeds.find( entry ) ;
     if ( _randomSeeds.end() != iter ) {
       std::cerr << "RandomSeedGenerator<T>::addEntry called from object: " 
@@ -175,7 +176,7 @@ namespace marlin {
     auto seed = getRandom() ;
     typename RandomSeedMap::value_type mapEntry( entry, seed ) ;
     _randomSeeds.insert( mapEntry ) ;
-    std::cout << "RandomSeedGenerator<T>: instance " << (void*)entry
+    streamlog_out(DEBUG6) << "RandomSeedGenerator<T>: instance " << (void*)entry
                          << " registered for random seed service. Allocated "
                          <<  seed << " as initial seed." << std::endl ;
   }
@@ -186,7 +187,7 @@ namespace marlin {
   inline typename RandomSeedGenerator<T>::SeedType RandomSeedGenerator<T>::getSeed( const T* entry ) const {
     auto iter = _randomSeeds.find( entry ) ;
     if ( _randomSeeds.end() == iter ) {
-      std::cerr << "RandomSeedGenerator<T>::getSeed called from object: " 
+      streamlog_out(ERROR) << "RandomSeedGenerator<T>::getSeed called from object: " 
          << (void*)entry 
          << std::endl 
          << "No such instance registered !" 
@@ -213,7 +214,7 @@ namespace marlin {
     c = (unsigned char *) &_globalSeed ;
     seed = jenkins_hash( c, sizeof _globalSeed, seed) ;
     // refresh the seed
-    std::cout << "RandomSeedGenerator: Refresh seeds using " << seed << " as new random seed" << std::endl ;
+    streamlog_out(DEBUG6) << "RandomSeedGenerator: Refresh seeds using " << seed << " as new random seed" << std::endl ;
     _generator.seed( seed ) ;
     // fill map with seeds for each registered instance using random number generator 
     for (auto& iter : _randomSeeds ) {
