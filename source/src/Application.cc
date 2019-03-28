@@ -16,6 +16,7 @@ namespace marlin {
     for ( int i=1 ; i<argc ; i++ ) {
       _arguments.push_back( argv[i] ) ;
     }
+    // set the main logger name a bit early for clearer logging
     _loggerMgr.mainLogger()->setName( program() ) ;
     parseCommandLine() ;
     // parse the steering file
@@ -25,7 +26,7 @@ namespace marlin {
     _loggerMgr.init( this ) ;
     // overwrite verbosity level if set from command line
     if ( not _verbosityFromCmdLine.empty() ) {
-      logger()->setLevel( _verbosityFromCmdLine ) ;
+      _loggerMgr.setLevel( _verbosityFromCmdLine ) ;
     }
     // initialize geometry
     _geometryMgr.init( this ) ;
