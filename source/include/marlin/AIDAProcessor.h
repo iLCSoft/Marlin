@@ -1,28 +1,32 @@
-#ifndef AIDAProcessor_h
-#define AIDAProcessor_h 1
+#ifndef MARLIN_AIDAPROCESSOR_h
+#define MARLIN_AIDAPROCESSOR_h 1
 
-#include "marlin/MarlinConfig.h"
+// -- marlin headers
+#include <marlin/MarlinConfig.h>
 
 #ifdef MARLIN_AIDA
 
+// -- marlin headers
 #include "marlin/Processor.h"
-#include "lcio.h"
 
-namespace AIDA{
+// lcio forward declaration
+namespace EVENT {
+  class LCEvent ;
+  class LCRunHeaders ;
+}
+
+// AIDA forward declaration
+namespace AIDA {
   class IAnalysisFactory ;
   class ITreeFactory ;
   class ITree ;
   class IHistogramFactory ;
   class ITupleFactory ;
   class IDataPointSetFactory ;
+  class ICloud1D ;
 }
 
-class HistoManager ;
-
-using namespace lcio ;
-
 namespace marlin {
-
 
 /** Provides access to AIDA histograms, ntuples, etc.
  *  This module  creates an AIDA file and histogram and tuple factories that 
@@ -59,17 +63,9 @@ class AIDAProcessor : public marlin::Processor {
    */
   virtual void init() ;
 
-  /** Called for every run.
-   */
-  virtual void processRunHeader( LCRunHeader* run ) ;
-
-  /** nothing processed here
-   */
-   virtual void processEvent( LCEvent * evt ) ; 
-
    /** Fills plot with processing time
     */
-   virtual void check( LCEvent * evt ) ; 
+   virtual void check( EVENT::LCEvent * evt ) ; 
 
 
   /** Called after data processing for clean up.
@@ -109,17 +105,20 @@ class AIDAProcessor : public marlin::Processor {
   
 
 protected:
-
-  AIDA::IAnalysisFactory* _analysisFactory ; 
-  AIDA::ITreeFactory* _treeFactory ; 
-  AIDA::ITree*  _tree ;
-  AIDA::IHistogramFactory* _histoFactory ; 
-  AIDA::ITupleFactory* _tupleFactory ; 
-  AIDA::IDataPointSetFactory* _dataPointSetFactory ; 
-
-  std::string _fileType ;
-  std::string _fileName ;
-  int _compress ;
+  // AIDA processor facility
+  AIDA::IAnalysisFactory*       _analysisFactory ; 
+  AIDA::ITreeFactory*           _treeFactory ; 
+  AIDA::ITree*                  _tree ;
+  AIDA::IHistogramFactory*      _histoFactory ; 
+  AIDA::ITupleFactory*          _tupleFactory ; 
+  AIDA::IDataPointSetFactory*   _dataPointSetFactory ; 
+  
+  AIDA::ICloud1D*               _hEvtTime {nullptr} ;
+  clock_t                       _eventTime {} ; 
+  
+  std::string                   _fileType ;
+  std::string                   _fileName ;
+  int                           _compress ;
     
 private:
   
@@ -129,5 +128,5 @@ private:
 } // end namespace marlin 
 
 #endif // MARLIN_AIDA
-#endif // AIDAProcessor_h
+#endif // MARLIN_AIDAPROCESSOR_h
 
