@@ -285,6 +285,17 @@ namespace marlin {
     }
     return *_application ;
   }
+  
+  //--------------------------------------------------------------------------
+  
+  Scheduler::TimeMetadata Scheduler::generateTimeSummary() const {
+    TimeMetadata summary {} ;
+    for ( auto t : _processorTimes ) {
+      summary._processingTime += t.second._processingTime / double(CLOCKS_PER_SEC) ;
+      summary._eventCounter += t.second._eventCounter ;
+    }
+    return summary ;
+  }
 
 } // namespace marlin
 

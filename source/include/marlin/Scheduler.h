@@ -27,6 +27,7 @@ namespace marlin {
    *  sequentially within a single thread
    */
   class Scheduler {
+  public:
     /**
      *  @brief  TimeMetadata struct
      *  Handle runtime information of processors
@@ -115,6 +116,11 @@ namespace marlin {
      *  @brief  Get the application in which the scheduler has been created
      */
     const Application &app() const ;
+    
+    /**
+     *  @brief  Generate a time summary of all processors
+     */
+    TimeMetadata generateTimeSummary() const ;
     
   private:
     /// The processor chain
