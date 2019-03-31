@@ -4,7 +4,34 @@
 // -- marlin headers
 #include "marlin/Application.h"
 
+// -- lcio headers
+#include "LCIOSTLTypes.h"
+
+// -- std headers
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
+
 namespace marlin {
+  
+  class Task ;
+  using TaskPtr = std::shared_ptr<Task> ;
+  using TaskList = std::vector<TaskPtr> ;
+  
+  /**
+   *  @brief  TaskError struct
+   *  An error summary of task running in a separate thread
+   */
+  struct TaskError {
+    /// The thread id 
+    std::thread::id        _threadId {0} ;
+    /// The task id 
+    unsigned int           _taskId {0} ;
+    /// A possibly caught exception during processing
+    std::exception_ptr     _exception {nullptr} ;
+  };
+  
+  using TaskErrorPtr = std::shared_ptr<TaskError> ;
 
   /**
    *  @brief  MarlinMTApplication class
@@ -16,6 +43,7 @@ namespace marlin {
    *  Each thread is processing a full processor chain with its own LCReader
    */
   class MarlinMTApplication : public Application {
+    friend class Task ;
   public:
     MarlinMTApplication() = default ;
     
@@ -24,6 +52,21 @@ namespace marlin {
     void init() ;
     void end() {}
     void printUsage() const ;
+    
+  private:
+    void joinTasks( bool stopTasks ) ;
+    
+  private:
+    /// The concurrency of MT application 
+    unsigned int             _concurrency {0} ;
+    ///
+    TaskList                 _tasks {} ;
+    ///
+    std::atomic_int          _nRunningTasks {0} ;
+    std::atomic_bool         _taskErrorFlag {false} ;
+    std::mutex               _mutex {} ;
+    std::condition_variable  _taskConditionVariable {} ;
+    TaskErrorPtr             _taskError {nullptr} ;
   };
 
 } // end namespace marlin
