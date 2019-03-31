@@ -35,7 +35,7 @@ void MyProcessor::init() {
 ```
 This application will avoid use of singletons such `ProcessorManager`
 
-**Solution**: an instance of a Scheduler class is assigned to the Processor object, not an Application object though.
+**Solution**: an instance of a Scheduler class is assigned to the Processor object, and an Application object.
 - [x] Develop a simple/use existing thread safe logging library. It is possible with Marlin to set the verbosity level for each processor independently. This is not possible with streamlog in the parallel version as the verbosity is global in streamlog and the verbosity level has to be thread local to avoid data race condition or unexpected logging behaviour.
    - Modify streamlog ?
    - Re-implement simple version of streamlog but thread safe and allowing for thread local verbosity ?
@@ -50,10 +50,13 @@ This application will avoid use of singletons such `ProcessorManager`
       - Provide a wrapper API around main ROOT objects with locks
       - Provide simplified implementation of thread safe histograming library. At end of Marlin application, make a conversion to ROOT objects and write to file.
    - In case the event ordering is important for tuples, provide a mechanism to order (re-order) entries before writing to file
-- [ ] Provide a mechanism to load geometry as a global instance
+   - Could think about allowing interaction with histos/tuples only in the `Processor::check()` method and use a lock on method call
+- [x] Provide a mechanism to load geometry as a global instance
    - Provide global application extensions that users can populate/access at runtime ?
-- [ ] Provide mechanism to pass condition together with an event
+   - **Solution** GeometryManager and GeometryPlugin take care of loading a single geometry instance per application
+- [x] Provide mechanism to pass condition together with an event
    - Attach condition to event via an event extension ?
+   - **Solution** Event runtime data are kept locally in the processor chain. No event extension mechanism added
 - [ ] Review current XML parser features and issues in order to make a better use of it
 - [ ] Allow for different possible source of records, e.g:
    - LCIO file reader
