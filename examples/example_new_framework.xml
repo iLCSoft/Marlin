@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<marlin>
+  <execute>
+    <processor name="MyTest1" />
+    <processor name="MyTest2" />
+    <processor name="MyTest3" />
+    <processor name="MyTest4" />
+    <processor name="MyTest5" />
+    <processor name="MyTest6" />
+    <processor name="MyTest7" />
+    <processor name="MyTest8" />
+    <processor name="MyTest9" />
+  </execute>
+
+  <global>
+    <parameter name="LCIOInputFiles">
+      test/testmarlin/simjob.slcio 
+      test/testmarlin/simjob.slcio 
+      test/testmarlin/simjob.slcio 
+      test/testmarlin/simjob.slcio 
+      test/testmarlin/simjob.slcio 
+      test/testmarlin/simjob.slcio 
+      test/testmarlin/simjob.slcio 
+      test/testmarlin/simjob.slcio
+      test/testmarlin/simjob.slcio 
+    </parameter>
+    <parameter name="MaxRecordNumber" value="0"/>
+    <parameter name="SkipNEvents" value="1"/>
+    <parameter name="Verbosity"> DEBUG </parameter>
+    <parameter name="Concurrency"> 10 </parameter>
+    <parameter name="ColoredConsole"> 0 </parameter>
+    <!-- <parameter name="LogFileName"> toto.log </parameter> -->
+  </global>
+
+  <geometry type="GearGeometry"> 
+    <parameter name="GearFile"> test/testmarlin/gear_ILD_00.xml </parameter> 
+    <parameter name="DumpGeometry"> false </parameter> 
+  </geometry>
+
+  <!-- <geometry type="DD4hepGeometry"> 
+    <parameter name="CompactFile"> /afs/desy.de/project/ilcsoft/sw/x86_64_gcc54_ub1604/v02-00-01/lcgeo/v00-16-01/ILD/compact/ILD_l5_v02/ILD_l5_v02.xml </parameter> 
+    <parameter name="DumpGeometry"> false </parameter>
+  </geometry> -->
+  
+  <processor name="MyTest1" type="Statusmonitor"/>
+  <processor name="MyTest2" type="Statusmonitor"/>
+  <processor name="MyTest3" type="Statusmonitor"/>
+  <processor name="MyTest4" type="Statusmonitor"/>
+  <processor name="MyTest5" type="Statusmonitor"/>
+  <processor name="MyTest6" type="Statusmonitor"/>
+  <processor name="MyTest7" type="Statusmonitor"/>
+  <processor name="MyTest8" type="Statusmonitor"/>
+  <processor name="MyTest9" type="Statusmonitor"/>
+
+  <!-- <processor name="MyTest1" type="TestProcessor">
+  </processor>
+  
+  <processor name="MyTest2" type="TestProcessor">
+  </processor>
+  
+  <processor name="MyTest3" type="TestProcessor">
+  </processor> -->
+
+</marlin>
