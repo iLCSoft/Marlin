@@ -72,8 +72,8 @@ INSTALL_SHARED_LIBRARY( MarlinXML DESTINATION lib )
 INSTALL_SHARED_LIBRARY( Marlin DESTINATION lib )
 TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} MarlinXML ${Marlin_DEPENDS_LIBRARIES}
   ## Note: it is not a problem if any variables is empty because package not found
-  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES}
-  ${DD4hep_LIBRARIES} ${DD4hep_COMPONENT_LIBRARIES} ${ROOT_LIBRARIES} )
+  ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}
+  ${DD4hep_LIBRARIES} ${DD4hep_COMPONENT_LIBRARIES} ${ROOT_LIBRARIES}  )
 
 # ----- MarlinDumpPlugins executable ----------------------------------------------------
 ADD_EXECUTABLE( bin_MarlinDumpPlugins ./main/MarlinDumpPlugins.cc )
@@ -90,13 +90,10 @@ INSTALL( TARGETS bin_Marlin DESTINATION bin )
 # ----------------------------------------------------------------------------
 
 # ----- MarlinMT executable ----------------------------------------------------
-IF( MARLIN_MT )
-  FIND_PACKAGE( Threads REQUIRED )
-  ADD_EXECUTABLE( bin_MarlinMT ./main/MarlinMT.cc )
-  SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
-  TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin ${CMAKE_THREAD_LIBS_INIT} )
-  INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
-ENDIF()
+ADD_EXECUTABLE( bin_MarlinMT ./main/MarlinMT.cc )
+SET_TARGET_PROPERTIES( bin_MarlinMT PROPERTIES OUTPUT_NAME MarlinMT )
+TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin )
+INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
 # ----------------------------------------------------------------------------
 
 # ----- MarlinGUI ------------------------------------------------------------

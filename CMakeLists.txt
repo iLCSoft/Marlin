@@ -25,6 +25,7 @@ INCLUDE( ilcsoft_default_settings )
 
 
 # required packages
+FIND_PACKAGE( Threads REQUIRED )
 FIND_PACKAGE( LCIO REQUIRED )
 FIND_PACKAGE( GEAR REQUIRED )
 
@@ -100,10 +101,6 @@ IF( MARLIN_GUI )
 
     ADD_DEFINITIONS ( -DQT_NO_DEBUG )
 ENDIF()
-
-### SUPPORT FOR MULTI-THREADING #############################################
-OPTION( MARLIN_MT "Set to ON to build multi-threading support in Marlin" OFF )
-
 
 ### DOCUMENTATION ###########################################################
 
