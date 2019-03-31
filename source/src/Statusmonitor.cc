@@ -1,6 +1,7 @@
 #include "marlin/Statusmonitor.h"
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 
 using namespace std;
 
@@ -23,7 +24,7 @@ Statusmonitor::Statusmonitor() : Processor("Statusmonitor") {
   registerProcessorParameter("HowOften",
 			     "Print the event number every N events",
 			     _howOften, 
-			     int(10000) ) ;
+			     int(1) ) ;
 
   
 }
@@ -45,6 +46,13 @@ void Statusmonitor::processRunHeader( LCRunHeader* ) {
 } 
 
 void Statusmonitor::processEvent( LCEvent *  ) { 
+  
+  int h = 0;
+  for( int i=0 ; i<10000 ; i++ ) {
+    for( int j=0 ; j<10000 ; j++ ) {
+      h = std::sqrt(i) * j ;
+    }
+  }
 
   if (_nEvt % _howOften == 0) {
     log<MESSAGE>() 
