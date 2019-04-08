@@ -19,10 +19,6 @@ IF( NOT MARLIN_LCCD )
     LIST( REMOVE_ITEM marlin_headers ./include/marlin/ConditionsProcessor.h )
 ENDIF()
 
-IF( NOT MARLIN_DD4HEP )
-    LIST( REMOVE_ITEM marlin_headers ./include/marlin/DD4hepGeometry.h )
-ENDIF()
-
 IF( NOT MARLIN_CLHEP )
     LIST( REMOVE_ITEM marlin_headers
         ./include/marlin/IFourVectorSmearer.h
