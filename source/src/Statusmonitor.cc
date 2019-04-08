@@ -1,77 +1,107 @@
-#include "marlin/Statusmonitor.h"
+
+// -- marlin headers
+#include <marlin/Processor.h>
+#include <marlin/Logging.h>
+
+// -- lcio headers
+#include <lcio.h>
+
+// -- std headers
+#include <string>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
 
-using namespace std;
-
-// ----- include for verbosity dependend logging ---------
-#include "marlin/VerbosityLevels.h"
-
-
-using namespace lcio ;
-using namespace marlin ;
-
-
-Statusmonitor aStatusmonitor ;
-
-
-Statusmonitor::Statusmonitor() : Processor("Statusmonitor") {
+namespace marlin {
   
-  // modify processor description
-  _description = "Statusmonitor prints out information on running Marlin Job: Prints number of runs run and current number of the event. Counting is sequential and not the run or event ID." ;
+    /** Simple processor for writing out a status message every n-th event.
+     *
+     *  <h4>Input - Prerequisites</h4>
+     *  none
+     *  <h4>Output</h4> 
+     *  none
+     * @parameter HowOften  print run and event number for every HowOften-th event
+     * 
+     * @author A.Sailer CERN
+     * @version $Id:$
+     */
+  class Statusmonitor : public Processor {
+    
+   public:     
+    Statusmonitor() ;
+    
+    Processor *newProcessor() { return new Statusmonitor ; }
 
-  registerProcessorParameter("HowOften",
-			     "Print the event number every N events",
-			     _howOften, 
-			     int(1) ) ;
+    void init() ;
+    
+    /** Called for every run.
+     */
+    void processRunHeader( EVENT::LCRunHeader* run ) ;
+    
+    /** Called for every event - the working horse.
+     */
+    void processEvent( EVENT::LCEvent * evt ) ; 
+    
+    /** Called after data processing for clean up.
+     */
+    void end() ;
+    
+  private:
+    // processor parameters
+    int    _howOften {10000} ;
 
+    // runtime members
+    int    _nRun {0} ;
+    int    _nEvt {0} ;
+  };
   
-}
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
+  Statusmonitor::Statusmonitor() : Processor("Statusmonitor") {
+    
+    // modify processor description
+    _description = "Statusmonitor prints out information on running Marlin Job: Prints number of runs run and current number of the event. Counting is sequential and not the run or event ID." ;
 
-void Statusmonitor::init() { 
-  log<DEBUG>() << "INIT CALLED  " << std::endl ;
+    registerProcessorParameter("HowOften",
+  			     "Print the event number every N events",
+  			     _howOften, 
+  			     int(1) ) ;
+  }
 
-  // usually a good idea to
-  printParameters() ;
+  //--------------------------------------------------------------------------
 
-  _nRun = 0 ;
-  _nEvt = 0 ;
-
-}
-
-void Statusmonitor::processRunHeader( LCRunHeader* ) { 
-  _nRun++ ;
-} 
-
-void Statusmonitor::processEvent( LCEvent *  ) { 
+  void Statusmonitor::init() { 
+    log<DEBUG>() << "INIT CALLED  " << std::endl ;
+    // usually a good idea to
+    printParameters() ;
+  }
   
-  int h = 0;
-  for( int i=0 ; i<10000 ; i++ ) {
-    for( int j=0 ; j<10000 ; j++ ) {
-      h = std::sqrt(i) * j ;
+  //--------------------------------------------------------------------------
+
+  void Statusmonitor::processRunHeader( EVENT::LCRunHeader* ) { 
+    _nRun++ ;
+  }
+  
+  //--------------------------------------------------------------------------
+
+  void Statusmonitor::processEvent( EVENT::LCEvent *  ) { 
+    if (_nEvt % _howOften == 0) {
+      log<MESSAGE>() 
+        << " ===== Run  : " << std::setw(7) << _nRun
+        << "  Event: " << std::setw(7) << _nEvt << std::endl;
     }
+    _nEvt ++ ;
   }
-
-  if (_nEvt % _howOften == 0) {
-    log<MESSAGE>() 
-      << " ===== Run  : " << std::setw(7) << _nRun
-      << "  Event: " << std::setw(7) << _nEvt << endl;
-  }
-  _nEvt ++ ;
-
-}
-
-
-
-void Statusmonitor::check( LCEvent * ) { 
-}
-
-
-void Statusmonitor::end(){ 
   
-  log<MESSAGE>() << "Statusmonitor::end()  " << name()  << " processed " << _nEvt << " events in " << _nRun << " runs "	    << std::endl ;
+  //--------------------------------------------------------------------------
 
+  void Statusmonitor::end() {
+    log<MESSAGE>() << "Statusmonitor::end()  " << name()  << " processed " << _nEvt << " events in " << _nRun << " runs"	<< std::endl ;
+  }
+  
+  // processor declaration
+  Statusmonitor aStatusmonitor ;
+  
 }
 
