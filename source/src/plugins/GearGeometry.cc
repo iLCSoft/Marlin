@@ -1,4 +1,6 @@
-#include "marlin/GearGeometry.h"
+
+// -- marlin headers
+#include "marlin/GeometryPlugin.h"
 #include "marlin/PluginManager.h"
 
 // -- gear headers
@@ -7,6 +9,35 @@
 #include "gearxml/GearXML.h"
 
 namespace marlin {
+  
+  /**
+   *  @brief  GearGeometry class
+   *  Responsible for loading Gear geometry in Marlin 
+   */
+  class GearGeometry : public GeometryPlugin {
+  public:
+    GearGeometry(const GearGeometry &) = delete ;
+    GearGeometry& operator=(const GearGeometry &) = delete ;
+    
+  public:
+    GearGeometry() ;
+    
+  protected:
+    void loadGeometry() ;
+    const void *handle() const ;
+    void destroy() ;
+    std::type_index typeIndex() const ;
+    void dumpGeometry() const ;
+    
+  private:
+    /// The GEAR geometry XML file
+    std::string                       _gearFile {} ;
+    /// The Gear manager handling geometry
+    std::unique_ptr<gear::GearMgr>    _gearMgr {nullptr} ;
+  };
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
   GearGeometry::GearGeometry() :
     GeometryPlugin("Gear") {
