@@ -1,7 +1,7 @@
 #include "marlin/GeometryPlugin.h"
 
 // -- marlin headers
-#include "marlin/VerbosityLevels.h"
+#include "marlin/Logging.h"
 #include "marlin/PluginManager.h"
 #include "marlin/Application.h"
 
