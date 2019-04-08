@@ -3,7 +3,6 @@
 
 #include "lcio.h"
 #include "Processor.h"
-#include "LCIOOutputProcessor.h"
 
 #include "IO/LCRunListener.h"
 #include "IO/LCEventListener.h"
@@ -127,7 +126,6 @@ private:
   ProcessorList _eventModifierList{};
 
   LogicalExpressions _conditions{};
-//   LCIOOutputProcessor* _outputProcessor ;
 
 };
   
