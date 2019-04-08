@@ -53,9 +53,10 @@ ENDIF()
 
 
 AUX_SOURCE_DIRECTORY( ./src library_sources )
+AUX_SOURCE_DIRECTORY( ./src/plugins library_sources )
 AUX_SOURCE_DIRECTORY( ./tinyxml/src tinyxml_sources )
 IF( NOT MARLIN_DD4HEP )
-    LIST( REMOVE_ITEM library_sources ./src/DD4hepGeometry.cc )
+    LIST( REMOVE_ITEM library_sources ./src/plugins/DD4hepGeometry.cc )
 ENDIF()
 INCLUDE_DIRECTORIES( SYSTEM tinyxml/include )
 
