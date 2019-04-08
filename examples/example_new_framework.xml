@@ -2,15 +2,8 @@
 
 <marlin>
   <execute>
-    <processor name="MyTest1" />
-    <processor name="MyTest2" />
-    <processor name="MyTest3" />
-    <processor name="MyTest4" />
-    <processor name="MyTest5" />
-    <processor name="MyTest6" />
-    <processor name="MyTest7" />
-    <processor name="MyTest8" />
-    <processor name="MyTest9" />
+    <processor name="Status"/>
+    <processor name="CPUCrunch"/>
   </execute>
 
   <global>
@@ -43,23 +36,11 @@
     <parameter name="DumpGeometry"> false </parameter>
   </geometry> -->
   
-  <processor name="MyTest1" type="Statusmonitor"/>
-  <processor name="MyTest2" type="Statusmonitor"/>
-  <processor name="MyTest3" type="Statusmonitor"/>
-  <processor name="MyTest4" type="Statusmonitor"/>
-  <processor name="MyTest5" type="Statusmonitor"/>
-  <processor name="MyTest6" type="Statusmonitor"/>
-  <processor name="MyTest7" type="Statusmonitor"/>
-  <processor name="MyTest8" type="Statusmonitor"/>
-  <processor name="MyTest9" type="Statusmonitor"/>
+  <processor name="CPUCrunch" type="CPUCrunching">
+    <parameter name="CrunchTime"> 1000 </parameter>
+  </processor>  
 
-  <!-- <processor name="MyTest1" type="TestProcessor">
-  </processor>
-  
-  <processor name="MyTest2" type="TestProcessor">
-  </processor>
-  
-  <processor name="MyTest3" type="TestProcessor">
-  </processor> -->
+  <processor name="Status" type="Statusmonitor"/>
+
 
 </marlin>
