@@ -60,9 +60,6 @@ IF( NOT MARLIN_DD4HEP )
 ENDIF()
 INCLUDE_DIRECTORIES( SYSTEM tinyxml/include )
 
-# need to remove ProcessorLoader.cc and Marlin.cc from library sources
-LIST( REMOVE_ITEM library_sources ./src/Marlin.cc ./src/ProcessorLoader.cc )
-
 # create library
 ADD_SHARED_LIBRARY( Marlin ${library_sources} )
 
