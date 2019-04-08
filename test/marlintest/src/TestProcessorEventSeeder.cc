@@ -1,7 +1,7 @@
 #include "TestProcessorEventSeeder.h"
 
 // ----- include for verbosity dependend logging ---------
-#include "marlin/VerbosityLevels.h"
+#include "marlin/Logging.h"
 
 #include <marlin/Global.h>
 #include "marlin/ProcessorEventSeeder.h"

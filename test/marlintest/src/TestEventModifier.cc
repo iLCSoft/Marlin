@@ -1,7 +1,7 @@
 #include "TestEventModifier.h"
 
 // ----- include for verbosity dependend logging ---------
-#include "marlin/VerbosityLevels.h"
+#include "marlin/Logging.h"
 
 #include "IMPL/LCEventImpl.h"
 #include "IMPL/LCRunHeaderImpl.h"
