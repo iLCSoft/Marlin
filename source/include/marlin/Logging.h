@@ -54,7 +54,7 @@ namespace marlin {
   using  streamlog::SILENT ;
 
   /**
-   *  @brief  Loggin class.
+   *  @brief  Logging class.
    *  Defines the basic logging functionalities in Marlin.
    *  For a more application oriented configuration, see LoggerManager.h
    */
