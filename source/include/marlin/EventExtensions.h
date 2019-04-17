@@ -1,5 +1,5 @@
-#ifndef MARLIN_EVENTCONTEXT_h
-#define MARLIN_EVENTCONTEXT_h 1
+#ifndef MARLIN_EVENTEXTENSIONS_h
+#define MARLIN_EVENTEXTENSIONS_h 1
 
 // -- marlin headers
 #include <marlin/RandomSeedManager.h>
