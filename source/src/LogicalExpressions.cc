@@ -7,9 +7,8 @@
 
 
 namespace marlin{
-  
+
   std::ostream& operator<< (  std::ostream& s,  Expression& e ) {
-    
     if( e.Operation == Expression::AND ) s << " && "  ;
     else s << " || " ;
     if( e.isNot ) s << " ! " ;
@@ -23,16 +22,13 @@ namespace marlin{
     setValue("false",false);
     setValue("False",false);
   }
-  
-  
+
+
   void LogicalExpressions::addCondition( const std::string& name, const std::string& expression ) {
     _condMap[ name ] = expression ;
-
-//     std::cout << " LogicalExpressions::addCondition( " << name << ", " << expression << " ) " << std::endl ;
   }
-  
-  void LogicalExpressions::clear() {
 
+  void LogicalExpressions::clear() {
     for( ResultMap::iterator it = _resultMap.begin() ; it != _resultMap.end() ; it++){
       it->second = false ;
     }
@@ -40,92 +36,67 @@ namespace marlin{
     setValue("True",true);
     setValue("false",false);
     setValue("False",false);
-//     std::cout << " LogicalExpressions::clear() "  << std::endl ;
   }
-  
-  bool LogicalExpressions::conditionIsTrue( const std::string& name ) {
 
-    return expressionIsTrue( _condMap[ name ] ) ;
+  bool LogicalExpressions::conditionIsTrue( const std::string& name ) const {
+    auto iter = _condMap.find( name ) ;
+    // RE: This method is now const. The old logic of
+    // a condition not in the map was to return true.
+    // Keep this logic here
+    if( _condMap.end() == iter ) {
+      return true ;
+    }
+    return expressionIsTrue( iter->second ) ;
   }
-  
-  bool LogicalExpressions::expressionIsTrue( const std::string& expression ) {
 
+  bool LogicalExpressions::expressionIsTrue( const std::string& expression ) const {
     std::vector<Expression> tokens ;
     Tokenizer t( tokens ) ;
-    
-    std::for_each( expression.begin(),expression.end(), t ) ; 
-    
+    std::for_each( expression.begin(),expression.end(), t ) ;
+
     // atomic expression
-    if( tokens.size() == 1 
-	&& tokens[0].Value.find('&') == std::string::npos 
-	&& tokens[0].Value.find('|') == std::string::npos ) { 
-      
+    if( tokens.size() == 1
+	   && tokens[0].Value.find('&') == std::string::npos
+	   && tokens[0].Value.find('|') == std::string::npos ) {
       if( tokens[0].isNot ) {
-// 	std::cout << " evaluated !"<< tokens[0].Value << " to "  << ! _resultMap[ tokens[0].Value ] << std::endl ;
-//	return ! _resultMap[ tokens[0].Value ] ;
-         return ! getValue( tokens[0].Value ) ;
+        return not getValue( tokens[0].Value ) ;
       }
       else {
-// 	if(  _resultMap.find( tokens[0].Value ) == _resultMap.end() ) 
-// 	  std::cout << " error in result map : " <<  tokens[0].Value << " not found !"  << std::endl ;
-// 	std::cout << " evaluated "<< tokens[0].Value << " to "  <<  _resultMap[ tokens[0].Value ] << std::endl ;
-//	return _resultMap[ tokens[0].Value ] ;
-         return  getValue( tokens[0].Value ) ;
+        return  getValue( tokens[0].Value ) ;
       }
-    }	
-	  
-    bool returnVal = true ;
-
-    for(   std::vector<Expression>::iterator it = tokens.begin() ; it != tokens.end() ; it++ ){
-
-      bool tokenValue = expressionIsTrue( it->Value ) ;
-
-      if( it->isNot ) 
-	tokenValue = ! tokenValue ;
-
-      if( it->Operation == Expression::AND ) 
-	returnVal &= tokenValue ;
-      else
-	returnVal |= tokenValue ;
     }
-
-//     std::cout << " expression given : " << expression << std::endl ;
-//     std::cout << " evaluated by parser:" <<  std::endl ;
-//     for(   std::vector<Expression>::iterator it = tokens.begin() ; it != tokens.end() ; it++ ){
-//       std::cout << *it ;
-//     }
-//     std::cout << " Result " << returnVal << std::endl << std::endl ;
-
+    bool returnVal = true ;
+    for( auto it = tokens.begin() ; it != tokens.end() ; it++ ) {
+      bool tokenValue = expressionIsTrue( it->Value ) ;
+      if( it->isNot ) {
+        tokenValue = ! tokenValue ;
+      }
+      if( it->Operation == Expression::AND ) {
+        returnVal &= tokenValue ;
+      }
+      else {
+	       returnVal |= tokenValue ;
+       }
+    }
     return returnVal ;
   }
-  
+
   void LogicalExpressions::setValue( const std::string& key, bool val ) {
-
-//     std::cout << " LogicalExpressions::setValue() "  << key << " - " << val << std::endl ;
-
     _resultMap[ key ] = val ;
   }
-  
-//     ConditionsMap _condMap ;
-//     ResultMap _resultMap ;
 
-
-  bool LogicalExpressions::getValue( const std::string& key) {
-      ResultMap::iterator it = _resultMap.find( key );
-      if (it == _resultMap.end() ) {
-         std::ostringstream error; 
-         error << "LogicalExpressions::getValue():  key \"" << key << "\" not found. Bad processor condition?\n";
- 
-	 //fg: debug:
-	 for(  it = _resultMap.begin() ; it != _resultMap.end() ; ++it ){
-
-	   streamlog_out( DEBUG ) << " key : " << it->first << " val: " << it->second << std::endl ;
-	 }
-
-	 throw marlin::ParseException( error.str() );
+  bool LogicalExpressions::getValue( const std::string& key) const {
+    auto it = _resultMap.find( key ) ;
+    if (it == _resultMap.end() ) {
+      std::ostringstream error;
+      error << "LogicalExpressions::getValue():  key \"" << key << "\" not found. Bad processor condition?\n";
+      //fg: debug:
+      for( auto iter = _resultMap.begin() ; iter != _resultMap.end() ; ++iter ){
+        streamlog_out( DEBUG ) << " key : " << iter->first << " val: " << iter->second << std::endl ;
       }
-      return it->second;
+      throw marlin::ParseException( error.str() );
+    }
+    return it->second;
   }
 
 }
-
