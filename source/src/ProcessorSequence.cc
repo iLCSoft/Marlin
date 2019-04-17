@@ -2,6 +2,7 @@
 #include "marlin/Processor.h"
 #include "marlin/EventModifier.h"
 #include "marlin/Exceptions.h"
+#include "marlin/EventExtensions.h"
 
 // -- std headers
 #include <algorithm>
@@ -103,15 +104,67 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void ProcessorSequence::processEvent( std::shared_ptr<EventContext> event ) {
-    
+  void ProcessorSequence::processEvent( std::shared_ptr<EVENT::LCEvent> event ) {
+    try {
+      auto extension = event->runtime().ext<RuntimeExtension>() ;
+      for ( auto processor : _processors ) {
+        if ( not extension->checkRuntimeCondition( processor->name() ) ) {
+          continue ;
+        }
+        auto startTime = clock() ;
+        processor->processEvent( event.get() ) ;
+        // if( not _suppressCheck ) {
+        processor->check( event.get() ) ;
+        // }
+        auto endTime = clock() ;
+        auto iter = _processorTimes.find( processor->name() ) ;
+        iter->second._processingTime += static_cast<double>( endTime - startTime ) ;
+        iter->second._eventCounter ++ ;
+        // TODO need to deal with that issue ...
+        // processor->setFirstEvent( false ) ;
+      }
+    }
+    catch ( SkipEventException& e ) {
+      auto iter = _skipEventMap.find( e.what() ) ;
+      if ( _skipEventMap.end() == iter ) {
+        _skipEventMap.insert( SkippedEventMap::value_type( e.what() , 1 ) ) ;
+      }
+      else {
+        iter->second ++;
+      }
+    }
   }
 
   //--------------------------------------------------------------------------
 
-  void ProcessorSequence::modifyEvent( std::shared_ptr<EventContext> event ) {
-
+  void ProcessorSequence::modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) {
+    auto extension = event->runtime().ext<RuntimeExtension>() ;
+    for ( auto processor : _processors ) {
+      auto eventModifier = dynamic_cast<EventModifier*>( processor.get() ) ;
+      if ( nullptr == eventModifier ) {
+        continue ;
+      }
+      // check runtime condition
+      if ( not extension->checkRuntimeCondition( processor->name() ) ) {
+        continue ;
+      }
+      auto startTime = clock() ;
+      eventModifier->modifyEvent( event.get() ) ;
+      auto endTime = clock() ;
+      auto iter = _processorTimes.find( processor->name() ) ;
+      iter->second._processingTime += static_cast<double>( endTime - startTime ) ;
+    }
   }
-
+  
+  //--------------------------------------------------------------------------
+  
+  ProcessorSequence::TimeMetadata ProcessorSequence::generateTimeSummary() const {
+    TimeMetadata summary {} ;
+    for ( auto t : _processorTimes ) {
+      summary._processingTime += t.second._processingTime / double(CLOCKS_PER_SEC) ;
+      summary._eventCounter += t.second._eventCounter ;
+    }
+    return summary ;
+  }
 
 } // namespace marlin

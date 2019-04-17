@@ -48,29 +48,75 @@ namespace marlin {
     ProcessorSequence &operator=(const ProcessorSequence &) = delete ;
     ProcessorSequence(const ProcessorSequence &) = delete ;
 
-    // check if the processor exists in the sequence
+    /**
+     *  @brief  Whether the processor exists in the sequence 
+     * 
+     *  @param  processor a processor pointer
+     */
     bool exists( std::shared_ptr<Processor> processor ) const ;
 
-    // add at the end of the sequence
+    /**
+     *  @brief  Add at the end of the sequence
+     * 
+     *  @param  processor a processor pointer
+     */
     void add( std::shared_ptr<Processor> processor ) ;
 
-    // insert processor after the named processor
+    /**
+     *  @brief  Insert processor after the named processor
+     * 
+     *  @param  afterName the name of the processor after which to insert the processor
+     *  @param  processor the processor to insert
+     */
     void insertAfter( const std::string &afterName, std::shared_ptr<Processor> processor ) ;
 
-    // insert processor after the named processor
+    /**
+     *  @brief  Insert processor before the named processor
+     * 
+     *  @param  afterName the name of the processor before which to insert the processor
+     *  @param  processor the processor to insert
+     */
     void insertBefore( const std::string &afterName, std::shared_ptr<Processor> processor ) ;
 
-    // remove a processor from the sequence. Return true if the processor has been removed
+    /**
+     *  @brief  Remove a processor from the sequence. 
+     *  Return true if the processor has been removed
+     *  
+     *  @param  processor [description]
+     */
     bool remove( std::shared_ptr<Processor> processor ) ;
 
+    /**
+     *  @brief  Process the run header. Call processRunHeader() for each processor in the sequence
+     * 
+     *  @param  rhdr the run header to process
+     */
     void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) ;
 
+    /**
+     *  @brief  Modify the run header. Call modifyRunHeader() for each processor in the sequence
+     * 
+     *  @param  rhdr the run header to modify
+     */
     void modifyRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) ;
 
-    void processEvent( std::shared_ptr<EventContext> event ) ;
+    /**
+     *  @brief  Process the event. Call processEvent() for each processor in the sequence
+     * 
+     *  @param  event the event to process
+     */
+    void processEvent( std::shared_ptr<EVENT::LCEvent> event ) ;
 
-    void modifyEvent( std::shared_ptr<EventContext> event ) ;
+    /**
+     *  @brief  Modify the event. Call modifyEvent() for each processor in the sequence
+     * 
+     *  @param  event the event to modify
+     */
+    void modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) ;
 
+    /**
+     *  @brief  Generate a time summary of all processors
+     */
     TimeMetadata generateTimeSummary() const ;
 
   private:
@@ -79,7 +125,11 @@ namespace marlin {
 
   private:
     /// The processor sequence
-    Container           _processors {} ;
+    Container                           _processors {} ;
+    /// Execution time measurement for each processor
+    TimeMap                             _processorTimes {} ;
+    /// Skip event exception map
+    SkippedEventMap                     _skipEventMap {} ;
   };
 
 } // end namespace marlin
