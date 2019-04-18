@@ -10,160 +10,33 @@
 #include <utility>
 #include <memory>
 #include <future>
-#include <queue>
 #include <condition_variable>
 
 // -- marlin headers
 #include "marlin/Exceptions.h"
+#include "marlin/concurrency/Queue.h"
+#include "marlin/concurrency/QueueElement.h"
 
 namespace marlin {
 
   namespace concurrency {
-    
-    namespace detail {
-      
-      /**
-       *  @brief  Queue class.
-       *  A simplified thread safe queue container.
-       *  Support maximum size setting
-       */
-      template <typename T>
-      class Queue {
-      public:
-        Queue() = default ;
-        ~Queue() = default ;
-        Queue(const Queue&) = delete ;
-        Queue& operator=(const Queue&) = delete ;
-        
-        /**
-         *  @brief  Constructor
-         * 
-         *  @param  maxsize the maximum queue size
-         */
-        Queue( std::size_t maxsize ) {
-          _maxSize = maxsize ;
-        }
-        
-        /**
-         *  @brief  push a value to the queue
-         *  
-         *  @param  value the value to push
-         */
-        bool push(const T &value) {
-          std::unique_lock<std::mutex> lock(_mutex) ;
-          if( _queue.size() >= _maxSize ) {
-            return false ;
-          }
-          _queue.push( value ) ;
-          return true ;
-        }
-        
-        /**
-         *  @brief  Pop and get the front element in the queue.
-         *  The queue type must support move operation
-         *  
-         *  @param  value the value to receive
-         */
-        bool pop( T & value ) {
-          std::unique_lock<std::mutex> lock(_mutex) ;
-          if( _queue.empty() ) {
-            return false ;
-          }
-          value = std::move(_queue.front()) ;
-          _queue.pop() ;
-          return true ;
-        }
-        
-        /**
-         *  @brief  Whether the queue is empty
-         */
-        bool empty() const {
-          std::unique_lock<std::mutex> lock(_mutex) ;
-          return _queue.empty() ;
-        }
-        
-        /**
-         *  @brief  Get the maximum queue size
-         */
-        std::size_t maxSize() const {
-          std::unique_lock<std::mutex> lock(_mutex) ;
-          return _maxSize ;
-        }
 
-        /**
-         *  @brief  Set the maximum queue size.
-         *  Note that the queue is NOT resized if the new value is smaller 
-         *  than the old size. The value of the old max size is returned
-         * 
-         *  @param  maxsize the maximum queue size to set
-         */
-        std::size_t setMaxSize( std::size_t maxsize ) {
-          std::unique_lock<std::mutex> lock(_mutex) ;
-          std::swap( _maxSize, maxsize ) ;
-          return maxsize ;
-        }
-        
-        /**
-         *  @brief  Check whether the queue has reached the maximum allowed size
-         */
-        bool isFull() const {
-          std::unique_lock<std::mutex> lock(_mutex) ;
-          return (_queue.size() >= _maxSize) ;
-        }
-        
-        /**
-         *  @brief  Clear the queue
-         */
-        void clear() {
-          std::unique_lock<std::mutex> lock(_mutex) ;
-          while( not _queue.empty() ) {
-            _queue.pop() ;
-          }
-        }
-        
-        /**
-         *  @brief  Get the number of free slots in the queue
-         */
-        std::size_t freeSlots() const {
-          std::unique_lock<std::mutex> lock(_mutex) ;
-          return (_queue.size() >= _maxSize ? 0 : (_maxSize - _queue.size())) ;
-        }
-        
-      private:
-        /// The underlying queue object
-        std::queue<T>              _queue {} ;
-        /// The synchronization mutex
-        mutable std::mutex         _mutex {} ;
-        /// The maximum size of the queue
-        std::size_t                _maxSize {std::numeric_limits<std::size_t>::max()} ;
-      };
-    }
-    
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
+    template <typename IN, typename OUT>
+    class Worker ;
 
     /**
      *  @brief  ThreadPool class
+     *  The template parameter T is the type of data to enqueue and process
+     *  in worker threads
      */
+    template <typename IN, typename OUT>
     class ThreadPool {
     public:
-      using Task = std::function<void()> ;
-      using TaskQueue = detail::Queue<Task> ;
-      using Pool = std::vector<std::thread> ;
-      using Flags = std::vector<std::atomic<bool>> ;
-      
+      using QueueType = Queue<QueueElement<IN,OUT>> ;
+      using PoolType = std::vector<std::shared_ptr<Worker<IN,OUT>>> ;
+      friend class Worker<IN,OUT> ;
+
     public:
-      /**
-       *  @brief  Settings struct
-       *  Settings to construct a thread pool
-       */
-      struct Settings {
-        /// The thread pool size
-        std::size_t     _poolSize = {std::thread::hardware_concurrency()} ;
-        /// The maximum queue size
-        std::size_t     _maxQueueSize = {10} ;
-      };
-      
       /**
        *  @brief  PushPolicy enumerator
        */
@@ -171,25 +44,31 @@ namespace marlin {
         Blocking,      ///< Block until a slot is free in the queue
         ThrowIfFull    ///< Throw an exception if the queue is full
       };
-      
+
     public:
-      ThreadPool() = delete ;
+      ThreadPool() = default ;
       ThreadPool(const ThreadPool &) = delete ;
       ThreadPool(ThreadPool &&) = delete ;
       ThreadPool& operator=(const ThreadPool &) = delete ;
       ThreadPool& operator=(ThreadPool &&) = delete ;
-      
-      /**
-       *  @brief  Constructor
-       *  
-       *  @param  settings the thread pool settings
-       */
-      ThreadPool( const Settings &settings ) ;
-      
+
       /**
        *  @brief  Destructor
        */
       ~ThreadPool() ;
+
+      /**
+       *  @brief  Add a new worker thread
+       *
+       *  @param  args arguments to pass to worker constructor
+       */
+      template <typename WORKER, typename ...Args>
+      void addWorker(Args &&...args) ;
+
+      /**
+       *  @brief  Start the worker threads
+       */
+      void start() ;
 
       /**
        *  @brief  Get the thread pool size
@@ -200,12 +79,12 @@ namespace marlin {
        *  @brief  Get the number of waiting threads
        */
       std::size_t nWaiting() const ;
-      
+
       /**
        *  @brief  Get the number of threads currently handling a task
        */
       std::size_t nRunning() const ;
-      
+
       /**
        *  @brief  Get the number of free slots in the task queue
        */
@@ -217,13 +96,20 @@ namespace marlin {
       void clearQueue() ;
 
       /**
-       *  @brief  Stop the thread pool. 
+       *  @brief  Set the maximum queue size
+       *
+       *  @param  maxQueueSize the maximum queue size
+       */
+      void setMaxQueueSize( std::size_t maxQueueSize ) ;
+
+      /**
+       *  @brief  Stop the thread pool.
        *  If the flag clear is set to true, the task queue is cleared.
        *  The threads are joined and the pool is clear. As no
        *  threads remains in the pool, the pool is not reusable.
-       *  Thus this method must be called for performing a proper 
+       *  Thus this method must be called for performing a proper
        *  program termination before exiting
-       * 
+       *
        *  @param  clear whether the task queue should be cleared
        */
       void stop( bool clear = true ) ;
@@ -231,61 +117,170 @@ namespace marlin {
       /**
        *  @brief  Push a new task in the task queue.
        *  See PushPolicy for runtime behavior of enqueuing.
-       *  
+       *
        *  @param  policy the push policy
-       *  @param  func the task function to enqueue
-       *  @param  args the arguments to pass to the task function
+       *  @param
        */
-      template <typename F, typename... Args>
-      auto push( PushPolicy policy, F &&func, Args &&... args ) -> std::future<decltype(func(args...))> ;
+      template <class = typename std::enable_if<not std::is_same<IN,void>::value>::type>
+      std::future<OUT> push( PushPolicy policy, IN && input ) ;
 
-    private:
-      /**
-       *  @brief  Initialize the thread pool
-       */
-      void init() ;
-    
     private:
       ///< The synchronization mutex
       std::mutex               _mutex {} ;
       ///< The queue enqueuing condition variable
       std::condition_variable  _conditionVariable {} ;
       ///< The actual thread pool
-      Pool                     _pool {} ;
-      ///< The task queue
-      TaskQueue                _taskQueue {} ;
+      PoolType                 _pool {} ;
+      ///< The input element queue
+      QueueType                _queue {} ;
       ///< Runtime flag...
       std::atomic<bool>        _isDone {false} ;
       ///< The thread pool stop flag
       std::atomic<bool>        _isStop {false} ;
-      ///< The number of waiting tasks
-      std::atomic<std::size_t> _nWaiting {0} ;
+      ///< Whether the thread pool is running
+      std::atomic<bool>        _isRunning {false} ;
     };
-    
+
+  }
+
+}
+
+// template implementation
+#include <marlin/concurrency/Worker.h>
+
+namespace marlin {
+
+  namespace concurrency {
+
+    template <typename IN, typename OUT>
+    inline ThreadPool<IN,OUT>::~ThreadPool() {
+      stop(true) ;
+    }
+
     //--------------------------------------------------------------------------
+
+    template <typename IN, typename OUT>
+    template <typename WORKER, typename ...Args>
+    inline void ThreadPool<IN,OUT>::addWorker(Args &&...args) {
+      if( _isRunning ) {
+        throw Exception( "ThreadPool::addWorker: thread pool is running, can't add a worker!" ) ;
+      }
+      std::unique_ptr<WORKER> impl( new WORKER(args...) ) ;
+      auto worker = std::make_shared<Worker<IN,OUT>>( *this, std::move( impl ) ) ;
+      _pool.push_back( worker ) ;
+    }
+
     //--------------------------------------------------------------------------
-    
-    template <typename F, typename... Args>
-    inline auto ThreadPool::push(PushPolicy policy, F && func, Args &&... args) -> std::future<decltype(func(args...))> {
-      auto pck = std::make_shared<std::packaged_task<decltype(f(args...))()>>(
-        std::bind(std::forward<F>(func), std::forward<Args>(args)...)
-      ) ;
-      Task task = [pck](){ 
-        (*pck)(); 
-      };
-      if(policy == PushPolicy::Blocking) {
-        while( not _taskQueue.push(task) ) {
-          std::this_thread::sleep_for( std::chrono::milliseconds(10) ) ;
+
+    template <typename IN, typename OUT>
+    inline void ThreadPool<IN,OUT>::start() {
+      if( _isRunning ) {
+        throw Exception( "ThreadPool::start: already running!" ) ;
+      }
+      // Start the worker threads
+      for (size_t i=0 ; i<_pool.size() ; i++) {
+        _pool[i]->start() ;
+      }
+      _isRunning = true ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    template <typename IN, typename OUT>
+    inline std::size_t ThreadPool<IN,OUT>::size() const {
+      return _pool.size() ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    template <typename IN, typename OUT>
+    inline std::size_t ThreadPool<IN,OUT>::nWaiting() const {
+      std::size_t count = 0 ;
+      for( auto &worker : _pool ) {
+        if( worker->waiting() ) {
+          ++count ;
         }
       }
+      return count ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    template <typename IN, typename OUT>
+    inline std::size_t ThreadPool<IN,OUT>::nRunning() const {
+      return ( _pool.size() - nWaiting() ) ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    template <typename IN, typename OUT>
+    inline std::size_t ThreadPool<IN,OUT>::freeSlots() const {
+      return _queue.freeSlots() ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    template <typename IN, typename OUT>
+    inline void ThreadPool<IN,OUT>::clearQueue() {
+      _queue.clear() ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    template <typename IN, typename OUT>
+    inline void ThreadPool<IN,OUT>::stop( bool clear ) {
+      if ( clear ) {
+        if (_isStop) {
+          return ;
+        }
+        _isStop = true ;
+        for( auto &worker : _pool ) {
+          worker->stop() ;
+        }
+        _queue.clear() ;
+      }
       else {
-        if( _taskQueue.isFull() ) {
+        if (_isDone or _isStop) {
+          return ;
+        }
+        _isDone = true ;  // give the waiting threads a command to finish
+      }
+      {
+        std::unique_lock<std::mutex> lock(_mutex);
+        _conditionVariable.notify_all();  // stop all waiting threads
+      }
+      for (auto &worker : _pool) {  // wait for the computing threads to finish
+        worker->join() ;
+      }
+      _queue.clear() ;
+      _pool.clear() ;
+      _isRunning = false ;
+    }
+
+    //--------------------------------------------------------------------------
+
+    template <typename IN, typename OUT>
+    template <class>
+    inline std::future<OUT> ThreadPool<IN,OUT>::push(PushPolicy policy, IN && queueData) {
+      QueueElement<IN,OUT> element( queueData ) ;
+      auto f = element.future() ;
+      if(policy == PushPolicy::Blocking) {
+        // this is dirty yet
+        // TODO find a proper implementation ...
+        while( _queue.isFull() ) {
+          std::this_thread::sleep_for( std::chrono::milliseconds(10) ) ;
+        }
+        // this is not really safe
+        _queue.push(element) ;
+      }
+      else {
+        if( _queue.isFull() ) {
           throw Exception( "ThreadPool::push: queue is full!" ) ;
         }
       }
       std::unique_lock<std::mutex> lock(_mutex) ;
       _conditionVariable.notify_one() ;
-      return pck->get_future() ;
+      return f ;
     }
 
   } // end namespace concurrency
