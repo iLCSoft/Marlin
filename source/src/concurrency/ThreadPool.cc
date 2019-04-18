@@ -5,138 +5,107 @@ namespace marlin {
 
   namespace concurrency {
     
-    ThreadPool::Worker::Worker( ThreadPool &pool ) :
-      _pool(pool) {
-      _thread = std::thread( &ThreadPool::Worker::loop, this ) ;
-    }
-    
-    //--------------------------------------------------------------------------
-
-    void ThreadPool::Worker::loop() {
-      Function func {nullptr} ;
-      while ( not _pool._shutdown ) {
-        {
-          func = nullptr ;
-          // wait for a task to be queued
-          std::unique_lock<std::mutex> ulock( _pool._queueMutex ) ;
-          _pool._queueCondition.wait( ulock , [this, &func]() {
-            if ( not _pool._pendingTasks.empty() ) {
-              func = _pool._pendingTasks.front() ;
-              _pool._pendingTasks.pop_front() ;              
-            }
-            return ( ( nullptr != func ) || _pool._shutdown ) ;
-          } ) ;
-        }
-        if ( func ) {
-          _pool._nRunningTasks ++ ;
-          func() ;
-          _pool._nRunningTasks -- ;
-        }
-      }
+    ThreadPool::ThreadPool( const Settings &settings ) :
+      _pool(settings._poolSize),
+      _taskQueue(settings._maxQueueSize) {
+      init() ;
     }
     
     //--------------------------------------------------------------------------
     
-    std::thread::id ThreadPool::Worker::threadId() const {
-      return _thread.get_id() ;
-    }
-    
-    //--------------------------------------------------------------------------
-    
-    void ThreadPool::Worker::join() {
-      if ( _thread.joinable() ) {
-        _thread.join() ;
-      }
-    }
-    
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-
-    ThreadPool::ThreadPool( const Options &options ) :
-    _options(options) {
-      _workers.resize( _options._nThreads ) ;
-    }
-
-    //--------------------------------------------------------------------------
-
     ThreadPool::~ThreadPool() {
-      if ( _initialized ) {
-        terminate( true ) ;
-      }
-    }
-
-    //--------------------------------------------------------------------------
-    
-    void ThreadPool::init() {
-      if ( _initialized ) {
-        throw Exception( "ThreadPool::init: already initialized!" ) ;
-      }
-      _shutdown = false ;
-      // start worker threads
-      for ( std::size_t i=0 ; i<_workers.size() ; ++i ) {
-        _workers[ i ] = std::make_shared<Worker>( *this ) ;
-      }
-      _initialized = true ;
+      this->stop(true);
     }
     
     //--------------------------------------------------------------------------
     
-    void ThreadPool::terminate( bool dropPending ) {
-      if ( not _initialized ) {
-        throw Exception( "ThreadPool::terminate: not initialized!" ) ;
+    void ThreadPool::init() { 
+      for (size_t i=0 ; i<_pool.size() ; i++) {        
+        _pool [i] = std::thread([this]() {
+          Task task {} ;
+          bool isPop = _taskQueue.pop(task) ;
+          while (true) {
+            // until nothing in the queue, process task
+            while (isPop) {
+              task() ;
+              if (_isStop) {
+                return ;
+              }
+              isPop = _taskQueue.pop(task) ;
+            }
+            // the queue is empty here, wait for the next command
+            std::unique_lock<std::mutex> lock(_mutex) ;
+            ++_nWaiting ;
+            _conditionVariable.wait(lock, [this, &task, &isPop] () { 
+              isPop = _taskQueue.pop(task); 
+              return (isPop || _isDone) ; 
+            }) ;
+            --_nWaiting;
+            if ( not isPop ) {
+              return;  // if the queue is empty and this->isDone == true then return              
+            }
+          }
+        }) ;
       }
-      // drop all pending tasks and terminate properly
-      if ( dropPending ) {
-        std::lock_guard<std::mutex> lock( _queueMutex ) ;
-        _pendingTasks.clear() ;
-      }
-      _shutdown = true ;
-      // wait for all pending tasks to be 
-      // executed and terminate properly
-      while ( 0 != _nRunningTasks ) {
-        {
-          std::lock_guard<std::mutex> lock( _queueMutex ) ;
-          _queueCondition.notify_one() ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    std::size_t ThreadPool::size() const { 
+      return _pool.size() ; 
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    std::size_t ThreadPool::nWaiting() const { 
+      return _nWaiting.load() ; 
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    std::size_t ThreadPool::nRunning() const {
+      return ( _pool.size() - _nWaiting.load() ) ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    std::size_t ThreadPool::freeSlots() const {
+      return _taskQueue.freeSlots() ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    void ThreadPool::clearQueue() {
+      _taskQueue.clear() ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    void ThreadPool::stop( bool clear ) {
+      if ( clear ) {
+        if (_isStop) {
+          return ;
         }
-        std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) ) ;
+        _isStop = true ;
+        _taskQueue.clear() ;
+      }
+      else {
+        if (_isDone or _isStop) {
+          return ;
+        }
+        _isDone = true ;  // give the waiting threads a command to finish
       }
       {
-        std::lock_guard<std::mutex> lock( _queueMutex ) ;
-        _queueCondition.notify_all() ;
+        std::unique_lock<std::mutex> lock(_mutex);
+        _conditionVariable.notify_all();  // stop all waiting threads
       }
-      for (unsigned int i=0 ; i<_workers.size() ; i++ ) {
-        // join the worker thread and clear
-        _workers[ i ]->join() ;
-        _workers[ i ] = nullptr ;
+      for (auto &thr : _pool) {  // wait for the computing threads to finish
+        if ( thr.joinable() ) {
+          thr.join() ;
+        }
       }
-      // no lock needed here, as no worker is running anymore
-      _pendingTasks.clear() ;
-      _initialized = false ;
-    }
-    
-    //--------------------------------------------------------------------------
-    
-    std::size_t ThreadPool::nPendingTasks() const {
-      std::lock_guard<std::mutex> lock( _queueMutex ) ;
-      return _pendingTasks.size() ;
-    }
-    
-    //--------------------------------------------------------------------------
-    
-    std::size_t ThreadPool::nRunningTasks() const {
-      return _nRunningTasks ;
-    }
-    
-    //--------------------------------------------------------------------------
-    
-    std::size_t ThreadPool::size() const {
-      return _workers.size() ;
-    }
-    
-    //--------------------------------------------------------------------------
-    
-    bool ThreadPool::initialized() const {
-      return _initialized ;
+      _taskQueue.clear() ;
+      _pool.clear() ;
     }
 
   } // namespace concurrency

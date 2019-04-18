@@ -10,7 +10,7 @@
 #include <utility>
 #include <memory>
 #include <future>
-#include <deque>
+#include <queue>
 #include <condition_variable>
 
 // -- marlin headers
@@ -19,175 +19,273 @@
 namespace marlin {
 
   namespace concurrency {
-
-    /**
-     *  @brief  ThreadPool class
-     *  Implement a thread pool pattern.
-     */
-    class ThreadPool {
-    public:
-      /**
-       *  @brief  Options struct
-       *  Holds the input thread pool options 
-       */
-      struct Options {
-        /// The number of workers in the thread pool
-        unsigned int      _nThreads {std::thread::hardware_concurrency()} ;
-        /// Whether to wait for a free worker when enqueuing a new task
-        bool              _waitForFreeWorker {true} ;
-      };
+    
+    namespace detail {
       
-    private:
       /**
-       *  @brief  Worker class
-       *  Implement the thread pool task main loop
+       *  @brief  Queue class.
+       *  A simplified thread safe queue container.
+       *  Support maximum size setting
        */
-      class Worker {
+      template <typename T>
+      class Queue {
       public:
-        friend class ThreadPool ;
-        typedef std::function<void()> Function ;
+        Queue() = default ;
+        ~Queue() = default ;
+        Queue(const Queue&) = delete ;
+        Queue& operator=(const Queue&) = delete ;
         
-      public:
         /**
          *  @brief  Constructor
          * 
-         *  @param  pool the parent thread pool
+         *  @param  maxsize the maximum queue size
          */
-        Worker( ThreadPool &pool ) ;
+        Queue( std::size_t maxsize ) {
+          _maxSize = maxsize ;
+        }
         
         /**
-         *  @brief  Get the worker thread id
+         *  @brief  push a value to the queue
+         *  
+         *  @param  value the value to push
          */
-        std::thread::id threadId() const ;
+        bool push(const T &value) {
+          std::unique_lock<std::mutex> lock(_mutex) ;
+          if( _queue.size() >= _maxSize ) {
+            return false ;
+          }
+          _queue.push( value ) ;
+          return true ;
+        }
+        
+        /**
+         *  @brief  Pop and get the front element in the queue.
+         *  The queue type must support move operation
+         *  
+         *  @param  value the value to receive
+         */
+        bool pop( T & value ) {
+          std::unique_lock<std::mutex> lock(_mutex) ;
+          if( _queue.empty() ) {
+            return false ;
+          }
+          value = std::move(_queue.front()) ;
+          _queue.pop() ;
+          return true ;
+        }
+        
+        /**
+         *  @brief  Whether the queue is empty
+         */
+        bool empty() const {
+          std::unique_lock<std::mutex> lock(_mutex) ;
+          return _queue.empty() ;
+        }
+        
+        /**
+         *  @brief  Get the maximum queue size
+         */
+        std::size_t maxSize() const {
+          std::unique_lock<std::mutex> lock(_mutex) ;
+          return _maxSize ;
+        }
+
+        /**
+         *  @brief  Set the maximum queue size.
+         *  Note that the queue is NOT resized if the new value is smaller 
+         *  than the old size. The value of the old max size is returned
+         * 
+         *  @param  maxsize the maximum queue size to set
+         */
+        std::size_t setMaxSize( std::size_t maxsize ) {
+          std::unique_lock<std::mutex> lock(_mutex) ;
+          std::swap( _maxSize, maxsize ) ;
+          return maxsize ;
+        }
+        
+        /**
+         *  @brief  Check whether the queue has reached the maximum allowed size
+         */
+        bool isFull() const {
+          std::unique_lock<std::mutex> lock(_mutex) ;
+          return (_queue.size() >= _maxSize) ;
+        }
+        
+        /**
+         *  @brief  Clear the queue
+         */
+        void clear() {
+          std::unique_lock<std::mutex> lock(_mutex) ;
+          while( not _queue.empty() ) {
+            _queue.pop() ;
+          }
+        }
+        
+        /**
+         *  @brief  Get the number of free slots in the queue
+         */
+        std::size_t freeSlots() const {
+          std::unique_lock<std::mutex> lock(_mutex) ;
+          return (_queue.size() >= _maxSize ? 0 : (_maxSize - _queue.size())) ;
+        }
         
       private:
-        /**
-         *  @brief  The worker main loop
-         *  Implement the thread pool task main loop
-         */
-        void loop() ;
-        
-        /**
-         *  @brief  Join the worker thread
-         */
-        void join() ;
-        
-      private:
-        /// The parent thread pool
-        ThreadPool          &_pool ;
-        /// The worker thread
-        std::thread          _thread {} ;
+        /// The underlying queue object
+        std::queue<T>              _queue {} ;
+        /// The synchronization mutex
+        mutable std::mutex         _mutex {} ;
+        /// The maximum size of the queue
+        std::size_t                _maxSize {std::numeric_limits<std::size_t>::max()} ;
+      };
+    }
+    
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+
+    /**
+     *  @brief  ThreadPool class
+     */
+    class ThreadPool {
+    public:
+      using Task = std::function<void()> ;
+      using TaskQueue = detail::Queue<Task> ;
+      using Pool = std::vector<std::thread> ;
+      using Flags = std::vector<std::atomic<bool>> ;
+      
+    public:
+      /**
+       *  @brief  Settings struct
+       *  Settings to construct a thread pool
+       */
+      struct Settings {
+        /// The thread pool size
+        std::size_t     _poolSize = {std::thread::hardware_concurrency()} ;
+        /// The maximum queue size
+        std::size_t     _maxQueueSize = {10} ;
+      };
+      
+      /**
+       *  @brief  PushPolicy enumerator
+       */
+      enum class PushPolicy {
+        Blocking,      ///< Block until a slot is free in the queue
+        ThrowIfFull    ///< Throw an exception if the queue is full
       };
       
     public:
-      typedef std::vector<std::shared_ptr<Worker>>    Workers ;
-      typedef std::deque<Worker::Function>            TaskQueue ;
-            
-    public:
+      ThreadPool() = delete ;
+      ThreadPool(const ThreadPool &) = delete ;
+      ThreadPool(ThreadPool &&) = delete ;
+      ThreadPool& operator=(const ThreadPool &) = delete ;
+      ThreadPool& operator=(ThreadPool &&) = delete ;
+      
       /**
        *  @brief  Constructor
-       *
-       *  @param  options the thread pool options
+       *  
+       *  @param  settings the thread pool settings
        */
-      ThreadPool( const Options &options ) ;
+      ThreadPool( const Settings &settings ) ;
       
       /**
        *  @brief  Destructor
        */
       ~ThreadPool() ;
-      
+
       /**
-       *  @brief  Initialize the thread pool (create and start worker threads)
-       */
-      void init() ;
-      
-      /**
-       *  @brief  Clean the thread pool (stop worker threads)
-       *
-       *  @param  dropPending whether to drop the pending task and terminate directly
-       */
-      void terminate( bool dropPending = true ) ;
-      
-      /**
-       *  @brief  Submit a new task to the pool
-       *  
-       *  @param  func any callable object to execute
-       *  @param  args the arguments to pass to the callable object
-       *  @return a future containing the result of the task to execute
-       */
-      template <typename Function, typename ...Args>
-      auto submit( Function&& func, Args&& ...args ) -> std::future<decltype(func(args...))> ;
-      
-      /**
-       *  @brief  Get the number of pending tasks
-       */
-      std::size_t nPendingTasks() const ;
-      
-      /**
-       *  @brief  Get the number of workers actually dealing with a task
-       */
-      std::size_t nRunningTasks() const ;
-      
-      /**
-       *  @brief  Get the pool size (number of worker threads)
+       *  @brief  Get the thread pool size
        */
       std::size_t size() const ;
+
+      /**
+       *  @brief  Get the number of waiting threads
+       */
+      std::size_t nWaiting() const ;
       
       /**
-       *  @brief  Whether the thread pool has been initialized
+       *  @brief  Get the number of threads currently handling a task
        */
-      bool initialized() const ;
+      std::size_t nRunning() const ;
       
+      /**
+       *  @brief  Get the number of free slots in the task queue
+       */
+      std::size_t freeSlots() const ;
+
+      /**
+       *  @brief  Clear the queue
+       */
+      void clearQueue() ;
+
+      /**
+       *  @brief  Stop the thread pool. 
+       *  If the flag clear is set to true, the task queue is cleared.
+       *  The threads are joined and the pool is clear. As no
+       *  threads remains in the pool, the pool is not reusable.
+       *  Thus this method must be called for performing a proper 
+       *  program termination before exiting
+       * 
+       *  @param  clear whether the task queue should be cleared
+       */
+      void stop( bool clear = true ) ;
+
+      /**
+       *  @brief  Push a new task in the task queue.
+       *  See PushPolicy for runtime behavior of enqueuing.
+       *  
+       *  @param  policy the push policy
+       *  @param  func the task function to enqueue
+       *  @param  args the arguments to pass to the task function
+       */
+      template <typename F, typename... Args>
+      auto push( PushPolicy policy, F &&func, Args &&... args ) -> std::future<decltype(func(args...))> ;
+
     private:
-      /// Whether the thread pool has been initialized
-      std::atomic_bool          _initialized {false} ;
-      /// The shutdown flag to stop worker thread on termination
-      std::atomic_bool          _shutdown {false} ;
-      /// The thread workers
-      Workers                   _workers {} ;
-      /// The queue of pending tasks to execute
-      TaskQueue                 _pendingTasks {} ;
-      /// The pending task condition variable
-      std::condition_variable   _queueCondition {} ;
-      /// The thread pool access mutex
-      mutable std::mutex        _queueMutex {} ;
-      /// The number of running tasks
-      std::atomic<std::size_t>  _nRunningTasks {0} ;
-      /// The thread pool options
-      Options                   _options {} ;
+      /**
+       *  @brief  Initialize the thread pool
+       */
+      void init() ;
+    
+    private:
+      ///< The synchronization mutex
+      std::mutex               _mutex {} ;
+      ///< The queue enqueuing condition variable
+      std::condition_variable  _conditionVariable {} ;
+      ///< The actual thread pool
+      Pool                     _pool {} ;
+      ///< The task queue
+      TaskQueue                _taskQueue {} ;
+      ///< Runtime flag...
+      std::atomic<bool>        _isDone {false} ;
+      ///< The thread pool stop flag
+      std::atomic<bool>        _isStop {false} ;
+      ///< The number of waiting tasks
+      std::atomic<std::size_t> _nWaiting {0} ;
     };
     
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
     
-    template <typename Function, typename ...Args>
-    inline auto ThreadPool::submit( Function&& func, Args&& ...args ) -> std::future<decltype(func(args...))> {
-      if ( not _initialized ) {
-        throw Exception( "ThreadPool::submit: thread pool not started, can't accept any task submission!" ) ;
-      }
-      // Create a function with bounded parameters ready to execute
-      std::function<decltype(func(args...))()> localFunc = std::bind( std::forward<Function>(func), std::forward<Args>(args)... ) ;
-      // Encapsulate it into a shared ptr in order to be able to copy construct / assign 
-      auto task_ptr = std::make_shared<std::packaged_task<decltype(func(args...))()>>( localFunc ) ;
-      // Wrap packaged task into void function
-      Worker::Function wrapper_func = [task_ptr]() {
-        (*task_ptr)() ;
-      } ;
-      // Wait for a free worker if set in the options
-      if ( _options._waitForFreeWorker ) {
-        while ( _nRunningTasks.load() == _workers.size() ) {
-          std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) ) ;
+    template <typename F, typename... Args>
+    inline auto ThreadPool::push(PushPolicy policy, F && func, Args &&... args) -> std::future<decltype(func(args...))> {
+      auto pck = std::make_shared<std::packaged_task<decltype(f(args...))()>>(
+        std::bind(std::forward<F>(func), std::forward<Args>(args)...)
+      ) ;
+      Task task = [pck](){ 
+        (*pck)(); 
+      };
+      if(policy == PushPolicy::Blocking) {
+        while( not _taskQueue.push(task) ) {
+          std::this_thread::sleep_for( std::chrono::milliseconds(10) ) ;
         }
       }
-      {
-        // Enqueue generic wrapper function
-        // Wake up one thread if its waiting
-        std::lock_guard<std::mutex> lock( _queueMutex ) ;
-        _pendingTasks.push_back( wrapper_func ) ;
-        _queueCondition.notify_one() ;
+      else {
+        if( _taskQueue.isFull() ) {
+          throw Exception( "ThreadPool::push: queue is full!" ) ;
+        }
       }
-      // Return future from promise
-      return task_ptr->get_future() ;
+      std::unique_lock<std::mutex> lock(_mutex) ;
+      _conditionVariable.notify_one() ;
+      return pck->get_future() ;
     }
 
   } // end namespace concurrency
