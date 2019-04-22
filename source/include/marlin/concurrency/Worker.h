@@ -34,6 +34,10 @@ namespace marlin {
     template <typename IN, typename OUT>
     class WorkerBase {
     public:
+      using Input = IN ;
+      using Output = OUT ;
+
+    public:
       virtual ~WorkerBase() = default ;
 
       /**
