@@ -106,9 +106,9 @@ namespace marlin {
 
   void ProcessorSequence::processEvent( std::shared_ptr<EVENT::LCEvent> event ) {
     try {
-      auto extension = event->runtime().ext<RuntimeExtension>() ;
+      auto extension = event->runtime().ext<ProcessorConditions>() ;
       for ( auto processor : _processors ) {
-        if ( not extension->checkRuntimeCondition( processor->name() ) ) {
+        if ( not extension->check( processor->name() ) ) {
           continue ;
         }
         auto startTime = clock() ;
@@ -138,14 +138,14 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void ProcessorSequence::modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) {
-    auto extension = event->runtime().ext<RuntimeExtension>() ;
+    auto extension = event->runtime().ext<ProcessorConditions>() ;
     for ( auto processor : _processors ) {
       auto eventModifier = dynamic_cast<EventModifier*>( processor.get() ) ;
       if ( nullptr == eventModifier ) {
         continue ;
       }
       // check runtime condition
-      if ( not extension->checkRuntimeCondition( processor->name() ) ) {
+      if ( not extension->check( processor->name() ) ) {
         continue ;
       }
       auto startTime = clock() ;
@@ -155,9 +155,9 @@ namespace marlin {
       iter->second._processingTime += static_cast<double>( endTime - startTime ) ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   ProcessorSequence::TimeMetadata ProcessorSequence::generateTimeSummary() const {
     TimeMetadata summary {} ;
     for ( auto t : _processorTimes ) {
