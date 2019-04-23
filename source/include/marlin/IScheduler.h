@@ -8,6 +8,7 @@
 // lcio forward declaration
 namespace EVENT {
   class LCEvent ;
+  class LCRunHeader ;
 }
 
 namespace marlin {
@@ -29,7 +30,14 @@ namespace marlin {
      *
      *  @param  app the application in which the scheduler runs
      */
-    virtual void init( const Application &app ) = 0 ;
+    virtual void init( const Application *app ) = 0 ;
+    
+    /**
+     *  @brief  Process a run header
+     *
+     *  @param  rhdr the run header to process
+     */
+    virtual void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) = 0 ;    
 
     /**
      *  @brief  Push a new event to the scheduler for processing
