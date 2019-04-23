@@ -262,7 +262,7 @@ namespace marlin {
     template <typename IN, typename OUT>
     template <class>
     inline std::future<OUT> ThreadPool<IN,OUT>::push(PushPolicy policy, IN && queueData) {
-      QueueElement<IN,OUT> element( queueData ) ;
+      QueueElement<IN,OUT> element( std::move(queueData) ) ;
       auto f = element.future() ;
       if(policy == PushPolicy::Blocking) {
         // this is dirty yet
