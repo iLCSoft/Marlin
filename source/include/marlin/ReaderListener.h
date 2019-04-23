@@ -29,10 +29,11 @@ namespace marlin {
    *
    *  Example with std::bind and custom class method:
    *  @code{cpp}
+   *  using namespace std::placeholders ;
    *  UserClass user ;
    *  ReaderListener listener ;
-   *  listener.onEventRead( std::bind(&UserClass::processEvent, &user) ) ;
-   *  listener.onRunHeaderRead( std::bind(&UserClass::processRunHeader, &user) ) ;
+   *  listener.onEventRead( std::bind(&UserClass::processEvent, &user, _1) ) ;
+   *  listener.onRunHeaderRead( std::bind(&UserClass::processRunHeader, &user, _1) ) ;
    *  @endcode
    *
    * Note that the current implementation forward the processing only on 
