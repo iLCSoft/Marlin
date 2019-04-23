@@ -20,6 +20,7 @@ namespace marlin {
     class QueueElement {
     public:
       // no copy
+      QueueElement() = default ;
       QueueElement( const QueueElement<IN,OUT> & ) = delete ;
       QueueElement &operator=( const QueueElement<IN,OUT> & ) = delete ;
 
@@ -37,7 +38,7 @@ namespace marlin {
        *  @brief  Move constructor
        */
       QueueElement( QueueElement<IN,OUT> &&rhs ) {
-        *this = rhs ;
+        *this = std::move(rhs) ;
       }
 
       /**

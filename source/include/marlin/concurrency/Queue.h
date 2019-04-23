@@ -36,16 +36,18 @@ namespace marlin {
       }
 
       /**
-       *  @brief  push a value to the queue
+       *  @brief  Push a value to the queue.
+       *  WARNING: On success, the element is moved in the queue 
+       *  container, else it is not !
        *
        *  @param  value the value to push
        */
-      bool push(const T &value) {
+      bool push(T &value) {
         std::unique_lock<std::mutex> lock(_mutex) ;
         if( _queue.size() >= _maxSize ) {
           return false ;
         }
-        _queue.push( value ) ;
+        _queue.push( std::move(value) ) ;
         return true ;
       }
 
