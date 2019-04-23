@@ -150,7 +150,7 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void Processor::baseInit( Application *application ) {
+  void Processor::baseInit( const Application *application ) {
     _application = application ;
     _logger = app().createLogger( name() ) ;
     log<DEBUG2>() << "Creating logger for processor " << name() << std::endl ;

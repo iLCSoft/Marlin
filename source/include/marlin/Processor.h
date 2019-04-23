@@ -26,6 +26,7 @@ namespace marlin {
   class Application ;
   class Scheduler ;
   class XMLFixCollTypes ;
+  class ProcessorFactory ;
 
   typedef std::map<std::string, ProcessorParameter* > ProcParamMap ;
   typedef std::map<std::string, std::string >         LCIOTypeMap ;
@@ -54,7 +55,7 @@ namespace marlin {
   class Processor {
     friend class ProcessorMgr ; // TODO to be removed
     friend class ProcessorEventSeeder ; // TODO to be removed
-    friend class PluginManager ;
+    friend class ProcessorFactory ;
     friend class Scheduler ;
     friend class CMProcessor ;
     friend class XMLFixCollTypes ;
@@ -353,7 +354,7 @@ namespace marlin {
     virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
 
     /** Sets the registered steering parameters before calling init() */
-    virtual void baseInit( Application *application ) ;
+    virtual void baseInit( const Application *application ) ;
 
     /** Called by ProcessorMgr */
     void setFirstEvent( bool firstEvent ) ;
@@ -404,7 +405,7 @@ namespace marlin {
     ///
     Logger                             _logger {nullptr} ;
     ///
-    Application                       *_application {nullptr} ;
+    const Application                 *_application {nullptr} ;
   };
 
   //--------------------------------------------------------------------------
