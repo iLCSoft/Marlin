@@ -89,6 +89,11 @@ namespace marlin {
        *  @brief  Get the number of free slots in the task queue
        */
       std::size_t freeSlots() const ;
+      
+      /**
+       *  @brief  Whether the queue is empty
+       */
+      bool isQueueEmpty() const ;
 
       /**
        *  @brief  Clear the queue
@@ -101,6 +106,24 @@ namespace marlin {
        *  @param  maxQueueSize the maximum queue size
        */
       void setMaxQueueSize( std::size_t maxQueueSize ) ;
+      
+      /**
+       *  @brief  Set whether the thread pool accept data push
+       *  
+       *  @param  accept whether to accept data push
+       */
+      void setAcceptPush( bool accept ) ;
+      
+      /**
+       *  @brief  Whether the thread pool accepts data push
+       */
+      bool acceptPush() const ;
+      
+      /**
+       *  @brief  Whether the thread pool is active, meaning that
+       *  the queue is not empty or at least one worker is active
+       */
+      bool active() const ;
 
       /**
        *  @brief  Stop the thread pool.
@@ -139,6 +162,8 @@ namespace marlin {
       std::atomic<bool>        _isStop {false} ;
       ///< Whether the thread pool is running
       std::atomic<bool>        _isRunning {false} ;
+      ///< Whether the thread pool accepts push action
+      std::atomic<bool>        _acceptPush {true} ;
     };
 
   }
@@ -217,12 +242,48 @@ namespace marlin {
     inline std::size_t ThreadPool<IN,OUT>::freeSlots() const {
       return _queue.freeSlots() ;
     }
+    
+    //--------------------------------------------------------------------------
+    
+    template <typename IN, typename OUT>
+    inline bool ThreadPool<IN,OUT>::isQueueEmpty() const {
+      return _queue.empty() ;
+    }
 
     //--------------------------------------------------------------------------
 
     template <typename IN, typename OUT>
     inline void ThreadPool<IN,OUT>::clearQueue() {
       _queue.clear() ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    template <typename IN, typename OUT>
+    inline void ThreadPool<IN,OUT>::setAcceptPush( bool accept ) {
+      _acceptPush = accept ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    template <typename IN, typename OUT>
+    inline bool ThreadPool<IN,OUT>::acceptPush() const {
+      return _acceptPush.load() ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    template <typename IN, typename OUT>
+    inline bool ThreadPool<IN,OUT>::active() const {
+      if( not _queue.empty() ) {
+        return true ;
+      }
+      for( auto &worker : _pool ) {
+        if( not worker->waiting() ) {
+          return true ;
+        }
+      }
+      return false ;
     }
 
     //--------------------------------------------------------------------------
@@ -262,6 +323,12 @@ namespace marlin {
     template <typename IN, typename OUT>
     template <class>
     inline std::future<OUT> ThreadPool<IN,OUT>::push(PushPolicy policy, IN && queueData) {
+      if( not _isRunning.load() ) {
+        throw Exception( "ThreadPool::push: pool not running yet!" ) ;
+      }
+      if( not _acceptPush.load() ) {
+        throw Exception( "ThreadPool::push: not allowed to push in pool!" ) ;
+      }
       QueueElement<IN,OUT> element( std::move(queueData) ) ;
       auto f = element.future() ;
       if(policy == PushPolicy::Blocking) {
