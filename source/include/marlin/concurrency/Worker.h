@@ -23,6 +23,8 @@ namespace marlin {
 
     template <typename IN, typename OUT>
     class ThreadPool ;
+    template <typename IN, typename OUT>
+    class Worker ;
 
     /**
      *  @brief  WorkerBase class
@@ -33,6 +35,7 @@ namespace marlin {
      */
     template <typename IN, typename OUT>
     class WorkerBase {
+      friend class Worker<IN,OUT> ;
     public:
       using Input = IN ;
       using Output = OUT ;
