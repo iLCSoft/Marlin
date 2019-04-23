@@ -167,6 +167,11 @@ namespace marlin {
        *  @brief  Whether the worker thread is currently running
        */
       bool running() const ;
+      
+      /**
+       *  @brief  Whether the worker is waiting
+       */
+      bool waiting() const ;
 
       /**
        *  @brief  Join the worker thread
@@ -255,6 +260,13 @@ namespace marlin {
     template <typename IN, typename OUT>
     inline bool Worker<IN,OUT>::running() const {
       return ( _thread.get_id() != std::thread::id() ) ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    template <typename IN, typename OUT>
+    inline bool Worker<IN,OUT>::waiting() const {
+      return _waitingFlag.load() ;
     }
 
     //--------------------------------------------------------------------------
