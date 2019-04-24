@@ -11,7 +11,7 @@
 namespace marlin {
 
   bool ProcessorSequence::exists( std::shared_ptr<Processor> processor ) const  {
-    return ( nullptr == processor ? false : (_processors.end() == find( processor ) ) ) ;
+    return ( nullptr == processor ? false : (_processors.end() != find( processor ) ) ) ;
   }
 
   //--------------------------------------------------------------------------
