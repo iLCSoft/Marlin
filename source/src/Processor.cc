@@ -168,6 +168,25 @@ namespace marlin {
       i->second->setValue( _parameters.get() ) ;
     }
   }
+  
+  //--------------------------------------------------------------------------
+  
+  std::pair<bool,bool> Processor::getForcedRuntimeOption( RuntimeOption option ) const {
+    std::pair<bool,bool> result ;
+    result.first = false ;
+    auto iter = _forcedRuntimeOptions.find( option ) ;
+    if( _forcedRuntimeOptions.end() != iter ) {
+      result.first = true ;
+      result.second = iter->second ;
+    }
+    return result ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  void Processor::forceRuntimeOption( RuntimeOption option, bool value ) {
+    _forcedRuntimeOptions[option] = value ;
+  }
 
   //--------------------------------------------------------------------------
 
