@@ -64,6 +64,7 @@ namespace marlin {
 
     template <typename OUT>
     class WorkerBase<void,OUT> {
+      friend class Worker<void,OUT> ;
     public:
       virtual ~WorkerBase() = default ;
       virtual OUT process() = 0 ;
@@ -75,6 +76,7 @@ namespace marlin {
 
     template <typename IN>
     class WorkerBase<IN,void> {
+      friend class Worker<IN,void> ;
     public:
       virtual ~WorkerBase() = default ;
       virtual void process( IN && data ) = 0 ;
@@ -86,6 +88,7 @@ namespace marlin {
 
     template <>
     class WorkerBase<void,void> {
+      friend class Worker<void,void> ;
     public:
       virtual ~WorkerBase() = default ;
       virtual void process() = 0 ;
