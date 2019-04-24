@@ -157,7 +157,12 @@ namespace marlin {
     registerOptionalParameter( "SplitFileSizekB" , 
 			       "will split output file if size in kB exceeds given value - doesn't work with APPEND and NEW"  ,
 			       _splitFileSizekB, 
-			       _splitFileSizekB ) ;  
+			       _splitFileSizekB ) ;
+                        
+    // make it thread-safe by using a lock
+    forceRuntimeOption( Processor::RuntimeOption::Critical, true ) ;
+    // don't duplicate opening/writing of output file
+    forceRuntimeOption( Processor::RuntimeOption::Clone, false ) ;
   }
 
   //--------------------------------------------------------------------------
