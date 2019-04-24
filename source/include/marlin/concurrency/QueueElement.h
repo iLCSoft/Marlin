@@ -100,6 +100,7 @@ namespace marlin {
     class QueueElement<IN, void> {
     public:
       // no copy
+      QueueElement() = default ;
       QueueElement( const QueueElement<IN,void> & ) = delete ;
       QueueElement &operator=( const QueueElement<IN,void> & ) = delete ;
       QueueElement( IN && input ) : _input(input) {}
