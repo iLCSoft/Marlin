@@ -2,14 +2,14 @@
 #define MARLIN_PROCESSOR_h 1
 
 // -- lcio headers
-#include "EVENT/LCEvent.h"
-#include "EVENT/LCRunHeader.h"
+#include <EVENT/LCEvent.h>
+#include <EVENT/LCRunHeader.h>
 
 // -- marlin headers
-#include "marlin/StringParameters.h"
-#include "marlin/ProcessorParameter.h"
-#include "marlin/Logging.h"
-#include "marlin/MarlinConfig.h"  // for Marlin version macros
+#include <marlin/StringParameters.h>
+#include <marlin/ProcessorParameter.h>
+#include <marlin/Logging.h>
+#include <marlin/MarlinConfig.h>  // for Marlin version macros
 
 // -- std headers
 #include <map>
