@@ -6,29 +6,22 @@
 #include <marlin/EventExtensions.h>
 #include <marlin/ProcessorSequence.h>
 #include <marlin/PluginManager.h>
+#include <marlin/ProcessorFactory.h>
+#include <marlin/EventModifier.h>
 
 // -- std headers
 #include <exception>
 #include <algorithm>
 #include <iomanip>
+#include <set>
+
+// -- lcio headers
+#include <EVENT/LCEvent.h>
+#include <EVENT/LCRunHeader.h>
 
 namespace marlin {
 
   namespace concurrency {
-
-    /**
-     *  @brief  WorkerOutput struct
-     *  Stores the output of a processor sequence call
-     */
-    struct WorkerOutput {
-      ///< The input event
-      std::shared_ptr<EVENT::LCEvent>     _event {nullptr} ;
-      ///< An exception potential throw in the worker thread
-      std::exception_ptr                  _exception {nullptr} ;
-    };
-
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
 
     /**
      *  @brief  ProcessorSequenceWorker class
@@ -85,32 +78,44 @@ namespace marlin {
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
 
-    void PEPScheduler::init( const Application &app ) {
-      _logger = app.createLogger( "PEPScheduler" ) ;
+    void PEPScheduler::init( const Application *app ) {
+      _logger = app->createLogger( "PEPScheduler" ) ;
       preConfigure( app ) ;
       configureProcessors( app ) ;
-      configurePool( app ) ;
+      configurePool() ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    void PEPScheduler::end() {
+      _logger->log<MESSAGE>() << "Terminating application" << std::endl ;
+      _pool.stop(false) ;
+      EventList events ;
+      popFinishedEvents( events ) ;
+      if( not _pushResults.empty() ) {
+        _logger->log<ERROR>() << "This should never happen !!" << std::endl ;
+      }
     }
 
     //--------------------------------------------------------------------------
 
-    void PEPScheduler::preConfigure( const Application &app ) {
-      auto globals = app.globalParameters() ;
-      auto allowModify = ( globals->getStringVal( "AllowToModifyEvent" ) == "true" ) ;
-      // warning !!!
-      if ( allowModify ) {
-        _logger->log<WARNING>()
-          << " ******************************************************************************* \n"
-          << " *    AllowToModifyEvent is set to 'true'                                      * \n"
-          << " *    => all processors can modify the input event in processEvent() !!        * \n"
-          << " *        consider setting this flag to 'false'                                * \n"
-          << " *        unless you really need it...                                         * \n"
-          << " *    - if you need a processor that modifies the input event                  * \n"
-          << " *      please implement the EventModifier interface and use the modifyEvent() * \n"
-          << " *      method for this                                                        * \n"
-          << " ******************************************************************************* \n"
-          << std::endl ;
-      }
+    void PEPScheduler::preConfigure( const Application *app ) {
+      auto globals = app->globalParameters() ;
+      // auto allowModify = ( globals->getStringVal( "AllowToModifyEvent" ) == "true" ) ;
+      // // warning !!!
+      // if ( allowModify ) {
+      //   _logger->log<WARNING>()
+      //     << " ******************************************************************************* \n"
+      //     << " *    AllowToModifyEvent is set to 'true'                                      * \n"
+      //     << " *    => all processors can modify the input event in processEvent() !!        * \n"
+      //     << " *        consider setting this flag to 'false'                                * \n"
+      //     << " *        unless you really need it...                                         * \n"
+      //     << " *    - if you need a processor that modifies the input event                  * \n"
+      //     << " *      please implement the EventModifier interface and use the modifyEvent() * \n"
+      //     << " *      method for this                                                        * \n"
+      //     << " ******************************************************************************* \n"
+      //     << std::endl ;
+      // }
       auto ccyStr = globals->getStringVal( "Concurrency" ) ;
       if ( ccyStr.empty() ) {
         ccyStr = "auto" ;
@@ -139,8 +144,8 @@ namespace marlin {
       for( std::size_t i = 0 ; i<ccy ; ++i ) {
         _sequences.push_back( std::make_shared<ProcessorSequence>() ) ;
       }
-      auto activeProcessors = app.activeProcessors() ;
-      auto processorConditions = app.processorConditions() ;
+      auto activeProcessors = app->activeProcessors() ;
+      auto processorConditions = app->processorConditions() ;
       const bool useConditions = ( activeProcessors.size() == processorConditions.size() ) ;
       if( useConditions ) {
         for( std::size_t i=0 ; i<activeProcessors.size() ; ++i ) {
@@ -151,7 +156,7 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
 
-    void PEPScheduler::configureProcessors( const Application &app )  {
+    void PEPScheduler::configureProcessors( const Application *app ) {
       // TODO for the time being, all processors in the sequences
       // are cloned and not locked. Need to find a proper config
       // mechanism to deal with processor instance sharing among
@@ -159,7 +164,7 @@ namespace marlin {
       // processors
       _logger->log<DEBUG5>() << "PEPScheduler configureProcessors ..." << std::endl ;
       // create list of active processors
-      auto activeProcessors = app.activeProcessors() ;
+      auto activeProcessors = app->activeProcessors() ;
       if ( activeProcessors.empty() ) {
         throw Exception( "PEPScheduler::configureProcessors: Active processor list is empty !" ) ;
       }
@@ -175,62 +180,117 @@ namespace marlin {
         }
         throw Exception( "PEPScheduler::configureProcessors: duplicated active processors. Check your steering file !" ) ;
       }
-      auto &pluginMgr = PluginManager::instance() ;
       // populate processor sequences
+      ProcessorFactory factory ;
       for ( size_t i=0 ; i<activeProcessors.size() ; ++i ) {
         auto procName = activeProcessors[ i ] ;
         _logger->log<DEBUG5>() << "Active processor " << procName << std::endl ;
-        auto processorParameters = app.processorParameters( procName ) ;
+        auto processorParameters = app->processorParameters( procName ) ;
         if ( nullptr == processorParameters ) {
           throw Exception( "PEPScheduler::configureProcessors: undefined processor '" + procName + "'" ) ;
         }
-        auto procType = processorParameters->getStringVal("ProcessorType") ;
-        // fill sequences. Create one processor each sequence for the moment
         for( auto sequence : _sequences ) {
-          auto processor = pluginMgr.create<Processor>( PluginType::Processor, procType ) ;
-          processor->setName( procName ) ;
-          if ( nullptr == processor ) {
-            throw Exception( "PEPScheduler::configureProcessors: processor '" + procType + "' not registered !" ) ;
-          }
-          processor->setParameters( processorParameters ) ;
+          auto processor = factory.createProcessor( app, procName, processorParameters ) ;
           sequence->add( processor ) ;
           // FIXME: all processor registers to random seed manager
           // for the time being. Need a registration mechanism for processors
-          _rdmSeedMgr.addEntry( processor.get() ) ;
-          _allProcessors.insert( processor ) ;
+          auto inserted = _allProcessors.insert( processor ).second ;
+          if( inserted ) {
+            _rdmSeedMgr.addEntry( processor.get() ) ;            
+          }
         }
-      }
-      // initialize processors
-      for ( auto processor : _allProcessors ) {
-        _logger->log<DEBUG5>() << "Init processor " << processor->name() << std::endl ;
-        processor->baseInit( app ) ;
       }
       _logger->log<DEBUG5>() << "PEPScheduler configureProcessors ... DONE" << std::endl ;
     }
 
     //--------------------------------------------------------------------------
 
-    void PEPScheduler::configurePool( const Application &app ) {
+    void PEPScheduler::configurePool() {
       // create N workers for N processor sequences
+      _logger->log<DEBUG5>() << "configurePool ..." << std::endl ;
+      _logger->log<DEBUG5>() << "Number of workers: " << _sequences.size() << std::endl ;
       for( auto sequence : _sequences ) {
+        _logger->log<DEBUG>() << "Adding worker ..." << std::endl ;
         _pool.addWorker<ProcessorSequenceWorker>( sequence ) ;
       }
+      _logger->log<DEBUG5>() << "starting thread pool" << std::endl ;
+      // start with a default small number
+      _pool.setMaxQueueSize(10) ;
       _pool.start() ;
+      _pool.setAcceptPush( true ) ;
+      _logger->log<DEBUG5>() << "configurePool ... DONE" << std::endl ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    void PEPScheduler::processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) {
+      // Current way to process run header:
+      //  - Stop accepting event in thread pool
+      //  - Wait for current events processing to finish
+      //  - Process run header
+      //  - Resume pool access for new event push
+      _pool.setAcceptPush( false ) ;
+      // need to wait for all current tasks to finish
+      // and then process run header
+      while( _pool.active() ) {
+        std::this_thread::sleep_for( std::chrono::milliseconds(1) ) ;
+      }
+      // TODO find a better way to handle this!
+      // The problem here is that some of the processors may have not been cloned (single)
+      // We can't call processRunHeader for all sequences because in this case the call
+      // will be duplicated ...
+      for( auto processor : _allProcessors ) {
+        auto modifier = dynamic_cast<EventModifier*>( processor.get() ) ;
+        if( nullptr != modifier ) {
+          modifier->modifyRunHeader( rhdr.get() ) ;
+        }
+      }
+      for( auto processor : _allProcessors ) {
+        processor->processRunHeader( rhdr.get() ) ;
+      }
+      _pool.setAcceptPush( true ) ;
     }
 
     //--------------------------------------------------------------------------
 
     void PEPScheduler::pushEvent( std::shared_ptr<EVENT::LCEvent> event ) {
-      // TODO deal with event runtime extensions here
-      // ...
-      // TODO need to deal with futures here
-      auto f = _pool.push( WorkerPool::PushPolicy::ThrowIfFull, event ) ;
+      // random seeds extension
+      auto seeds = _rdmSeedMgr.generateRandomSeeds( event.get() ) ;
+      auto randomSeedExtension = new RandomSeedExtension( std::move(seeds) ) ;
+      event->runtime().ext<RandomSeed>() = randomSeedExtension ;
+      // runtime conditions extension
+      auto procCondExtension = new ProcessorConditionsExtension( _conditions ) ;
+      event->runtime().ext<ProcessorConditions>() = procCondExtension ;
+      // push event to thread pool queue. It might throw !
+      // _pool.push( WorkerPool::PushPolicy::ThrowIfFull, std::move(event) ) ;
+      _pushResults.push_back( _pool.push( WorkerPool::PushPolicy::ThrowIfFull, std::move(event) ) ) ;
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    void PEPScheduler::popFinishedEvents( std::vector<std::shared_ptr<EVENT::LCEvent>> &events ) {
+      auto iter = _pushResults.begin() ;
+      while( iter != _pushResults.end() ) {
+        const bool finished = (iter->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) ;
+        if( finished ) {
+          auto output = iter->second.get() ;
+          // if an exception was raised during processing rethrow it there !
+          if( nullptr != output._exception ) {
+            std::rethrow_exception( output._exception ) ;
+          }
+          _logger->log<MESSAGE>() << "Finished event " << output._event->getEventNumber() << ", run " << output._event->getRunNumber() << std::endl ;
+          events.push_back( output._event ) ;
+          iter = _pushResults.erase( iter ) ;
+          continue;
+        }
+        ++iter ;
+      }
     }
 
     //--------------------------------------------------------------------------
 
     std::size_t PEPScheduler::freeSlots() const {
-      return _pool.freeSlots() :
+      return _pool.freeSlots() ;
     }
 
   }

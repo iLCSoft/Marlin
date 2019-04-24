@@ -8,7 +8,7 @@
 #include <marlin/concurrency/ThreadPool.h>
 
 // -- std headers
-#include <set>
+#include <unordered_set>
 
 namespace marlin {
 
@@ -16,8 +16,19 @@ namespace marlin {
 
   namespace concurrency {
 
-    // forward declarations
-    struct WorkerOutput ;
+    /**
+     *  @brief  WorkerOutput struct
+     *  Stores the output of a processor sequence call
+     */
+    struct WorkerOutput {
+      ///< The input event
+      std::shared_ptr<EVENT::LCEvent>     _event {nullptr} ;
+      ///< An exception potential throw in the worker thread
+      std::exception_ptr                  _exception {nullptr} ;
+    };
+    
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      *  @brief  PEPScheduler class
@@ -30,7 +41,7 @@ namespace marlin {
      *  fail if the thread pool queue is full. Use freeSlots() to know how many
      *  slots are free in the thread pool queue and avoid unexpected exceptions.
      */
-    class PEPScheduler {
+    class PEPScheduler : public IScheduler {
     public:
       using ConditionsMap = std::map<std::string, std::string> ;
       using InputType = std::shared_ptr<EVENT::LCEvent> ;
@@ -38,21 +49,25 @@ namespace marlin {
       using WorkerPool = ThreadPool<InputType,OutputType> ;
       using Logger = Logging::Logger ;
       using ProcessorSequences = std::vector<std::shared_ptr<ProcessorSequence>> ;
-      using ProcessorSet = std::set<std::shared_ptr<Processor>> ;
+      using ProcessorSet = std::unordered_set<std::shared_ptr<Processor>> ;
+      using PushResultList = std::vector<WorkerPool::PushResult> ;
+      using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
 
     public:
       PEPScheduler() = default ;
 
       // from IScheduler interface
-      void init( const Application &app ) ;
-      void pushEvent( std::shared_ptr<EVENT::LCEvent> event ) ;
-      void popFinishedEvents( std::vector<std::shared_ptr<EVENT::LCEvent>> &events ) ;
-      std::size_t freeSlots() const ;
+      void init( const Application *app ) override ;
+      void end() override ;
+      void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) ;
+      void pushEvent( std::shared_ptr<EVENT::LCEvent> event ) override ;
+      void popFinishedEvents( std::vector<std::shared_ptr<EVENT::LCEvent>> &events ) override ;
+      std::size_t freeSlots() const override ;
 
     private:
-      void preConfigure( const Application &app ) ;
-      void configureProcessors( const Application &app ) ;
-      void configurePool( const Application &app ) ;
+      void preConfigure( const Application *app ) ;
+      void configureProcessors( const Application *app ) ;
+      void configurePool() ;
 
     private:
       ///< The worker thread pool
@@ -67,6 +82,8 @@ namespace marlin {
       ConditionsMap                    _conditions {} ;
       ///< The random seed manager
       RandomSeedManager                _rdmSeedMgr {} ;
+      ///< The list of worker output promises
+      PushResultList                   _pushResults {} ;
     };
 
   }
