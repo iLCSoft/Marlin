@@ -48,7 +48,7 @@ namespace marlin {
     
   private:
     // processor parameters
-    int    _howOften {10000} ;
+    int    _howOften {1} ;
 
     // runtime members
     int    _nRun {0} ;
