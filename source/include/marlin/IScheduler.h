@@ -33,6 +33,12 @@ namespace marlin {
     virtual void init( const Application *app ) = 0 ;
     
     /**
+     *  @brief  Terminate the scheduler activites
+     *  Cleanup memory, etc ...
+     */
+    virtual void end() = 0 ;
+    
+    /**
      *  @brief  Process a run header
      *
      *  @param  rhdr the run header to process
