@@ -239,6 +239,19 @@ namespace marlin{
             std::string name( getAttribute( section, "name") ) ;
             _map[ name  ] = std::make_shared<StringParameters>();
             _current = _map[ name  ].get();
+            
+            try{  
+              auto cloneProc = getAttribute( section , "clone" ) ;
+              _current->add( "ProcessorClone", {cloneProc} ) ;
+            }      
+            catch( ParseException ) {
+            }
+            try{  
+              auto criticalProc = getAttribute( section , "critical" ) ;
+              _current->add( "ProcessorCritical", {criticalProc} ) ;
+            }      
+            catch( ParseException ) {
+            }
 
             // exit if processor defined more than once in the execute section
             if( procList.find( name ) != procList.end() ){
