@@ -34,6 +34,9 @@ namespace marlin {
     public:
       using QueueType = Queue<QueueElement<IN,OUT>> ;
       using PoolType = std::vector<std::shared_ptr<Worker<IN,OUT>>> ;
+      using Promise = std::shared_ptr<std::promise<OUT>> ;
+      using Future = std::future<OUT> ;
+      using PushResult = std::pair<Promise,Future> ;
       friend class Worker<IN,OUT> ;
 
     public:
@@ -145,7 +148,7 @@ namespace marlin {
        *  @param
        */
       template <class = typename std::enable_if<not std::is_same<IN,void>::value>::type>
-      std::future<OUT> push( PushPolicy policy, IN && input ) ;
+      PushResult push( PushPolicy policy, IN && input ) ;
 
     private:
       ///< The synchronization mutex
@@ -249,6 +252,13 @@ namespace marlin {
     inline bool ThreadPool<IN,OUT>::isQueueEmpty() const {
       return _queue.empty() ;
     }
+    
+    //--------------------------------------------------------------------------
+    
+    template <typename IN, typename OUT>
+    inline void ThreadPool<IN,OUT>::setMaxQueueSize( std::size_t maxQueueSize ) {
+      _queue.setMaxSize( maxQueueSize ) ;
+    }
 
     //--------------------------------------------------------------------------
 
@@ -322,7 +332,7 @@ namespace marlin {
 
     template <typename IN, typename OUT>
     template <class>
-    inline std::future<OUT> ThreadPool<IN,OUT>::push(PushPolicy policy, IN && queueData) {
+    inline typename ThreadPool<IN,OUT>::PushResult ThreadPool<IN,OUT>::push(PushPolicy policy, IN && queueData) {
       if( not _isRunning.load() ) {
         throw Exception( "ThreadPool::push: pool not running yet!" ) ;
       }
@@ -330,7 +340,9 @@ namespace marlin {
         throw Exception( "ThreadPool::push: not allowed to push in pool!" ) ;
       }
       QueueElement<IN,OUT> element( std::move(queueData) ) ;
-      auto f = element.future() ;
+      PushResult result ;
+      result.first = element.promise() ;
+      result.second = result.first->get_future() ;
       if(policy == PushPolicy::Blocking) {
         // this is dirty yet
         // TODO find a proper implementation ...
@@ -344,10 +356,11 @@ namespace marlin {
         if( _queue.isFull() ) {
           throw Exception( "ThreadPool::push: queue is full!" ) ;
         }
+        _queue.push(element) ;
       }
       std::unique_lock<std::mutex> lock(_mutex) ;
       _conditionVariable.notify_one() ;
-      return f ;
+      return std::move(result) ;
     }
 
   } // end namespace concurrency
