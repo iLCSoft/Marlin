@@ -49,12 +49,12 @@ namespace marlin {
         _input = std::move(rhs._input) ;
         return *this ;
       }
-
+      
       /**
-       *  @brief  Get the future associated to the output promise
+       *  @brief  Get the output promise
        */
-      std::future<OUT> future() {
-        return _promise.get_future() ;
+      std::shared_ptr<std::promise<OUT>> promise() const {
+        return _promise ;
       }
 
       /**
@@ -63,7 +63,7 @@ namespace marlin {
        *  @param  output the output data to retrieve in the future object
        */
       void setValue( OUT && output ) {
-        _promise.set_value( output ) ;
+        _promise->set_value( output ) ;
       }
 
       /**
@@ -76,9 +76,9 @@ namespace marlin {
 
     private:
       ///< The promise for getting the output data
-      std::promise<OUT>    _promise {} ;
+      std::shared_ptr<std::promise<OUT>>    _promise {std::make_shared<std::promise<OUT>>()} ;
       ///< The input data provided by the user
-      IN                   _input {} ;
+      IN                                    _input {} ;
     };
 
     template <typename OUT>
@@ -88,12 +88,12 @@ namespace marlin {
       QueueElement( const QueueElement<void,OUT> & ) = delete ;
       QueueElement &operator=( const QueueElement<void,OUT> & ) = delete ;
       QueueElement() = default ;
-      QueueElement( QueueElement<void,OUT> &&rhs ) { *this = rhs ; }
+      QueueElement( QueueElement<void,OUT> &&rhs ) { *this = std::move(rhs) ; }
       QueueElement &operator=( QueueElement<void,OUT> &&rhs ) { _promise = std::move(rhs._promise) ; return *this ; }
-      std::future<OUT> future() { return _promise.get_future() ; }
-      void setValue( OUT && output ) { _promise.set_value( output ) ; }
+      std::shared_ptr<std::promise<OUT>> promise() const { return _promise ; }
+      void setValue( OUT && output ) { _promise->set_value( output ) ; }
     private:
-      std::promise<OUT>    _promise {} ;
+      std::shared_ptr<std::promise<OUT>>    _promise {std::make_shared<std::promise<OUT>>()} ;
     };
 
     template <typename IN>
@@ -104,18 +104,18 @@ namespace marlin {
       QueueElement( const QueueElement<IN,void> & ) = delete ;
       QueueElement &operator=( const QueueElement<IN,void> & ) = delete ;
       QueueElement( IN && input ) : _input(input) {}
-      QueueElement( QueueElement<IN,void> &&rhs ) { *this = rhs ; }
+      QueueElement( QueueElement<IN,void> &&rhs ) { *this = std::move(rhs) ; }
       QueueElement &operator=( QueueElement<IN,void> &&rhs ) {
         _promise = std::move(rhs._promise) ;
         _input = std::move(rhs._input) ;
         return *this ;
       }
-      std::future<void> future() { return _promise.get_future() ; }
-      void setValue() { _promise.set_value() ; }
+      std::shared_ptr<std::promise<void>> promise() const { return _promise ; }
+      void setValue() { _promise->set_value() ; }
       IN takeInput() { return std::move(_input) ; }
     private:
-      std::promise<void>    _promise {} ;
-      IN                   _input {} ;
+      std::shared_ptr<std::promise<void>>    _promise {std::make_shared<std::promise<void>>()} ;
+      IN                                     _input {} ;
     };
 
     template <>
@@ -127,10 +127,10 @@ namespace marlin {
       QueueElement() = default ;
       QueueElement( QueueElement<void,void> &&rhs ) { *this = std::move(rhs) ; }
       QueueElement &operator=( QueueElement<void,void> &&rhs ) { _promise = std::move(rhs._promise) ; return *this ; }
-      std::future<void> future() { return _promise.get_future() ; }
-      void setValue() { _promise.set_value() ; }
+      std::shared_ptr<std::promise<void>> promise() const { return _promise ; }
+      void setValue() { _promise->set_value() ; }
     private:
-      std::promise<void>    _promise {} ;
+      std::shared_ptr<std::promise<void>>    _promise {std::make_shared<std::promise<void>>()} ;
     };
 
   } // end namespace concurrency
