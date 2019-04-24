@@ -48,11 +48,11 @@ namespace marlin {
     
   private:
     // processor parameters
-    int    _howOften {1} ;
+    int                 _howOften {1} ;
 
     // runtime members
-    int    _nRun {0} ;
-    int    _nEvt {0} ;
+    int                 _nRun {0} ;
+    std::atomic<int>    _nEvt {0} ;
   };
   
   //--------------------------------------------------------------------------
@@ -67,6 +67,11 @@ namespace marlin {
   			     "Print the event number every N events",
   			     _howOften, 
   			     int(1) ) ;
+             
+   // no need to lock, this processor is thread safe
+   forceRuntimeOption( Processor::RuntimeOption::Critical, false ) ;
+   // don't duplicate since it is thread safe and hold no big data
+   forceRuntimeOption( Processor::RuntimeOption::Clone, false ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -85,13 +90,13 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
 
-  void Statusmonitor::processEvent( EVENT::LCEvent *  ) { 
-    if (_nEvt % _howOften == 0) {
+  void Statusmonitor::processEvent( EVENT::LCEvent *  ) {
+    auto eventid = _nEvt.fetch_add(1) ;
+    if (eventid % _howOften == 0) {
       log<MESSAGE>() 
         << " ===== Run  : " << std::setw(7) << _nRun
-        << "  Event: " << std::setw(7) << _nEvt << std::endl;
+        << "  Event: " << std::setw(7) << eventid << std::endl;
     }
-    _nEvt ++ ;
   }
   
   //--------------------------------------------------------------------------
