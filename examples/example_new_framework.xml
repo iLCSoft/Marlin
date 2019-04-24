@@ -8,17 +8,9 @@
 
   <global>
     <parameter name="LCIOInputFiles">
-      test/testmarlin/simjob.slcio 
-      test/testmarlin/simjob.slcio 
-      test/testmarlin/simjob.slcio 
-      test/testmarlin/simjob.slcio 
-      test/testmarlin/simjob.slcio 
-      test/testmarlin/simjob.slcio 
-      test/testmarlin/simjob.slcio 
       test/testmarlin/simjob.slcio
-      test/testmarlin/simjob.slcio 
     </parameter>
-    <parameter name="MaxRecordNumber" value="0"/>
+    <parameter name="MaxRecordNumber" value="100"/>
     <parameter name="SkipNEvents" value="1"/>
     <parameter name="Verbosity"> DEBUG </parameter>
     <parameter name="Concurrency"> 10 </parameter>
@@ -36,11 +28,13 @@
     <parameter name="DumpGeometry"> false </parameter>
   </geometry> -->
   
-  <processor name="CPUCrunch" type="CPUCrunching">
+  <processor name="CPUCrunch" type="CPUCrunching" clone="true" lock="false">
     <parameter name="CrunchTime"> 1000 </parameter>
   </processor>  
 
-  <processor name="Status" type="Statusmonitor"/>
+  <processor name="Status" type="Statusmonitor" clone="false">
+    <parameter name="Verbosity"> MESSAGE </parameter>
+  </processor>
 
 
 </marlin>
