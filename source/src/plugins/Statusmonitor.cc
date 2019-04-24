@@ -11,6 +11,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <atomic>
 
 namespace marlin {
   
