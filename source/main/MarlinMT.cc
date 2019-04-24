@@ -1,5 +1,5 @@
 // -- marlin headers
-#include <marlin/MarlinMTApplication.h>
+#include <marlin/MarlinPEPApplication.h>
 #include <marlin/PluginManager.h>
 
 using namespace marlin ;
@@ -24,7 +24,7 @@ int main( int argc, char **argv ) {
   }
   // configure and run application
   try {
-    application = std::make_shared<MarlinMTApplication>() ;    
+    application = std::make_shared<MarlinPEPApplication>() ;    
     application->init( argc, argv ) ;
     application->run() ;
   }
