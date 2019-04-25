@@ -25,12 +25,15 @@
     }; \
     static PluginDeclaration_##Class __instance_##Class ; \
   }
-// geometry plugin declaration 
+// geometry plugin declaration
 #define MARLIN_DECLARE_GEOPLUGIN_NAME( Class, NameStr ) MARLIN_DECLARE_PLUGIN( Class, NameStr, marlin::PluginType::GeometryPlugin )
 #define MARLIN_DECLARE_GEOPLUGIN( Class ) MARLIN_DECLARE_GEOPLUGIN_NAME( Class, #Class )
 // processor plugin declaration
 #define MARLIN_DECLARE_PROCESSOR_NAME( Class, NameStr ) MARLIN_DECLARE_PLUGIN( Class, NameStr, marlin::PluginType::Processor )
 #define MARLIN_DECLARE_PROCESSOR( Class ) MARLIN_DECLARE_PROCESSOR_NAME( Class, #Class )
+// data source plugin declaration
+#define MARLIN_DECLARE_DATASOURCE_NAME( Class, NameStr ) MARLIN_DECLARE_PLUGIN( Class, NameStr, marlin::PluginType::DataSource )
+#define MARLIN_DECLARE_DATASOURCE( Class ) MARLIN_DECLARE_DATASOURCE_NAME( Class, #Class )
 
 namespace marlin {
 
@@ -41,9 +44,10 @@ namespace marlin {
    */
   enum class PluginType : int {
     Processor,
-    GeometryPlugin
+    GeometryPlugin,
+    DataSource
   } ;
-  
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
@@ -70,7 +74,7 @@ namespace marlin {
     PluginManager(const PluginManager &) = delete ;
     PluginManager& operator=(const PluginManager &) = delete ;
     ~PluginManager() = default ;
-    
+
     /**
      *  @brief  Constructor
      */
@@ -81,34 +85,34 @@ namespace marlin {
      *  @brief  Get the plugin manager instance
      */
     static PluginManager &instance() ;
-    
+
     /**
      *  @brief  Register a new plugin to the manager.
-     *  A new factory function creating an object of type T 
-     *  is inserted into the registry. The type T must be 
-     *  default constructible. If you want to provide a custom 
+     *  A new factory function creating an object of type T
+     *  is inserted into the registry. The type T must be
+     *  default constructible. If you want to provide a custom
      *  factory function, use the corresponding overloaded function.
-     *  If the flag ignoreDuplicate is set to true, no exception is 
-     *  thrown in case a duplicate is found in the registry. In this 
+     *  If the flag ignoreDuplicate is set to true, no exception is
+     *  thrown in case a duplicate is found in the registry. In this
      *  case, the registry is not modified.
-     *  
+     *
      *  @param  type the plugin type
      *  @param  name the plugin name
      *  @param  ignoreDuplicate whether to avoid exception throw in case of duplicate entry
      */
     template <typename T>
     void registerPlugin( PluginType type, const std::string &name, bool ignoreDuplicate = true ) ;
-    
+
     /**
      *  @brief  Register a new plugin to the manager.
      *  See overloaded function description for more details
-     *  
+     *
      *  @param  type the plugin type
      *  @param  name the plugin name
      *  @param  factoryFunction the factory function responsible for the plugin creation
      *  @param  ignoreDuplicate whether to avoid exception throw in case of duplicate entry
      */
-    void registerPlugin( PluginType type, const std::string &name, 
+    void registerPlugin( PluginType type, const std::string &name,
       FactoryFunction factoryFunction, bool ignoreDuplicate = true ) ;
 
     /**
@@ -117,22 +121,22 @@ namespace marlin {
      *  @param  envvar the environment variable to load the libraries from
      */
     bool loadLibraries( const std::string &envvar = "MARLIN_DLL" ) ;
-    
+
     /**
      *  @brief  Get all registered plugin name for the given type
-     * 
+     *
      *  @param  type the plugin type
      */
     std::vector<std::string> pluginNames( PluginType type ) const ;
-    
+
     /**
      *  @brief  Whether the plugin of given type and name is registered
-     * 
+     *
      *  @param  type the plugin type to check
      *  @param  name the plugin name to check
      */
     bool pluginRegistered( PluginType type, const std::string &name ) const ;
-    
+
     /**
      *  @brief  Create a new plugin instance.
      *  A factory function must have been registered before hand.
@@ -149,16 +153,16 @@ namespace marlin {
      *  @brief  Dump plugin manager content in console
      */
     void dump() const ;
-    
+
     /**
      *  @brief  Get the plugin manager logger
      */
     Logger logger() const ;
-    
+
   private:
     /**
      *  @brief  Convert plugin type to string
-     * 
+     *
      *  @param  type plugin type from enumerator
      */
     static std::string pluginTypeToString( PluginType type ) ;
@@ -173,21 +177,21 @@ namespace marlin {
     /// The synchronization mutex
     mutable mutex_type         _mutex {} ;
   };
-  
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
-  
+
   template <typename T>
-  inline void PluginManager::registerPlugin( PluginType type, const std::string &name, 
+  inline void PluginManager::registerPlugin( PluginType type, const std::string &name,
     bool ignoreDuplicate ) {
     FactoryFunction factoryFunction = [](){
       return std::make_shared<T>() ;
     };
     registerPlugin( type, name, factoryFunction, ignoreDuplicate ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   template <typename T>
   inline std::shared_ptr<T> PluginManager::create( PluginType type, const std::string &name ) const {
     lock_type lock( _mutex ) ;

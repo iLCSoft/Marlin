@@ -11,17 +11,18 @@
 #include <UTIL/BitField64.h>  // LCTokenizer
 
 namespace marlin {
-  
+
   PluginManager::PluginManager() {
     _pluginFactories.insert( PluginFactoryMap::value_type(PluginType::Processor, FactoryMap()) ) ;
     _pluginFactories.insert( PluginFactoryMap::value_type(PluginType::GeometryPlugin, FactoryMap()) ) ;
+    _pluginFactories.insert( PluginFactoryMap::value_type(PluginType::DataSource, FactoryMap()) ) ;
     _logger = Logging::createLogger( "PluginManager" ) ;
     _logger->setLevel<MESSAGE>() ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
-  void PluginManager::registerPlugin( PluginType type, const std::string &name, 
+
+  void PluginManager::registerPlugin( PluginType type, const std::string &name,
     FactoryFunction factoryFunction, bool ignoreDuplicate ) {
     lock_type lock( _mutex ) ;
     auto typeIter = _pluginFactories.find( type ) ;
@@ -39,9 +40,9 @@ namespace marlin {
       _logger->log<DEBUG5>() << "New plugin registered: type '" << typeStr << "', name '" << name << "'" <<std::endl ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   std::vector<std::string> PluginManager::pluginNames( PluginType type ) const {
     lock_type lock( _mutex ) ;
     std::vector<std::string> names ;
@@ -51,9 +52,9 @@ namespace marlin {
     }
     return names ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   bool PluginManager::pluginRegistered( PluginType type, const std::string &name ) const {
     lock_type lock( _mutex ) ;
     auto typeIter = _pluginFactories.find( type ) ;
@@ -76,11 +77,11 @@ namespace marlin {
       // TODO log a debug message here!
       return true ;
     }
-    std::string marlinDllStr (marlinDll) ;    
+    std::string marlinDllStr (marlinDll) ;
     std::vector<std::string> libraries ;
     LCTokenizer tokenizer ( libraries , ':' ) ;
     std::for_each( marlinDllStr.begin() , marlinDllStr.end() , tokenizer ) ;
-    
+
     std::set<std::string> checkDuplicateLibs;
     for ( auto library : libraries ) {
       size_t idx = library.find_last_of("/") ;
@@ -124,19 +125,20 @@ namespace marlin {
     }
     _logger->log<MESSAGE>() << "----------------------------------" << std::endl ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   std::string PluginManager::pluginTypeToString( PluginType type ) {
     switch ( type ) {
       case PluginType::Processor: return "Processor" ;
       case PluginType::GeometryPlugin: return "GeometryPlugin" ;
+      case PluginType::DataSource: return "DataSource" ;
       default: throw;
     }
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   PluginManager::Logger PluginManager::logger() const {
     return _logger ;
   }
