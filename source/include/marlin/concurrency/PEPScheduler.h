@@ -84,6 +84,8 @@ namespace marlin {
       RandomSeedManager                _rdmSeedMgr {} ;
       ///< The list of worker output promises
       PushResultList                   _pushResults {} ;
+      ///< Whether the currently pushed event is the first one
+      bool                             _isFirstEvent {true} ;
     };
 
   }
