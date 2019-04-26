@@ -10,7 +10,6 @@
 #include <marlin/IRecoParticleFactory.h>
 
 // -- lcio headers
-#include <lcio.h>
 #include <IMPL/LCCollectionVec.h>
 #include <EVENT/ReconstructedParticle.h>
 #include <UTIL/LCRelationNavigator.h>
