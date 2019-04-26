@@ -79,10 +79,6 @@ namespace marlin {
     Scheduler                    _scheduler {nullptr} ;
     ///< The data source plugin
     DataSource                   _dataSource {nullptr} ;
-    ///< The maximum number of record to read fron file
-    int                          _maxRecordNumber {0} ;
-    ///< The number of events to skip from begining of file
-    int                          _skipNEvents {0} ;
   };
 
 } // end namespace marlin
