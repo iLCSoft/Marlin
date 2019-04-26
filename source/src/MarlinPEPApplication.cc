@@ -2,6 +2,8 @@
 
 // -- marlin headers
 #include <marlin/Utils.h>
+#include <marlin/DataSourcePlugin.h>
+#include <marlin/PluginManager.h>
 #include <marlin/concurrency/PEPScheduler.h>
 
 using namespace std::placeholders ;
@@ -9,25 +11,8 @@ using namespace std::placeholders ;
 namespace marlin {
   
   void MarlinPEPApplication::runApplication() {
-    _fileReader.open( _lcioFileList ) ;
-    // skip events if requested
-    if ( _skipNEvents > 0 ) {
-      logger()->log<WARNING>() << " --- Will skip first " << _skipNEvents << " event(s)" << std::endl ;
-      _fileReader.skipNEvents( _skipNEvents ) ;
-    }
     try {
-      MT::LCReaderListenerList listeners = {&_readerListener} ;
-      if( _maxRecordNumber > 0 ){
-        try {
-          _fileReader.readStream( listeners, _maxRecordNumber ) ;
-        }
-        catch( IO::EndOfDataException &e ) {
-          logger()->log<WARNING>() << e.what() << std::endl ;
-        }
-      } 
-      else {
-        _fileReader.readStream( listeners ) ;
-      }
+      _dataSource->readAll() ;
     }
     catch( StopProcessingException &e ) {
       logger()->log<ERROR>() << std::endl
@@ -40,11 +25,6 @@ namespace marlin {
           << " **********************************************************" << std::endl
           << std::endl ;
     }
-    catch( RewindDataFilesException &e ) {
-      // TODO re-activate this functionality
-      logger()->log<WARNING>() << "Files rewind functionality is not available in MarlinMT" << std::endl ;
-      logger()->log<WARNING>() << "Application will terminate normally now ..." << std::endl ;
-    }
   }
   
   //--------------------------------------------------------------------------
@@ -52,7 +32,7 @@ namespace marlin {
   void MarlinPEPApplication::init() {
     logger()->log<MESSAGE>() << "----------------------------------------------------------" << std::endl ;
     configureScheduler() ;
-    configureFileReader() ;
+    configureDataSource() ;
     logger()->log<MESSAGE>() << "----------------------------------------------------------" << std::endl ;
   }
   
@@ -79,32 +59,19 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
   
-  void MarlinPEPApplication::configureFileReader() {
-    // configure the file reader
-    auto globals = globalParameters() ;
-    globals->getStringVals( "LCIOInputFiles" , _lcioFileList ) ;
-    if ( _lcioFileList.empty() ) {
-      logger()->log<ERROR>() << "No LCIO iput files found in </global> section of steering file" << std::endl ;
-      throw Exception( "No LCIO iput files found in </global> section of steering file" ) ;
+  void MarlinPEPApplication::configureDataSource() {
+    // configure the data source
+    auto parameters = dataSourceParameters() ;
+    auto dstype = parameters->getStringVal( "DataSourceType" ) ;
+    auto &pluginMgr = PluginManager::instance() ;
+    _dataSource = pluginMgr.create<DataSourcePlugin>( PluginType::DataSource, dstype ) ;
+    if( nullptr == _dataSource ) {
+      throw Exception( "Data source of type '" + dstype + "' not found in plugins" ) ;
     }
-    _maxRecordNumber = globals->getIntVal( "MaxRecordNumber" ) ;
-    _skipNEvents = globals->getIntVal( "SkipNEvents" ) ;
-    EVENT::StringVec readCollectionNames {} ;
-    globals->getStringVals( "LCIOReadCollectionNames" , readCollectionNames ) ;
-    if ( not readCollectionNames.empty() ) {
-      logger()->log<WARNING>()
-        << " *********** Parameter LCIOReadCollectionNames given - will only read the following collections: **** " 
-        << std::endl ;
-      for( auto collection : readCollectionNames ) {
-        logger()->log<WARNING>()  << "     " << collection << std::endl ;
-      } 
-      logger()->log<WARNING>() 
-        << " *************************************************************************************************** " << std::endl ;
-      _fileReader.setReadCollectionNames( readCollectionNames ) ;
-    }
-    // configure the reader listener
-    _readerListener.onEventRead( std::bind( &MarlinPEPApplication::onEventRead, this, _1 ) ) ;
-    _readerListener.onRunHeaderRead( std::bind( &MarlinPEPApplication::onRunHeaderRead, this, _1 ) ) ;
+    _dataSource->init( this ) ;
+    // setup callbacks
+    _dataSource->onEventRead( std::bind( &MarlinPEPApplication::onEventRead, this, _1 ) ) ;
+    _dataSource->onRunHeaderRead( std::bind( &MarlinPEPApplication::onRunHeaderRead, this, _1 ) ) ;
   }
   
   //--------------------------------------------------------------------------

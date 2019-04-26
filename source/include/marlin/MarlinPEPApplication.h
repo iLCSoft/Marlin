@@ -11,6 +11,7 @@
 namespace marlin {
 
   class IScheduler ;
+  class DataSourcePlugin ;
 
   /**
    *  @brief  MarlinPEPApplication class
@@ -30,33 +31,54 @@ namespace marlin {
     using FileReader = MT::LCReader ;
     using FileList = EVENT::StringVec ;
     using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
+    using DataSource = std::shared_ptr<DataSourcePlugin> ;
 
   public:
     MarlinPEPApplication() = default ;
 
   private:
+    // from Application
     void runApplication() override ;
     void init() override ;
     void end() override ;
     void printUsage() const override ;
 
+    /**
+     *  @brief  Configure the scheduler
+     */
     void configureScheduler() ;
-    void configureFileReader() ;
+    
+    /**
+     *  @brief  Configure the data source
+     */
+    void configureDataSource() ;
 
+    /**
+     *  @brief  Callback function to process an event received from the data source
+     * 
+     *  @param  event the event to process
+     */
     void onEventRead( std::shared_ptr<EVENT::LCEvent> event ) ;
+    
+    /**
+     *  @brief  Callback function to process a run header received from the data source
+     * 
+     *  @param  rhdr the run header to process
+     */
     void onRunHeaderRead( std::shared_ptr<EVENT::LCRunHeader> rhdr ) ;
 
+    /**
+     *  @brief  Processed finished events from the output queue
+     *
+     *  @param  events the list of finished events
+     */
     void processFinishedEvents( const EventList &events ) const ;
 
   private:
     ///< The event processing scheduler instance
     Scheduler                    _scheduler {nullptr} ;
-    ///< The event reader listener
-    ReaderListener               _readerListener {} ;
-    ///< The lcio file reader
-    FileReader                   _fileReader {FileReader::directAccess} ;
-    ///< The LCIO input file list
-    FileList                     _lcioFileList {} ;
+    ///< The data source plugin
+    DataSource                   _dataSource {nullptr} ;
     ///< The maximum number of record to read fron file
     int                          _maxRecordNumber {0} ;
     ///< The number of events to skip from begining of file
