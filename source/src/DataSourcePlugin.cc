@@ -14,6 +14,7 @@ namespace marlin {
 
   void DataSourcePlugin::init( const Application *app ) {
     _logger = app->createLogger( "Data source '" + _type + "'" ) ;
+    setParameters( app->dataSourceParameters() ) ;
     logger()->log<MESSAGE>() << "----------------------------------------------------------" << std::endl ;
     logger()->log<MESSAGE>() << "Data source" << std::endl ;
     logger()->log<MESSAGE>() << "  - type: " << type() << std::endl ;
