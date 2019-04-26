@@ -7,16 +7,19 @@
   </execute>
 
   <global>
-    <parameter name="LCIOInputFiles">
-      test/testmarlin/simjob.slcio
-    </parameter>
-    <parameter name="MaxRecordNumber" value="100"/>
-    <parameter name="SkipNEvents" value="1"/>
     <parameter name="Verbosity"> DEBUG </parameter>
     <parameter name="Concurrency"> 10 </parameter>
     <parameter name="ColoredConsole"> 0 </parameter>
     <!-- <parameter name="LogFileName"> toto.log </parameter> -->
   </global>
+  
+  <datasource type="LCIO">
+    <parameter name="LCIOInputFiles">
+      test/testmarlin/simjob.slcio
+    </parameter>
+    <parameter name="MaxRecordNumber" value="100"/>
+    <parameter name="SkipNEvents" value="1"/>
+  </datasource>
 
   <geometry type="GearGeometry"> 
     <parameter name="GearFile"> test/testmarlin/gear_ILD_00.xml </parameter> 
