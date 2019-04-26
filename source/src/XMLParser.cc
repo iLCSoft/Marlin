@@ -78,6 +78,19 @@ namespace marlin{
             auto geotype = getAttribute( section , "type" ) ;
             _current->add( "GeometryType", {geotype} );
         }
+        
+        // data source section
+        section = root->FirstChildElement("datasource")  ;
+
+        if( nullptr == section ) {
+          throw ParseException(std::string( "XMLParser::parse : no <datasource/> section found in  ") 
+                  + _fileName  ) ;
+        }
+        _map[ "DataSource" ] = std::make_shared<StringParameters>() ;
+        _current =  _map[ "DataSource" ].get() ;
+        parametersFromNode( section , constants ) ;
+        auto dstype = getAttribute( section , "type" ) ;
+        _current->add( "DataSourceType", {dstype} );
 
         _map[ "Global" ] = std::make_shared<StringParameters>();
         StringParameters*  globalParameters = _map[ "Global" ].get();
