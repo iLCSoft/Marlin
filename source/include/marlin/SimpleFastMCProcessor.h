@@ -1,19 +1,18 @@
 #ifndef SimpleFastMCProcessor_h
 #define SimpleFastMCProcessor_h 1
 
-#include "marlin/Processor.h"
-#include "marlin/IRecoParticleFactory.h"
+// -- marlin headers
+#include <marlin/Processor.h>
+#include <marlin/IRecoParticleFactory.h>
 
-#include "lcio.h"
+// -- lcio headers
+#include <lcio.h>
+
+// -- std headers
 #include <string>
 
-
-
-using namespace lcio ;
-
-namespace marlin{
+namespace marlin {
  
-
   /** A simple smearing "Monte Carlo" processor.
    *  It creates ReconstructedParticles from MCParticles according to
    *  the resolution that is specified for the particle type, one of:
@@ -68,66 +67,32 @@ namespace marlin{
    */
   
   class SimpleFastMCProcessor : public Processor {
-    
   public:
-    
-    /** Returns a new instance of the processor.*/
-    virtual Processor*  newProcessor() { return new SimpleFastMCProcessor ; }
-    
-    
     SimpleFastMCProcessor() ;
     SimpleFastMCProcessor(const marlin::SimpleFastMCProcessor&) = delete;
     SimpleFastMCProcessor& operator=(const marlin::SimpleFastMCProcessor&) = delete;
-
-    /** Initializes ...
-     */
-    virtual void init() ;
+    Processor *newProcessor() ;
+    void init() ;
+    void processEvent( EVENT::LCEvent * evt ) ;  
     
-    /** Called for every run.
-     */
-    virtual void processRunHeader( LCRunHeader* run ) ;
-    
-    /** Updates all registered conditions handlers and adds the data to the event.
-     */
-    virtual void processEvent( LCEvent * evt ) ; 
-    
-    /** Creates some checkplots.
-     */
-    virtual void check( LCEvent * evt ) ; 
-    
-    /** Called after data processing for clean up.
-     */
-    virtual void end() ;
-    
-    
-  protected:
-    
-    /**  Input collection name */
-    std::string _inputCollectionName{};
-
-    /**  Ouput collection names */
-    std::string _recoParticleCollectionName{};
-    std::string _mcTruthCollectionName{};
-
-    /** Momentum cut in GeV */
-    float _momentumCut=0.0;
-
-    /** Resolutions of charged particles */
-    FloatVec _initChargedRes{};
-
-    /** Resolutions of photons */
-    FloatVec _initPhotonRes{};
-
-    /** Resolutions of photons */
-    FloatVec _initNeutralHadronRes{};
-
-    /** The particle factory */
-    IRecoParticleFactory* _factory=NULL;
-
-    int _nRun=-1;
-    int _nEvt=-1;
-    
-  } ;
+  private:
+    ///< Input MC collection name
+    std::string              _inputCollectionName{};
+    ///< Reco particle output collection name
+    std::string              _recoParticleCollectionName {} ;
+    ///< Reco -> MC relation output collection name
+    std::string              _mcTruthCollectionName {} ;
+    ///< Momentum cut in GeV
+    float                    _momentumCut {0.0} ;
+    ///< Resolutions of charged particles
+    EVENT::FloatVec          _initChargedRes {} ;
+    ///< Resolutions of photons
+    EVENT::FloatVec          _initPhotonRes {} ;
+    ///< Resolutions of photons
+    EVENT::FloatVec          _initNeutralHadronRes {} ;
+    ///< The particle factory
+    IRecoParticleFactory    *_factory {nullptr} ;  
+  };
   
 } // end namespace 
 
