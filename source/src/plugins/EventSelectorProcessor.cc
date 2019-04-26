@@ -36,11 +36,11 @@ namespace marlin {
     // from Processor
     Processor* newProcessor() ;
     void init() ;
-    void processEvent( LCEvent * evt ) ; 
+    void processEvent( EVENT::LCEvent * evt ) ; 
     
     // from EventModifier
     const std::string & name() const ;
-    void modifyEvent( LCEvent *evt ) ;
+    void modifyEvent( EVENT::LCEvent *evt ) ;
     
    protected:
     ///< The event list parameter (list of "run event" ids)
@@ -99,7 +99,7 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
 
-  void EventSelectorProcessor::processEvent( LCEvent * evt ) {
+  void EventSelectorProcessor::processEvent( EVENT::LCEvent * evt ) {
     auto conditions = evt->runtime().ext<ProcessorConditions>() ;
     // if no events specified - always return true
     if( _evtList.size() == 0 ) {
