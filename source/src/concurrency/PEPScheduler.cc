@@ -261,8 +261,10 @@ namespace marlin {
       // runtime conditions extension
       auto procCondExtension = new ProcessorConditionsExtension( _conditions ) ;
       event->runtime().ext<ProcessorConditions>() = procCondExtension ;
+      // first event flag
+      event->runtime().ext<IsFirstEvent>() = _isFirstEvent ;
+      _isFirstEvent = false ;
       // push event to thread pool queue. It might throw !
-      // _pool.push( WorkerPool::PushPolicy::ThrowIfFull, std::move(event) ) ;
       _pushResults.push_back( _pool.push( WorkerPool::PushPolicy::ThrowIfFull, std::move(event) ) ) ;
     }
     
