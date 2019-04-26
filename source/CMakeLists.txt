@@ -15,10 +15,6 @@ IF( NOT MARLIN_AIDA )
     LIST( REMOVE_ITEM marlin_headers ./include/marlin/AIDAProcessor.h )
 ENDIF()
 
-IF( NOT MARLIN_LCCD )
-    LIST( REMOVE_ITEM marlin_headers ./include/marlin/ConditionsProcessor.h )
-ENDIF()
-
 IF( NOT MARLIN_CLHEP )
     LIST( REMOVE_ITEM marlin_headers
         ./include/marlin/IFourVectorSmearer.h

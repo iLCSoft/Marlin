@@ -54,16 +54,6 @@ IF( MARLIN_CLHEP )
 ENDIF()
 
 
-OPTION( MARLIN_LCCD "Set to ON to build Marlin with LCCD" ON )
-IF( MARLIN_LCCD )
-    SET( FIND_PACKAGE_SKIP_DEPENDENCIES TRUE ) # lccd also exports lcio libraries/headers
-    FIND_PACKAGE( LCCD )
-    IF( NOT LCCD_FOUND )
-        MESSAGE( SEND_ERROR "LCCD not found. Please set MARLIN_LCCD to OFF or LCCD_DIR=/path/to/LCCD" )
-    ENDIF()
-ENDIF()
-
-
 OPTION( MARLIN_DD4HEP "Set to ON to build Marlin with DD4hep" ON )
 IF( MARLIN_DD4HEP )
     FIND_PACKAGE( ROOT REQUIRED )
@@ -77,10 +67,9 @@ IF( MARLIN_DD4HEP )
 ENDIF()
 
 
-FOREACH( pkg AIDA CLHEP LCCD DD4hep ROOT )
+FOREACH( pkg AIDA CLHEP DD4hep ROOT )
     IF( ${pkg}_FOUND )
         INCLUDE_DIRECTORIES( SYSTEM ${${pkg}_INCLUDE_DIRS} )
-        #ADD_DEFINITIONS ( ${${pkg}_DEFINITIONS} )
     ENDIF()
 ENDFOREACH()
 

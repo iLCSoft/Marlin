@@ -10,6 +10,5 @@
 
 #cmakedefine MARLIN_AIDA
 #cmakedefine MARLIN_CLHEP
-#cmakedefine MARLIN_LCCD
 
 #endif // MarlinConfig_h
