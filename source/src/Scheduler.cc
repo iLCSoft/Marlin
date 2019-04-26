@@ -102,7 +102,7 @@ namespace marlin {
         auto iter = _processorTimes.find( processor->name() ) ;
         iter->second._processingTime += static_cast<double>( endTime - startTime ) ;
         iter->second._eventCounter ++ ;
-        processor->setFirstEvent( false ) ;
+        // processor->setFirstEvent( false ) ;
       }
     }
     catch ( SkipEventException& e ) {
@@ -166,7 +166,7 @@ namespace marlin {
         auto iter = _processorTimes.find( processor->name() ) ;
         iter->second._processingTime += static_cast<double>( endTime - startTime ) ;
         iter->second._eventCounter ++ ;
-        processor->setFirstEvent( false ) ;
+        // processor->setFirstEvent( false ) ;
       }
     }
     catch ( SkipEventException& e ) {
