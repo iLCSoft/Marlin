@@ -178,11 +178,6 @@ namespace marlin {
     const std::string& description() ;
 
     /**
-     *  @brief  True if first event in processEvent(evt) - use this e.g. to initialize histograms etc.
-     */
-    bool isFirstEvent() ;
-
-    /**
      *  @brief  Return the LCIO input type for the collection colName - empty string if colName is
      *  not a registered collection name
      */
@@ -405,9 +400,6 @@ namespace marlin {
     /** Sets the registered steering parameters before calling init() */
     virtual void baseInit( const Application *application ) ;
 
-    /** Called by ProcessorMgr */
-    void setFirstEvent( bool firstEvent ) ;
-
     // called internally
 
     /** Set the expected LCIO type for a parameter that refers to one or more
@@ -439,8 +431,6 @@ namespace marlin {
     std::shared_ptr<StringParameters>  _parameters {nullptr} ;
     /// A map fixing the old steering file implementation (deprecated)
     ProcParamMap                       _map {} ;
-    /// Whether the current event is the first being processed
-    bool                               _isFirstEvent {false} ;
     /// The input collection information
     LCIOTypeMap                        _inTypeMap {} ;
     /// The output collection information
@@ -449,7 +439,7 @@ namespace marlin {
     std::string                        _logLevelName {} ;
 
   private:
-    /// The scheduler managing the processor
+    /// The scheduler managing the processor (DEPRECATED)
     Scheduler                         *_scheduler {nullptr} ;
     /// The processor logger. See log<T>() for details
     Logger                             _logger {nullptr} ;
@@ -505,12 +495,6 @@ namespace marlin {
 
   inline const std::string& Processor::description() {
     return _description ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline bool Processor::isFirstEvent() {
-    return _isFirstEvent ;
   }
 
   //--------------------------------------------------------------------------
@@ -629,12 +613,6 @@ namespace marlin {
   inline void Processor::setName( const std::string & processorName) {
     _processorName = processorName ;
     _logger->setName( processorName );
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline void Processor::setFirstEvent( bool firstEvent ) {
-    _isFirstEvent =  firstEvent ;
   }
 
   //--------------------------------------------------------------------------

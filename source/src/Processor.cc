@@ -11,7 +11,6 @@ namespace marlin {
     _description(" description not set by author ") ,
     _typeName( typeName ) ,
     _parameters(0) ,
-    _isFirstEvent( true ),
     _logLevelName("") {
     //register processor
     PluginManager::instance().registerPlugin( PluginType::Processor, type(), [this](){
