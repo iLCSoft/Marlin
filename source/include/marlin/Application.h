@@ -86,6 +86,11 @@ namespace marlin {
      *  @brief  Get the geometry section parameters
      */
     std::shared_ptr<StringParameters> geometryParameters () const ;
+    
+    /**
+     *  @brief  Get the data source section parameters
+     */
+    std::shared_ptr<StringParameters> dataSourceParameters () const ;
 
     /**
      *  @brief  Get the processor parameters
