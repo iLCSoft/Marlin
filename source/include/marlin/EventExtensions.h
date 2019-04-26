@@ -117,6 +117,7 @@ namespace marlin {
   // LCEvent runtime extension declaration in Marlin
   struct ProcessorConditions : public lcrtrel::LCOwnedExtension<ProcessorConditions, ProcessorConditionsExtension> {} ;
   struct RandomSeed : public lcrtrel::LCOwnedExtension<RandomSeed, RandomSeedExtension> {} ;
+  struct IsFirstEvent : public lcrtrel::LCBoolExtension<IsFirstEvent> {} ;
 }
 
 #endif
