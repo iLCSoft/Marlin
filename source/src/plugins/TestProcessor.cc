@@ -3,10 +3,12 @@
 #include <marlin/Processor.h>
 #include <marlin/Exceptions.h>
 #include <marlin/Logging.h>
+#include <marlin/EventExtensions.h>
 
 // -- std headers
 #include <iostream>
 #include <sstream>
+#include <atomic>
 
 // -- lcio headers
 #include <lcio.h>
@@ -59,21 +61,16 @@ namespace marlin {
     /**Test method for const.*/
     void printEndMessage() const ;
 
-    int       _nRun {0} ;
-    int       _nEvt {0} ;
-    bool      _doCalibration {false} ;
-    int       _nLoops {0} ;
+    int                   _nRun {0} ;
+    std::atomic_int       _nEvt {0} ;
+    bool                  _doCalibration {false} ;
   } ;
   
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
-  TestProcessor::TestProcessor() : Processor("TestProcessor"),
-    _nRun (-1), 
-    _nEvt(-1),
-    _doCalibration(false), 
-    _nLoops(-1) {
-
+  TestProcessor::TestProcessor() : 
+    Processor("TestProcessor") {
     _description = "Simple processor to test the marlin application."
       " Prints run and event number." ;
   }
@@ -94,60 +91,44 @@ namespace marlin {
     log<DEBUG>() << " marlin version is g.e. 0.9.8 " << std::endl ;
 #endif
 #endif
-
-    _nRun = 0 ;
-    _nEvt = 0 ;
-    _doCalibration = false ;
-    _nLoops = 0 ;
   }
   
   //--------------------------------------------------------------------------
 
-  void TestProcessor::processRunHeader( LCRunHeader* run) { 
+  void TestProcessor::processRunHeader( EVENT::LCRunHeader* run) { 
    log<MESSAGE>() << " processRun() " 
 			    << run->getRunNumber() 		  
 			    << std::endl ;
-    
     _nRun++ ;
   }
   
   //--------------------------------------------------------------------------
-
-  void TestProcessor::processEvent( LCEvent * evt ) { 
-    _nEvt ++ ;
-    //------------ example code that tests/demonstrates ------------
-    //------------ the usage of Exceptions to steer program flow ------------
-    // --- loop 3 times over the first 3 events and do a 'calibration' ) ------
-
-    if( isFirstEvent() ){
-      _doCalibration = true ;
-      _nLoops = 0 ;
-
-      log<DEBUG>() << " initialize  _doCalibration  and  _nLoops in first event :  " << evt->getEventNumber() 
+  
+  void TestProcessor::processEvent( EVENT::LCEvent * evt ) {
+    // event counter: add +1 and get the old value.
+    // For example, if _nEvt is 0, it adds +1 and returns 0
+    auto eventCounter = _nEvt.fetch_add(1) ;
+    // This how we know if we are currently processing the first event
+    const bool firstEvent = evt->runtime().ext<IsFirstEvent>() ;
+    // Get the processor runtime conditions (not conditions data)
+    // You can use them to set boolean values that next processors 
+    // in the chain can use as conditions
+    auto conditions = evt->runtime().ext<ProcessorConditions>() ;
+    // An example usage in this processor ...
+    const bool calibrate = (eventCounter % 3 ) == 0 ;
+    
+    if( firstEvent ) {
+      log<DEBUG>() << " This is the first event :  " << evt->getEventNumber() 
 			     << " run " << evt->getRunNumber() << std::endl ; 
     }
   
-    setReturnValue( "Calibrating" , false ) ;
+    conditions->set( this, "Calibrating" , calibrate ) ;
 
-    if( _doCalibration ) {
-
-      setReturnValue( "Calibrating" , true ) ;
-
+    if( calibrate ) {
       log<MESSAGE>() << "processEvent()  ---CALIBRATING ------ "  
 			      << " in event " << evt->getEventNumber() << " (run " 
 			      << evt->getRunNumber() << ") " 
 			      << std::endl ;
-
-      if( _nEvt == 3 ) {
-      	_nEvt = 0 ;
-      	++_nLoops ;
-      	if( _nLoops == 3 ) {
-      	  _doCalibration = false ;
-      	}
-        else {
-      	  throw RewindDataFilesException( this ) ;
-      	}
-      }
     }
 
     log<MESSAGE>() << " processing event " << evt->getEventNumber() 
@@ -156,11 +137,10 @@ namespace marlin {
     
     log<MESSAGE>() << "(MESSAGE) local verbosity level: " << logLevelName() << std::endl ;
 
-    // always return true  for ProcessorName
-    setReturnValue( true ) ;
-    
+    // always return true for this processor
+    conditions->set( this , true ) ;
     // set ProcessorName.EvenNumberOfEvents == true if this processor has been called 2n (n=0,1,2,...) times 
-    setReturnValue("EvenNumberOfEvents",  !( _nEvt % 2 )   ) ;
+    conditions->set( this , "EvenNumberOfEvents", !( eventCounter % 2 ) ) ;
   }
   
   //--------------------------------------------------------------------------
