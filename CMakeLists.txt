@@ -36,13 +36,15 @@ SET( Marlin_DEPENDS_LIBRARIES ${LCIO_LIBRARIES} ${GEAR_LIBRARIES} ${streamlog_LI
 
 INCLUDE_DIRECTORIES( SYSTEM ${Marlin_DEPENDS_INCLUDE_DIRS} )
 
-OPTION( MARLIN_AIDA "Set to ON to build Marlin with AIDA" ON )
-IF( MARLIN_AIDA )
-    FIND_PACKAGE( AIDA )
-    IF( NOT AIDA_FOUND )
-        MESSAGE( SEND_ERROR "AIDA not found. Please set MARLIN_AIDA to OFF or AIDA_DIR=/path/to/AIDA" )
-    ENDIF()
-ENDIF()
+# WARNING: Kept for backward compatibility only
+SET( MARLIN_AIDA OFF )
+# OPTION( MARLIN_AIDA "Set to ON to build Marlin with AIDA" OFF )
+# IF( MARLIN_AIDA )
+#     FIND_PACKAGE( AIDA )
+#     IF( NOT AIDA_FOUND )
+#         MESSAGE( SEND_ERROR "AIDA not found. Please set MARLIN_AIDA to OFF or AIDA_DIR=/path/to/AIDA" )
+#     ENDIF()
+# ENDIF()
 
 
 OPTION( MARLIN_CLHEP "Set to ON to build Marlin with CLHEP" ON )
