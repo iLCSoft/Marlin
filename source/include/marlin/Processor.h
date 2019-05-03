@@ -210,6 +210,9 @@ namespace marlin {
      */
     std::pair<bool,bool> getForcedRuntimeOption( RuntimeOption option ) const ;
 
+    /** Sets the registered steering parameters before calling init() */
+    void baseInit( const Application *application ) ;
+    
   protected:
     /**
      *  @brief  Force the runtime option to a given boolean value.
@@ -396,9 +399,6 @@ namespace marlin {
 
     /** Initialize the parameters */
     virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
-
-    /** Sets the registered steering parameters before calling init() */
-    virtual void baseInit( const Application *application ) ;
 
     // called internally
 
