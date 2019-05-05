@@ -1,5 +1,6 @@
 #include "marlin/LogicalExpressions.h"
 #include "marlin/Exceptions.h"
+#include "marlin/Logging.h"
 
 #include <iostream>
 #include <sstream>
