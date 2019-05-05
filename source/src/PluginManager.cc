@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <set>
 
-// -- lcio headers
-#include <UTIL/BitField64.h>  // LCTokenizer
+// -- marlin headers
+#include <marlin/Utils.h>
 
 namespace marlin {
 
@@ -78,9 +78,7 @@ namespace marlin {
       return true ;
     }
     std::string marlinDllStr (marlinDll) ;
-    std::vector<std::string> libraries ;
-    LCTokenizer tokenizer ( libraries , ':' ) ;
-    std::for_each( marlinDllStr.begin() , marlinDllStr.end() , tokenizer ) ;
+    std::vector<std::string> libraries = StringUtil::split<std::string>( marlinDllStr, ":" ) ;
 
     std::set<std::string> checkDuplicateLibs;
     for ( auto library : libraries ) {
