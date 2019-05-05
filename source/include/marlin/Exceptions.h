@@ -1,13 +1,11 @@
 #ifndef Exceptions_h
 #define Exceptions_h 1
 
-#include "lcio.h"
-#include "marlin/Processor.h" 
-
-// define some exceptions for Marlin
+#include <lcio.h>
 
 namespace marlin {
 
+  class Processor ;
   using Exception = lcio::Exception ;
 
   /**ParseException used for parse errors, e.g. when reading the steering file.
@@ -15,35 +13,26 @@ namespace marlin {
    * @author gaede
    * @version $Id: Exceptions.h,v 1.5 2007-02-02 17:15:25 gaede Exp $
    */
-  class ParseException : public lcio::Exception{
-
+  class ParseException : public Exception {
   protected:
-    ParseException() {  /*no_op*/ ; }
+    ParseException() = delete ;
   public:
-    virtual ~ParseException() throw() { /*no_op*/; }
-
-    ParseException( std::string text ){
-      message = "marlin::ParseException: " + text ;
-    }
+    virtual ~ParseException() throw() = default ;
+    ParseException( const std::string &text ) ;
   };
-
-//    class Processor ;
 
   /**SkipEventException used to skip the current event in Processor::processEvent.
    * @author gaede
    * @version $Id: Exceptions.h,v 1.5 2007-02-02 17:15:25 gaede Exp $
    */
-  class SkipEventException : public lcio::Exception{
+  class SkipEventException : public Exception {
 
   protected:
-    SkipEventException() {  /*no_op*/ ; }
+    SkipEventException() = delete ;
 
   public:
-    SkipEventException(const Processor* proc){
-      message = proc->name()  ;
-    }
-    virtual ~SkipEventException() throw() { /*no_op*/; }
-
+    virtual ~SkipEventException() throw() = default ;
+    SkipEventException( const Processor* proc ) ;
   };
 
   /** StopProcessingException used to stop the current proccessing of events and
@@ -51,17 +40,13 @@ namespace marlin {
    * @author gaede
    * @version $Id: Exceptions.h,v 1.5 2007-02-02 17:15:25 gaede Exp $
    */
-  class StopProcessingException : public lcio::Exception{
-
+  class StopProcessingException : public Exception{
   protected:
-    StopProcessingException() {  /*no_op*/ ; }
+    StopProcessingException() = delete ;
 
   public:
-    StopProcessingException(const Processor* proc){
-      message = proc->name()  ;
-    }
-    virtual ~StopProcessingException() throw() { /*no_op*/; }
-
+    virtual ~StopProcessingException() throw() = default ;
+    StopProcessingException(const Processor* proc) ;
   };
 
   /** RewindDataFilesException used to stop the current proccessing of events,
@@ -69,20 +54,14 @@ namespace marlin {
    * @author gaede
    * @version $Id: Exceptions.h,v 1.5 2007-02-02 17:15:25 gaede Exp $
    */
-  class RewindDataFilesException : public lcio::Exception{
-
+  class RewindDataFilesException : public Exception{
   protected:
-    RewindDataFilesException() {  /*no_op*/ ; }
+    RewindDataFilesException() = delete ;
 
   public:
-    RewindDataFilesException(const Processor* proc){
-      message = proc->name()  ;
-    }
-    virtual ~RewindDataFilesException() throw() { /*no_op*/; }
-
+    virtual ~RewindDataFilesException() throw() = default ;
+    RewindDataFilesException(const Processor* proc) ;
   };
-
-
 
 } // end namespace
 
