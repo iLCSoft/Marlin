@@ -30,12 +30,12 @@ namespace marlin {
      *  @brief  Initialize the application
      */
     virtual void init() = 0;
-    
+
     /**
      *  @brief  Run the user application
      */
     virtual void runApplication() = 0 ;
-    
+
     /**
      *  @brief  End the application
      */
@@ -49,7 +49,7 @@ namespace marlin {
      *  @param  argv argv from main function
      */
     void init( int argc, char **argv ) ;
-    
+
     /**
      *  @brief  Run the application
      */
@@ -59,7 +59,7 @@ namespace marlin {
      *  @brief  Print command line usage
      */
     virtual void printUsage() const = 0;
-    
+
     /**
      *  @brief  Print the Marlin banner
      *
@@ -86,7 +86,7 @@ namespace marlin {
      *  @brief  Get the geometry section parameters
      */
     std::shared_ptr<StringParameters> geometryParameters () const ;
-    
+
     /**
      *  @brief  Get the data source section parameters
      */
@@ -107,12 +107,12 @@ namespace marlin {
     /**
      *  @brief  Get the active processor list
      */
-    StringVec activeProcessors () const ;
+    std::vector<std::string> activeProcessors () const ;
 
     /**
      *  @brief  Get the active processor conditions list
      */
-    StringVec processorConditions () const ;
+    std::vector<std::string> processorConditions () const ;
 
     /**
      *  @brief  Whether the application has been initialized

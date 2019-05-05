@@ -3,7 +3,7 @@
 #include "marlin/Utils.h"
 #include "marlin/XMLParser.h"
 #include "marlin/Parser.h"
-#include "marlin/Parser.h"
+#include "marlin/MarlinConfig.h"
 
 // -- std headers
 #include <cstring>
@@ -26,7 +26,7 @@ namespace marlin {
     _parser->parse() ;
     // write parsed steering file if global parameter is there
     auto globals = globalParameters() ;
-    auto outputSteeringFile = globals->getStringVal( "OutputSteeringFile" ) ;
+    auto outputSteeringFile = globals->getAs<std::string>( "OutputSteeringFile" ) ;
     if ( not outputSteeringFile.empty() ) {
       parser()->write( outputSteeringFile ) ;
     }
@@ -38,9 +38,9 @@ namespace marlin {
     init() ;
     _initialized = true ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Application::run() {
     runApplication() ;
     _geometryMgr.clear();
@@ -77,7 +77,7 @@ namespace marlin {
           ::exit( 1 ) ;
         }
         _cmdLineOptions[ argKey[0] ][ argKey[1] ] = argVec[1] ;
-        logger()->log<MESSAGE9>() 
+        logger()->log<MESSAGE9>()
           << "steering file " << argKey[0] << ": "
           << "[ " << argKey[0] << "." << argKey[1] << " ]"
           << " will be OVERWRITTEN with value: [\"" << argVec[1] << "\"]"  << std::endl ;
@@ -116,9 +116,9 @@ namespace marlin {
     }
     logger()->log<DEBUG2>() << "Parsing command line ... done" << std::endl ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Application::printBanner( std::ostream &out ) const {
     out << std::endl ;
     out << "    __  __            _ _       " << std::endl ;
@@ -127,9 +127,9 @@ namespace marlin {
     out << "   | |  | | (_| | |  | | | | | |" << std::endl ;
     out << "   |_|  |_|\\__,_|_|  |_|_|_| |_|" << std::endl ;
     out << std::endl ;
-    out << "         Version: " 
-      << MARLIN_MAJOR_VERSION << "." 
-      << MARLIN_MINOR_VERSION << "." 
+    out << "         Version: "
+      << MARLIN_MAJOR_VERSION << "."
+      << MARLIN_MINOR_VERSION << "."
       << MARLIN_PATCH_LEVEL << std::endl ;
     out << std::endl ;
     out << "         LICENCE: GPLv3 " << std::endl ;
@@ -148,9 +148,9 @@ namespace marlin {
   std::shared_ptr<StringParameters> Application::geometryParameters () const {
     return (nullptr == _parser) ? nullptr : _parser->getParameters( "Geometry" ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   std::shared_ptr<StringParameters> Application::dataSourceParameters () const {
     return (nullptr == _parser) ? nullptr : _parser->getParameters( "DataSource" ) ;
   }
@@ -169,24 +169,20 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  StringVec Application::activeProcessors () const {
-    StringVec list ;
+  std::vector<std::string> Application::activeProcessors () const {
     if( nullptr == _parser ) {
-      return list ;
+      return std::vector<std::string>() ;
     }
-    _parser->getParameters( "Global" )->getStringVals( "ActiveProcessors", list ) ;
-    return list ;
+    return _parser->getParameters( "Global" )->getAs<std::vector<std::string>>( "ActiveProcessors" ) ;
   }
 
   //--------------------------------------------------------------------------
 
-  StringVec Application::processorConditions () const {
-    StringVec list ;
+  std::vector<std::string> Application::processorConditions () const {
     if( nullptr == _parser ) {
-      return list ;
+      return std::vector<std::string>() ;
     }
-    _parser->getParameters( "Global" )->getStringVals( "ProcessorConditions", list ) ;
-    return list ;
+    return _parser->getParameters( "Global" )->getAs<std::vector<std::string>>( "ProcessorConditions" ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -200,7 +196,6 @@ namespace marlin {
   Application::Logger Application::logger() const {
     return _loggerMgr.mainLogger() ;
   }
-
 
   //--------------------------------------------------------------------------
 
