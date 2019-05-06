@@ -253,7 +253,7 @@ namespace marlin {
     /**
      *  @brief  Get the list of parameter names
      */
-    EVENT::StringVec parameterNames() const ;
+    std::vector<std::string> parameterNames() const ;
 
     /**
      *  @brief  Get a parameter value.
@@ -348,6 +348,17 @@ namespace marlin {
    return def.str() ;
   }
 
+  //--------------------------------------------------------------------------
+
+  template <typename T>
+  void ParameterT<T>::setValue( StringParameters* params ) {
+    if( params->isParameterSet( name() ) ) {
+      _valueSet = true ;
+    }
+    params->get( name(), _value ) ;
+  }
+
+  //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
   template <class T>
