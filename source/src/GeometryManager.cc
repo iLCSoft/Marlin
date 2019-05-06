@@ -25,7 +25,7 @@ namespace marlin {
       _plugin = mgr.create<GeometryPlugin>( PluginType::GeometryPlugin, "EmptyGeometry" ) ;
     }
     else {
-      auto geometryType = geometryParameters->getStringVal( "GeometryType" ) ;
+      auto geometryType = geometryParameters->getValue<std::string>( "GeometryType" ) ;
       _plugin = mgr.create<GeometryPlugin>( PluginType::GeometryPlugin, geometryType ) ;
       if ( nullptr == _plugin ) {
         throw Exception( "GeometryManager::init: Couldn't find geometry plugin '" + geometryType + "'..." ) ;

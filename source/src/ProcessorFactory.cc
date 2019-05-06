@@ -11,10 +11,10 @@ namespace marlin {
 
   std::shared_ptr<Processor> ProcessorFactory::createProcessor(
     const Application *app,
-    const std::string &name, 
+    const std::string &name,
     std::shared_ptr<StringParameters> parameters) {
     // first look in the single instance map
-    auto clone = parameters->getStringVal( "ProcessorClone" ) ;
+    auto clone = parameters->getValue<std::string>( "ProcessorClone" ) ;
     if( "false" == clone ) {
       auto iter = _singleProcessors.find( name ) ;
       if( _singleProcessors.end() != iter ) {
@@ -22,7 +22,7 @@ namespace marlin {
       }
     }
     // else create it from plugin manager
-    auto type = parameters->getStringVal( "ProcessorType" ) ;
+    auto type = parameters->getValue<std::string>( "ProcessorType" ) ;
     if( type.empty() ) {
       throw Exception( "ProcessorFactory::createProcessor: Processor type undefined!" ) ;
     }

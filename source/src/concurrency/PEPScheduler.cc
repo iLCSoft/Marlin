@@ -5,6 +5,7 @@
 #include <marlin/Utils.h>
 #include <marlin/EventExtensions.h>
 #include <marlin/ProcessorSequence.h>
+#include <marlin/Processor.h>
 #include <marlin/PluginManager.h>
 #include <marlin/ProcessorFactory.h>
 #include <marlin/EventModifier.h>
@@ -84,9 +85,9 @@ namespace marlin {
       configureProcessors( app ) ;
       configurePool() ;
     }
-    
+
     //--------------------------------------------------------------------------
-    
+
     void PEPScheduler::end() {
       _logger->log<MESSAGE>() << "Terminating application" << std::endl ;
       _pool.stop(false) ;
@@ -116,10 +117,7 @@ namespace marlin {
       //     << " ******************************************************************************* \n"
       //     << std::endl ;
       // }
-      auto ccyStr = globals->getStringVal( "Concurrency" ) ;
-      if ( ccyStr.empty() ) {
-        ccyStr = "auto" ;
-      }
+      auto ccyStr = globals->getValue<std::string>( "Concurrency", "auto" ) ;
       // The concurrency read from the steering file
       std::size_t ccy = (ccyStr == "auto" ?
         std::thread::hardware_concurrency() :
@@ -196,7 +194,7 @@ namespace marlin {
           // for the time being. Need a registration mechanism for processors
           auto inserted = _allProcessors.insert( processor ).second ;
           if( inserted ) {
-            _rdmSeedMgr.addEntry( processor.get() ) ;            
+            _rdmSeedMgr.addEntry( processor.get() ) ;
           }
         }
       }
@@ -220,9 +218,9 @@ namespace marlin {
       _pool.setAcceptPush( true ) ;
       _logger->log<DEBUG5>() << "configurePool ... DONE" << std::endl ;
     }
-    
+
     //--------------------------------------------------------------------------
-    
+
     void PEPScheduler::processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) {
       // Current way to process run header:
       //  - Stop accepting event in thread pool
@@ -267,9 +265,9 @@ namespace marlin {
       // push event to thread pool queue. It might throw !
       _pushResults.push_back( _pool.push( WorkerPool::PushPolicy::ThrowIfFull, std::move(event) ) ) ;
     }
-    
+
     //--------------------------------------------------------------------------
-    
+
     void PEPScheduler::popFinishedEvents( std::vector<std::shared_ptr<EVENT::LCEvent>> &events ) {
       auto iter = _pushResults.begin() ;
       while( iter != _pushResults.end() ) {

@@ -3,15 +3,15 @@
 
 namespace marlin {
 
-//   const std::string ProcessorParameter::type() { 
+//   const std::string ProcessorParameter::type() {
 
 //     if( typeid( _this ) == typeid( StringVec ) )
 //       return "StringVec" ;
-    
-//     else
-//       return typeid( _parameter ).name() ; 
 
-//   } 
+//     else
+//       return typeid( _parameter ).name() ;
+
+//   }
 
 
   void toStream(  std::ostream& s, int i , int ) { s << i ; }
@@ -23,28 +23,28 @@ namespace marlin {
   template<>
   void setProcessorParameter<int>( ProcessorParameter_t<int>* procParam,  StringParameters* params ) {
     if( params->isParameterSet( procParam->name() ) ) {
-      procParam->_parameter = params->getIntVal( procParam->_name ) ; 
+      procParam->_parameter = params->getValue<int>( procParam->_name, 0 ) ;
       procParam->_valueSet = true ;
     }
   }
   template<>
   void setProcessorParameter<float>( ProcessorParameter_t<float>* procParam ,  StringParameters* params ) {
     if( params->isParameterSet( procParam->name() ) ) {
-      procParam->_parameter = params->getFloatVal( procParam->_name ) ; 
+      procParam->_parameter = params->getValue<float>( procParam->_name, 0.f ) ;
       procParam->_valueSet = true ;
     }
   }
   template<>
   void setProcessorParameter<double>( ProcessorParameter_t<double>* procParam ,  StringParameters* params ) {
     if( params->isParameterSet( procParam->name() ) ) {
-      procParam->_parameter = params->getFloatVal( procParam->_name ) ; 
+      procParam->_parameter = params->getValue<double>( procParam->_name, 0. ) ;
       procParam->_valueSet = true ;
     }
   }
   template<>
   void setProcessorParameter<std::string>( ProcessorParameter_t<std::string>* procParam ,  StringParameters* params ) {
     if( params->isParameterSet( procParam->name() ) ) {
-      procParam->_parameter = params->getStringVal( procParam->_name ) ; 
+      procParam->_parameter = params->getValue<std::string>( procParam->_name, "" ) ;
       procParam->_valueSet = true ;
     }
   }
@@ -54,7 +54,7 @@ namespace marlin {
       procParam->_parameter.clear() ;
       procParam->_valueSet = true ;
     }
-    params->getIntVals( procParam->_name,  procParam->_parameter ) ; 
+    procParam->_parameter = params->getValues<int>( procParam->_name, IntVec() ) ;
   }
   template<>
   void setProcessorParameter<FloatVec>( ProcessorParameter_t<FloatVec>* procParam ,  StringParameters* params ) {
@@ -62,7 +62,7 @@ namespace marlin {
       procParam->_parameter.clear() ;
       procParam->_valueSet = true ;
     }
-    params->getFloatVals( procParam->_name,  procParam->_parameter ) ; 
+    procParam->_parameter = params->getValues<float>( procParam->_name, FloatVec() ) ;
   }
   template<>
   void setProcessorParameter<StringVec>( ProcessorParameter_t<StringVec>* procParam ,  StringParameters* params ) {
@@ -70,14 +70,14 @@ namespace marlin {
       procParam->_parameter.clear() ;
       procParam->_valueSet = true ;
     }
-    params->getStringVals( procParam->_name,  procParam->_parameter ) ; 
+    procParam->_parameter = params->getValues<std::string>( procParam->_name, StringVec() ) ;
   }
   template<>
-  void setProcessorParameter<bool>( ProcessorParameter_t<bool>* procParam ,  StringParameters* params ) 
+  void setProcessorParameter<bool>( ProcessorParameter_t<bool>* procParam ,  StringParameters* params )
   {
     if( params->isParameterSet( procParam->name() ) ) {
-      std::string param = params->getStringVal( procParam->_name );
-      std::transform( param.begin(),param.end(),param.begin(), 
+      std::string param = params->getValue<std::string>( procParam->_name, "" );
+      std::transform( param.begin(),param.end(),param.begin(),
 		      (int (*)(int)) std::tolower );
       if ( param == "false" || param == "0" )	{
 	procParam->_parameter = false;
@@ -92,9 +92,9 @@ namespace marlin {
 		  << "] is boolean but neither \"true\" nor \"false\"! "
 		  << "Ignoring steering parameter" << std::endl;
 	procParam->_valueSet = false;
-      }      
+      }
     }
   }
 
-  
+
 }

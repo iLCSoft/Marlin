@@ -26,7 +26,7 @@ namespace marlin {
     _parser->parse() ;
     // write parsed steering file if global parameter is there
     auto globals = globalParameters() ;
-    auto outputSteeringFile = globals->getAs<std::string>( "OutputSteeringFile" ) ;
+    auto outputSteeringFile = globals->getValue<std::string>( "OutputSteeringFile", "" ) ;
     if ( not outputSteeringFile.empty() ) {
       parser()->write( outputSteeringFile ) ;
     }
@@ -173,7 +173,7 @@ namespace marlin {
     if( nullptr == _parser ) {
       return std::vector<std::string>() ;
     }
-    return _parser->getParameters( "Global" )->getAs<std::vector<std::string>>( "ActiveProcessors" ) ;
+    return _parser->getParameters( "Global" )->getValues<std::string>( "ActiveProcessors", std::vector<std::string>() ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -182,7 +182,7 @@ namespace marlin {
     if( nullptr == _parser ) {
       return std::vector<std::string>() ;
     }
-    return _parser->getParameters( "Global" )->getAs<std::vector<std::string>>( "ProcessorConditions" ) ;
+    return _parser->getParameters( "Global" )->getValues<std::string>( "ProcessorConditions", std::vector<std::string>() ) ;
   }
 
   //--------------------------------------------------------------------------

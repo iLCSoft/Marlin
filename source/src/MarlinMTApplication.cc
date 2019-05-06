@@ -12,11 +12,11 @@
 #include <MT/LCReader.h>
 
 namespace marlin {
-  
+
   namespace detail {
     /**
      *  @brief  MarlinMTLCListener class
-     *  Implement LCEvent and LCRunHeader listeners to use 
+     *  Implement LCEvent and LCRunHeader listeners to use
      *  in combination with MT::LCReader class.
      *  Forward calls to the application scheduler
      */
@@ -24,22 +24,22 @@ namespace marlin {
     public:
       /**
        *  @brief  Constructor
-       * 
+       *
        *  @param  scheduler the scheduler to forward calls
        */
       MarlinMTLCListener( Scheduler &scheduler ) :
         _scheduler(scheduler) {
         /* nop */
       }
-      
+
       void processEvent( MT::LCEventPtr event ) {
         _scheduler.processEvent( event.get() ) ;
       }
-      
+
       void modifyEvent( MT::LCEventPtr event ) {
         _scheduler.modifyEvent( event.get() ) ;
       }
-      
+
       void processRunHeader( MT::LCRunHeaderPtr hdr ) {
         _scheduler.processRunHeader( hdr.get() ) ;
       }
@@ -47,85 +47,85 @@ namespace marlin {
       void modifyRunHeader( MT::LCRunHeaderPtr hdr ) {
         _scheduler.modifyRunHeader( hdr.get() ) ;
       }
-      
+
     private:
       /// The application scheduler
       Scheduler          &_scheduler ;
     };
   }
-  
-  
-  
+
+
+
   class Task {
     friend class MarlinMTApplication ;
   public:
     using Logger = Logging::Logger ;
-    
+
   public:
     Task(const Task &) = delete ;
     Task &operator=(const Task &) = delete ;
-    
+
     Task( unsigned int tid ) :
       _id(tid) {
-      
+
     }
-    
+
     void init( MarlinMTApplication *app ) {
       _application = app ;
       _logger = _application->createLogger( "ThreadTask" + StringUtil::typeToString( id() ) ) ;
       _scheduler.init( app ) ;
       auto globals = _application->globalParameters() ;
-      _maxRecord = globals->getIntVal( "MaxRecordNumber" ) ;
-      _skipNEvents = globals->getIntVal( "SkipNEvents" ) ;
+      _maxRecord = globals->getValue<int>( "MaxRecordNumber" ) ;
+      _skipNEvents = globals->getValue<int>( "SkipNEvents" ) ;
       EVENT::StringVec readCollectionNames {} ;
-      globals->getStringVals( "LCIOReadCollectionNames" , readCollectionNames ) ;
+      readCollectionNames = globals->getValues<std::string>( "LCIOReadCollectionNames" ) ;
       if ( not readCollectionNames.empty() ) {
         _logger->log<WARNING>()
-          << " *********** Parameter LCIOReadCollectionNames given - will only read the following collections: **** " 
+          << " *********** Parameter LCIOReadCollectionNames given - will only read the following collections: **** "
           << std::endl ;
         for( auto collection : readCollectionNames ) {
     	    _logger->log<WARNING>()  << "     " << collection << std::endl ;
-    	  } 
-    	  _logger->log<WARNING>() 
+    	  }
+    	  _logger->log<WARNING>()
           << " *************************************************************************************************** " << std::endl ;
         _lcReader.setReadCollectionNames( readCollectionNames ) ;
       }
       _lcReader.setReadCollectionNames( readCollectionNames ) ;
     }
-    
+
     void setLCIOInputFiles( const EVENT::StringVec &lcioInputFiles ) {
       _lcioInputFiles = lcioInputFiles ;
     }
-    
+
     void start() {
       _stopFlag = false ;
       _thread = std::thread( &Task::threadFunction, this ) ;
     }
-    
+
     void stop() {
       _stopFlag = true ;
     }
-    
+
     unsigned int id() const {
       return _id ;
     }
-    
+
     void join() {
       if( _thread.joinable() ) {
         _thread.join() ;
       }
     }
-    
+
     const Scheduler &scheduler() const {
       return _scheduler ;
     }
-    
+
     void end() {
       if ( _finishedProperly ) {
-        _scheduler.end() ;        
+        _scheduler.end() ;
       }
     }
-    
+
   private:
     void threadFunction() {
       _logger->log<MESSAGE9>() << "Starting thread task (id=" << id() << "), thread id " << _thread.get_id() << std::endl ;
@@ -146,7 +146,7 @@ namespace marlin {
             catch( IO::EndOfDataException &e ) {
               _logger->log<WARNING>() << e.what() << std::endl ;
             }
-          } 
+          }
           else {
             _lcReader.readStream( listeners ) ;
           }
@@ -168,7 +168,7 @@ namespace marlin {
         }
         _finishedProperly = true ;
       }
-      // uncaught exceptions at this point means that the 
+      // uncaught exceptions at this point means that the
       // task thread should exit with error
       catch( ... ) {
         prepareForExit( true ) ;
@@ -178,7 +178,7 @@ namespace marlin {
       _logger->log<MESSAGE9>() << "Exiting thread task (id=" << id() << "), thread id " << _thread.get_id() << std::endl ;
       prepareForExit( false ) ;
     }
-    
+
     void prepareForExit( bool error ) {
       // an error has been raised by another task.
       // The main program will exit in any case, so just return ..
@@ -186,7 +186,7 @@ namespace marlin {
         return ;
       }
       {
-        // lock and prepare the application the application 
+        // lock and prepare the application the application
         // to exit, with or without error
         std::lock_guard<std::mutex> lock( _application->_mutex ) ;
         _application->_nRunningTasks--;
@@ -205,7 +205,7 @@ namespace marlin {
       }
       _application->_taskConditionVariable.notify_one() ;
     }
-    
+
   private:
     unsigned int           _id {0} ;
     Scheduler              _scheduler {} ;
@@ -219,13 +219,13 @@ namespace marlin {
     MT::LCReader           _lcReader {MT::LCReader::directAccess} ;
     bool                   _finishedProperly {false} ;
   };
-  
-  
-  
-  
+
+
+
+
   void MarlinMTApplication::runApplication() {
-    // This application should have the possibility to run in 
-    // single threaded mode without having to create a new task thread 
+    // This application should have the possibility to run in
+    // single threaded mode without having to create a new task thread
     // if ( _concurrency == 1 ) {
     //   // TODO implement this !
     // }
@@ -291,24 +291,23 @@ namespace marlin {
       }
     // }
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void MarlinMTApplication::init() {
     logger()->log<MESSAGE>() << "----------------------------------------------------------" << std::endl ;
     // get settings from global section
     auto globals = globalParameters() ;
-    EVENT::StringVec lcioInputFiles {} ;
-    globals->getStringVals( "LCIOInputFiles" , lcioInputFiles ) ;
+    EVENT::StringVec lcioInputFiles = globals->getValues<std::string>( "LCIOInputFiles" ) ;
     if ( lcioInputFiles.empty() ) {
       logger()->log<ERROR>() << "No LCIO iput files found in </global> section of steering file" << std::endl ;
       throw Exception( "No LCIO iput files found in </global> section of steering file" ) ;
     }
-    auto allowModify = ( globals->getStringVal( "AllowToModifyEvent" ) == "true" ) ;
+    auto allowModify = ( globals->getValue<std::string>( "AllowToModifyEvent" ) == "true" ) ;
     // warning !!!
     if ( allowModify ) {
-      logger()->log<WARNING>()  
-        << " ******************************************************************************* \n" 
+      logger()->log<WARNING>()
+        << " ******************************************************************************* \n"
         << " *    AllowToModifyEvent is set to 'true'                                      * \n"
         << " *    => all processors can modify the input event in processEvent() !!        * \n"
         << " *        consider setting this flag to 'false'                                * \n"
@@ -316,10 +315,10 @@ namespace marlin {
         << " *    - if you need a processor that modifies the input event                  * \n"
         << " *      please implement the EventModifier interface and use the modifyEvent() * \n"
         << " *      method for this                                                        * \n"
-        << " ******************************************************************************* \n" 
+        << " ******************************************************************************* \n"
         << std::endl ;
     }
-    auto ccyStr = globals->getStringVal( "Concurrency" ) ;
+    auto ccyStr = globals->getValue<std::string>( "Concurrency" ) ;
     if ( ccyStr.empty() ) {
       ccyStr = "auto" ;
     }
@@ -372,15 +371,15 @@ namespace marlin {
     }
     logger()->log<MESSAGE>() << "----------------------------------------------------------" << std::endl ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void MarlinMTApplication::printUsage() const {
 
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void MarlinMTApplication::joinTasks( bool stopTasks ) {
     if ( stopTasks ) {
       logger()->log<WARNING>() << "Stopping all task threads !" << std::endl ;

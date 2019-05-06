@@ -17,9 +17,9 @@ namespace marlin {
       throw Exception( "LoggerManager::init: already initialized!" ) ;
     }
     auto globals = app->globalParameters() ;
-    auto verbosityLevel = globals->getStringVal( "Verbosity" ) ;
-    auto logFileName = globals->getStringVal( "LogFileName" ) ;
-    auto coloredConsole = globals->getIntVal( "ColoredConsole" ) ;
+    auto verbosityLevel = globals->getValue<std::string>( "Verbosity" ) ;
+    auto logFileName = globals->getValue<std::string>( "LogFileName", "" ) ;
+    auto coloredConsole = globals->getValue<bool>( "ColoredConsole", false ) ;
     streamlog::logsink_list sinks {} ;
     if ( coloredConsole ) {
       sinks.push_back( streamlog::logstream::coloredConsole<Logging::mutex_type>() ) ;
@@ -30,7 +30,7 @@ namespace marlin {
     if ( not logFileName.empty() ) {
       sinks.push_back( streamlog::logstream::simpleFile<Logging::mutex_type>( logFileName ) ) ;
     }
-    // configure both main and global logger 
+    // configure both main and global logger
     if ( not verbosityLevel.empty() ) {
       setLevel( verbosityLevel ) ;
     }
@@ -64,9 +64,9 @@ namespace marlin {
   bool LoggerManager::isInitialized() const {
     return _initialized ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void LoggerManager::setLevel( const std::string &level ) {
     mainLogger()->setLevel( level ) ;
     streamlog::logstream::global().setLevel( level ) ;

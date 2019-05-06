@@ -242,8 +242,8 @@ namespace marlin {
   void SuperSequence::addProcessor( const std::string &type, std::shared_ptr<StringParameters> parameters ) {
     const bool cloneSet = parameters->isParameterSet( "ProcessorClone" ) ;
     const bool criticalSet = parameters->isParameterSet( "ProcessorCritical" ) ;
-    bool clone = cloneSet ? (parameters->getStringVal( "ProcessorClone" ) == "true" ) : true ;
-    bool critical = criticalSet ? (parameters->getStringVal( "ProcessorCritical" ) == "true") : false ;
+    bool clone = parameters->getValue<bool>( "ProcessorClone", true ) ;
+    bool critical = parameters->getValue<bool>( "ProcessorCritical", false ) ;
     auto &pluginMgr = PluginManager::instance() ;
     auto processor = pluginMgr.create<Processor>( PluginType::Processor, type ) ;
     if( nullptr == processor ) {
