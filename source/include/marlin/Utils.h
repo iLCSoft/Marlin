@@ -4,10 +4,11 @@
 // -- std headers
 #include <map>
 #include <string>
+#include <sstream>
 #include <typeinfo>
 
 // -- marlin headers
-#include "marlin/Exceptions.h"
+#include <marlin/Exceptions.h>
 
 namespace marlin {
 
@@ -65,12 +66,28 @@ namespace marlin {
     static std::string typeToString( const T &var ) ;
 
     /**
+     *  @brief  Convert a vector of type to vector of string
+     *
+     *  @param  vars the values to convert
+     */
+    template <typename T>
+    static std::vector<std::string> typeToString( const std::vector<T> &vars ) ;
+
+    /**
      *  @brief  Convert a variable to string
      *
      *  @param  str the string to convert
      */
     template <typename T>
     static T stringToType( const std::string &str ) ;
+
+    /**
+     *  @brief  Convert a string vector to a vector of specified type
+     *
+     *  @param  strs the string vector to convert
+     */
+    template <typename T>
+    static std::vector<T> stringToType( const std::vector<std::string> &strs ) ;
 
     template <typename T>
     static std::vector<T> split(const std::string &inputString, const std::string &delimiter = " ") ;
@@ -102,6 +119,16 @@ namespace marlin {
     return (var ? "true" : "false") ;
   }
 
+  template <typename T>
+  inline std::vector<std::string> StringUtil::typeToString( const std::vector<T> &vars ) {
+    std::vector<std::string> result ;
+    result.reserve( vars.size() ) ;
+    for( auto var : vars ) {
+      result.push_back( typeToString<T>( var ) ) ;
+    }
+    return result ;
+  }
+
   //--------------------------------------------------------------------------
 
   template <typename T>
@@ -128,6 +155,16 @@ namespace marlin {
     if ( str == "true"  || str == "1" || str == "on"  ) return true ;
     if ( str == "false" || str == "0" || str == "off" ) return false ;
     throw Exception( "Couldn't convert value to string" ) ;
+  }
+
+  template <typename T>
+  inline std::vector<T> StringUtil::stringToType( const std::vector<std::string> &strs ) {
+    std::vector<T> result ;
+    result.reserve( strs.size() ) ;
+    for( auto str : strs ) {
+      result.push_back( stringToType<T>( str ) ) ;
+    }
+    return result ;
   }
 
   //--------------------------------------------------------------------------
