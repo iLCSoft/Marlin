@@ -43,6 +43,9 @@ namespace marlin {
     if( not parameterSet("Verbosity") ) {
       _logLevelName = "" ;
     }
+    if( parameterSet( "ProcessorName" ) ) {
+      setName( _parameters->getValue<std::string>( "ProcessorName" ) ) ;
+    }
   }
 
   //--------------------------------------------------------------------------
