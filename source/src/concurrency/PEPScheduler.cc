@@ -95,6 +95,7 @@ namespace marlin {
       if( not _pushResults.empty() ) {
         _logger->log<ERROR>() << "This should never happen !!" << std::endl ;
       }
+      _superSequence->end() ;
     }
 
     //--------------------------------------------------------------------------
