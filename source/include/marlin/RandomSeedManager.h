@@ -82,7 +82,7 @@ namespace marlin {
     /// The random generator engine
     RandomGenerator         _generator {_globalSeed} ;
     /// The random number distribution
-    RandomDistribution      _rdmDistribution{MinSeed, MaxSeed} ;
+    RandomDistribution      _rdmDistribution {MinSeed, MaxSeed} ;
   };
 
 } // end namespace marlin
