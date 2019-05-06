@@ -89,8 +89,35 @@ namespace marlin {
     template <typename T>
     static std::vector<T> stringToType( const std::vector<std::string> &strs ) ;
 
+    /**
+     *  @brief  Split the string with the corresponding delimiter
+     *  
+     *  @param  inputString the input string to split
+     *  @param  delimiter the string delimiter
+     */
     template <typename T>
-    static std::vector<T> split(const std::string &inputString, const std::string &delimiter = " ") ;
+    static std::vector<T> split( const std::string &inputString, const std::string &delimiter = " " ) ;
+    
+    /**
+     *  @brief  Weird overload for scalar types.
+     *  Just returns the conversion to string.
+     *  See overload version with vector instead.
+     *  
+     *  @param  input the input value 
+     *  @param  delimiter the string delimiter (unused here)
+     */
+    template <typename T>
+    static std::string join( const T &input, const std::string &delimiter = " " ) ;
+    
+    /**
+     *  @brief  Join the input values from the vector with the corresponding delimiter
+     *  and returns a string representation of it.
+     *  
+     *  @param  input the input vector or values to join
+     *  @param  delimiter the string delimiter
+     */
+    template <typename T>
+    static std::string join( const std::vector<T> &input, const std::string &delimiter = " " ) ;
   };
 
   //--------------------------------------------------------------------------
@@ -185,6 +212,28 @@ namespace marlin {
       pos = inputString.find_first_of(delimiter, lastPos) ;
     }
     return tokens ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  // weird overloading function that just converts the value to string ...
+  template <typename T>
+  inline std::string StringUtil::join( const T &input, const std::string &/*delimiter*/ ) {
+    return typeToString( input ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  template <typename T>
+  inline std::string StringUtil::join( const std::vector<T> &input, const std::string &delimiter ) {
+    std::stringstream ss ;
+    for( auto iter = input.begin() ; iter != input.end() ; ++iter ) {
+      ss << typeToString( *iter ) ;
+      if( std::next(iter) != input.end() ) {
+        ss << delimiter ;
+      }
+    }
+    return ss.str() ;
   }
 
 } // end namespace marlin
