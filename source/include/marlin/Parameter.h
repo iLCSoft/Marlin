@@ -146,6 +146,9 @@ namespace marlin {
   public:
     typedef std::shared_ptr<Parameter>            ParameterPtr ;
     typedef std::map<std::string, ParameterPtr>   ParameterMap ;
+    typedef std::map<std::string, std::string>    LCIOTypeMap ;
+    typedef ParameterMap::iterator                iterator ;
+    typedef ParameterMap::const_iterator          const_iterator ;
 
   public:
     Parametrized() = default ;
@@ -185,6 +188,39 @@ namespace marlin {
 				   T& parameter,
 				   const T& defaultVal,
 				   int setSize = 0 ) ;
+    
+   /**
+    *  @brief  Specialization of registerParameter() for a parameter that defines an
+    *  input collection - can be used fo checking the consistency of the steering file.
+    */
+    void registerInputCollection(const std::string& collectionType,
+          const std::string& parameterName,
+          const std::string& parameterDescription,
+          std::string& parameter,
+          const std::string& defaultVal,
+          int setSize = 0 ) ;
+    
+    /**
+     *  @brief  Specialization of registerParameter() for a parameter that defines one or several
+     *  input collections - can be used fo checking the consistency of the steering file.
+     */
+    void registerInputCollections(const std::string& collectionType,
+          const std::string& parameterName,
+          const std::string& parameterDescription,
+          std::vector<std::string>& parameter,
+          const std::vector<std::string>& defaultVal,
+          int setSize = 0 ) ;
+    
+    /**
+     *  @brief  Specialization of registerParameter() for a parameter that defines an
+     *  output collection - can be used fo checking the consistency of the steering file.
+     */
+    void registerOutputCollection(const std::string& collectionType,
+				  const std::string& parameterName,
+				  const std::string& parameterDescription,
+				  std::string& parameter,
+				  const std::string& defaultVal,
+				  int setSize = 0 ) ;
 
     /**
      *  @brief  Tests whether the parameter has been set in the steering file
@@ -220,6 +256,49 @@ namespace marlin {
      */
     template <typename T>
     T getParameter( const std::string& name ) const ;
+    
+    /**
+     *  @brief  Return the LCIO input type for the collection colName - empty string if colName is
+     *  not a registered collection name
+     */
+    std::string getLCIOInType( const std::string& colName ) const ;
+
+    /**
+     *  @brief  Return the LCIO output type for the collection colName - empty string if colName is
+     *  not a registered collection name
+     */
+    std::string getLCIOOutType( const std::string& colName ) const ;
+    
+    /**
+     *  @brief  True if the given parameter defines an LCIO input collection, i.e. the type has
+     *  been defined with setLCIOInType().
+     */
+    bool isInputCollectionName( const std::string& parameterName ) const ;
+
+    /**
+     *  @brief   True if the given parameter defines an LCIO output collection
+     */
+    bool isOutputCollectionName( const std::string& parameterName ) const ;
+    
+    /**
+     *  @brief  Begin iterator to parameter map
+     */
+    iterator pbegin() ;
+    
+    /**
+     *  @brief  End iterator of parameter map
+     */
+    iterator pend() ;
+    
+    /**
+     *  @brief  Begin iterator to parameter map
+     */
+    const_iterator pbegin() const ;
+    
+    /**
+     *  @brief  End iterator of parameter map
+     */
+    const_iterator pend() const ;
 
   private:
     /**
@@ -229,10 +308,26 @@ namespace marlin {
      *  @throw logic_error if parameter has been registered before
      */
     void checkForExistingParameter( const std::string& parameterName ) const ;
+    
+    /** 
+     *  @brief  Set the expected LCIO type for a parameter that refers to 
+     *  one or more input collections.
+     */
+    void setLCIOInType(const std::string& colName,  const std::string& lcioInType) ;
+
+    /**  
+     *  @brief  Set the LCIO type for a parameter that refers to an output collections,
+     *  i.e. the type has been defined with setLCIOOutType().
+     */
+    void setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) ;
 
   private:
-    /// The parameter map
-    ParameterMap        _parameters {} ;
+    ///< The parameter map
+    ParameterMap                       _parameters {} ;
+    ///< The input collection information
+    LCIOTypeMap                        _inTypeMap {} ;
+    ///< The output collection information
+    LCIOTypeMap                        _outTypeMap {} ;
   };
 
 
