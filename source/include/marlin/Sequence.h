@@ -257,7 +257,16 @@ namespace marlin {
      */
     std::shared_ptr<Sequence> sequence( Index index ) const ;
 
-    void addProcessor( const std::string &type, std::shared_ptr<StringParameters> parameters ) ;
+    /**
+     *  @brief  Add a processor using the input parameters.
+     *  The processor is added to each sequence. Depending on 
+     *  the parameter "ProcessorClone" and the processor forced
+     *  runtime policy, the processor is either cloned for each 
+     *  sequence or shared by all sequences  
+     *  
+     *  @param  parameters the processor input parameters
+     */
+    void addProcessor( std::shared_ptr<StringParameters> parameters ) ;
 
     /**
      *  @brief  Get the number of sequences
@@ -296,6 +305,8 @@ namespace marlin {
   private:
     ///< The list of sequences
     Sequences                  _sequences {} ;
+    ///< A unique list of sequence items
+    SequenceItemList           _uniqueItems {} ;
   };
 
 } // end namespace marlin

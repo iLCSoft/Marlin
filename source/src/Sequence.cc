@@ -239,11 +239,12 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void SuperSequence::addProcessor( const std::string &type, std::shared_ptr<StringParameters> parameters ) {
+  void SuperSequence::addProcessor( std::shared_ptr<StringParameters> parameters ) {
     const bool cloneSet = parameters->isParameterSet( "ProcessorClone" ) ;
     const bool criticalSet = parameters->isParameterSet( "ProcessorCritical" ) ;
     bool clone = parameters->getValue<bool>( "ProcessorClone", true ) ;
     bool critical = parameters->getValue<bool>( "ProcessorCritical", false ) ;
+    auto type = parameters->getValue<std::string>( "ProcessorType" ) ;
     auto &pluginMgr = PluginManager::instance() ;
     auto processor = pluginMgr.create<Processor>( PluginType::Processor, type ) ;
     if( nullptr == processor ) {
@@ -276,17 +277,20 @@ namespace marlin {
       // add the first but then create new processor instances and add them
       auto item = _sequences.at(0)->createItem( processor, critical ) ;
       _sequences.at(0)->addItem( item ) ;
+      _uniqueItems.insert( item ) ;
       for( SizeType i=1 ; i<size() ; ++i ) {
         processor = pluginMgr.create<Processor>( PluginType::Processor, type ) ;
         processor->setParameters( parameters ) ;
         item = _sequences.at(i)->createItem( processor, critical ) ;
         _sequences.at(i)->addItem( item ) ;
+        _uniqueItems.insert( item ) ;
       }
     }
     else {
       // add the first and re-use the same item
       auto item = _sequences.at(0)->createItem( processor, critical ) ;
       _sequences.at(0)->addItem( item ) ;
+      _uniqueItems.insert( item ) ;
       for( SizeType i=1 ; i<size() ; ++i ) {
         _sequences.at(i)->addItem( item ) ;
       }
