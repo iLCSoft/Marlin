@@ -7,6 +7,7 @@
 
 // -- marlin headers
 #include <marlin/StringParameters.h>
+#include <marlin/Parameter.h>
 #include <marlin/ProcessorParameter.h>
 #include <marlin/Logging.h>
 #include <marlin/MarlinConfig.h>  // for Marlin version macros
@@ -20,16 +21,9 @@
 
 namespace marlin {
 
-  class ProcessorMgr ;
-  class ProcessorEventSeeder ;
-  class PluginManager ;
   class Application ;
   class Scheduler ;
   class XMLFixCollTypes ;
-  class ProcessorFactory ;
-
-  typedef std::map<std::string, ProcessorParameter* > ProcParamMap ;
-  typedef std::map<std::string, std::string >         LCIOTypeMap ;
 
   /**
    *  @brief  Processor class
@@ -52,14 +46,9 @@ namespace marlin {
    *  @author F. Gaede, DESY
    *  @version $Id: Processor.h,v 1.38 2008-06-26 10:25:36 gaede Exp $
    */
-  class Processor {
-    friend class ProcessorMgr ; // TODO to be removed
-    friend class ProcessorEventSeeder ; // TODO to be removed
-    friend class ProcessorFactory ;
+  class Processor : public Parametrized {
     friend class Scheduler ;
-    friend class CMProcessor ;
     friend class XMLFixCollTypes ;
-
     using Logger = Logging::Logger ;
 
   private:
@@ -67,8 +56,10 @@ namespace marlin {
     Processor() = delete ;
     Processor(const Processor&) = delete ;
     Processor& operator=(const Processor&) = delete ;
-
+    
   public:
+    virtual ~Processor() = default ;
+    
     /**
      *  @brief  RuntimeOption enumerator
      */
@@ -86,11 +77,6 @@ namespace marlin {
      *  @param  typeName the processor type
      */
     Processor(const std::string& typeName) ;
-
-    /**
-     *  @brief  Destructor
-     */
-    virtual ~Processor() ;
 
     /**
      *  @brief  Return a new instance of the processor (factory method)
@@ -149,56 +135,33 @@ namespace marlin {
     /**
      *  @brief  Return the parameters defined for this Processor.
      */
-    virtual std::shared_ptr<StringParameters> parameters() ;
+    virtual std::shared_ptr<StringParameters> parameters() const ;
 
     /**
      *  @brief  Print information about this processor in ASCII steering file format.
      */
-    virtual void printDescription() ;
+    virtual void printDescription() const ;
 
     /**
      *  @brief  Print information about this processor in XML steering file format.
      */
-    virtual void printDescriptionXML(std::ostream& stream=std::cout) ;
+    virtual void printDescriptionXML(std::ostream& stream=std::cout) const ;
 
     /**
      *  @brief  Print the parameters and their values depending on the given verbosity level.
      */
     template <class T>
-    void printParameters() ;
+    void printParameters() const ;
 
     /**
      *  @brief  Print the parameters and their values with verbosity level MESSAGE.
      */
-    void printParameters() ;
+    void printParameters() const ;
 
     /**
      *  @brief  Description of processor.
      */
-    const std::string& description() ;
-
-    /**
-     *  @brief  Return the LCIO input type for the collection colName - empty string if colName is
-     *  not a registered collection name
-     */
-    std::string getLCIOInType( const std::string& colName ) ;
-
-    /**
-     *  @brief  Return the LCIO output type for the collection colName - empty string if colName is
-     *  not a registered collection name
-     */
-    std::string getLCIOOutType( const std::string& colName ) ;
-
-    /**
-     *  @brief  True if the given parameter defines an LCIO input collection, i.e. the type has
-     *  been defined with setLCIOInType().
-     */
-    bool isInputCollectionName( const std::string& parameterName  ) ;
-
-    /**
-     *  @brief   True if the given parameter defines an LCIO output collection
-     */
-    bool isOutputCollectionName( const std::string& parameterName  ) ;
+    const std::string& description() const ;
 
     /**
      *  @brief  Get the forced runtime option settings.
@@ -246,95 +209,14 @@ namespace marlin {
     void forceRuntimeOption( RuntimeOption option, bool value ) ;
 
     /**
-     *  @brief  Set the return value for this processor - typically at end of processEvent().
-     *  The value can be used in a condition in the steering file referred to by the name
-     *  of the processor.
-     */
-    void setReturnValue( bool val) ;
-
-    /**
-     *  @brief  Set a named return value for this processor - typically at end of processEvent()
-     *  The value can be used in a condition in the steering file referred to by
-     *  ProcessorName.name of the processor.
-     */
-    void setReturnValue( const std::string& name, bool val ) ;
-
-    /**
-     *  @brief  Register a steering variable for this processor - call in constructor of processor.
-     *  The default value has to be of the _same_ type as the parameter, e.g.<br>
-     *  float _cut ;<br>
-     *  ...<br>
-     *   registerProcessorParameter( "Cut", "cut...", _cut , float( 3.141592 ) ) ;<br>
-     *  as implicit conversions don't work for templates.<br>
-     *  The optional parameter setSize is used for formating the printout of parameters.
-     *  This can be used if the parameter values are expected to come in sets of fixed size.
+     *  @brief  Alias function to Parametrized::registerParameter
      */
      template<class T>
      void registerProcessorParameter(const std::string& parameterName,
  				    const std::string& parameterDescription,
  				    T& parameter,
  				    const T& defaultVal,
-				    int setSize=0 );
-
-    /**
-     *  @brief  Specialization of registerProcessorParameter() for a parameter that defines an
-     *  input collection - can be used fo checking the consistency of the steering file.
-     */
-    void registerInputCollection(const std::string& collectionType,
-				 const std::string& parameterName,
-				 const std::string& parameterDescription,
-				 std::string& parameter,
-				 const std::string& defaultVal,
-				 int setSize=0 ) ;
-
-    /**
-     *  @brief  Specialization of registerProcessorParameter() for a parameter that defines an
-     *  output collection - can be used fo checking the consistency of the steering file.
-     */
-    void registerOutputCollection(const std::string& collectionType,
-				  const std::string& parameterName,
-				  const std::string& parameterDescription,
-				  std::string& parameter,
-				  const std::string& defaultVal,
-				  int setSize=0 ) ;
-
-    /**
-     *  @brief  Specialization of registerProcessorParameter() for a parameter that defines one or several
-     *  input collections - can be used fo checking the consistency of the steering file.
-     */
-    void registerInputCollections(const std::string& collectionType,
-				  const std::string& parameterName,
-				  const std::string& parameterDescription,
-				  EVENT::StringVec& parameter,
-				  const EVENT::StringVec& defaultVal,
-				  int setSize=0 ) ;
-
-    /**
-     *  @brief  Same as registerProcessorParameter except that the parameter is optional.
-     *  The value of the parameter will still be set to the default value, which
-     *  is used to print an example steering line.
-     *  Use parameterSet() to check whether it actually has been set in the steering
-     *  file.
-     */
-    template<class T>
-    void registerOptionalParameter(const std::string& parameterName,
-				   const std::string& parameterDescription,
-				   T& parameter,
-				   const T& defaultVal,
-				   int setSize=0 ) ;
-
-    /**
-     *  @brief  Tests whether the parameter has been set in the steering file
-     */
-    bool parameterSet( const std::string& name ) ;
-
-    /**
-     *  @brief  Tests whether the parameter has been registered before
-     *
-     *  @param name name of the parameter to check
-     *  @throw logic_error if parameter has been registered before
-     */
-    void checkForExistingParameter( const std::string& parameterName ) ;
+				    int setSize = 0 ) ;
 
     /**
      *  @brief  Print message according to  verbosity level of the templated parameter (one of
@@ -400,23 +282,6 @@ namespace marlin {
     /** Set processor name */
     virtual void setName( const std::string & processorName) ;
 
-    // called internally
-
-    /** Set the expected LCIO type for a parameter that refers to one or more
-     *  input collections, e.g.:<br>
-     *  &nbsp;&nbsp;  setReturnValue( "InputCollecitonName" , LCIO::MCPARTICLE ) ; <br>
-     *  Set to LCIO::LCObject if more than one type is allowed, e.g. for a viewer processor.
-     */
-    void setLCIOInType(const std::string& colName,  const std::string& lcioInType) ;
-
-    /** Set the  LCIO type for a parameter that refers to an output collections, i.e. the type has
-     *  been defined with setLCIOOutType().
-     */
-    void setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) ;
-
-    /** Helper function for fixing old steering files */
-    const ProcParamMap& procMap() ;
-
     /** Set the scheduler instance in which this processor is scheduled at runtime */
     void setScheduler( Scheduler *scheduler ) ;
 
@@ -429,12 +294,6 @@ namespace marlin {
     std::string                        _processorName {""} ;
     /// The processor parameters
     std::shared_ptr<StringParameters>  _parameters {nullptr} ;
-    /// A map fixing the old steering file implementation (deprecated)
-    ProcParamMap                       _map {} ;
-    /// The input collection information
-    LCIOTypeMap                        _inTypeMap {} ;
-    /// The output collection information
-    LCIOTypeMap                        _outTypeMap {} ;
     /// The processor logger level
     std::string                        _logLevelName {} ;
 
@@ -453,10 +312,10 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   template <class T>
-  inline void Processor::printParameters() {
+  inline void Processor::printParameters() const {
     if( _logger->wouldWrite<T>() ) {
       _logger->log<T>() << std::endl << "---- " << name()  <<" -  parameters: " << std::endl ;
-      for( auto i = _map.begin() ; i != _map.end() ; i ++ ) {
+      for( auto i = this->pbegin() ; i != this->pend() ; i ++ ) {
         if( ! i->second->isOptional() || i->second->valueSet() ){
           _logger->log<T>() << "\t"   << i->second->name()
                << ":  "  << i->second->value()
@@ -487,13 +346,13 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  inline std::shared_ptr<StringParameters> Processor::parameters() {
+  inline std::shared_ptr<StringParameters> Processor::parameters() const {
     return _parameters ;
   }
 
   //--------------------------------------------------------------------------
 
-  inline const std::string& Processor::description() {
+  inline const std::string& Processor::description() const {
     return _description ;
   }
 
@@ -505,74 +364,7 @@ namespace marlin {
          T& parameter,
          const T& defaultVal,
          int setSize ) {
-    checkForExistingParameter( parameterName );
-    _map[ parameterName ] = new ProcessorParameter_t<T>( parameterName , parameterDescription,
-            parameter, defaultVal,
-            false , setSize) ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline void Processor::registerInputCollection(const std::string& collectionType,
-       const std::string& parameterName,
-       const std::string& parameterDescription,
-       std::string& parameter,
-       const std::string& defaultVal,
-       int setSize ) {
-    setLCIOInType( parameterName , collectionType ) ;
-    registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline void Processor::registerOutputCollection(const std::string& collectionType,
-        const std::string& parameterName,
-        const std::string& parameterDescription,
-        std::string& parameter,
-        const std::string& defaultVal,
-        int setSize ) {
-    setLCIOOutType( parameterName , collectionType ) ;
-    registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline void Processor::registerInputCollections(const std::string& collectionType,
-        const std::string& parameterName,
-        const std::string& parameterDescription,
-        EVENT::StringVec& parameter,
-        const EVENT::StringVec& defaultVal,
-        int setSize ) {
-    setLCIOInType( parameterName , collectionType ) ;
-    registerProcessorParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  template<class T>
-  inline void Processor::registerOptionalParameter(const std::string& parameterName,
-         const std::string& parameterDescription,
-         T& parameter,
-         const T& defaultVal,
-         int setSize ) {
-    checkForExistingParameter( parameterName );
-    _map[ parameterName ] = new ProcessorParameter_t<T>( parameterName , parameterDescription,
-            parameter, defaultVal,
-            true , setSize) ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline void Processor::checkForExistingParameter( const std::string& parameterName ) {
-     auto paraIt = _map.find( parameterName );
-     if (paraIt != _map.end() ) {
-       std::stringstream errorMessage;
-       errorMessage << "Parameter " << parameterName
-                    << " already defined for processor "
-                    << this->type()
-                    << std::endl;
-       throw std::logic_error(  errorMessage.str() );
-     }
+    registerParameter( parameterName, parameterDescription, parameter, defaultVal, setSize ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -613,12 +405,6 @@ namespace marlin {
   inline void Processor::setName( const std::string & processorName) {
     _processorName = processorName ;
     _logger->setName( processorName );
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline const ProcParamMap& Processor::procMap() {
-    return _map ;
   }
 
   //--------------------------------------------------------------------------

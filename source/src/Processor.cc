@@ -28,14 +28,6 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  Processor::~Processor() {
-    for( auto i = _map.begin() ; i != _map.end() ; i ++ ) {
-      delete i->second ;
-    }
-  }
-
-  //--------------------------------------------------------------------------
-
   void Processor::setParameters( std::shared_ptr<StringParameters> processorParameters) {
     _parameters = processorParameters ;
     updateParameters();
@@ -50,34 +42,34 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void Processor::printParameters() {
+  void Processor::printParameters() const {
     printParameters<MESSAGE>() ;
   }
 
   //--------------------------------------------------------------------------
 
-  void Processor::printDescription() {
+  void Processor::printDescription() const {
     std::cout << ".begin My"        <<  type()  << std::endl << "ProcessorType "   <<  type() << std::endl ;
     std::cout << "#---" << description() << std::endl ;
-    for( auto i = _map.begin() ; i != _map.end() ; i ++ ) {
-      ProcessorParameter* p = i->second ;
+    for( auto i = this->pbegin() ; i != this->pend() ; i ++ ) {
+      // ProcessorParameter* p = i->second ;
       std::cout << std::endl
-		    << "#\t"  << p->description() << std::endl
-		    << "#\t type: " << " [" <<  p->type() << "]"
+		    << "#\t"  << i->second->description() << std::endl
+		    << "#\t type: " << " [" <<  i->second->type() << "]"
 		    << std::endl ;
-      if( p->isOptional() ) {
+      if( i->second->isOptional() ) {
       	std::cout << "#\t example: " << std::endl ;
-      	std::cout << "#\t"   << p->name()
-      		  << "   "  << p->defaultValue()
+      	std::cout << "#\t"   << i->second->name()
+      		  << "   "  << i->second->defaultValue()
       		  << std::endl
       		  << std::endl ;
       }
       else {
-      	std::cout << "#\t default: " << p->defaultValue()
+      	std::cout << "#\t default: " << i->second->defaultValue()
       		  << std::endl ;
 
-      	std::cout << "\t"   << p->name()
-      		  << "   "  << p->defaultValue()
+      	std::cout << "\t"   << i->second->name()
+      		  << "   "  << i->second->defaultValue()
       		  << std::endl
       		  << std::endl ;
       }
@@ -89,7 +81,7 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void Processor::printDescriptionXML(std::ostream& stream) {
+  void Processor::printDescriptionXML(std::ostream& stream) const {
     if(&stream == &std::cout){
       stream << " <processor name=\"My" <<  type()  << "\""
 	     << " type=\"" <<  type() << "\">"
@@ -101,34 +93,33 @@ namespace marlin {
 	     << std::endl ;
     }
     stream << " <!--" << description() << "-->" << std::endl ;
-    for( auto i = _map.begin() ; i != _map.end() ; i ++ ) {
-      ProcessorParameter* p = i->second ;
-      stream << "  <!--" << p->description() << "-->" << std::endl ;
-      if( p->isOptional() ) {
-	      stream << "  <!--parameter name=\"" << p->name() << "\" "
-	      << "type=\"" << p->type() ;
-	      if ( isInputCollectionName( p->name() ) ) {
-	        stream << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
+    for( auto i = this->pbegin() ; i != this->pend() ; i ++ ) {
+      stream << "  <!--" << i->second->description() << "-->" << std::endl ;
+      if( i->second->isOptional() ) {
+	      stream << "  <!--parameter name=\"" << i->second->name() << "\" "
+	      << "type=\"" << i->second->type() ;
+	      if ( isInputCollectionName( i->second->name() ) ) {
+	        stream << "\" lcioInType=\"" << getLCIOInType( i->second->name() ) ;
         }
-	      if ( isOutputCollectionName( p->name() ) ) {
-	       stream << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
+	      if ( isOutputCollectionName( i->second->name() ) ) {
+	       stream << "\" lcioOutType=\"" << getLCIOOutType( i->second->name() ) ;
         }
       	stream << "\">"
-      	       << p->defaultValue()
+      	       << i->second->defaultValue()
       	       << " </parameter-->"
       	       << std::endl ;
       }
       else {
-	      stream << "  <parameter name=\"" << p->name() << "\" "
-	       << "type=\"" << p->type() ;
-      	if ( isInputCollectionName( p->name() ) ) {
-      	  stream << "\" lcioInType=\"" << _inTypeMap[ p->name() ]  ;
+	      stream << "  <parameter name=\"" << i->second->name() << "\" "
+	       << "type=\"" << i->second->type() ;
+      	if ( isInputCollectionName( i->second->name() ) ) {
+      	  stream << "\" lcioInType=\"" << getLCIOInType( i->second->name() ) ;
         }
-      	if ( isOutputCollectionName( p->name() ) ) {
-      	  stream << "\" lcioOutType=\"" << _outTypeMap[ p->name() ]  ;
+      	if ( isOutputCollectionName( i->second->name() ) ) {
+      	  stream << "\" lcioOutType=\"" << getLCIOOutType( i->second->name() ) ;
         }
       	stream  << "\">"
-      		<< p->defaultValue()
+      		<< i->second->defaultValue()
       		<< " </parameter>"
       		<< std::endl ;
       }
@@ -136,18 +127,6 @@ namespace marlin {
     stream << "</processor>"
 	   << std::endl
 	   << std::endl ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  bool Processor::parameterSet( const std::string& parameterName ) {
-    auto it = _map.find(parameterName) ;
-    if( it != _map.end() ) {
-      return it->second->valueSet() ;
-    }
-    else {
-      return false ;
-    }
   }
 
   //--------------------------------------------------------------------------
@@ -166,7 +145,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void Processor::updateParameters() {
-    for( auto i = _map.begin() ; i != _map.end() ; i ++ ) {
+    for( auto i = this->pbegin() ; i != this->pend() ; i ++ ) {
       i->second->setValue( _parameters.get() ) ;
     }
   }
@@ -188,67 +167,6 @@ namespace marlin {
   
   void Processor::forceRuntimeOption( RuntimeOption option, bool value ) {
     _forcedRuntimeOptions[option] = value ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  void Processor::setReturnValue( bool val ) {
-    if ( nullptr == _scheduler ) {
-      throw Exception( "Processor::setReturnValue: Processor not initialized !" ) ;
-    }
-    _scheduler->runtimeConditions()->setValue( name(), val ) ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  void Processor::setLCIOInType(const std::string& collectionName,  const std::string& lcioInType) {
-    _inTypeMap[ collectionName ] = lcioInType ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  std::string Processor::getLCIOInType( const std::string& colName ) {
-    if( isInputCollectionName( colName )  )
-      return _inTypeMap[ colName ] ;
-    else
-      return "" ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  std::string Processor::getLCIOOutType( const std::string& colName ) {
-    if( isOutputCollectionName( colName )  )
-      return _outTypeMap[ colName ] ;
-    else
-      return "" ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  bool Processor::isInputCollectionName( const std::string& pName  ) {
-    return _inTypeMap.find( pName  ) != _inTypeMap.end() ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  void Processor::setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) {
-    _outTypeMap[ collectionName ] = lcioOutType ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  bool Processor::isOutputCollectionName( const std::string& pName  ) {
-    return _outTypeMap.find( pName ) != _outTypeMap.end() ;
-  }
-
-  //--------------------------------------------------------------------------
-
-  void Processor::setReturnValue( const std::string& keyName, bool val ) {
-    if ( nullptr == _scheduler ) {
-      throw Exception( "Processor::setReturnValue: Processor not initialized !" ) ;
-    }
-    std::string valName = name() + "." + keyName ;
-    _scheduler->runtimeConditions()->setValue( valName, val ) ;
   }
   
   //--------------------------------------------------------------------------
