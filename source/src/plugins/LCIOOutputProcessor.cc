@@ -120,7 +120,7 @@ namespace marlin {
 				_lcioWriteMode ,
 				std::string("None") ) ;
 
-    StringVec dropNamesExamples ;
+    EVENT::StringVec dropNamesExamples ;
     dropNamesExamples.push_back("TPCHits");
     dropNamesExamples.push_back("HCalHits");
 
@@ -129,7 +129,7 @@ namespace marlin {
  			       _dropCollectionNames ,
  			       dropNamesExamples ) ;
     
-    StringVec dropTypesExample ;
+    EVENT::StringVec dropTypesExample ;
     dropTypesExample.push_back("SimTrackerHit");
     dropTypesExample.push_back("SimCalorimeterHit");
     
@@ -138,7 +138,7 @@ namespace marlin {
 			       _dropCollectionTypes ,
 			       dropTypesExample ) ;
     
-    StringVec keepNamesExample ;
+    EVENT::StringVec keepNamesExample ;
     keepNamesExample.push_back("MyPreciousSimTrackerHits");
 
     registerOptionalParameter( "KeepCollectionNames" , 
@@ -146,7 +146,7 @@ namespace marlin {
 			       _keepCollectionNames ,
 			       keepNamesExample ) ;
 
-    StringVec fullSubsetExample ;
+    EVENT::StringVec fullSubsetExample ;
     fullSubsetExample.push_back("MCParticlesSkimmed");
 
     registerOptionalParameter( "FullSubsetCollections" , 
@@ -172,17 +172,17 @@ namespace marlin {
     printParameters() ;
 
     if (  parameterSet("SplitFileSizekB") ) {
-      _lcWrt = new LCSplitWriter( LCFactory::getInstance()->createLCWriter(), _splitFileSizekB*1024  ) ;
+      _lcWrt = new UTIL::LCSplitWriter( IOIMPL::LCFactory::getInstance()->createLCWriter(), _splitFileSizekB*1024  ) ;
     } 
     else {
-      _lcWrt = LCFactory::getInstance()->createLCWriter() ;
+      _lcWrt = IOIMPL::LCFactory::getInstance()->createLCWriter() ;
     }
 
     if ( _lcioWriteMode == "WRITE_APPEND" ) {  	 
-      _lcWrt->open( _lcioOutputFile , LCIO::WRITE_APPEND ) ;
+      _lcWrt->open( _lcioOutputFile , EVENT::LCIO::WRITE_APPEND ) ;
     }
     else if ( _lcioWriteMode == "WRITE_NEW" ) {
-      _lcWrt->open( _lcioOutputFile , LCIO::WRITE_NEW ) ;
+      _lcWrt->open( _lcioOutputFile , EVENT::LCIO::WRITE_NEW ) ;
     }
     else {
       _lcWrt->open( _lcioOutputFile ) ;
@@ -191,15 +191,15 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
 
-  void LCIOOutputProcessor::processRunHeader( LCRunHeader* run) { 
+  void LCIOOutputProcessor::processRunHeader( EVENT::LCRunHeader* run) { 
     _lcWrt->writeRunHeader( run ) ;
     _nRun++ ;
   }
   
   //--------------------------------------------------------------------------
 
-  void LCIOOutputProcessor::dropCollections( LCEvent * evt ) {
-    const StringVec*  colNames = evt->getCollectionNames() ;
+  void LCIOOutputProcessor::dropCollections( EVENT::LCEvent * evt ) {
+    const EVENT::StringVec*  colNames = evt->getCollectionNames() ;
 
     // if all tracker hits are droped we don't store the hit pointers with the tracks below ...
     bool trackerHitsDroped = false ;
@@ -207,18 +207,18 @@ namespace marlin {
 
     if( parameterSet("DropCollectionTypes") ) {
       if( std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end()
-		     , LCIO::TRACKERHIT ) != _dropCollectionTypes.end() ) {
+		     , EVENT::LCIO::TRACKERHIT ) != _dropCollectionTypes.end() ) {
 	      trackerHitsDroped =  true ;
       }
       if( std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end()
-		     , LCIO::CALORIMETERHIT )   != _dropCollectionTypes.end()  ) {
+		     , EVENT::LCIO::CALORIMETERHIT )   != _dropCollectionTypes.end()  ) {
 	      calorimeterHitsDroped =  true ;
       }
     }      
     
-    for( StringVec::const_iterator it = colNames->begin(); it != colNames->end() ; it++ ) {
+    for( auto it = colNames->begin(); it != colNames->end() ; it++ ) {
       
-      IMPL::LCCollectionVec*  col =  dynamic_cast<LCCollectionVec*> (evt->getCollection( *it ) ) ;
+      IMPL::LCCollectionVec*  col =  dynamic_cast<IMPL::LCCollectionVec*> (evt->getCollection( *it ) ) ;
       
       std::string collectionType  = col->getTypeName() ;
       auto typeIter = std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end(), collectionType ) ;
@@ -243,14 +243,14 @@ namespace marlin {
       	}
       }
       // don't store hit pointers if hits are droped
-      if ( collectionType == LCIO::TRACK && trackerHitsDroped ) {
+      if ( collectionType == EVENT::LCIO::TRACK && trackerHitsDroped ) {
       	std::bitset<32> flag( col->getFlag() ) ;
-      	flag[ LCIO::TRBIT_HITS ] = 0 ;
+      	flag[ EVENT::LCIO::TRBIT_HITS ] = 0 ;
        	col->setFlag( flag.to_ulong() ) ;
       }
-      if(  collectionType == LCIO::CLUSTER && calorimeterHitsDroped ) {
+      if(  collectionType == EVENT::LCIO::CLUSTER && calorimeterHitsDroped ) {
       	std::bitset<32> flag( col->getFlag() ) ;
-      	flag[ LCIO::CLBIT_HITS ] = 0 ;
+      	flag[ EVENT::LCIO::CLBIT_HITS ] = 0 ;
        	col->setFlag( flag.to_ulong() ) ;
       }
     }
@@ -258,11 +258,11 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
 
-  void LCIOOutputProcessor::processEvent( LCEvent * evt ) {
+  void LCIOOutputProcessor::processEvent( EVENT::LCEvent * evt ) {
     dropCollections( evt ) ;
     _lcWrt->writeEvent( evt ) ;
     // revert subset flag - if any 
-    for( SubSetVec::iterator sIt = _subSets.begin() ; 
+    for( auto sIt = _subSets.begin() ; 
          sIt != _subSets.end() ;  ++sIt  ) {
       
       (*sIt)->setSubset( true ) ;

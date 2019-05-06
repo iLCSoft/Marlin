@@ -107,19 +107,19 @@ namespace marlin {
     _description = "SimpleFastMCProcessor creates ReconstrcutedParticles from MCParticles " 
       "according to the resolution given in the steering file." ;
         
-    registerInputCollection( LCIO::MCPARTICLE,
+    registerInputCollection( EVENT::LCIO::MCPARTICLE,
            "InputCollectionName" , 
            "Name of the MCParticle input collection"  ,
            _inputCollectionName ,
            std::string("MCParticle") ) ;
     
-    registerOutputCollection( LCIO::RECONSTRUCTEDPARTICLE,
+    registerOutputCollection( EVENT::LCIO::RECONSTRUCTEDPARTICLE,
            "RecoParticleCollectionName" , 
            "Name of the ReconstructedParticles output collection"  ,
            _recoParticleCollectionName ,
            std::string("ReconstructedParticles") ) ;
 
-    registerOutputCollection( LCIO::LCRELATION,
+    registerOutputCollection( EVENT::LCIO::LCRELATION,
            "MCTruthMappingCollectionName" , 
            "Name of the MCTruthMapping output collection"  ,
            _mcTruthCollectionName ,
@@ -130,7 +130,7 @@ namespace marlin {
         _momentumCut ,
         float( 0.001 ) ) ;
 
-    FloatVec chResDefault ;
+    EVENT::FloatVec chResDefault ;
     chResDefault.push_back( 5e-5 ) ;
     chResDefault.push_back( 0.00 ) ;
     chResDefault.push_back( 3.141593/2. ) ;
@@ -141,7 +141,7 @@ namespace marlin {
         chResDefault ,
         chResDefault.size() ) ;
     
-    FloatVec gammaResDefault ;
+    EVENT::FloatVec gammaResDefault ;
     gammaResDefault.push_back( 0.01 ) ;
     gammaResDefault.push_back( 0.10 ) ;
     gammaResDefault.push_back( 0.00 ) ;
@@ -153,7 +153,7 @@ namespace marlin {
         gammaResDefault ,
         gammaResDefault.size() ) ;
     
-    FloatVec hadronResDefault ;
+    EVENT::FloatVec hadronResDefault ;
     hadronResDefault.push_back( 0.04 ) ;
     hadronResDefault.push_back( 0.50 ) ;
     hadronResDefault.push_back( 0.00 ) ;
@@ -194,7 +194,7 @@ namespace marlin {
   void SimpleFastMCProcessor::processEvent( EVENT::LCEvent * evt ) { 
     
     const EVENT::LCCollection* mcpCol = evt->getCollection( _inputCollectionName ) ;
-    IMPL::LCCollectionVec* recVec = new LCCollectionVec( EVENT::LCIO::RECONSTRUCTEDPARTICLE ) ;
+    IMPL::LCCollectionVec* recVec = new IMPL::LCCollectionVec( EVENT::LCIO::RECONSTRUCTEDPARTICLE ) ;
     UTIL::LCRelationNavigator relNav( EVENT::LCIO::RECONSTRUCTEDPARTICLE , EVENT::LCIO::MCPARTICLE ) ;
 
     for(int i=0 ; i<mcpCol->getNumberOfElements() ; i++ ) {
