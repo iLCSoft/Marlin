@@ -300,9 +300,6 @@ namespace marlin {
     void end() ;
 
   private:
-    void buildUniqueList( SequenceItemList &items ) const ;
-
-  private:
     ///< The list of sequences
     Sequences                  _sequences {} ;
     ///< A unique list of sequence items

@@ -224,9 +224,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void SuperSequence::init( const Application *app ) {
-    SequenceItemList items ;
-    buildUniqueList( items ) ;
-    for( auto item : items ) {
+    for( auto item : _uniqueItems ) {
       item->processor()->baseInit( app ) ;
     }
   }
@@ -306,9 +304,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void SuperSequence::processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) {
-    SequenceItemList items ;
-    buildUniqueList( items ) ;
-    for( auto item : items ) {
+    for( auto item : _uniqueItems ) {
       item->processRunHeader( rhdr ) ;
     }
   }
@@ -316,9 +312,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void SuperSequence::modifyRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) {
-    SequenceItemList items ;
-    buildUniqueList( items ) ;
-    for( auto item : items ) {
+    for( auto item : _uniqueItems ) {
       item->modifyRunHeader( rhdr ) ;
     }
   }
@@ -326,21 +320,8 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void SuperSequence::end() {
-    SequenceItemList items ;
-    buildUniqueList( items ) ;
-    for( auto item : items ) {
+    for( auto item : _uniqueItems ) {
       item->processor()->end() ;
-    }
-  }
-
-  //--------------------------------------------------------------------------
-
-  void SuperSequence::buildUniqueList( SequenceItemList &items ) const {
-    auto nprocs = _sequences.at(0)->size() ;
-    for( decltype(nprocs) i=0 ; i<nprocs ; ++i ) {
-      for( auto seq : _sequences ) {
-        items.insert( seq->at(i) ) ;
-      }
     }
   }
 
