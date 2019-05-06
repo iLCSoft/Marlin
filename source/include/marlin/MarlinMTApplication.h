@@ -2,71 +2,83 @@
 #define MARLIN_MARLINMTAPPLICATION_h 1
 
 // -- marlin headers
-#include "marlin/Application.h"
+#include <marlin/Application.h>
+#include <marlin/ReaderListener.h>
 
 // -- lcio headers
-#include "LCIOSTLTypes.h"
-
-// -- std headers
-#include <mutex>
-#include <atomic>
-#include <condition_variable>
+#include <MT/LCReader.h>
 
 namespace marlin {
-  
-  class Task ;
-  using TaskPtr = std::shared_ptr<Task> ;
-  using TaskList = std::vector<TaskPtr> ;
-  
-  /**
-   *  @brief  TaskError struct
-   *  An error summary of task running in a separate thread
-   */
-  struct TaskError {
-    /// The thread id 
-    std::thread::id        _threadId {0} ;
-    /// The task id 
-    unsigned int           _taskId {0} ;
-    /// A possibly caught exception during processing
-    std::exception_ptr     _exception {nullptr} ;
-  };
-  
-  using TaskErrorPtr = std::shared_ptr<TaskError> ;
+
+  class IScheduler ;
+  class DataSourcePlugin ;
 
   /**
    *  @brief  MarlinMTApplication class
+   *
    *  Implementation of parallel Marlin processing (multi threaded program).
    *  Parse a steering file from which a processor chain is described, configure
-   *  processor and run N processor chains in N threads. The number of threads 
-   *  is either automatically by the OS, by the number of input files or set 
-   *  manually in the steering file or command arguments (-j N).
-   *  Each thread is processing a full processor chain with its own LCReader
+   *  processor and run N processor chains in N threads. The number of threads
+   *  is either automatically by the OS, by the number of input files or set
+   *  manually in the steering file or command arguments (-j N). Events are read
+   *  from the input file(s) and pushed in the thread pool to be distributed
+   *  among the worker threads. LCRunHeader objects are processed synchronously, waiting
+   *  for all current events being processed to be finished before calling processRunHeader()
    */
   class MarlinMTApplication : public Application {
-    friend class Task ;
+  public:
+    using Scheduler = std::shared_ptr<IScheduler> ;
+    using FileReader = MT::LCReader ;
+    using FileList = EVENT::StringVec ;
+    using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
+    using DataSource = std::shared_ptr<DataSourcePlugin> ;
+
   public:
     MarlinMTApplication() = default ;
-    
+
   private:
-    void runApplication() ;
-    void init() ;
-    void end() {}
-    void printUsage() const ;
+    // from Application
+    void runApplication() override ;
+    void init() override ;
+    void end() override ;
+    void printUsage() const override ;
+
+    /**
+     *  @brief  Configure the scheduler
+     */
+    void configureScheduler() ;
     
-  private:
-    void joinTasks( bool stopTasks ) ;
+    /**
+     *  @brief  Configure the data source
+     */
+    void configureDataSource() ;
+
+    /**
+     *  @brief  Callback function to process an event received from the data source
+     * 
+     *  @param  event the event to process
+     */
+    void onEventRead( std::shared_ptr<EVENT::LCEvent> event ) ;
     
+    /**
+     *  @brief  Callback function to process a run header received from the data source
+     * 
+     *  @param  rhdr the run header to process
+     */
+    void onRunHeaderRead( std::shared_ptr<EVENT::LCRunHeader> rhdr ) ;
+
+    /**
+     *  @brief  Processed finished events from the output queue
+     *
+     *  @param  events the list of finished events
+     */
+    void processFinishedEvents( const EventList &events ) const ;
+
   private:
-    /// The concurrency of MT application 
-    unsigned int             _concurrency {0} ;
-    ///
-    TaskList                 _tasks {} ;
-    ///
-    std::atomic_int          _nRunningTasks {0} ;
-    std::atomic_bool         _taskErrorFlag {false} ;
-    std::mutex               _mutex {} ;
-    std::condition_variable  _taskConditionVariable {} ;
-    TaskErrorPtr             _taskError {nullptr} ;
+    ///< The event processing scheduler instance
+    Scheduler                    _scheduler {nullptr} ;
+    ///< The data source plugin
+    DataSource                   _dataSource {nullptr} ;
   };
 
 } // end namespace marlin
