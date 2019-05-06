@@ -8,7 +8,6 @@
 // -- marlin headers
 #include <marlin/StringParameters.h>
 #include <marlin/Parameter.h>
-#include <marlin/ProcessorParameter.h>
 #include <marlin/Logging.h>
 #include <marlin/MarlinConfig.h>  // for Marlin version macros
 
