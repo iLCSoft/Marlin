@@ -277,11 +277,7 @@ namespace marlin{
 
             availableProcs.push_back( name ) ;
 
-            // add ProcessorType to processor parameters
-            // std::vector<std::string> procType(2)  ;
-            // procType[0] = "ProcessorType" ;
-            // procType[1] =   getAttribute( section, "type")  ;
-            // _current->add( procType ) ;
+            _current->add( "ProcessorName", getAttribute( section, "name") ) ;
             _current->add( "ProcessorType", getAttribute( section, "type") ) ;
 
 
