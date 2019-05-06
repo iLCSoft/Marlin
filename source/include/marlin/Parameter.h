@@ -9,57 +9,10 @@
 #include <memory>
 
 // -- marlin headers
-#include "marlin/StringParameters.h"
+#include <marlin/Utils.h>
+#include <marlin/StringParameters.h>
 
 namespace marlin {
-
-  namespace detail {
-
-    /**
-     *  @brief  Stream a value to a standard stream
-     *
-     *  @param s the output stream
-     *  @param value the value to stream
-     */
-    template <typename T>
-    inline void toStream( std::ostream& s, const T &value, int ) {
-      s << value ;
-    }
-
-    //--------------------------------------------------------------------------
-
-    /// Specialization for booleans
-    template <>
-    inline void toStream( std::ostream& s, const bool &value, int ) {
-      s << (value ? "true" : "false") ;
-    }
-
-    //--------------------------------------------------------------------------
-
-    /**
-     *  @brief  Stream a vector to a standard stream
-     *
-     *  @param  s the output stream
-     *  @param  v the vector to stream
-     *  @param  n insert a line break every n element
-     */
-    template< class T>
-    inline std::ostream& toStream(  std::ostream& s, const std::vector<T>& v , int n) {
-      unsigned int count = 0 ;
-      for( auto it = v.begin() ; it != v.end() ; it++) {
-        // start a new line after N parameters
-        if( count && n && ! (count % n)  ) {
-          s << "\n\t\t" ;
-        }
-        s <<  (*it) << " " ;
-        count ++ ;
-      }
-      return s ;
-    }
-  }
-
-  //--------------------------------------------------------------------------
-  //--------------------------------------------------------------------------
 
   /**
    *  @brief  Parameter class.
@@ -334,18 +287,14 @@ namespace marlin {
 
   template <typename T>
   inline const std::string ParameterT<T>::defaultValue() const {
-   std::stringstream def ;
-   detail::toStream( def,  _defaultValue , setSize() )  ;
-   return def.str() ;
+    return StringUtil::join( _defaultValue, " " ) ;
   }
 
   //--------------------------------------------------------------------------
 
   template <typename T>
   inline const std::string ParameterT<T>::value() const {
-   std::stringstream def ;
-   detail::toStream( def,  _value , setSize() )  ;
-   return def.str() ;
+    return StringUtil::join( _value, " " ) ;
   }
 
   //--------------------------------------------------------------------------
