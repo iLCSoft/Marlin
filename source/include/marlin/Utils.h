@@ -119,6 +119,8 @@ namespace marlin {
     return (var ? "true" : "false") ;
   }
 
+  //--------------------------------------------------------------------------
+
   template <typename T>
   inline std::vector<std::string> StringUtil::typeToString( const std::vector<T> &vars ) {
     std::vector<std::string> result ;
@@ -156,6 +158,8 @@ namespace marlin {
     if ( str == "false" || str == "0" || str == "off" ) return false ;
     throw Exception( "Couldn't convert value to string" ) ;
   }
+
+  //--------------------------------------------------------------------------
 
   template <typename T>
   inline std::vector<T> StringUtil::stringToType( const std::vector<std::string> &strs ) {
