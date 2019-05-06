@@ -154,11 +154,6 @@ namespace marlin {
     //--------------------------------------------------------------------------
 
     void PEPScheduler::configureProcessors( const Application *app ) {
-      // TODO for the time being, all processors in the sequences
-      // are cloned and not locked. Need to find a proper config
-      // mechanism to deal with processor instance sharing among
-      // sequences and how to lock properly processing for certain
-      // processors
       _logger->log<DEBUG5>() << "PEPScheduler configureProcessors ..." << std::endl ;
       // create list of active processors
       auto activeProcessors = app->activeProcessors() ;
