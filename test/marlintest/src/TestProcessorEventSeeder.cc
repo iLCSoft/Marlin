@@ -2,9 +2,7 @@
 
 // ----- include for verbosity dependend logging ---------
 #include "marlin/Logging.h"
-
-#include <marlin/Global.h>
-#include "marlin/ProcessorEventSeeder.h"
+#include "marlin/EventExtensions.h"
 
 #include "IMPL/LCEventImpl.h"
 #include "IMPL/LCRunHeaderImpl.h"
@@ -29,27 +27,29 @@ TestProcessorEventSeeder::TestProcessorEventSeeder() : Processor("TestProcessorE
 
 void TestProcessorEventSeeder::init() { 
 
-  Global::EVENTSEEDER->registerProcessor(this);
+  // TODO use new registration API
+  // Global::EVENTSEEDER->registerProcessor(this);
   
   _nRun = 0 ;
   _nEvt = 0 ;
 }
 
 
-void TestProcessorEventSeeder::processRunHeader( LCRunHeader* ) { 
+void TestProcessorEventSeeder::processRunHeader( EVENT::LCRunHeader* ) { 
   
   ++_nRun ;
 
 } 
 
-void TestProcessorEventSeeder::processEvent( LCEvent * evt ) { 
+void TestProcessorEventSeeder::processEvent( EVENT::LCEvent * evt ) { 
 
 
   streamlog_out(DEBUG) << "   processing event: " << evt->getEventNumber() 
 		       << "   in run:  " << evt->getRunNumber() 
 		       << std::endl ;
   
-  unsigned int seed = Global::EVENTSEEDER->getSeed(this) ;
+  auto randomSeeds = evt->runtime().ext<RandomSeed>() ;
+  unsigned int seed = randomSeeds->randomSeed( this ) ;
 
   streamlog_out( DEBUG ) << "seed set to " 
 			    << seed
@@ -58,7 +58,8 @@ void TestProcessorEventSeeder::processEvent( LCEvent * evt ) {
 			    << std::endl;
 
   try{
-    Global::EVENTSEEDER->registerProcessor(this);
+    // TODO try again to register processor with new API
+    // Global::EVENTSEEDER->registerProcessor(this);
   }
   catch( lcio::Exception ) {
     log<ERROR>() << name() << " failed to register processor to event seed generator (TEST is OK)" << std::endl ;
