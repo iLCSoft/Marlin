@@ -1,7 +1,6 @@
 #include "marlin/Parameter.h"
 
 // -- marlin headers
-#include "marlin/MarlinLCIOSTLTypes.h"
 #include "marlin/Logging.h"
 
 // -- std headers
