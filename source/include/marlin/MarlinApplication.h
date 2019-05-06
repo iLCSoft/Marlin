@@ -2,17 +2,12 @@
 #define MARLIN_MARLINAPPLICATION_h 1
 
 // -- marlin headers
-#include "marlin/Application.h"
-#include "marlin/Scheduler.h"
-
-// -- lcio headers
-#include "LCIOSTLTypes.h"
-
-namespace IO {
-  class LCReader ;
-}
+#include <marlin/Application.h>
 
 namespace marlin {
+  
+  class IScheduler ;
+  class DataSourcePlugin ;
 
   /**
    *  @brief  MarlinApplication class
@@ -22,25 +17,35 @@ namespace marlin {
    */
   class MarlinApplication : public Application {
   public:
+    using Scheduler = std::shared_ptr<IScheduler> ;
+    using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
+    using DataSource = std::shared_ptr<DataSourcePlugin> ;
+    
+  public:
     MarlinApplication() = default ;
     
   private:
-    void runApplication() ;
-    void init() ;
-    void end() {}
-    void printUsage() const ;
+    // from Application
+    void runApplication() override ;
+    void init() override ;
+    void end() override ;
+    void printUsage() const override ;
+    
+    /**
+     *  @brief  Configure the scheduler
+     */
+    void configureScheduler() ;
+    
+    /**
+     *  @brief  Configure the data source
+     */
+    void configureDataSource() ;
     
   private:
-    /// The processor scheduler
-    Scheduler                         _scheduler {} ;
-    /// The LCReader instance
-    std::shared_ptr<IO::LCReader>     _lcReader {nullptr} ;
-    /// The LCIO inout files to read and process
-    EVENT::StringVec                  _lcioInputFiles {} ;
-    /// The maximum number of record to read from files (events and run headers)
-    int                               _maxRecord {0} ;
-    /// The number of events to skip on file opening
-    int                               _skipNEvents {0} ;
+    /// The event processing scheduler instance
+    Scheduler                         _scheduler {nullptr} ;
+    ///< The data source plugin
+    DataSource                        _dataSource {nullptr} ;
   };
 
 } // end namespace marlin
