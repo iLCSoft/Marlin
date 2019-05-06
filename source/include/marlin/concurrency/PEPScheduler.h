@@ -12,7 +12,8 @@
 
 namespace marlin {
 
-  class ProcessorSequence ;
+  class SuperSequence ;
+  class Sequence ;
 
   namespace concurrency {
 
@@ -48,8 +49,7 @@ namespace marlin {
       using OutputType = WorkerOutput ;
       using WorkerPool = ThreadPool<InputType,OutputType> ;
       using Logger = Logging::Logger ;
-      using ProcessorSequences = std::vector<std::shared_ptr<ProcessorSequence>> ;
-      using ProcessorSet = std::unordered_set<std::shared_ptr<Processor>> ;
+      using ProcessorSequence = std::shared_ptr<SuperSequence> ;
       using PushResultList = std::vector<WorkerPool::PushResult> ;
       using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
 
@@ -74,10 +74,8 @@ namespace marlin {
       WorkerPool                       _pool {} ;
       ///< The logger instance
       Logger                           _logger {nullptr} ;
-      ///< The processor sequences
-      ProcessorSequences               _sequences {} ;
-      ///< The full list of processor instances
-      ProcessorSet                     _allProcessors {} ;
+      ///< The processor super sequence
+      ProcessorSequence                _superSequence {nullptr} ;
       ///< Initial processor runtime conditions from steering file
       ConditionsMap                    _conditions {} ;
       ///< The random seed manager

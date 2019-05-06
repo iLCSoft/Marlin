@@ -4,10 +4,9 @@
 #include <marlin/Application.h>
 #include <marlin/Utils.h>
 #include <marlin/EventExtensions.h>
-#include <marlin/ProcessorSequence.h>
+#include <marlin/Sequence.h>
 #include <marlin/Processor.h>
 #include <marlin/PluginManager.h>
-#include <marlin/ProcessorFactory.h>
 #include <marlin/EventModifier.h>
 
 // -- std headers
@@ -42,7 +41,7 @@ namespace marlin {
        *
        *  @param  sequence the processor sequence to execute
        */
-      ProcessorSequenceWorker( std::shared_ptr<ProcessorSequence> sequence ) ;
+      ProcessorSequenceWorker( std::shared_ptr<Sequence> sequence ) ;
 
     private:
       // from WorkerBase<IN,OUT>
@@ -50,13 +49,13 @@ namespace marlin {
 
     private:
       ///< The processor sequence to run in the worker thread
-      std::shared_ptr<ProcessorSequence>     _sequence {nullptr} ;
+      std::shared_ptr<Sequence>     _sequence {nullptr} ;
     };
 
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
 
-    ProcessorSequenceWorker::ProcessorSequenceWorker( std::shared_ptr<ProcessorSequence> sequence ) :
+    ProcessorSequenceWorker::ProcessorSequenceWorker( std::shared_ptr<Sequence> sequence ) :
       _sequence(sequence) {
       /* nop */
     }
@@ -138,10 +137,9 @@ namespace marlin {
         _logger->log<WARNING>() << "-- The program will run on a single thread --" << std::endl ;
         // TODO should we throw here ??
       }
-      // create processor sequences
-      for( std::size_t i = 0 ; i<ccy ; ++i ) {
-        _sequences.push_back( std::make_shared<ProcessorSequence>() ) ;
-      }
+      // create processor super sequence
+      _superSequence = std::make_shared<SuperSequence>(ccy) ;
+      // store processor conditions
       auto activeProcessors = app->activeProcessors() ;
       auto processorConditions = app->processorConditions() ;
       const bool useConditions = ( activeProcessors.size() == processorConditions.size() ) ;
@@ -179,7 +177,6 @@ namespace marlin {
         throw Exception( "PEPScheduler::configureProcessors: duplicated active processors. Check your steering file !" ) ;
       }
       // populate processor sequences
-      ProcessorFactory factory ;
       for ( size_t i=0 ; i<activeProcessors.size() ; ++i ) {
         auto procName = activeProcessors[ i ] ;
         _logger->log<DEBUG5>() << "Active processor " << procName << std::endl ;
@@ -187,16 +184,7 @@ namespace marlin {
         if ( nullptr == processorParameters ) {
           throw Exception( "PEPScheduler::configureProcessors: undefined processor '" + procName + "'" ) ;
         }
-        for( auto sequence : _sequences ) {
-          auto processor = factory.createProcessor( app, procName, processorParameters ) ;
-          sequence->add( processor ) ;
-          // FIXME: all processor registers to random seed manager
-          // for the time being. Need a registration mechanism for processors
-          auto inserted = _allProcessors.insert( processor ).second ;
-          if( inserted ) {
-            _rdmSeedMgr.addEntry( processor.get() ) ;
-          }
-        }
+        _superSequence->addProcessor( processorParameters ) ;
       }
       _logger->log<DEBUG5>() << "PEPScheduler configureProcessors ... DONE" << std::endl ;
     }
@@ -206,10 +194,10 @@ namespace marlin {
     void PEPScheduler::configurePool() {
       // create N workers for N processor sequences
       _logger->log<DEBUG5>() << "configurePool ..." << std::endl ;
-      _logger->log<DEBUG5>() << "Number of workers: " << _sequences.size() << std::endl ;
-      for( auto sequence : _sequences ) {
+      _logger->log<DEBUG5>() << "Number of workers: " << _superSequence->size() << std::endl ;
+      for( unsigned int i=0 ; i<_superSequence->size() ; ++i ) {
         _logger->log<DEBUG>() << "Adding worker ..." << std::endl ;
-        _pool.addWorker<ProcessorSequenceWorker>( sequence ) ;
+        _pool.addWorker<ProcessorSequenceWorker>( _superSequence->sequence(i) ) ;
       }
       _logger->log<DEBUG5>() << "starting thread pool" << std::endl ;
       // start with a default small number
@@ -233,19 +221,8 @@ namespace marlin {
       while( _pool.active() ) {
         std::this_thread::sleep_for( std::chrono::milliseconds(1) ) ;
       }
-      // TODO find a better way to handle this!
-      // The problem here is that some of the processors may have not been cloned (single)
-      // We can't call processRunHeader for all sequences because in this case the call
-      // will be duplicated ...
-      for( auto processor : _allProcessors ) {
-        auto modifier = dynamic_cast<EventModifier*>( processor.get() ) ;
-        if( nullptr != modifier ) {
-          modifier->modifyRunHeader( rhdr.get() ) ;
-        }
-      }
-      for( auto processor : _allProcessors ) {
-        processor->processRunHeader( rhdr.get() ) ;
-      }
+      _superSequence->modifyRunHeader( rhdr ) ;
+      _superSequence->processRunHeader( rhdr ) ;
       _pool.setAcceptPush( true ) ;
     }
 
