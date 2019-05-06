@@ -67,7 +67,7 @@ namespace marlin {
     Processor() = delete ;
     Processor(const Processor&) = delete ;
     Processor& operator=(const Processor&) = delete ;
-    
+
   public:
     /**
      *  @brief  RuntimeOption enumerator
@@ -76,7 +76,7 @@ namespace marlin {
       Critical,     /// Whether the processor has to be executed in a critical section
       Clone         /// Whether the processor must be cloned in each thread worker
     };
-    
+
     using RuntimeOptions = std::map<RuntimeOption, bool> ;
 
   public:
@@ -199,27 +199,30 @@ namespace marlin {
      *  @brief   True if the given parameter defines an LCIO output collection
      */
     bool isOutputCollectionName( const std::string& parameterName  ) ;
-    
+
     /**
      *  @brief  Get the forced runtime option settings.
      *  The pair returned contains two boolean values:
      *    - first: whether the option appears in the forced options
      *    - second: if first is true, then contains the option flag
-     *    
+     *
      *  @param  option the runtime option to get
      */
     std::pair<bool,bool> getForcedRuntimeOption( RuntimeOption option ) const ;
 
     /** Sets the registered steering parameters before calling init() */
     void baseInit( const Application *application ) ;
-    
+
+    /** Initialize the parameters */
+    void setParameters( std::shared_ptr<StringParameters> parameters) ;
+
   protected:
     /**
      *  @brief  Force the runtime option to a given boolean value.
      *
      *  Depending on the implementation of your processor, setting
-     *  one of the runtime option might be a necessity. For example, you 
-     *  handle a lot of data in your processor members that you don't want 
+     *  one of the runtime option might be a necessity. For example, you
+     *  handle a lot of data in your processor members that you don't want
      *  to duplicate. In this case you should call in the constructor
      *  @code{cpp}
      *  forceRuntimeOption( Processor::RuntimeOption::Clone, false ) ;
@@ -232,16 +235,16 @@ namespace marlin {
      *  @endcode
      *  If a runtime option is forced in the code and the steering file tries
      *  to overwrite it, an exception will be raised.
-     *  
-     *  Note that this method must be called in user processor constructor 
+     *
+     *  Note that this method must be called in user processor constructor
      *  to ensure it is correctly handled by the framework at configuration time.
-     *  
-     *  
+     *
+     *
      *  @param  option the runtime option to force
      *  @param  value the boolean value to set
      */
     void forceRuntimeOption( RuntimeOption option, bool value ) ;
-    
+
     /**
      *  @brief  Set the return value for this processor - typically at end of processEvent().
      *  The value can be used in a condition in the steering file referred to by the name
@@ -380,7 +383,7 @@ namespace marlin {
      */
     template <class T>
     Logging::StreamType log() const ;
-    
+
     /**
      *  @brief  Get the application in which the processor is running
      *  Throws if the application is not set
@@ -396,9 +399,6 @@ namespace marlin {
 
     /** Set processor name */
     virtual void setName( const std::string & processorName) ;
-
-    /** Initialize the parameters */
-    virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
 
     // called internally
 
@@ -445,7 +445,7 @@ namespace marlin {
     Logger                             _logger {nullptr} ;
     /// The application in which the processor is running
     const Application                 *_application {nullptr} ;
-    /// The user forced runtime options for parallel processing 
+    /// The user forced runtime options for parallel processing
     RuntimeOptions                     _forcedRuntimeOptions {} ;
   };
 
