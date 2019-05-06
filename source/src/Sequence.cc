@@ -16,7 +16,7 @@ namespace marlin {
   SequenceItem::SequenceItem( std::shared_ptr<Processor> proc, bool lock ) :
     _processor(proc),
     _mutex(lock ? std::make_shared<std::mutex>() : nullptr) {
-    if( nullptr != _processor ) {
+    if( nullptr == _processor ) {
       throw Exception( "SequenceItem: got a nullptr for processor" ) ;
     }
   }
@@ -116,13 +116,13 @@ namespace marlin {
 
   void Sequence::addItem( std::shared_ptr<SequenceItem> item ) {
     auto iter = std::find_if(_items.begin(), _items.end(), [&](std::shared_ptr<SequenceItem> i){
-      return (i->processor()->name() == item->processor()->name()) ;
+      return (i->name() == item->name()) ;
     });
     if( _items.end() != iter ) {
-      throw Exception( "Sequence::addItem: processor '" + item->processor()->name() + "' already in sequence" ) ;
+      throw Exception( "Sequence::addItem: processor '" + item->name() + "' already in sequence" ) ;
     }
     _items.push_back( item ) ;
-    _clockMeasures[item->processor()->name()] = ClockMeasure() ;
+    _clockMeasures[item->name()] = ClockMeasure() ;
   }
 
   //--------------------------------------------------------------------------
