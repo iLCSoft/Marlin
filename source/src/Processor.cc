@@ -2,7 +2,6 @@
 
 // -- marlin headers
 #include "marlin/PluginManager.h"
-#include "marlin/Scheduler.h"
 #include "marlin/Application.h"
 
 namespace marlin {

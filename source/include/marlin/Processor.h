@@ -21,7 +21,6 @@
 namespace marlin {
 
   class Application ;
-  class Scheduler ;
   class XMLFixCollTypes ;
 
   /**
@@ -46,7 +45,6 @@ namespace marlin {
    *  @version $Id: Processor.h,v 1.38 2008-06-26 10:25:36 gaede Exp $
    */
   class Processor : public Parametrized {
-    friend class Scheduler ;
     friend class XMLFixCollTypes ;
     using Logger = Logging::Logger ;
 
@@ -281,9 +279,6 @@ namespace marlin {
     /** Set processor name */
     virtual void setName( const std::string & processorName) ;
 
-    /** Set the scheduler instance in which this processor is scheduled at runtime */
-    void setScheduler( Scheduler *scheduler ) ;
-
   protected:
     /// The processor description
     std::string                        _description {""} ;
@@ -297,8 +292,6 @@ namespace marlin {
     std::string                        _logLevelName {} ;
 
   private:
-    /// The scheduler managing the processor (DEPRECATED)
-    Scheduler                         *_scheduler {nullptr} ;
     /// The processor logger. See log<T>() for details
     Logger                             _logger {nullptr} ;
     /// The application in which the processor is running
@@ -404,12 +397,6 @@ namespace marlin {
   inline void Processor::setName( const std::string & processorName) {
     _processorName = processorName ;
     _logger->setName( processorName );
-  }
-
-  //--------------------------------------------------------------------------
-
-  inline void Processor::setScheduler( Scheduler *scheduler ) {
-    _scheduler = scheduler ;
   }
 
 } // end namespace marlin
