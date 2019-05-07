@@ -29,7 +29,6 @@ namespace marlin {
     void runApplication() override ;
     void init() override ;
     void end() override ;
-    void printUsage() const override ;
     
     /**
      *  @brief  Configure the scheduler

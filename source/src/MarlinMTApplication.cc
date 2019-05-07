@@ -46,12 +46,6 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void MarlinMTApplication::printUsage() const {
-
-  }
-
-  //--------------------------------------------------------------------------
-
   void MarlinMTApplication::configureScheduler() {
     _scheduler = std::make_shared<concurrency::PEPScheduler>() ;
     _scheduler->init( this ) ;

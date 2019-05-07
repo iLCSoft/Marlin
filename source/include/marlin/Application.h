@@ -58,7 +58,7 @@ namespace marlin {
     /**
      *  @brief  Print command line usage
      */
-    virtual void printUsage() const = 0;
+    virtual void printUsage() const ;
 
     /**
      *  @brief  Print the Marlin banner
