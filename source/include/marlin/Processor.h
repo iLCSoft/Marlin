@@ -21,6 +21,7 @@
 namespace marlin {
 
   class Application ;
+  class ProcessorApi ;
   class XMLFixCollTypes ;
 
   /**
@@ -46,6 +47,7 @@ namespace marlin {
    */
   class Processor : public Parametrized {
     friend class XMLFixCollTypes ;
+    friend class ProcessorApi ;
     using Logger = Logging::Logger ;
 
   private:
