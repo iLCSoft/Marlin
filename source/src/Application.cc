@@ -235,6 +235,12 @@ namespace marlin {
       return Logging::createLogger( name ) ;
     }
   }
+  
+  //--------------------------------------------------------------------------
+  
+  const GeometryManager &Application::geometryManager() const {
+    return _geometryMgr ;
+  }
 
   //--------------------------------------------------------------------------
 
