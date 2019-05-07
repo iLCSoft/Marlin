@@ -3,11 +3,9 @@
 // -- marlin headers
 #include <marlin/Application.h>
 #include <marlin/Utils.h>
-#include <marlin/EventExtensions.h>
 #include <marlin/Sequence.h>
 #include <marlin/Processor.h>
 #include <marlin/PluginManager.h>
-#include <marlin/EventModifier.h>
 
 // -- std headers
 #include <exception>
@@ -102,21 +100,6 @@ namespace marlin {
 
     void PEPScheduler::preConfigure( const Application *app ) {
       auto globals = app->globalParameters() ;
-      // auto allowModify = ( globals->getStringVal( "AllowToModifyEvent" ) == "true" ) ;
-      // // warning !!!
-      // if ( allowModify ) {
-      //   _logger->log<WARNING>()
-      //     << " ******************************************************************************* \n"
-      //     << " *    AllowToModifyEvent is set to 'true'                                      * \n"
-      //     << " *    => all processors can modify the input event in processEvent() !!        * \n"
-      //     << " *        consider setting this flag to 'false'                                * \n"
-      //     << " *        unless you really need it...                                         * \n"
-      //     << " *    - if you need a processor that modifies the input event                  * \n"
-      //     << " *      please implement the EventModifier interface and use the modifyEvent() * \n"
-      //     << " *      method for this                                                        * \n"
-      //     << " ******************************************************************************* \n"
-      //     << std::endl ;
-      // }
       auto ccyStr = globals->getValue<std::string>( "Concurrency", "auto" ) ;
       // The concurrency read from the steering file
       std::size_t ccy = (ccyStr == "auto" ?
@@ -140,15 +123,6 @@ namespace marlin {
       }
       // create processor super sequence
       _superSequence = std::make_shared<SuperSequence>(ccy) ;
-      // store processor conditions
-      auto activeProcessors = app->activeProcessors() ;
-      auto processorConditions = app->processorConditions() ;
-      const bool useConditions = ( activeProcessors.size() == processorConditions.size() ) ;
-      if( useConditions ) {
-        for( std::size_t i=0 ; i<activeProcessors.size() ; ++i ) {
-          _conditions[ activeProcessors[i] ] = processorConditions[i] ;
-        }
-      }
     }
 
     //--------------------------------------------------------------------------
@@ -225,16 +199,6 @@ namespace marlin {
     //--------------------------------------------------------------------------
 
     void PEPScheduler::pushEvent( std::shared_ptr<EVENT::LCEvent> event ) {
-      // random seeds extension
-      auto seeds = _rdmSeedMgr.generateRandomSeeds( event.get() ) ;
-      auto randomSeedExtension = new RandomSeedExtension( std::move(seeds) ) ;
-      event->runtime().ext<RandomSeed>() = randomSeedExtension ;
-      // runtime conditions extension
-      auto procCondExtension = new ProcessorConditionsExtension( _conditions ) ;
-      event->runtime().ext<ProcessorConditions>() = procCondExtension ;
-      // first event flag
-      event->runtime().ext<IsFirstEvent>() = _isFirstEvent ;
-      _isFirstEvent = false ;
       // push event to thread pool queue. It might throw !
       _pushResults.push_back( _pool.push( WorkerPool::PushPolicy::ThrowIfFull, std::move(event) ) ) ;
     }

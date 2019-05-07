@@ -3,7 +3,6 @@
 // -- marlin headers
 #include <marlin/Application.h>
 #include <marlin/Utils.h>
-#include <marlin/EventExtensions.h>
 #include <marlin/Sequence.h>
 #include <marlin/Processor.h>
 
@@ -15,16 +14,7 @@ namespace marlin {
 
   void SimpleScheduler::init( const Application *app ) {
     _logger = app->createLogger( "SimpleScheduler" ) ;
-    auto globals = app->globalParameters() ;
-    // store processor conditions
     auto activeProcessors = app->activeProcessors() ;
-    auto processorConditions = app->processorConditions() ;
-    const bool useConditions = ( activeProcessors.size() == processorConditions.size() ) ;
-    if( useConditions ) {
-      for( std::size_t i=0 ; i<activeProcessors.size() ; ++i ) {
-        _conditions[ activeProcessors[i] ] = processorConditions[i] ;
-      }
-    }
     // create super sequence with only only sequence and fill it
     _superSequence = std::make_shared<SuperSequence>(1) ;
     _logger->log<DEBUG5>() << "Creating processors ..." << std::endl ;
@@ -75,17 +65,6 @@ namespace marlin {
   void SimpleScheduler::pushEvent( std::shared_ptr<EVENT::LCEvent> event ) {
     _currentEvent = event ;
     auto sequence = _superSequence->sequence(0) ;
-    // random seeds extension
-    auto seeds = _rdmSeedMgr.generateRandomSeeds( event.get() ) ;
-    auto randomSeedExtension = new RandomSeedExtension( std::move(seeds) ) ;
-    event->runtime().ext<RandomSeed>() = randomSeedExtension ;
-    // runtime conditions extension
-    auto procCondExtension = new ProcessorConditionsExtension( _conditions ) ;
-    event->runtime().ext<ProcessorConditions>() = procCondExtension ;
-    // first event flag
-    event->runtime().ext<IsFirstEvent>() = _isFirstEvent ;
-    _isFirstEvent = false ;
-    // process it !
     sequence->modifyEvent( _currentEvent ) ;
     sequence->processEvent( _currentEvent ) ;
   }

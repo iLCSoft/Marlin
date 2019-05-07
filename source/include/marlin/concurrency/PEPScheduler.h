@@ -4,7 +4,6 @@
 // -- marlin headers
 #include <marlin/IScheduler.h>
 #include <marlin/Logging.h>
-#include <marlin/RandomSeedManager.h>
 #include <marlin/concurrency/ThreadPool.h>
 
 // -- std headers
@@ -76,14 +75,8 @@ namespace marlin {
       Logger                           _logger {nullptr} ;
       ///< The processor super sequence
       ProcessorSequence                _superSequence {nullptr} ;
-      ///< Initial processor runtime conditions from steering file
-      ConditionsMap                    _conditions {} ;
-      ///< The random seed manager
-      RandomSeedManager                _rdmSeedMgr {} ;
       ///< The list of worker output promises
       PushResultList                   _pushResults {} ;
-      ///< Whether the currently pushed event is the first one
-      bool                             _isFirstEvent {true} ;
     };
 
   }

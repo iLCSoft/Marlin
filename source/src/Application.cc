@@ -7,6 +7,7 @@
 #include <marlin/XMLParser.h>
 #include <marlin/Parser.h>
 #include <marlin/MarlinConfig.h>
+#include <marlin/EventExtensions.h>
 #include <marlin/IScheduler.h>
 #include <marlin/SimpleScheduler.h>
 
@@ -60,6 +61,15 @@ namespace marlin {
     // setup callbacks
     _dataSource->onEventRead( std::bind( &Application::onEventRead, this, _1 ) ) ;
     _dataSource->onRunHeaderRead( std::bind( &Application::onRunHeaderRead, this, _1 ) ) ;
+    // store processor conditions
+    auto activeProcs = activeProcessors() ;
+    auto processorConds = processorConditions() ;
+    const bool useConditions = ( activeProcs.size() == processorConds.size() ) ;
+    if( useConditions ) {
+      for( std::size_t i=0 ; i<activeProcs.size() ; ++i ) {
+        _conditions[ activeProcs[i] ] = processorConds[i] ;
+      }
+    }
     _initialized = true ;
   }
 
@@ -287,6 +297,17 @@ namespace marlin {
       }
       std::this_thread::sleep_for( std::chrono::milliseconds(1) ) ;
     }
+    // prepare event extensions for users
+    // random seeds extension
+    auto seeds = _randomSeedMgr.generateRandomSeeds( event.get() ) ;
+    auto randomSeedExtension = new RandomSeedExtension( std::move(seeds) ) ;
+    event->runtime().ext<RandomSeed>() = randomSeedExtension ;
+    // runtime conditions extension
+    auto procCondExtension = new ProcessorConditionsExtension( _conditions ) ;
+    event->runtime().ext<ProcessorConditions>() = procCondExtension ;
+    // first event flag
+    event->runtime().ext<IsFirstEvent>() = _isFirstEvent ;
+    _isFirstEvent = false ;
     _scheduler->pushEvent( event ) ;
     // check a second time
     _scheduler->popFinishedEvents( events ) ;

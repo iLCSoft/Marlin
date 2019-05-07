@@ -4,7 +4,6 @@
 // -- marlin headers
 #include <marlin/IScheduler.h>
 #include <marlin/Logging.h>
-#include <marlin/RandomSeedManager.h>
 
 namespace marlin {
   
@@ -16,7 +15,6 @@ namespace marlin {
    */
   class SimpleScheduler : public IScheduler {
   public:
-    using ConditionsMap = std::map<std::string, std::string> ;
     using Logger = Logging::Logger ;
     using ProcessorSequence = std::shared_ptr<SuperSequence> ;
     
@@ -36,12 +34,6 @@ namespace marlin {
     Logger                           _logger {nullptr} ;
     ///< The processor super sequence
     ProcessorSequence                _superSequence {nullptr} ;
-    ///< Initial processor runtime conditions from steering file
-    ConditionsMap                    _conditions {} ;
-    ///< The random seed manager
-    RandomSeedManager                _rdmSeedMgr {} ;
-    ///< Whether the currently pushed event is the first one
-    bool                             _isFirstEvent {true} ;
     ///< The current event being processed
     std::shared_ptr<EVENT::LCEvent>  _currentEvent {nullptr} ;
   };

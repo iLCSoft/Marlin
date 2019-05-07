@@ -31,6 +31,7 @@ namespace marlin {
     using Scheduler = std::shared_ptr<IScheduler> ;
     using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
     using DataSource = std::shared_ptr<DataSourcePlugin> ;
+    using ConditionsMap = std::map<std::string, std::string> ;
 
   public:
     Application() = default ;
@@ -217,6 +218,10 @@ namespace marlin {
     Scheduler                  _scheduler {nullptr} ;
     ///< The data source plugin
     DataSource                 _dataSource {nullptr} ;
+    ///< Initial processor runtime conditions from steering file
+    ConditionsMap              _conditions {} ;
+    ///< Whether the currently pushed event is the first one
+    bool                       _isFirstEvent {true} ;
   };
 
 } // end namespace marlin
