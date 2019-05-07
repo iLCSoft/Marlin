@@ -2,11 +2,12 @@
 #define MARLIN_APPLICATION_h 1
 
 // -- marlin headers
-#include "marlin/Exceptions.h"
-#include "marlin/IParser.h"
-#include "marlin/Logging.h"
-#include "marlin/GeometryManager.h"
-#include "marlin/LoggerManager.h"
+#include <marlin/Exceptions.h>
+#include <marlin/IParser.h>
+#include <marlin/Logging.h>
+#include <marlin/GeometryManager.h>
+#include <marlin/LoggerManager.h>
+#include <marlin/RandomSeedManager.h>
 
 namespace marlin {
 
@@ -138,6 +139,16 @@ namespace marlin {
      *  @brief  Get the geometry manager
      */
     const GeometryManager &geometryManager() const ;
+    
+    /**
+     *  @brief  Get the random seed manager
+     */
+    const RandomSeedManager &randomSeedManager() const ;
+    
+    /**
+     *  @brief  Get the random seed manager
+     */
+    RandomSeedManager &randomSeedManager() ;
 
   protected:
     /**
@@ -161,6 +172,8 @@ namespace marlin {
     CmdLineArguments           _filteredArguments {} ;
     /// The geometry manager
     GeometryManager            _geometryMgr {} ;
+    /// The random seed manager
+    RandomSeedManager          _randomSeedMgr {} ;
     /// The logger manager
     LoggerManager              _loggerMgr {} ;
 

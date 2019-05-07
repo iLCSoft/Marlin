@@ -241,6 +241,18 @@ namespace marlin {
   const GeometryManager &Application::geometryManager() const {
     return _geometryMgr ;
   }
+  
+  //--------------------------------------------------------------------------
+  
+  const RandomSeedManager &Application::randomSeedManager() const {
+    return _randomSeedMgr ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  RandomSeedManager &Application::randomSeedManager() {
+    return _randomSeedMgr ;
+  }
 
   //--------------------------------------------------------------------------
 
