@@ -130,7 +130,7 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void Processor::baseInit( const Application *application ) {
+  void Processor::baseInit( Application *application ) {
     _application = application ;
     _logger = app().createLogger( name() ) ;
     log<DEBUG2>() << "Creating logger for processor " << name() << std::endl ;
@@ -171,6 +171,15 @@ namespace marlin {
   //--------------------------------------------------------------------------
   
   const Application &Processor::app() const {
+    if ( nullptr == _application ) {
+      throw Exception( "Processor::app: app pointer not set!" ) ;
+    }
+    return *_application ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  Application &Processor::app() {
     if ( nullptr == _application ) {
       throw Exception( "Processor::app: app pointer not set!" ) ;
     }

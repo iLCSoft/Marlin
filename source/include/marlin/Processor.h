@@ -173,7 +173,7 @@ namespace marlin {
     std::pair<bool,bool> getForcedRuntimeOption( RuntimeOption option ) const ;
 
     /** Sets the registered steering parameters before calling init() */
-    void baseInit( const Application *application ) ;
+    void baseInit( Application *application ) ;
 
     /** Initialize the parameters */
     void setParameters( std::shared_ptr<StringParameters> parameters) ;
@@ -270,6 +270,12 @@ namespace marlin {
      *  Throws if the application is not set
      */
     const Application &app() const ;
+    
+    /**
+     *  @brief  Get the application in which the processor is running
+     *  Throws if the application is not set
+     */
+    Application &app() ;
 
   private:
     /** Allow friend class CCProcessor to change/reset processor parameters */
@@ -297,7 +303,7 @@ namespace marlin {
     /// The processor logger. See log<T>() for details
     Logger                             _logger {nullptr} ;
     /// The application in which the processor is running
-    const Application                 *_application {nullptr} ;
+    Application                       *_application {nullptr} ;
     /// The user forced runtime options for parallel processing
     RuntimeOptions                     _forcedRuntimeOptions {} ;
   };
