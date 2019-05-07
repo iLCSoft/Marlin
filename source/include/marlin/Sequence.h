@@ -278,7 +278,7 @@ namespace marlin {
      *
      *  @param  app the application in which the processors run
      */
-    void init( const Application *app ) ;
+    void init( Application *app ) ;
 
     /**
      *  @brief  Process the run header. Call processRunHeader() for each item in the sequence

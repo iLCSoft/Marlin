@@ -223,7 +223,7 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  void SuperSequence::init( const Application *app ) {
+  void SuperSequence::init( Application *app ) {
     for( auto item : _uniqueItems ) {
       item->processor()->baseInit( app ) ;
     }
