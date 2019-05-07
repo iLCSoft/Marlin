@@ -1,12 +1,19 @@
-#include "marlin/Application.h"
-#include "marlin/PluginManager.h"
-#include "marlin/Utils.h"
-#include "marlin/XMLParser.h"
-#include "marlin/Parser.h"
-#include "marlin/MarlinConfig.h"
+#include <marlin/Application.h>
+
+// -- marlin headers
+#include <marlin/PluginManager.h>
+#include <marlin/Utils.h>
+#include <marlin/DataSourcePlugin.h>
+#include <marlin/XMLParser.h>
+#include <marlin/Parser.h>
+#include <marlin/MarlinConfig.h>
+#include <marlin/IScheduler.h>
+#include <marlin/SimpleScheduler.h>
 
 // -- std headers
 #include <cstring>
+
+using namespace std::placeholders ;
 
 namespace marlin {
 
@@ -32,19 +39,50 @@ namespace marlin {
     }
     // initialize logging
     _loggerMgr.init( this ) ;
+    // check at this point for a scheduler instance
+    if( nullptr == _scheduler ) {
+      logger()->log<MESSAGE>() << "No scheduler set. Using SimpleScheduler (single threaded program)" << std::endl ;
+      _scheduler = std::make_shared<SimpleScheduler>() ;
+    }
     // initialize geometry
     _geometryMgr.init( this ) ;
-    // sub-class initialization
-    init() ;
+    // initialize scheduler
+    _scheduler->init( this ) ;
+    // initialize data source
+    auto parameters = dataSourceParameters() ;
+    auto dstype = parameters->getValue<std::string>( "DataSourceType" ) ;
+    auto &pluginMgr = PluginManager::instance() ;
+    _dataSource = pluginMgr.create<DataSourcePlugin>( PluginType::DataSource, dstype ) ;
+    if( nullptr == _dataSource ) {
+      throw Exception( "Data source of type '" + dstype + "' not found in plugins" ) ;
+    }
+    _dataSource->init( this ) ;
+    // setup callbacks
+    _dataSource->onEventRead( std::bind( &Application::onEventRead, this, _1 ) ) ;
+    _dataSource->onRunHeaderRead( std::bind( &Application::onRunHeaderRead, this, _1 ) ) ;
     _initialized = true ;
   }
 
   //--------------------------------------------------------------------------
 
   void Application::run() {
-    runApplication() ;
-    _geometryMgr.clear();
-    end() ;
+    try {
+      _dataSource->readAll() ;
+    }
+    catch( StopProcessingException &e ) {
+      logger()->log<ERROR>() << std::endl
+          << " **********************************************************" << std::endl
+          << " *                                                        *" << std::endl
+          << " *   Stop of EventProcessing requested by processor :     *" << std::endl
+          << " *                  "  << e.what()                           << std::endl
+          << " *     will call end() method of all processors !         *" << std::endl
+          << " *                                                        *" << std::endl
+          << " **********************************************************" << std::endl
+          << std::endl ;
+    }
+    _geometryMgr.clear() ;
+    _scheduler->end() ;
+    // end() ;
   }
   
   //--------------------------------------------------------------------------
@@ -238,6 +276,34 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
   
+  void Application::onEventRead( std::shared_ptr<EVENT::LCEvent> event ) {
+    EventList events ;
+    while( _scheduler->freeSlots() == 0 ) {
+      _scheduler->popFinishedEvents( events ) ;
+      if( not events.empty() ) {
+        processFinishedEvents( events ) ;
+        events.clear() ;
+        break;
+      }
+      std::this_thread::sleep_for( std::chrono::milliseconds(1) ) ;
+    }
+    _scheduler->pushEvent( event ) ;
+    // check a second time
+    _scheduler->popFinishedEvents( events ) ;
+    if( not events.empty() ) {
+      processFinishedEvents( events ) ;
+    }
+  }
+
+  //--------------------------------------------------------------------------
+
+  void Application::onRunHeaderRead( std::shared_ptr<EVENT::LCRunHeader> rhdr ) {
+    logger()->log<MESSAGE9>() << "New run header no " << rhdr->getRunNumber() << std::endl ;
+    _scheduler->processRunHeader( rhdr ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
   const GeometryManager &Application::geometryManager() const {
     return _geometryMgr ;
   }
@@ -252,6 +318,12 @@ namespace marlin {
   
   RandomSeedManager &Application::randomSeedManager() {
     return _randomSeedMgr ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  void Application::setScheduler( Scheduler scheduler ) {
+    _scheduler = scheduler ;
   }
 
   //--------------------------------------------------------------------------
@@ -274,6 +346,18 @@ namespace marlin {
       // tell parser to take into account any options defined on the command line
       parser->setCmdLineParameters( _cmdLineOptions ) ;
       return parser ;
+    }
+  }
+  
+  //--------------------------------------------------------------------------
+
+  void Application::processFinishedEvents( const EventList &events ) const {
+    // simple printout for the time being
+    for( auto event : events ) {
+      logger()->log<MESSAGE9>()
+        << "Run no " << event->getRunNumber()
+        << ", event no " << event->getEventNumber()
+        << " finished" << std::endl ;
     }
   }
 

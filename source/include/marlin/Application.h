@@ -9,7 +9,15 @@
 #include <marlin/LoggerManager.h>
 #include <marlin/RandomSeedManager.h>
 
+namespace EVENT {
+  class LCEvent ;
+  class LCRunHeader ;
+}
+
 namespace marlin {
+  
+  class IScheduler ;
+  class DataSourcePlugin ;
 
   /**
    *  @brief  Application class
@@ -18,29 +26,15 @@ namespace marlin {
    */
   class Application {
   public:
-    // traits
     using CmdLineArguments = std::vector<std::string> ;
     using Logger = Logging::Logger ;
+    using Scheduler = std::shared_ptr<IScheduler> ;
+    using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
+    using DataSource = std::shared_ptr<DataSourcePlugin> ;
 
   public:
     Application() = default ;
-    virtual ~Application() = default ;
-
-  protected:
-    /**
-     *  @brief  Initialize the application
-     */
-    virtual void init() = 0;
-
-    /**
-     *  @brief  Run the user application
-     */
-    virtual void runApplication() = 0 ;
-
-    /**
-     *  @brief  End the application
-     */
-    virtual void end() = 0 ;
+    ~Application() = default ;
 
   public:
     /**
@@ -59,7 +53,7 @@ namespace marlin {
     /**
      *  @brief  Print command line usage
      */
-    virtual void printUsage() const ;
+    void printUsage() const ;
 
     /**
      *  @brief  Print the Marlin banner
@@ -149,6 +143,14 @@ namespace marlin {
      *  @brief  Get the random seed manager
      */
     RandomSeedManager &randomSeedManager() ;
+    
+    /**
+     *  @brief  Set the scheduler instance to use in this application.
+     *  Must be called before init(argc, argv)
+     *  
+     *  @param  scheduler the sceduler instance to use
+     */
+    void setScheduler( Scheduler scheduler ) ;
 
   protected:
     /**
@@ -166,6 +168,27 @@ namespace marlin {
      *  @brief  Create the parser instance based on the steering file extension
      */
     std::shared_ptr<IParser> createParser() const ;
+    
+    /**
+     *  @brief  Callback function to process an event received from the data source
+     * 
+     *  @param  event the event to process
+     */
+    void onEventRead( std::shared_ptr<EVENT::LCEvent> event ) ;
+    
+    /**
+     *  @brief  Callback function to process a run header received from the data source
+     * 
+     *  @param  rhdr the run header to process
+     */
+    void onRunHeaderRead( std::shared_ptr<EVENT::LCRunHeader> rhdr ) ;
+    
+    /**
+     *  @brief  Processed finished events from the output queue
+     *
+     *  @param  events the list of finished events
+     */
+    void processFinishedEvents( const EventList &events ) const ;
 
   protected:
     /// The arguments from main function after command line arguments have been removed
@@ -190,6 +213,10 @@ namespace marlin {
     std::string                _steeringFileName {} ;
     /// The XML steering file parser
     std::shared_ptr<IParser>   _parser {nullptr} ;
+    ///< The event processing scheduler instance
+    Scheduler                  _scheduler {nullptr} ;
+    ///< The data source plugin
+    DataSource                 _dataSource {nullptr} ;
   };
 
 } // end namespace marlin

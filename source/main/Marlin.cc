@@ -1,5 +1,6 @@
 // -- marlin headers
-#include <marlin/MarlinApplication.h>
+#include <marlin/Application.h>
+#include <marlin/SimpleScheduler.h>
 #include <marlin/PluginManager.h>
 
 using namespace marlin ;
@@ -24,7 +25,8 @@ int main( int argc, char **argv ) {
   }
   // configure and run application
   try {
-    application = std::make_shared<MarlinApplication>() ;    
+    application = std::make_shared<Application>() ;    
+    application->setScheduler( std::make_shared<SimpleScheduler>() ) ;
     application->init( argc, argv ) ;
     application->run() ;
   }

@@ -1,5 +1,6 @@
 // -- marlin headers
-#include <marlin/MarlinMTApplication.h>
+#include <marlin/Application.h>
+#include <marlin/concurrency/PEPScheduler.h>
 #include <marlin/PluginManager.h>
 
 using namespace marlin ;
@@ -24,7 +25,8 @@ int main( int argc, char **argv ) {
   }
   // configure and run application
   try {
-    application = std::make_shared<MarlinMTApplication>() ;    
+    application = std::make_shared<Application>() ;    
+    application->setScheduler( std::make_shared<concurrency::PEPScheduler>() ) ;
     application->init( argc, argv ) ;
     application->run() ;
   }
