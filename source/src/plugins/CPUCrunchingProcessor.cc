@@ -9,57 +9,58 @@
 // -- std headers
 #include <cmath>
 #include <ctime>
+#include <random>
 
 namespace marlin {
-  
+
   /** Simple processor crunching CPU time for n milliseconds.
    *
    *  <h4>Input - Prerequisites</h4>
    *  none
-   *  <h4>Output</h4> 
+   *  <h4>Output</h4>
    *  none
    * @parameter CrunchTime the time in millisecond to crunch CPU
-   * 
+   *
    * @author R.Ete, DESY
    */
   class CPUCrunchingProcessor : public Processor {
-    
-   public:     
+
+   public:
     CPUCrunchingProcessor() ;
     Processor *newProcessor() { return new CPUCrunchingProcessor ; }
     void init() ;
-    void processEvent( EVENT::LCEvent * evt ) ; 
-    
+    void processEvent( EVENT::LCEvent * evt ) ;
+
   private:
     // processor parameters
     int    _crunchTime {200} ; // unit ms
     float  _crunchSigma {0} ;
-    
+
     float  _totalCrunchTime {200} ;
   };
-  
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
   CPUCrunchingProcessor::CPUCrunchingProcessor() : Processor("CPUCrunching") {
-    
+
     // modify processor description
     _description = "CPUCrunchingProcessor crunch CPU time for n milliseconds" ;
 
     registerProcessorParameter("CrunchTime",
   			     "The crunching time (unit ms)",
-  			     _crunchTime, 
+  			     _crunchTime,
   			     _crunchTime ) ;
-             
+
     registerProcessorParameter("CrunchSigma",
             "Smearing factor on the crunching time using a gaussian generator (unit ms)",
-            _crunchSigma, 
+            _crunchSigma,
             _crunchSigma ) ;
   }
 
   //--------------------------------------------------------------------------
 
-  void CPUCrunchingProcessor::init() { 
+  void CPUCrunchingProcessor::init() {
     log<DEBUG>() << "CPUCrunchingProcessor::init() called" << std::endl ;
     // usually a good idea to
     printParameters() ;
@@ -68,10 +69,10 @@ namespace marlin {
     _totalCrunchTime = _crunchTime + distribution(generator) ;
     log<MESSAGE>() << "Will use total crunch time of " << _totalCrunchTime << " ms" << std::endl ;
   }
-  
+
   //--------------------------------------------------------------------------
 
-  void CPUCrunchingProcessor::processEvent( EVENT::LCEvent *) {    
+  void CPUCrunchingProcessor::processEvent( EVENT::LCEvent *) {
     auto start = clock::now() ;
     auto now = start ;
     auto timediff = 0.f ;
@@ -84,9 +85,8 @@ namespace marlin {
       timediff = clock::time_difference<clock::milliseconds>(start, now) ;
     }
   }
-  
+
   // processor declaration
   CPUCrunchingProcessor aCPUCrunchingProcessor ;
-  
-}
 
+}
