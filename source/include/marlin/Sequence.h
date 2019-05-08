@@ -208,6 +208,11 @@ namespace marlin {
      *  @brief  Get all the clock measurements of the sequence
      */
     const ClockMeasureMap &clockMeasures() const ;
+    
+    /**
+     *  @brief  Get all the skipped events of the sequence
+     */
+    const SkippedEventMap &skippedEvents() const ;
 
   private:
     ///< The sequence items (processor list)

@@ -213,6 +213,12 @@ namespace marlin {
   const Sequence::ClockMeasureMap &Sequence::clockMeasures() const {
     return _clockMeasures ;
   }
+  
+  //--------------------------------------------------------------------------
+  
+  const Sequence::SkippedEventMap &Sequence::skippedEvents() const {
+    return _skipEventMap ;
+  }
 
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
