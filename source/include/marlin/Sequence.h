@@ -203,6 +203,11 @@ namespace marlin {
      *  @brief  Generate a clock measure summary of all items
      */
     ClockMeasure clockMeasureSummary() const ;
+    
+    /**
+     *  @brief  Get all the clock measurements of the sequence
+     */
+    const ClockMeasureMap &clockMeasures() const ;
 
   private:
     ///< The sequence items (processor list)
