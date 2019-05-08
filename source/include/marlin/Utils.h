@@ -6,11 +6,86 @@
 #include <string>
 #include <sstream>
 #include <typeinfo>
+#include <chrono>
 
 // -- marlin headers
 #include <marlin/Exceptions.h>
 
 namespace marlin {
+  
+  /**
+   *  @brief  clock class
+   *  Provide a wrapper around a certain clock type in std
+   *  to perform safe clock measurement in multi-threading 
+   *  environement
+   */
+  class clock {
+  public:
+    using clock_type = std::chrono::steady_clock ;
+    using time_point = clock_type::time_point ;
+    using duration_rep = float ;
+    using pair = std::pair<duration_rep, duration_rep> ;
+    // helper definitions
+    using nanoseconds = std::chrono::duration<duration_rep, std::nano> ;
+    using microseconds = std::chrono::duration<duration_rep, std::micro> ;
+    using milliseconds = std::chrono::duration<duration_rep, std::milli> ;
+    using seconds = std::chrono::duration<duration_rep> ;
+    using minutes = std::chrono::duration<duration_rep, std::ratio<60>> ;
+    
+  public:
+    // static API only
+    clock() = delete ;
+    ~clock() = delete ;
+    
+  public:
+    /**
+     *  @brief  Get the current time
+     */
+    static time_point now() {
+      return clock_type::now() ;
+    }
+
+    /**
+     *  @brief  Get the elapsed time since a previous time point.
+     *  The template parameter 'unit' allows for casting the result
+     *  to a specific unit (default seconds). Use the duration types 
+     *  defined in this class to get a correct calculation.
+     *  The result is floating type.
+     * 
+     *  @param  since an earlier time point
+     */
+    template <class unit = seconds>
+    static duration_rep elapsed_since( const time_point &since ) {
+      auto current = now() ;
+      return std::chrono::duration_cast<unit>( current - since ).count() ;
+    }
+    
+    /**
+     *  @brief  Get the time difference between two time points.
+     *  The template parameter 'unit' allows for casting the result
+     *  to a specific unit (default seconds). Use the duration types 
+     *  defined in this class to get a correct calculation.
+     *  The result is floating type.
+     *  Example:
+     *  @code{cpp}
+     *  auto start = clock::now();
+     *  // do stuff
+     *  auto end = clock::now();
+     *  // get the time difference in milliseconds as a float
+     *  auto ms_spent = clock::time_difference<clock::milliseconds>( start, end );
+     *  @endcode
+     * 
+     *  @param  older the oldest time point
+     *  @param  ealier the earliest time point
+     */
+    template <class unit = seconds>
+    static duration_rep time_difference( const time_point &older, const time_point &ealier ) {
+      return std::chrono::duration_cast<unit>( ealier - older ).count() ;
+    }
+  };
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
 
   /**
    *  @brief  HashHelper class
