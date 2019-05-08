@@ -3,6 +3,7 @@
 
 // -- std headers
 #include <map>
+#include <cmath>
 #include <string>
 #include <sstream>
 #include <typeinfo>
@@ -12,11 +13,11 @@
 #include <marlin/Exceptions.h>
 
 namespace marlin {
-  
+
   /**
    *  @brief  clock class
    *  Provide a wrapper around a certain clock type in std
-   *  to perform safe clock measurement in multi-threading 
+   *  to perform safe clock measurement in multi-threading
    *  environement
    */
   class clock {
@@ -31,12 +32,12 @@ namespace marlin {
     using milliseconds = std::chrono::duration<duration_rep, std::milli> ;
     using seconds = std::chrono::duration<duration_rep> ;
     using minutes = std::chrono::duration<duration_rep, std::ratio<60>> ;
-    
+
   public:
     // static API only
     clock() = delete ;
     ~clock() = delete ;
-    
+
   public:
     /**
      *  @brief  Get the current time
@@ -48,10 +49,10 @@ namespace marlin {
     /**
      *  @brief  Get the elapsed time since a previous time point.
      *  The template parameter 'unit' allows for casting the result
-     *  to a specific unit (default seconds). Use the duration types 
+     *  to a specific unit (default seconds). Use the duration types
      *  defined in this class to get a correct calculation.
      *  The result is floating type.
-     * 
+     *
      *  @param  since an earlier time point
      */
     template <class unit = seconds>
@@ -59,11 +60,11 @@ namespace marlin {
       auto current = now() ;
       return std::chrono::duration_cast<unit>( current - since ).count() ;
     }
-    
+
     /**
      *  @brief  Get the time difference between two time points.
      *  The template parameter 'unit' allows for casting the result
-     *  to a specific unit (default seconds). Use the duration types 
+     *  to a specific unit (default seconds). Use the duration types
      *  defined in this class to get a correct calculation.
      *  The result is floating type.
      *  Example:
@@ -74,7 +75,7 @@ namespace marlin {
      *  // get the time difference in milliseconds as a float
      *  auto ms_spent = clock::time_difference<clock::milliseconds>( start, end );
      *  @endcode
-     * 
+     *
      *  @param  older the oldest time point
      *  @param  ealier the earliest time point
      */
@@ -82,8 +83,26 @@ namespace marlin {
     static duration_rep time_difference( const time_point &older, const time_point &ealier ) {
       return std::chrono::duration_cast<unit>( ealier - older ).count() ;
     }
+
+    /**
+     *  @brief  Crunch numbers for some time.
+     *  The template parameter specifies the unit
+     *
+     *  @param crunchTime the time duration
+     */
+    template <class unit = seconds>
+    static void crunchFor( duration_rep crunchTime ) {
+      auto start = clock::now() ;
+      auto now = start ;
+      clock::duration_rep timediff = 0 ;
+      while ( timediff < crunchTime ) {
+        (void)std::sqrt(2) ;
+        now = clock::now() ;
+        timediff = clock::time_difference<unit>(start, now) ;
+      }
+    }
   };
-  
+
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
@@ -166,28 +185,28 @@ namespace marlin {
 
     /**
      *  @brief  Split the string with the corresponding delimiter
-     *  
+     *
      *  @param  inputString the input string to split
      *  @param  delimiter the string delimiter
      */
     template <typename T>
     static std::vector<T> split( const std::string &inputString, const std::string &delimiter = " " ) ;
-    
+
     /**
      *  @brief  Weird overload for scalar types.
      *  Just returns the conversion to string.
      *  See overload version with vector instead.
-     *  
-     *  @param  input the input value 
+     *
+     *  @param  input the input value
      *  @param  delimiter the string delimiter (unused here)
      */
     template <typename T>
     static std::string join( const T &input, const std::string &delimiter = " " ) ;
-    
+
     /**
      *  @brief  Join the input values from the vector with the corresponding delimiter
      *  and returns a string representation of it.
-     *  
+     *
      *  @param  input the input vector or values to join
      *  @param  delimiter the string delimiter
      */
@@ -288,17 +307,17 @@ namespace marlin {
     }
     return tokens ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   // weird overloading function that just converts the value to string ...
   template <typename T>
   inline std::string StringUtil::join( const T &input, const std::string &/*delimiter*/ ) {
     return typeToString( input ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   template <typename T>
   inline std::string StringUtil::join( const std::vector<T> &input, const std::string &delimiter ) {
     std::stringstream ss ;
