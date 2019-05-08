@@ -62,7 +62,6 @@ namespace marlin {
     log<DEBUG>() << "CPUCrunchingProcessor::init() called" << std::endl ;
     // usually a good idea to
     printParameters() ;
-    log<MESSAGE>() << "Will use total crunch time of " << _totalCrunchTime << " ms" << std::endl ;
   }
 
   //--------------------------------------------------------------------------
@@ -71,6 +70,7 @@ namespace marlin {
     std::default_random_engine generator(std::hash<void*>()(this));
     std::normal_distribution<clock::duration_rep> distribution(0, _crunchSigma);
     clock::duration_rep totalCrunchTime = _crunchTime + distribution(generator) ;
+    log<MESSAGE>() << "Will use total crunch time of " << totalCrunchTime << " ms" << std::endl ;
     // crunch for n milliseconds !
     clock::crunchFor<clock::milliseconds>(totalCrunchTime) ;
   }
