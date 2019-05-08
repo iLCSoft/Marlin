@@ -22,7 +22,7 @@ namespace marlin {
     SimpleScheduler() = default ;
     
     // from IScheduler interface
-    void init( const Application *app ) ;
+    void init( Application *app ) ;
     void end() ;
     void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) ;    
     void pushEvent( std::shared_ptr<EVENT::LCEvent> event ) ;

@@ -89,6 +89,7 @@ namespace marlin {
           << " *                                                        *" << std::endl
           << " **********************************************************" << std::endl
           << std::endl ;
+      throw e ;
     }
     _geometryMgr.clear() ;
     _scheduler->end() ;

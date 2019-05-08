@@ -76,29 +76,50 @@ namespace marlin {
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
 
-    void PEPScheduler::init( const Application *app ) {
+    void PEPScheduler::init( Application *app ) {
       _logger = app->createLogger( "PEPScheduler" ) ;
       preConfigure( app ) ;
       configureProcessors( app ) ;
       configurePool() ;
+      _startTime = clock::now() ;
     }
 
     //--------------------------------------------------------------------------
 
     void PEPScheduler::end() {
-      _logger->log<MESSAGE>() << "Terminating application" << std::endl ;
       _pool.stop(false) ;
       EventList events ;
       popFinishedEvents( events ) ;
       if( not _pushResults.empty() ) {
         _logger->log<ERROR>() << "This should never happen !!" << std::endl ;
       }
+      _logger->log<MESSAGE>() << "Terminating application" << std::endl ;
+      _endTime = clock::now() ;
       _superSequence->end() ;
+      // print some statistics
+      _superSequence->printStatistics( _logger ) ;
+      // print additional threading summary
+      const auto parallelTime = clock::time_difference( _startTime, _endTime ) ;
+      double totalProcessorClock {0.0} ;
+      double totalApplicationClock {0.0} ;
+      for ( unsigned int i=0 ; i<_superSequence->size() ; ++i ) {
+        auto summary = _superSequence->sequence(i)->clockMeasureSummary() ;
+        totalProcessorClock += summary._procClock ;
+        totalApplicationClock += summary._appClock ;
+      }
+      const double speedup = totalApplicationClock / parallelTime ;
+      const double scalingDeviation = ( fabs( speedup - _superSequence->size() ) / _superSequence->size() ) * 100. ;
+      _logger->log<MESSAGE>() << "---------------------------------------------------" << std::endl ;
+      _logger->log<MESSAGE>() << "-- Threading summary" << std::endl ;
+      _logger->log<MESSAGE>() << "--   N threads:                      " << _superSequence->size() << std::endl ;
+      _logger->log<MESSAGE>() << "--   Speedup (serial/parallel):      " << totalApplicationClock << " / " << parallelTime << " = " << speedup << std::endl ;
+      _logger->log<MESSAGE>() << "--   Deviation from perfect scaling: " << scalingDeviation << " " << '%' << std::endl ;
+      _logger->log<MESSAGE>() << "---------------------------------------------------" << std::endl ;
     }
 
     //--------------------------------------------------------------------------
 
-    void PEPScheduler::preConfigure( const Application *app ) {
+    void PEPScheduler::preConfigure( Application *app ) {
       auto globals = app->globalParameters() ;
       auto ccyStr = globals->getValue<std::string>( "Concurrency", "auto" ) ;
       // The concurrency read from the steering file
@@ -127,7 +148,7 @@ namespace marlin {
 
     //--------------------------------------------------------------------------
 
-    void PEPScheduler::configureProcessors( const Application *app ) {
+    void PEPScheduler::configureProcessors( Application *app ) {
       _logger->log<DEBUG5>() << "PEPScheduler configureProcessors ..." << std::endl ;
       // create list of active processors
       auto activeProcessors = app->activeProcessors() ;
@@ -156,6 +177,7 @@ namespace marlin {
         }
         _superSequence->addProcessor( processorParameters ) ;
       }
+      _superSequence->init( app ) ;
       _logger->log<DEBUG5>() << "PEPScheduler configureProcessors ... DONE" << std::endl ;
     }
 

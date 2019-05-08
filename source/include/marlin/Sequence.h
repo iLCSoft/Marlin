@@ -10,6 +10,10 @@
 #include <utility> // pair
 #include <ctime>
 
+// -- marlin headers
+#include <marlin/Logging.h>
+#include <marlin/Utils.h>
+
 // lcio forward declaration
 namespace EVENT {
   class LCEvent ;
@@ -33,7 +37,6 @@ namespace marlin {
    */
   class SequenceItem {
   public:
-    using ClockPair = std::pair<clock_t, clock_t> ;
     ~SequenceItem() = default ;
 
     /**
@@ -66,7 +69,7 @@ namespace marlin {
      *
      *  @param  event the event to process
      */
-    ClockPair processEvent( std::shared_ptr<EVENT::LCEvent> event ) ;
+    clock::pair processEvent( std::shared_ptr<EVENT::LCEvent> event ) ;
 
     /**
      *  @brief  Call Processor::modifyEvent. Lock if the mutex has been initialized
@@ -76,7 +79,7 @@ namespace marlin {
      *
      *  @param  event the event to modify
      */
-    ClockPair modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) ;
+    clock::pair modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) ;
 
     /**
      *  @brief  Get the processor instance
@@ -104,11 +107,11 @@ namespace marlin {
    */
   struct ClockMeasure {
     /// The total time spent by the application on processEvent() and modifyEvent() calls
-    double   _appClock {0.} ;
+    clock::duration_rep   _appClock {0.} ;
     /// The time spent by the processor on processEvent() and modifyEvent() calls
-    double   _procClock {0.} ;
+    clock::duration_rep   _procClock {0.} ;
     /// The event counter
-    int      _counter {0} ;
+    int                   _counter {0} ;
   };
 
   //--------------------------------------------------------------------------
@@ -308,6 +311,13 @@ namespace marlin {
      *  @brief  Call Processor::end() for all processors
      */
     void end() ;
+    
+    /**
+     *  @brief  Print statistics at end of application
+     *
+     *  @param  logger the logger in which to perform the printout
+     */
+    void printStatistics( Logging::Logger logger ) const ;
 
   private:
     ///< The list of sequences

@@ -51,45 +51,53 @@ namespace marlin {
 
   //--------------------------------------------------------------------------
 
-  SequenceItem::ClockPair SequenceItem::processEvent( std::shared_ptr<EVENT::LCEvent> event ) {
+  clock::pair SequenceItem::processEvent( std::shared_ptr<EVENT::LCEvent> event ) {
     if( nullptr != _mutex ) {
-      clock_t start = clock() ;
+      auto start = clock::now() ;
       std::lock_guard<std::mutex> lock( *_mutex ) ;
-      clock_t start2 = clock() ;
+      auto start2 = clock::now() ;
       _processor->processEvent( event.get() ) ;
       _processor->check( event.get() ) ;
-      clock_t end = clock() ;
-      return ClockPair(end-start, end-start2) ;
+      auto end = clock::now() ;
+      return clock::pair(
+        clock::time_difference<clock::seconds>(start, end),
+        clock::time_difference<clock::seconds>(start2, end)) ;
     }
     else {
-      clock_t start = clock() ;
+      auto start = clock::now() ;
       _processor->processEvent( event.get() ) ;
       _processor->check( event.get() ) ;
-      clock_t end = clock() ;
-      return ClockPair(end-start, end-start) ;
+      auto end = clock::now() ;
+      return clock::pair(
+        clock::time_difference<clock::seconds>(start, end),
+        clock::time_difference<clock::seconds>(start, end)) ;
     }
   }
 
   //--------------------------------------------------------------------------
 
-  SequenceItem::ClockPair SequenceItem::modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) {
+  clock::pair SequenceItem::modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) {
     auto modifier = dynamic_cast<EventModifier*>( _processor.get() ) ;
     if( nullptr == modifier ) {
-      return ClockPair(0, 0) ;
+      return clock::pair(0, 0) ;
     }
     if( nullptr != _mutex ) {
-      clock_t start = clock() ;
+      auto start = clock::now() ;
       std::lock_guard<std::mutex> lock( *_mutex ) ;
-      clock_t start2 = clock() ;
+      auto start2 = clock::now() ;
       modifier->modifyEvent( event.get() ) ;
-      clock_t end = clock() ;
-      return ClockPair(end-start, end-start2) ;
+      auto end = clock::now() ;
+      return clock::pair(
+        clock::time_difference<clock::seconds>(start, end),
+        clock::time_difference<clock::seconds>(start2, end)) ;
     }
     else {
-      clock_t start = clock() ;
+      auto start = clock::now() ;
       modifier->modifyEvent( event.get() ) ;
-      clock_t end = clock() ;
-      return ClockPair(end-start, end-start) ;
+      auto end = clock::now() ;
+      return clock::pair(
+        clock::time_difference<clock::seconds>(start, end),
+        clock::time_difference<clock::seconds>(start, end)) ;
     }
   }
 
@@ -164,8 +172,8 @@ namespace marlin {
         }
         auto clockMeas = item->processEvent( event ) ;
         auto iter = _clockMeasures.find( item->name() ) ;
-        iter->second._appClock += clockMeas.first / static_cast<double>( CLOCKS_PER_SEC ) ;
-        iter->second._procClock += clockMeas.second / static_cast<double>( CLOCKS_PER_SEC ) ;
+        iter->second._appClock += clockMeas.first ;
+        iter->second._procClock += clockMeas.second ;
         iter->second._counter ++ ;
       }
     }
@@ -335,6 +343,97 @@ namespace marlin {
     for( auto item : _uniqueItems ) {
       item->processor()->end() ;
     }
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  void SuperSequence::printStatistics( Logging::Logger logger ) const {
+    // first merge measurements from the different sequences
+    Sequence::SkippedEventMap skippedEvents {} ;
+    Sequence::ClockMeasureMap clockMeasures {} ;
+    for( unsigned int i=0 ; i<size() ; ++i ) {
+      auto skipped = sequence(i)->skippedEvents() ;
+      auto clocks = sequence(i)->clockMeasures() ;
+      // merge skipped events stats
+      for( auto sk : skipped ) {
+        auto iter = skippedEvents.find( sk.first ) ;
+        if( skippedEvents.end() != iter ) {
+          iter->second += sk.second ;
+        }
+        else {
+          skippedEvents.insert( sk ) ;
+        }
+      }
+      // merge clocks stats
+      for( auto clk : clocks ) {
+        auto iter = clockMeasures.find( clk.first ) ;
+        if( clockMeasures.end() != iter ) {
+          iter->second._appClock += clk.second._appClock ;
+          iter->second._procClock += clk.second._procClock ;
+          iter->second._counter += clk.second._counter ;
+        }
+        else {
+          clockMeasures.insert( clk ) ;
+        }
+      }
+    }
+    logger->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl ;
+    logger->log<MESSAGE>() << "  Events skipped by processors : " << std::endl ;
+    unsigned int nSkipped = 0 ;
+    for( auto skip : skippedEvents ) {
+      logger->log<MESSAGE>() << "       " << skip.first << ": \t" << skip.second << std::endl ;
+      nSkipped += skip.second ;	
+    }
+    logger->log<MESSAGE>() << "  Total: " << nSkipped  << std::endl ;
+    logger->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl 
+          << std::endl ;
+    logger->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl
+          << "      Time used by processors ( in processEvent() ) :      " << std::endl 
+          << std::endl ;
+    std::list<Sequence::ClockMeasureMap::value_type> clockList( clockMeasures.begin() , clockMeasures.end() ) ;
+    typedef std::list<Sequence::ClockMeasureMap::value_type>::value_type elt ;
+    clockList.sort( [](const elt &lhs, const elt &rhs) {
+      return ( lhs.second._procClock > rhs.second._procClock ) ;
+    }) ;
+    double clockTotal = 0.0 ;
+    int eventTotal = 0 ;
+    for( auto clockMeasure : clockList ) {
+      std::string procName = clockMeasure.first ;
+      procName.resize(40, ' ') ;
+      clockTotal += clockMeasure.second._procClock ;
+      if( clockMeasure.second._counter > eventTotal ){
+        eventTotal = clockMeasure.second._counter ;
+      }
+      std::stringstream ss ;
+      if ( clockMeasure.second._counter > 0 ) {
+        ss << clockMeasure.second._procClock / clockMeasure.second._counter ;
+      }
+      else {
+        ss << "NaN" ;
+      }
+      logger->log<MESSAGE>() 
+        //<< std::left << std::setw(30)
+        << procName
+        << std::setw(12) << std::scientific  << clockMeasure.second._procClock  << " s "
+        << "in " << std::setw(12) << clockMeasure.second._counter 
+        << " events  ==> " 
+        << std::setw(12) << std::scientific << ss.str() << " [ s/evt.] "
+        << std::endl << std::endl ;
+    }
+    std::stringstream ss ;
+    if ( eventTotal > 0 ) {
+      ss << clockTotal / eventTotal ;
+    }
+    else {
+      ss << "NaN" ;
+    }
+    logger->log<MESSAGE>() 
+      << "Total:                                  "
+      <<  std::setw(12) << std::scientific  << clockTotal << " s in "
+      <<  std::setw(12) << eventTotal << " events  ==> " 
+      <<  std::setw(12) << std::scientific << ss.str() << " [ s/evt.] "
+      << std::endl << std::endl ;
+    logger->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl ;
   }
 
 }

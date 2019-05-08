@@ -12,7 +12,7 @@
 
 namespace marlin {
 
-  void SimpleScheduler::init( const Application *app ) {
+  void SimpleScheduler::init( Application *app ) {
     _logger = app->createLogger( "SimpleScheduler" ) ;
     auto activeProcessors = app->activeProcessors() ;
     // create super sequence with only only sequence and fill it
@@ -43,6 +43,7 @@ namespace marlin {
       }
       _superSequence->addProcessor( processorParameters ) ;
     }
+    _superSequence->init( app ) ;
     _logger->log<DEBUG5>() << "Creating processors ... OK" << std::endl ;
   }
   
@@ -51,6 +52,8 @@ namespace marlin {
   void SimpleScheduler::end() {
     _logger->log<MESSAGE>() << "Terminating application" << std::endl ;
     _superSequence->end() ;
+    // print some statistics
+    _superSequence->printStatistics( _logger ) ;
   }
   
   //--------------------------------------------------------------------------

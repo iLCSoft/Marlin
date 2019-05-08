@@ -30,7 +30,7 @@ namespace marlin {
      *
      *  @param  app the application in which the scheduler runs
      */
-    virtual void init( const Application *app ) = 0 ;
+    virtual void init( Application *app ) = 0 ;
     
     /**
      *  @brief  Terminate the scheduler activites

@@ -4,6 +4,7 @@
 // -- marlin headers
 #include <marlin/IScheduler.h>
 #include <marlin/Logging.h>
+#include <marlin/Utils.h>
 #include <marlin/concurrency/ThreadPool.h>
 
 // -- std headers
@@ -51,12 +52,15 @@ namespace marlin {
       using ProcessorSequence = std::shared_ptr<SuperSequence> ;
       using PushResultList = std::vector<WorkerPool::PushResult> ;
       using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
+      using Clock = std::chrono::steady_clock ;
+      using TimePoint = std::chrono::steady_clock::time_point ;
+      
 
     public:
       PEPScheduler() = default ;
 
       // from IScheduler interface
-      void init( const Application *app ) override ;
+      void init( Application *app ) override ;
       void end() override ;
       void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) ;
       void pushEvent( std::shared_ptr<EVENT::LCEvent> event ) override ;
@@ -64,8 +68,8 @@ namespace marlin {
       std::size_t freeSlots() const override ;
 
     private:
-      void preConfigure( const Application *app ) ;
-      void configureProcessors( const Application *app ) ;
+      void preConfigure( Application *app ) ;
+      void configureProcessors( Application *app ) ;
       void configurePool() ;
 
     private:
@@ -77,6 +81,10 @@ namespace marlin {
       ProcessorSequence                _superSequence {nullptr} ;
       ///< The list of worker output promises
       PushResultList                   _pushResults {} ;
+      ///< The start time (end of init() function)
+      clock::time_point                _startTime {} ;
+      ///< The end time (start of end() function)
+      clock::time_point                _endTime {} ;
     };
 
   }

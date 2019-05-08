@@ -71,15 +71,17 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
 
-  void CPUCrunchingProcessor::processEvent( EVENT::LCEvent *) {
-    auto start = clock() ;
-    auto now = clock() ;
+  void CPUCrunchingProcessor::processEvent( EVENT::LCEvent *) {    
+    auto start = clock::now() ;
+    auto now = start ;
+    auto timediff = 0.f ;
     // crunch for n milliseconds !
-    while ( (now - start)*1000. / static_cast<double>(CLOCKS_PER_SEC) < _totalCrunchTime) {
+    while ( timediff < _totalCrunchTime ) {
       // crunch !
       (void)std::sqrt(2) ;
       // update time
-      now = clock() ;
+      now = clock::now() ;
+      timediff = clock::time_difference<clock::milliseconds>(start, now) ;
     }
   }
   
