@@ -64,26 +64,17 @@ namespace marlin {
     log<DEBUG>() << "CPUCrunchingProcessor::init() called" << std::endl ;
     // usually a good idea to
     printParameters() ;
-    std::default_random_engine generator(std::hash<void*>()(this));
-    std::normal_distribution<float> distribution(0, _crunchSigma);
-    _totalCrunchTime = _crunchTime + distribution(generator) ;
     log<MESSAGE>() << "Will use total crunch time of " << _totalCrunchTime << " ms" << std::endl ;
   }
 
   //--------------------------------------------------------------------------
 
   void CPUCrunchingProcessor::processEvent( EVENT::LCEvent *) {
-    auto start = clock::now() ;
-    auto now = start ;
-    auto timediff = 0.f ;
+    std::default_random_engine generator(std::hash<void*>()(this));
+    std::normal_distribution<clock::duration_rep> distribution(0, _crunchSigma);
+    clock::duration_rep totalCrunchTime = _crunchTime + distribution(generator) ;
     // crunch for n milliseconds !
-    while ( timediff < _totalCrunchTime ) {
-      // crunch !
-      (void)std::sqrt(2) ;
-      // update time
-      now = clock::now() ;
-      timediff = clock::time_difference<clock::milliseconds>(start, now) ;
-    }
+    clock::crunchFor<clock::milliseconds>(totalCrunchTime) ;
   }
 
   // processor declaration
