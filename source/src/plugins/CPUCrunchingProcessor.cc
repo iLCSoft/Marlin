@@ -33,6 +33,9 @@ namespace marlin {
   private:
     // processor parameters
     int    _crunchTime {200} ; // unit ms
+    float  _crunchSigma {0} ;
+    
+    float  _totalCrunchTime {200} ;
   };
   
   //--------------------------------------------------------------------------
@@ -47,6 +50,11 @@ namespace marlin {
   			     "The crunching time (unit ms)",
   			     _crunchTime, 
   			     _crunchTime ) ;
+             
+    registerProcessorParameter("CrunchSigma",
+            "Smearing factor on the crunching time using a gaussian generator (unit ms)",
+            _crunchSigma, 
+            _crunchSigma ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -55,6 +63,10 @@ namespace marlin {
     log<DEBUG>() << "CPUCrunchingProcessor::init() called" << std::endl ;
     // usually a good idea to
     printParameters() ;
+    std::default_random_engine generator(std::hash<void*>()(this));
+    std::normal_distribution<float> distribution(0, _crunchSigma);
+    _totalCrunchTime = _crunchTime + distribution(generator) ;
+    log<MESSAGE>() << "Will use total crunch time of " << _totalCrunchTime << " ms" << std::endl ;
   }
   
   //--------------------------------------------------------------------------
@@ -63,7 +75,7 @@ namespace marlin {
     auto start = clock() ;
     auto now = clock() ;
     // crunch for n milliseconds !
-    while ( (now - start)*1000. / static_cast<double>(CLOCKS_PER_SEC) < _crunchTime) {
+    while ( (now - start)*1000. / static_cast<double>(CLOCKS_PER_SEC) < _totalCrunchTime) {
       // crunch !
       (void)std::sqrt(2) ;
       // update time
