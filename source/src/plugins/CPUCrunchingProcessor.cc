@@ -35,8 +35,6 @@ namespace marlin {
     // processor parameters
     int    _crunchTime {200} ; // unit ms
     float  _crunchSigma {0} ;
-
-    float  _totalCrunchTime {200} ;
   };
 
   //--------------------------------------------------------------------------
