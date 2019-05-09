@@ -107,13 +107,20 @@ namespace marlin {
         totalProcessorClock += summary._procClock ;
         totalApplicationClock += summary._appClock ;
       }
-      const double speedup = totalApplicationClock / parallelTime ;
-      const double scalingDeviation = ( fabs( speedup - _superSequence->size() ) / _superSequence->size() ) * 100. ;
+      const double speedup = totalProcessorClock / parallelTime ;
+      const double lockTimeFraction = ((totalApplicationClock - totalProcessorClock) / totalApplicationClock) * 100. ;
       _logger->log<MESSAGE>() << "---------------------------------------------------" << std::endl ;
       _logger->log<MESSAGE>() << "-- Threading summary" << std::endl ;
       _logger->log<MESSAGE>() << "--   N threads:                      " << _superSequence->size() << std::endl ;
-      _logger->log<MESSAGE>() << "--   Speedup (serial/parallel):      " << totalApplicationClock << " / " << parallelTime << " = " << speedup << std::endl ;
-      _logger->log<MESSAGE>() << "--   Deviation from perfect scaling: " << scalingDeviation << " " << '%' << std::endl ;
+      _logger->log<MESSAGE>() << "--   Speedup (serial/parallel):      " << totalProcessorClock << " / " << parallelTime << " = " << speedup << std::endl ;
+      if( _superSequence->size() > 1 ) {
+        double speedupPercent = (speedup - 1) * 100 / ( _superSequence->size() - 1 ) ;
+        if( speedupPercent < 0 ) {
+          speedupPercent = 0. ;
+        }
+        _logger->log<MESSAGE>() << "--   Speedup percentage:             " << speedupPercent << " " << '%' << std::endl ;
+      }
+      _logger->log<MESSAGE>() << "--   Lock time fraction:             " << lockTimeFraction << " %" << std::endl ;
       _logger->log<MESSAGE>() << "---------------------------------------------------" << std::endl ;
     }
 
