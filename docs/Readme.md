@@ -5,7 +5,34 @@ The Marlin documentation is available at: https://iLCSoft.github.io/Marlin/
 
 The documentation format is in markdown and managed with mkdocs.
 
-The documentation sources are only available on the `doc-dev` branch of the project and are deployed on the `gh-pages` branch on github.
+The documentation sources are only available on the `marlin-mt` branch of the project and are deployed on the `gh-pages` branch on github.
+
+## Installing development tools
+
+Install doxygen with your package manager, e.g:
+
+```shell
+sudo apt-get install doxygen
+```
+
+Install `mkdocs` using `pip`:
+
+```shell
+pip install mkdocs
+```
+
+To generate correctly the doxygen documentation and deploy it with mkdocs, you need a mkdocs plugin.
+
+To install it:
+
+```shell
+git clone https://github.com/pieterdavid/mkdocs-doxygen-plugin.git
+cd mkdocs-doxygen-plugin
+python setup.py build install
+```
+
+You are ready to develop the documentation.
+
 
 ### Deploy the documentation
 
