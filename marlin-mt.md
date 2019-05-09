@@ -14,9 +14,6 @@
   - SimpleTrackSmearer.h / .cc -> Move to MarlinUtil
 
 
-- Fixed issue with processor lock (not working somehow ??) 
 - Fill Application::printUsage() when adding new options !
-- Make the test random seed processor working again
-- Re-implement MarlinSteerCheck again with the option -x to dump processors
+- Re-implement MarlinSteerCheck
 - Re-implement MarlinGUI with new APIs
-
