@@ -1,7 +1,0 @@
-<gear>
-    <!--minimal Gear XML file that can be used to read simjob.slcio with Marlin (for testing) ...-->
-    <global detectorName="D09TileHcal" />
-    <BField type="ConstantBField" x="0.000000000e+00" y="0.000000000e+00" z="3.500000000e+00" />
-    <detectors>
-   </detectors>
-</gear>
