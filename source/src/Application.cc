@@ -10,6 +10,7 @@
 #include <marlin/EventExtensions.h>
 #include <marlin/IScheduler.h>
 #include <marlin/SimpleScheduler.h>
+#include <marlin/XMLTools.h>
 
 // -- std headers
 #include <cstring>
@@ -19,7 +20,6 @@ using namespace std::placeholders ;
 namespace marlin {
 
   void Application::init( int argc, char **argv ) {
-    printBanner() ;
     std::string pname = argv[0] ;
     auto pos = pname.find_last_of("/") ;
     _programName = pname.substr(pos+1) ;
@@ -29,6 +29,7 @@ namespace marlin {
     // set the main logger name a bit early for clearer logging
     _loggerMgr.mainLogger()->setName( program() ) ;
     parseCommandLine() ;
+    printBanner() ;
     // parse the steering file
     _parser = createParser() ;
     _parser->parse() ;
@@ -95,30 +96,30 @@ namespace marlin {
     _scheduler->end() ;
     // end() ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Application::printUsage() const {
-    logger()->log<MESSAGE>() << " Usage: " << _programName << " [OPTION] [FILE]..." << std::endl 
-    << "   runs a " << _programName << " application " << std::endl 
-    << std::endl 
-    << " Running the application with a given steering file:" << std::endl 
-    << "   " << _programName << " steer.xml   " << std::endl 
-    << std::endl 
-    << "   " << _programName << " [-h/-?]             \t print this help information" << std::endl 
-    // << "   " << _programName << " -x                  \t print an example steering file to stdout" << std::endl 
-    // << "   " << _programName << " -c steer.xml        \t check the given steering file for consistency" << std::endl 
+    logger()->log<MESSAGE>() << " Usage: " << _programName << " [OPTION] [FILE]..." << std::endl
+    << "   runs a " << _programName << " application " << std::endl
+    << std::endl
+    << " Running the application with a given steering file:" << std::endl
+    << "   " << _programName << " steer.xml   " << std::endl
+    << std::endl
+    << "   " << _programName << " [-h/-?]             \t print this help information" << std::endl
+    << "   " << _programName << " -x [steer.xml]      \t print an example steering file to output file file (default: marlin_steer.xml)" << std::endl
+    // << "   " << _programName << " -c steer.xml        \t check the given steering file for consistency" << std::endl
     // << "   " << _programName << " -u old.xml new.xml  \t consistency check with update of xml file"  << std::endl
-    // << "   " << _programName << " -d steer.xml flow.dot\t create a program flow diagram (see: http://www.graphviz.org)" << std::endl 
-    << std::endl 
-    << " Example: " << std::endl 
-    // << " To create a new default steering file from any Marlin application, run" << std::endl 
-    // << "     " << _programName << " -x > mysteer.xml" << std::endl 
-    // << " and then use either an editor or the MarlinGUI to modify the created steering file " << std::endl 
-    // << " to configure your application and then run it. e.g. : " << std::endl 
+    // << "   " << _programName << " -d steer.xml flow.dot\t create a program flow diagram (see: http://www.graphviz.org)" << std::endl
+    << std::endl
+    << " Example: " << std::endl
+    << " To create a new default steering file from any Marlin application, run" << std::endl
+    << "     " << _programName << " -x  mysteer.xml" << std::endl
+    // << " and then use either an editor or the MarlinGUI to modify the created steering file " << std::endl
+    // << " to configure your application and then run it. e.g. : " << std::endl
     // << "     " << _programName << " mysteer.xml > marlin.out 2>&1 &" << std::endl << std::endl
-    << " Dynamic command line options may be specified in order to overwrite individual steering file parameters, e.g.:" << std::endl 
-    << "     " << _programName << " --datasource.LCIOInputFiles=\"input1.slcio input2.slcio\" --geometry.CompactFile=mydetector.xml" << std::endl 
+    << " Dynamic command line options may be specified in order to overwrite individual steering file parameters, e.g.:" << std::endl
+    << "     " << _programName << " --datasource.LCIOInputFiles=\"input1.slcio input2.slcio\" --geometry.CompactFile=mydetector.xml" << std::endl
     << "            --MyLCIOOutputProcessor.LCIOWriteMode=WRITE_APPEND --MyLCIOOutputProcessor.LCIOOutputFile=out.slcio steer.xml" << std::endl << std::endl
     << "     NOTE: Dynamic options do NOT work together with " << _programName << " options (-x, -f) nor with the MarlinGUI" << std::endl
 << std::endl ;
@@ -175,6 +176,21 @@ namespace marlin {
       // print help and exit
       else if ( arg == "-h" || arg == "-?" ) {
         printUsage() ;
+        ::exit( 0 ) ;
+      }
+      // dump an example steering file to output file
+      else if( arg == "-x" ) {
+        auto nextarg = std::next( iter ) ;
+        std::string fname = "marlin_steer.xml" ;
+        if( nextarg != cmdLineArgs.end() ) {
+          std::string outname = *nextarg ;
+          bool xmlext = (outname.size() >= 4 and
+           outname.compare(outname.size() - 4, 4, ".xml") == 0 ) ;
+          if( xmlext ) {
+            fname = outname ;
+          }
+        }
+        XMLTools::dumpRegisteredProcessors( fname ) ;
         ::exit( 0 ) ;
       }
       // last argument is steering file
@@ -284,9 +300,9 @@ namespace marlin {
       return Logging::createLogger( name ) ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Application::onEventRead( std::shared_ptr<EVENT::LCEvent> event ) {
     EventList events ;
     while( _scheduler->freeSlots() == 0 ) {
@@ -323,27 +339,27 @@ namespace marlin {
     logger()->log<MESSAGE9>() << "New run header no " << rhdr->getRunNumber() << std::endl ;
     _scheduler->processRunHeader( rhdr ) ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   const GeometryManager &Application::geometryManager() const {
     return _geometryMgr ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   const RandomSeedManager &Application::randomSeedManager() const {
     return _randomSeedMgr ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   RandomSeedManager &Application::randomSeedManager() {
     return _randomSeedMgr ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Application::setScheduler( Scheduler scheduler ) {
     _scheduler = scheduler ;
   }
@@ -370,7 +386,7 @@ namespace marlin {
       return parser ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
 
   void Application::processFinishedEvents( const EventList &events ) const {
