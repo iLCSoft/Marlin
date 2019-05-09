@@ -2,18 +2,13 @@
     "docs": [
         {
             "location": "/",
-            "text": "Hello section\n\n\nHello subsection\n\n\nhello text\n\n\nhello another text",
+            "text": "Marlin - Modular Analysis and Reconstruction for the LINear Collider\n\n\nHello world !",
             "title": "Home"
         },
         {
-            "location": "/#hello-section",
-            "text": "",
-            "title": "Hello section"
-        },
-        {
-            "location": "/#hello-subsection",
-            "text": "hello text  hello another text",
-            "title": "Hello subsection"
+            "location": "/#marlin-modular-analysis-and-reconstruction-for-the-linear-collider",
+            "text": "Hello world !",
+            "title": "Marlin - Modular Analysis and Reconstruction for the LINear Collider"
         }
     ]
 }
