@@ -1,6 +1,16 @@
 #ifndef JENKINSHASH_INCLUDED
 #define JENKINSHASH_INCLUDED
 
+#if defined __has_cpp_attribute
+#if __has_cpp_attribute(fallthrough)
+#define MARLIN_FALLTHROUGH [[fallthrough]]
+#else
+#define MARLIN_FALLTHROUGH
+#endif
+#else
+#define MARLIN_FALLTHROUGH
+#endif
+
 /*
 
 Original source by Bob Jenkins
@@ -109,18 +119,18 @@ inline unsigned jenkins_hash ( unsigned char *k, unsigned length, unsigned initv
   c += length;
 
   switch ( len ) {
-  case 11: c += ( (unsigned)k[10] << 24 ); break;
-  case 10: c += ( (unsigned)k[9] << 16 ); break;
-  case 9 : c += ( (unsigned)k[8] << 8 ); break;
+  case 11: c += ( (unsigned)k[10] << 24 ); MARLIN_FALLTHROUGH ;
+  case 10: c += ( (unsigned)k[9] << 16 ); MARLIN_FALLTHROUGH ;
+  case 9 : c += ( (unsigned)k[8] << 8 ); MARLIN_FALLTHROUGH ;
     /* First byte of c reserved for length */
-  case 8 : b += ( (unsigned)k[7] << 24 ); break;
-  case 7 : b += ( (unsigned)k[6] << 16 ); break;
-  case 6 : b += ( (unsigned)k[5] << 8 ); break;
-  case 5 : b += k[4]; break;
-  case 4 : a += ( (unsigned)k[3] << 24 ); break;
-  case 3 : a += ( (unsigned)k[2] << 16 ); break;
-  case 2 : a += ( (unsigned)k[1] << 8 ); break;
-  case 1 : a += k[0]; break;
+  case 8 : b += ( (unsigned)k[7] << 24 ); MARLIN_FALLTHROUGH ;
+  case 7 : b += ( (unsigned)k[6] << 16 ); MARLIN_FALLTHROUGH ;
+  case 6 : b += ( (unsigned)k[5] << 8 ); MARLIN_FALLTHROUGH ;
+  case 5 : b += k[4]; MARLIN_FALLTHROUGH ;
+  case 4 : a += ( (unsigned)k[3] << 24 ); MARLIN_FALLTHROUGH ;
+  case 3 : a += ( (unsigned)k[2] << 16 ); MARLIN_FALLTHROUGH ;
+  case 2 : a += ( (unsigned)k[1] << 8 ); MARLIN_FALLTHROUGH ;
+  case 1 : a += k[0]; MARLIN_FALLTHROUGH ;
   }
 
   mix ( a, b, c );
