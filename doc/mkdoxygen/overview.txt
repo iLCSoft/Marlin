@@ -1,47 +1,47 @@
-/** 
+/**
 
 \mainpage <a href="http://ilcsoft.desy.de/marlin">Marlin</a>
- 
+
 <b>Marlin [Modular Analysis and Reconstruction for the LINear collider]</b>
 is a simple modular application framework for analysis and reconstruction code based
 on LCIO.
 
 <h2>Overview</h2>
 
-The main purpose of Marlin is to facilitate the modular development of reconstruction 
-and analysis code based on LCIO. As a lot of different groups are involved it should 
-be simple and straight forward to have distributed development of modules and combine 
+The main purpose of Marlin is to facilitate the modular development of reconstruction
+and analysis code based on LCIO. As a lot of different groups are involved it should
+be simple and straight forward to have distributed development of modules and combine
 existing modules as needed in a larger application. <br>
 The base class for a Marlin module is called marlin::Processor. It defines a set of
 callbacks that the user can implement in their subclasses. A steering file mechanism
-allows to activate the needed processors. These are then called for every event using 
+allows to activate the needed processors. These are then called for every event using
 the LCEvent as container for input and output data in terms of LCCollections:
 
-<img src="../marlin_overview.gif" alt="marlin schema">
+<img src="https://github.com/rete/Marlin/raw/master/doc/marlin_overview.gif" alt="marlin schema">
 
 
 <h2>Installation</h2>
 
-The installation of Marlin is described in the <a href="../README.md">README.md</a>.
+The installation of Marlin is described in the <a href="https://github.com/rete/Marlin/blob/master/README.md">README.md</a>.
 <b>Note that since v00-09-08 the default build process has been changed to use CMake and create
-shared libraries. This allows for a flexible plugin mechanism that does not involve recompiling and 
+shared libraries. This allows for a flexible plugin mechanism that does not involve recompiling and
 relinking of Marlin and the needed packages if only one package is changed !</b>
 
 
 <h2>Running Marlin</h2>
-After having installed Marlin you have to write your own marlin::Processor(s) subclass 
-that performs the computation. This is fairly straight forward and Marlin provides 
+After having installed Marlin you have to write your own marlin::Processor(s) subclass
+that performs the computation. This is fairly straight forward and Marlin provides
 an example in "$MARLIN/examples/mymarlin" that can serve as a template for your own
 projects.
 <p>
-Note: there is no need to write a main program as this is provided by Marlin. Existing 
+Note: there is no need to write a main program as this is provided by Marlin. Existing
 Processors are automatically registered with Marlin provided one instance exists in the
-library as described in the <a href="../README.md">README.md</a>.
+library as described in the <a href="https://github.com/rete/Marlin/blob/master/README.md">README.md</a>.
 
 
 <h3>Steering files</h3>
 A Marlin application is controlled via a steering file that defines the active processors
-and the order in which they are called as well as global and processor specific 
+and the order in which they are called as well as global and processor specific
 parameters. The default format of the steering files is xml (older ascci steering files are still supported
 for a transition period)
 
@@ -53,7 +53,7 @@ You can get an example XML steering file with:
 <li>
   <b>./bin/Marlin -x > example.xml</b>
 </li>
-</ul> 
+</ul>
 The XML steering files provide the following features:
 <ul>
 <li> definition of the program flow (order of processors to be executed)</li>
@@ -61,7 +61,7 @@ The XML steering files provide the following features:
 <li> processor parameters</li>
 <li> conditional execution of processors (depending on flags set by other processors)</li>
 <li> grouping of processors sharing common parameters</li>
-</ul> 
+</ul>
 
 See marlin::XMLParser for a detailed description of the xml steering files.
 
@@ -70,7 +70,7 @@ The application is run by:
 <li>
   <b>./bin/Marlin example.xml</b>
 </li>
-</ul> 
+</ul>
 
 <h4>Old Ascii steering files</h4>
 
@@ -79,7 +79,7 @@ You can convert old ascii steering files to xml steering files by typing:
 <li>
   <b>./bin/Marlin -o old.steer new.xml </b>
 </li>
-</ul> 
+</ul>
 
 <h4> Other commands </h4>
 You can get a list of all supported command line options with
@@ -87,7 +87,7 @@ You can get a list of all supported command line options with
 <li>
   <b>./bin/Marlin -h </b>
 </li>
-</ul> 
+</ul>
 This will create the following output:
 <pre>
  Usage: Marlin [OPTION] [FILE]...
@@ -115,8 +115,8 @@ This will create the following output:
 </pre>
 
 <h3>Release Notes</h3>
-Marlin is under development and there are frequent releases. Please check the 
-<a href="../ReleaseNotes.md">./ReleaseNotes.md</a>
+Marlin is under development and there are frequent releases. Please check the
+<a href="https://github.com/rete/Marlin/blob/master/doc/ReleaseNotes.md">./ReleaseNotes.md</a>
 
 <hr>
 <p>
@@ -132,4 +132,3 @@ If you have any questions or proposals for new features please contact the autho
 
 /** A general logging library that is used in Marlin */
  namespace streamlog{}
-
