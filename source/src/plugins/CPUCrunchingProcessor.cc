@@ -1,6 +1,7 @@
 
 // -- marlin headers
 #include <marlin/Processor.h>
+#include <marlin/ProcessorApi.h>
 #include <marlin/Logging.h>
 
 // -- lcio headers
@@ -62,12 +63,14 @@ namespace marlin {
     log<DEBUG>() << "CPUCrunchingProcessor::init() called" << std::endl ;
     // usually a good idea to
     printParameters() ;
+    ProcessorApi::registerForRandomSeeds( this ) ;
   }
 
   //--------------------------------------------------------------------------
 
-  void CPUCrunchingProcessor::processEvent( EVENT::LCEvent *) {
-    std::default_random_engine generator(std::hash<void*>()(this));
+  void CPUCrunchingProcessor::processEvent( EVENT::LCEvent *event ) {
+    auto randomSeed = ProcessorApi::getRandomSeed( this, event ) ;
+    std::default_random_engine generator( randomSeed );
     std::normal_distribution<clock::duration_rep> distribution(0, _crunchSigma);
     clock::duration_rep totalCrunchTime = _crunchTime + distribution(generator) ;
     log<MESSAGE>() << "Will use total crunch time of " << totalCrunchTime << " ms" << std::endl ;
