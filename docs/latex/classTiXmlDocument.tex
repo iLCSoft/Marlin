@@ -1,0 +1,322 @@
+\section{Ti\+Xml\+Document Class Reference}
+\label{classTiXmlDocument}\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+
+
+Always the top level node.  
+
+
+
+
+{\ttfamily \#include $<$tinyxml.\+h$>$}
+
+Inheritance diagram for Ti\+Xml\+Document\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classTiXmlDocument}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlDocument_a9f5e84335708fde98400230f9f12659c}} 
+\textbf{ Ti\+Xml\+Document} ()
+\begin{DoxyCompactList}\small\item\em Create an empty document, that has no name. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_ae4508b452d0c3061db085f3db27b8396}} 
+\textbf{ Ti\+Xml\+Document} (const char $\ast$document\+Name)
+\begin{DoxyCompactList}\small\item\em Create a document with a name. The name of the document is also the filename of the xml. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a2c6e58fb99bfa76cc613f16840022225}} 
+\textbf{ Ti\+Xml\+Document} (const std\+::string \&document\+Name)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a323a7486e7da6099cdc19a5ff7e74b07}} 
+{\bfseries Ti\+Xml\+Document} (const \textbf{ Ti\+Xml\+Document} \&copy)
+\item 
+\mbox{\label{classTiXmlDocument_aafbfacc3414008f619b1345775ef12a4}} 
+void {\bfseries operator=} (const \textbf{ Ti\+Xml\+Document} \&copy)
+\item 
+bool \textbf{ Load\+File} (Ti\+Xml\+Encoding encoding=T\+I\+X\+M\+L\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+E\+N\+C\+O\+D\+I\+NG)
+\begin{DoxyCompactList}\small\item\em Load a file using the current document value. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_ab63b96a6af5a467e289c7c75202edad9}} 
+bool \textbf{ Save\+File} () const
+\begin{DoxyCompactList}\small\item\em Save a file using the current document value. Returns true if successful. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a879cdf5e981b8b2d2ef82f2546dd28fb}} 
+bool \textbf{ Load\+File} (const char $\ast$filename, Ti\+Xml\+Encoding encoding=T\+I\+X\+M\+L\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+E\+N\+C\+O\+D\+I\+NG)
+\begin{DoxyCompactList}\small\item\em Load a file using the given filename. Returns true if successful. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_ae641f33784381017c44e107cc2c86b5c}} 
+bool \textbf{ Save\+File} (const char $\ast$filename) const
+\begin{DoxyCompactList}\small\item\em Save a file using the given filename. Returns true if successful. \end{DoxyCompactList}\item 
+bool \textbf{ Load\+File} (F\+I\+LE $\ast$, Ti\+Xml\+Encoding encoding=T\+I\+X\+M\+L\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+E\+N\+C\+O\+D\+I\+NG)
+\begin{DoxyCompactList}\small\item\em Load a file using the given F\+I\+L\+E$\ast$. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a8f5a1022168a5767e32becec7b6f44ee}} 
+bool \textbf{ Save\+File} (F\+I\+LE $\ast$) const
+\begin{DoxyCompactList}\small\item\em Save a file using the given F\+I\+L\+E$\ast$. Returns true if successful. \end{DoxyCompactList}\item 
+bool \textbf{ Load\+File} (const std\+::string \&filename, Ti\+Xml\+Encoding encoding=T\+I\+X\+M\+L\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+E\+N\+C\+O\+D\+I\+NG)
+\item 
+\mbox{\label{classTiXmlDocument_a2b3d316ed658852876d4852cd39c42d8}} 
+bool \textbf{ Save\+File} (const std\+::string \&filename) const
+\begin{DoxyCompactList}\small\item\em $<$ S\+TL std\+::string version. \end{DoxyCompactList}\item 
+virtual const char $\ast$ \textbf{ Parse} (const char $\ast$p, \textbf{ Ti\+Xml\+Parsing\+Data} $\ast$data=0, Ti\+Xml\+Encoding encoding=T\+I\+X\+M\+L\+\_\+\+D\+E\+F\+A\+U\+L\+T\+\_\+\+E\+N\+C\+O\+D\+I\+NG)
+\begin{DoxyCompactList}\small\item\em Parse the given null terminated block of xml data. \end{DoxyCompactList}\item 
+const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ Root\+Element} () const
+\begin{DoxyCompactList}\small\item\em Get the root element -- the only top level element -- of the document. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a0b43e762a23f938b06651bc90b8a1013}} 
+\textbf{ Ti\+Xml\+Element} $\ast$ {\bfseries Root\+Element} ()
+\item 
+bool \textbf{ Error} () const
+\begin{DoxyCompactList}\small\item\em If an error occurs, Error will be set to true. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_aab511be262e84a003e3bb86f0215c8c2}} 
+const char $\ast$ \textbf{ Error\+Desc} () const
+\begin{DoxyCompactList}\small\item\em Contains a textual (english) description of the error if one occurs. \end{DoxyCompactList}\item 
+int \textbf{ Error\+Id} () const
+\begin{DoxyCompactList}\small\item\em Generally, you probably want the error string ( \doxyref{Error\+Desc()}{p.}{classTiXmlDocument_aab511be262e84a003e3bb86f0215c8c2} ). \end{DoxyCompactList}\item 
+int \textbf{ Error\+Row} () const
+\begin{DoxyCompactList}\small\item\em Returns the location (if known) of the error. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_adea69de889449a2587afb8ee043f43f5}} 
+int \textbf{ Error\+Col} () const
+\begin{DoxyCompactList}\small\item\em The column where the error occured. See \doxyref{Error\+Row()}{p.}{classTiXmlDocument_a062e5257128a7da31b0b2e38cd524600} \end{DoxyCompactList}\item 
+void \textbf{ Set\+Tab\+Size} (int \+\_\+tabsize)
+\begin{DoxyCompactList}\small\item\em \doxyref{Set\+Tab\+Size()}{p.}{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e} allows the error reporting functions (\doxyref{Error\+Row()}{p.}{classTiXmlDocument_a062e5257128a7da31b0b2e38cd524600} and \doxyref{Error\+Col()}{p.}{classTiXmlDocument_adea69de889449a2587afb8ee043f43f5}) to report the correct values for row and column. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a81e6ffeee8f5d025a171eabf79abdad7}} 
+int {\bfseries Tab\+Size} () const
+\item 
+void \textbf{ Clear\+Error} ()
+\begin{DoxyCompactList}\small\item\em If you have handled the error, it can be reset with this call. \end{DoxyCompactList}\item 
+void \textbf{ Print} () const
+\begin{DoxyCompactList}\small\item\em Write the document to standard out using formatted printing (\char`\"{}pretty print\char`\"{}). \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_aa9e166fae51da603641380a964f21eeb}} 
+virtual void \textbf{ Print} (F\+I\+LE $\ast$cfile, int depth=0) const
+\begin{DoxyCompactList}\small\item\em Print this Document to a F\+I\+LE stream. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a735c23e318597b920c94eae77fa206de}} 
+void {\bfseries Set\+Error} (int err, const char $\ast$error\+Location, \textbf{ Ti\+Xml\+Parsing\+Data} $\ast$prev\+Data, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlDocument_a468e582640e3c4f740f7168d8b4a6e4a}} 
+virtual const \textbf{ Ti\+Xml\+Document} $\ast$ \textbf{ To\+Document} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a1025d942a1f328fd742d545e37efdd42}} 
+virtual \textbf{ Ti\+Xml\+Document} $\ast$ \textbf{ To\+Document} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_a8ddd6eec722cbd25900bbac664909bac}} 
+virtual bool \textbf{ Accept} (\textbf{ Ti\+Xml\+Visitor} $\ast$content) const
+\begin{DoxyCompactList}\small\item\em Walk the X\+ML tree visiting this node and all of its children. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Clone} () const
+\begin{DoxyCompactList}\small\item\em Create an exact duplicate of this node and return it. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlDocument_ab6d70b2c19e46aedb9903b3c3aa2a568}} 
+virtual void {\bfseries Stream\+In} (std\+::istream $\ast$in, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$tag)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Always the top level node. 
+
+A document binds together all the X\+ML pieces. It can be saved, loaded, and printed to the screen. The \textquotesingle{}value\textquotesingle{} of a document node is the xml file name. 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classTiXmlDocument_ac66b8c28db86363315712a3574e87c35}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Clear\+Error@{Clear\+Error}}
+\index{Clear\+Error@{Clear\+Error}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Clear\+Error()}
+{\footnotesize\ttfamily void Ti\+Xml\+Document\+::\+Clear\+Error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+If you have handled the error, it can be reset with this call. 
+
+The error state is automatically cleared if you Parse a new X\+ML block. 
+
+Referenced by Parse(), and Ti\+Xml\+Document().
+
+\mbox{\label{classTiXmlDocument_a46a4dda6c56eb106d46d4046ae1e5353}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Clone@{Clone}}
+\index{Clone@{Clone}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Clone()}
+{\footnotesize\ttfamily \textbf{ Ti\+Xml\+Node} $\ast$ Ti\+Xml\+Document\+::\+Clone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Create an exact duplicate of this node and return it. 
+
+The memory must be deleted by the caller. 
+
+Implements \textbf{ Ti\+Xml\+Node} \doxyref{}{p.}{classTiXmlNode_a4508cc3a2d7a98e96a54cc09c37a78a4}.
+
+
+
+References Ti\+Xml\+Document().
+
+\mbox{\label{classTiXmlDocument_a348e68faad4a3498f413c51ee9bc321a}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Error@{Error}}
+\index{Error@{Error}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Error()}
+{\footnotesize\ttfamily bool Ti\+Xml\+Document\+::\+Error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+If an error occurs, Error will be set to true. 
+
+Also,
+\begin{DoxyItemize}
+\item The \doxyref{Error\+Id()}{p.}{classTiXmlDocument_abd928b49a646c8ed53e0453c555d96a2} will contain the integer identifier of the error (not generally useful)
+\item The \doxyref{Error\+Desc()}{p.}{classTiXmlDocument_aab511be262e84a003e3bb86f0215c8c2} method will return the name of the error. (very useful)
+\item The \doxyref{Error\+Row()}{p.}{classTiXmlDocument_a062e5257128a7da31b0b2e38cd524600} and \doxyref{Error\+Col()}{p.}{classTiXmlDocument_adea69de889449a2587afb8ee043f43f5} will return the location of the error (if known) 
+\end{DoxyItemize}
+
+Referenced by Load\+File().
+
+\mbox{\label{classTiXmlDocument_abd928b49a646c8ed53e0453c555d96a2}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Error\+Id@{Error\+Id}}
+\index{Error\+Id@{Error\+Id}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Error\+Id()}
+{\footnotesize\ttfamily int Ti\+Xml\+Document\+::\+Error\+Id (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Generally, you probably want the error string ( \doxyref{Error\+Desc()}{p.}{classTiXmlDocument_aab511be262e84a003e3bb86f0215c8c2} ). 
+
+But if you prefer the Error\+Id, this function will fetch it. \mbox{\label{classTiXmlDocument_a062e5257128a7da31b0b2e38cd524600}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Error\+Row@{Error\+Row}}
+\index{Error\+Row@{Error\+Row}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Error\+Row()}
+{\footnotesize\ttfamily int Ti\+Xml\+Document\+::\+Error\+Row (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the location (if known) of the error. 
+
+The first column is column 1, and the first row is row 1. A value of 0 means the row and column wasn\textquotesingle{}t applicable (memory errors, for example, have no row/column) or the parser lost the error. (An error in the error reporting, in that case.)
+
+\begin{DoxySeeAlso}{See also}
+\doxyref{Set\+Tab\+Size}{p.}{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}, \doxyref{Row}{p.}{classTiXmlBase_ad0cacca5d76d156b26511f46080b442e}, \doxyref{Column}{p.}{classTiXmlBase_ad283b95d9858d5d78c334f4a61b07bb4} 
+\end{DoxySeeAlso}
+
+
+Referenced by marlin\+::\+X\+M\+L\+Parser\+::process\+Include\+Elements().
+
+\mbox{\label{classTiXmlDocument_a4c852a889c02cf251117fd1d9fe1845f}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Load\+File@{Load\+File}}
+\index{Load\+File@{Load\+File}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Load\+File()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily bool Ti\+Xml\+Document\+::\+Load\+File (\begin{DoxyParamCaption}\item[{Ti\+Xml\+Encoding}]{encoding = {\ttfamily TIXML\+\_\+DEFAULT\+\_\+ENCODING} }\end{DoxyParamCaption})}
+
+
+
+Load a file using the current document value. 
+
+Returns true if successful. Will delete any existing document data before loading. 
+
+References Ti\+Xml\+Node\+::\+Value().
+
+
+
+Referenced by Load\+File(), and marlin\+::\+X\+M\+L\+Parser\+::process\+Include\+Elements().
+
+\mbox{\label{classTiXmlDocument_a41f6fe7200864d1dca663d230caf8db6}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Load\+File@{Load\+File}}
+\index{Load\+File@{Load\+File}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Load\+File()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily bool Ti\+Xml\+Document\+::\+Load\+File (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{file,  }\item[{Ti\+Xml\+Encoding}]{encoding = {\ttfamily TIXML\+\_\+DEFAULT\+\_\+ENCODING} }\end{DoxyParamCaption})}
+
+
+
+Load a file using the given F\+I\+L\+E$\ast$. 
+
+Returns true if successful. Note that this method doesn\textquotesingle{}t stream -\/ the entire object pointed at by the F\+I\+L\+E$\ast$ will be interpreted as an X\+ML file. Tiny\+X\+ML doesn\textquotesingle{}t stream in X\+ML from the current file location. Streaming may be added in the future. 
+
+References Ti\+Xml\+Node\+::\+Clear(), Error(), and Parse().
+
+\mbox{\label{classTiXmlDocument_a18ae6ed34fed7991ebc220862dfac884}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Load\+File@{Load\+File}}
+\index{Load\+File@{Load\+File}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Load\+File()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily bool Ti\+Xml\+Document\+::\+Load\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename,  }\item[{Ti\+Xml\+Encoding}]{encoding = {\ttfamily TIXML\+\_\+DEFAULT\+\_\+ENCODING} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em encoding} & S\+TL std\+::string version. \\
+\hline
+\end{DoxyParams}
+\mbox{\label{classTiXmlDocument_a789ad2f06f93d52bdb5570b2f3670289}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Parse@{Parse}}
+\index{Parse@{Parse}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Parse()}
+{\footnotesize\ttfamily const char $\ast$ Ti\+Xml\+Document\+::\+Parse (\begin{DoxyParamCaption}\item[{const char $\ast$}]{p,  }\item[{\textbf{ Ti\+Xml\+Parsing\+Data} $\ast$}]{data = {\ttfamily 0},  }\item[{Ti\+Xml\+Encoding}]{encoding = {\ttfamily TIXML\+\_\+DEFAULT\+\_\+ENCODING} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Parse the given null terminated block of xml data. 
+
+Passing in an encoding to this method (either T\+I\+X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+I\+N\+G\+\_\+\+L\+E\+G\+A\+CY or T\+I\+X\+M\+L\+\_\+\+E\+N\+C\+O\+D\+I\+N\+G\+\_\+\+U\+T\+F8 will force Tiny\+Xml to use that encoding, regardless of what Tiny\+Xml might otherwise try to detect. 
+
+Implements \textbf{ Ti\+Xml\+Base} \doxyref{}{p.}{classTiXmlBase}.
+
+
+
+References Clear\+Error(), Ti\+Xml\+Declaration\+::\+Encoding(), Ti\+Xml\+Node\+::\+Get\+Document(), Ti\+Xml\+Base\+::\+Is\+White\+Space\+Condensed(), Ti\+Xml\+Node\+::\+Link\+End\+Child(), Ti\+Xml\+Attribute\+::\+Name(), Ti\+Xml\+Text\+::\+Set\+C\+D\+A\+T\+A(), Ti\+Xml\+Attribute\+::\+Set\+Value(), Ti\+Xml\+Node\+::\+To\+Declaration(), and Ti\+Xml\+Attribute\+::\+Value().
+
+
+
+Referenced by Ti\+Xml\+Base\+::\+Get\+User\+Data(), and Load\+File().
+
+\mbox{\label{classTiXmlDocument_aa4e8c1498a76dcde7191c683e1220882}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Print@{Print}}
+\index{Print@{Print}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Print()}
+{\footnotesize\ttfamily void Ti\+Xml\+Document\+::\+Print (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Write the document to standard out using formatted printing (\char`\"{}pretty print\char`\"{}). 
+
+
+
+References Print().
+
+
+
+Referenced by Print(), and Save\+File().
+
+\mbox{\label{classTiXmlDocument_ab54e3a93279fcf0ac80f06ed9c52f04a}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Root\+Element@{Root\+Element}}
+\index{Root\+Element@{Root\+Element}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Root\+Element()}
+{\footnotesize\ttfamily const \textbf{ Ti\+Xml\+Element}$\ast$ Ti\+Xml\+Document\+::\+Root\+Element (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the root element -- the only top level element -- of the document. 
+
+In well formed X\+ML, there should only be one. Tiny\+Xml is tolerant of multiple elements at the document level. \mbox{\label{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}} 
+\index{Ti\+Xml\+Document@{Ti\+Xml\+Document}!Set\+Tab\+Size@{Set\+Tab\+Size}}
+\index{Set\+Tab\+Size@{Set\+Tab\+Size}!Ti\+Xml\+Document@{Ti\+Xml\+Document}}
+\subsubsection{Set\+Tab\+Size()}
+{\footnotesize\ttfamily void Ti\+Xml\+Document\+::\+Set\+Tab\+Size (\begin{DoxyParamCaption}\item[{int}]{\+\_\+tabsize }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxyref{Set\+Tab\+Size()}{p.}{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e} allows the error reporting functions (\doxyref{Error\+Row()}{p.}{classTiXmlDocument_a062e5257128a7da31b0b2e38cd524600} and \doxyref{Error\+Col()}{p.}{classTiXmlDocument_adea69de889449a2587afb8ee043f43f5}) to report the correct values for row and column. 
+
+It does not change the output or input in any way.
+
+By calling this method, with a tab size greater than 0, the row and column of each node and attribute is stored when the file is loaded. Very useful for tracking the D\+OM back in to the source file.
+
+The tab size is required for calculating the location of nodes. If not set, the default of 4 is used. The tabsize is set per document. Setting the tabsize to 0 disables row/column tracking.
+
+Note that row and column tracking is not supported when using operator$>$$>$.
+
+The tab size needs to be enabled before the parse or load. Correct usage\+: \begin{DoxyVerb}    TiXmlDocument doc;
+    doc.SetTabSize( 8 );
+    doc.Load( "myfile.xml" );\end{DoxyVerb}
+
+
+\begin{DoxySeeAlso}{See also}
+\doxyref{Row}{p.}{classTiXmlBase_ad0cacca5d76d156b26511f46080b442e}, \doxyref{Column}{p.}{classTiXmlBase_ad283b95d9858d5d78c334f4a61b07bb4} 
+\end{DoxySeeAlso}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+tinyxml.\+h\item 
+tinyxml.\+cc\item 
+tinyxmlparser.\+cc\end{DoxyCompactItemize}

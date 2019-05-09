@@ -1,0 +1,161 @@
+\section{marlin\+:\+:Sequence\+Item Class Reference}
+\label{classmarlin_1_1SequenceItem}\index{marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}}
+
+
+\doxyref{Sequence\+Item}{p.}{classmarlin_1_1SequenceItem} class Handle a processor pointer and call \doxyref{Processor\+::process\+Event}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a} in a critical section if configured accordingly.  
+
+
+
+
+{\ttfamily \#include $<$Sequence.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Sequence\+Item} (std\+::shared\+\_\+ptr$<$ \textbf{ Processor} $>$ proc)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\textbf{ Sequence\+Item} (std\+::shared\+\_\+ptr$<$ \textbf{ Processor} $>$ proc, std\+::shared\+\_\+ptr$<$ std\+::mutex $>$ lock)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+void \textbf{ process\+Run\+Header} (std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $>$ rhdr)
+\begin{DoxyCompactList}\small\item\em Process the run header. \end{DoxyCompactList}\item 
+void \textbf{ modify\+Run\+Header} (std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $>$ rhdr)
+\begin{DoxyCompactList}\small\item\em Modify the run header. \end{DoxyCompactList}\item 
+clock\+::pair \textbf{ process\+Event} (std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$ event)
+\begin{DoxyCompactList}\small\item\em Call \doxyref{Processor\+::process\+Event}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a}. \end{DoxyCompactList}\item 
+clock\+::pair \textbf{ modify\+Event} (std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$ event)
+\begin{DoxyCompactList}\small\item\em Call Processor\+::modify\+Event. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1SequenceItem_a00896e5cebd046c7137b2aa9a121efc7}} 
+std\+::shared\+\_\+ptr$<$ \textbf{ Processor} $>$ \textbf{ processor} () const
+\begin{DoxyCompactList}\small\item\em Get the processor instance. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1SequenceItem_aeb3b15f63bfe8acbb71cc400bf75f0f1}} 
+const std\+::string \& \textbf{ name} () const
+\begin{DoxyCompactList}\small\item\em Get the processor name. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Sequence\+Item}{p.}{classmarlin_1_1SequenceItem} class Handle a processor pointer and call \doxyref{Processor\+::process\+Event}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a} in a critical section if configured accordingly. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1SequenceItem_a2f100e16f21b318d9ffc2d320e7716a5}} 
+\index{marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}!Sequence\+Item@{Sequence\+Item}}
+\index{Sequence\+Item@{Sequence\+Item}!marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}}
+\subsubsection{Sequence\+Item()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily marlin\+::\+Sequence\+Item\+::\+Sequence\+Item (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \textbf{ Processor} $>$}]{proc }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+No internal locking
+
+
+\begin{DoxyParams}{Parameters}
+{\em proc} & a pointer on a processor \\
+\hline
+\end{DoxyParams}
+\mbox{\label{classmarlin_1_1SequenceItem_a7c7e4b1ad94d1edae194ea9ae94c1674}} 
+\index{marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}!Sequence\+Item@{Sequence\+Item}}
+\index{Sequence\+Item@{Sequence\+Item}!marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}}
+\subsubsection{Sequence\+Item()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily marlin\+::\+Sequence\+Item\+::\+Sequence\+Item (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \textbf{ Processor} $>$}]{proc,  }\item[{std\+::shared\+\_\+ptr$<$ std\+::mutex $>$}]{lock }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em proc} & a pointer on a processor \\
+\hline
+{\em lock} & the mutex instance to use \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1SequenceItem_ad71887fc8401eb52b95597c1c9fd42f6}} 
+\index{marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}!modify\+Event@{modify\+Event}}
+\index{modify\+Event@{modify\+Event}!marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}}
+\subsubsection{modify\+Event()}
+{\footnotesize\ttfamily clock\+::pair marlin\+::\+Sequence\+Item\+::modify\+Event (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$}]{event }\end{DoxyParamCaption})}
+
+
+
+Call Processor\+::modify\+Event. 
+
+Lock if the mutex has been initialized Call time is returned in a pair as \+:
+\begin{DoxyItemize}
+\item first \+: the total time taking into account the mutex waiting time
+\item second \+: the time spent on process event only
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & the event to modify \\
+\hline
+\end{DoxyParams}
+
+
+References marlin\+::clock\+::now().
+
+\mbox{\label{classmarlin_1_1SequenceItem_ab211f8a85cd5905c8e3be35872602c88}} 
+\index{marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}!modify\+Run\+Header@{modify\+Run\+Header}}
+\index{modify\+Run\+Header@{modify\+Run\+Header}!marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}}
+\subsubsection{modify\+Run\+Header()}
+{\footnotesize\ttfamily void marlin\+::\+Sequence\+Item\+::modify\+Run\+Header (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $>$}]{rhdr }\end{DoxyParamCaption})}
+
+
+
+Modify the run header. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rhdr} & the run header to modify \\
+\hline
+\end{DoxyParams}
+\mbox{\label{classmarlin_1_1SequenceItem_ac63897089f19002476453da272225823}} 
+\index{marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}!process\+Event@{process\+Event}}
+\index{process\+Event@{process\+Event}!marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}}
+\subsubsection{process\+Event()}
+{\footnotesize\ttfamily clock\+::pair marlin\+::\+Sequence\+Item\+::process\+Event (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$}]{event }\end{DoxyParamCaption})}
+
+
+
+Call \doxyref{Processor\+::process\+Event}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a}. 
+
+Lock if the mutex has been initialized. Call time is returned in a pair as \+:
+\begin{DoxyItemize}
+\item first \+: the total time taking into account the mutex waiting time
+\item second \+: the time spent on process event only
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & the event to process \\
+\hline
+\end{DoxyParams}
+
+
+References marlin\+::clock\+::now().
+
+\mbox{\label{classmarlin_1_1SequenceItem_a9ddb5dc973eeb86cba79bada59c75abc}} 
+\index{marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}!process\+Run\+Header@{process\+Run\+Header}}
+\index{process\+Run\+Header@{process\+Run\+Header}!marlin\+::\+Sequence\+Item@{marlin\+::\+Sequence\+Item}}
+\subsubsection{process\+Run\+Header()}
+{\footnotesize\ttfamily void marlin\+::\+Sequence\+Item\+::process\+Run\+Header (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $>$}]{rhdr }\end{DoxyParamCaption})}
+
+
+
+Process the run header. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rhdr} & the run header to process \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Sequence.\+h\item 
+Sequence.\+cc\end{DoxyCompactItemize}

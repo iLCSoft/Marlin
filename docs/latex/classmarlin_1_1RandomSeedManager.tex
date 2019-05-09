@@ -1,0 +1,149 @@
+\section{marlin\+:\+:Random\+Seed\+Manager Class Reference}
+\label{classmarlin_1_1RandomSeedManager}\index{marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}}
+
+
+\doxyref{Random\+Seed\+Manager}{p.}{classmarlin_1_1RandomSeedManager} class.  
+
+
+
+
+{\ttfamily \#include $<$Random\+Seed\+Manager.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a22e7991f1e79ba1ac8770724dd99dfaf}} 
+typedef unsigned int {\bfseries Seed\+Type}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a2b4db2a3645c39d14c3e8af615f6bc56}} 
+typedef std\+::hash$<$ const void $\ast$ $>$ {\bfseries Hash\+Function}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a384ee1c8ab79d7a1c4f595300c063f2e}} 
+typedef Hash\+Function\+::argument\+\_\+type {\bfseries Hash\+Argument}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a087cae390c126e1468d6354099740e3c}} 
+typedef Hash\+Function\+::result\+\_\+type {\bfseries Hash\+Result}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a446223249f682903ceeaf59a9b3658dc}} 
+typedef std\+::unordered\+\_\+set$<$ Hash\+Result $>$ {\bfseries Entry\+List}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a79a5b7b30c8e99560d736e7c1d14809c}} 
+typedef std\+::map$<$ Hash\+Result, Seed\+Type $>$ {\bfseries Random\+Seed\+Map}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a7933b8c0d97b9848fec2dd85c44bb5f7}} 
+typedef std\+::mt19937 {\bfseries Random\+Generator}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a6e4cebc8c94e68fb6ba72c2ec4b38e2d}} 
+typedef std\+::uniform\+\_\+int\+\_\+distribution$<$ Seed\+Type $>$ {\bfseries Random\+Distribution}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_ac6016749c5e09831cc882d7dc3f85b99}} 
+{\bfseries Random\+Seed\+Manager} (const \textbf{ Random\+Seed\+Manager} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_ae2324c7cc8f867a3dc4923f9ce1da452}} 
+\textbf{ Random\+Seed\+Manager} \& {\bfseries operator=} (const \textbf{ Random\+Seed\+Manager} \&)=delete
+\item 
+\textbf{ Random\+Seed\+Manager} (Seed\+Type global\+Seed=time(nullptr))
+\begin{DoxyCompactList}\small\item\em Constructor with global seed. \end{DoxyCompactList}\item 
+void \textbf{ add\+Entry} (Hash\+Result entry)
+\begin{DoxyCompactList}\small\item\em Add an entry to the random seed manager. \end{DoxyCompactList}\item 
+void \textbf{ add\+Entry} (Hash\+Argument arg)
+\begin{DoxyCompactList}\small\item\em Add an entry to the random seed manager. \end{DoxyCompactList}\item 
+std\+::unique\+\_\+ptr$<$ Random\+Seed\+Map $>$ \textbf{ generate\+Random\+Seeds} (const E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$const evt)
+\begin{DoxyCompactList}\small\item\em Generate a random seed map. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a3258392857a15bd92a4b9c204a0a9f52}} 
+static const Seed\+Type {\bfseries Min\+Seed} = 0
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedManager_a8b3c60f20510b92184477ebe8a599298}} 
+static const Seed\+Type {\bfseries Max\+Seed} = std\+::numeric\+\_\+limits$<$Seed\+Type$>$\+::max()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Random\+Seed\+Manager}{p.}{classmarlin_1_1RandomSeedManager} class. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1RandomSeedManager_aff29e2ededf32a7e287d7808f1de2be2}} 
+\index{marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}!Random\+Seed\+Manager@{Random\+Seed\+Manager}}
+\index{Random\+Seed\+Manager@{Random\+Seed\+Manager}!marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}}
+\subsubsection{Random\+Seed\+Manager()}
+{\footnotesize\ttfamily marlin\+::\+Random\+Seed\+Manager\+::\+Random\+Seed\+Manager (\begin{DoxyParamCaption}\item[{Seed\+Type}]{global\+Seed = {\ttfamily time(nullptr)} }\end{DoxyParamCaption})}
+
+
+
+Constructor with global seed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em global\+Seed} & the global seed \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1RandomSeedManager_acae2cec3d0c02092b3632a1da6de75fa}} 
+\index{marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}!add\+Entry@{add\+Entry}}
+\index{add\+Entry@{add\+Entry}!marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}}
+\subsubsection{add\+Entry()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void marlin\+::\+Random\+Seed\+Manager\+::add\+Entry (\begin{DoxyParamCaption}\item[{Hash\+Result}]{entry }\end{DoxyParamCaption})}
+
+
+
+Add an entry to the random seed manager. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & a hash ideintifying the entry \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by add\+Entry(), and marlin\+::\+Processor\+Api\+::register\+For\+Random\+Seeds().
+
+\mbox{\label{classmarlin_1_1RandomSeedManager_a0f7ebccd7a36a86b59f52b122dd3f815}} 
+\index{marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}!add\+Entry@{add\+Entry}}
+\index{add\+Entry@{add\+Entry}!marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}}
+\subsubsection{add\+Entry()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void marlin\+::\+Random\+Seed\+Manager\+::add\+Entry (\begin{DoxyParamCaption}\item[{Hash\+Argument}]{arg }\end{DoxyParamCaption})}
+
+
+
+Add an entry to the random seed manager. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entry} & a hash ideintifying the entry \\
+\hline
+\end{DoxyParams}
+
+
+References add\+Entry().
+
+\mbox{\label{classmarlin_1_1RandomSeedManager_a79b5efc296360b47cf90dd13749fb73a}} 
+\index{marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}!generate\+Random\+Seeds@{generate\+Random\+Seeds}}
+\index{generate\+Random\+Seeds@{generate\+Random\+Seeds}!marlin\+::\+Random\+Seed\+Manager@{marlin\+::\+Random\+Seed\+Manager}}
+\subsubsection{generate\+Random\+Seeds()}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$ Random\+Seed\+Manager\+::\+Random\+Seed\+Map $>$ marlin\+::\+Random\+Seed\+Manager\+::generate\+Random\+Seeds (\begin{DoxyParamCaption}\item[{const E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$const}]{evt }\end{DoxyParamCaption})}
+
+
+
+Generate a random seed map. 
+
+Mainly used by the whiteboard to get random seeds which are local for a given event context
+
+
+\begin{DoxyParams}{Parameters}
+{\em evt} & the event source \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Random\+Seed\+Manager.\+h\item 
+Random\+Seed\+Manager.\+cc\end{DoxyCompactItemize}

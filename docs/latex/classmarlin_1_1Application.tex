@@ -1,0 +1,214 @@
+\section{marlin\+:\+:Application Class Reference}
+\label{classmarlin_1_1Application}\index{marlin\+::\+Application@{marlin\+::\+Application}}
+
+
+\doxyref{Application}{p.}{classmarlin_1_1Application} class Base application interface for running a Marlin application.  
+
+
+
+
+{\ttfamily \#include $<$Application.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Application_ab0aaa43e1f584f43c542a57325ed52c6}} 
+using {\bfseries Cmd\+Line\+Arguments} = std\+::vector$<$ std\+::string $>$
+\item 
+\mbox{\label{classmarlin_1_1Application_a5ebdf664fc83467b59608e473ac9e28b}} 
+using {\bfseries Logger} = Logging\+::\+Logger
+\item 
+\mbox{\label{classmarlin_1_1Application_aee0b13433c788cf68b7bb1ace1aa88a9}} 
+using {\bfseries Scheduler} = std\+::shared\+\_\+ptr$<$ \textbf{ I\+Scheduler} $>$
+\item 
+\mbox{\label{classmarlin_1_1Application_ab2a805355abe24c7f6601b314dceb89e}} 
+using {\bfseries Event\+List} = std\+::vector$<$ std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$ $>$
+\item 
+\mbox{\label{classmarlin_1_1Application_a89c378a660d5fa2813aef3fbf999343c}} 
+using {\bfseries Data\+Source} = std\+::shared\+\_\+ptr$<$ \textbf{ Data\+Source\+Plugin} $>$
+\item 
+\mbox{\label{classmarlin_1_1Application_a7758150b9e6d055b368371cb13f31c97}} 
+using {\bfseries Conditions\+Map} = std\+::map$<$ std\+::string, std\+::string $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ init} (int argc, char $\ast$$\ast$argv)
+\begin{DoxyCompactList}\small\item\em Initialize the application. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a0d49392ba0ecd4f3f3f42395d42112cc}} 
+void \textbf{ run} ()
+\begin{DoxyCompactList}\small\item\em Run the application. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a9f6927f23aa743799b0fa1dc33a1d9e1}} 
+void \textbf{ print\+Usage} () const
+\begin{DoxyCompactList}\small\item\em Print command line usage. \end{DoxyCompactList}\item 
+void \textbf{ print\+Banner} (std\+::ostream \&out=std\+::cout) const
+\begin{DoxyCompactList}\small\item\em Print the Marlin banner. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a59df9c27d099a4afaf7af0d4d8d83774}} 
+const std\+::string \& \textbf{ program} () const
+\begin{DoxyCompactList}\small\item\em Get the program name. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_abdbed82934c342a7961d65d9ff80fdd8}} 
+const Cmd\+Line\+Arguments \& \textbf{ arguments} () const
+\begin{DoxyCompactList}\small\item\em Get the command line arguments. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a446e8924c05d8b17f7f4b7aab557b787}} 
+std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ global\+Parameters} () const
+\begin{DoxyCompactList}\small\item\em Get the global section parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a1f410feb83e949ead8e4a7e50eac8f25}} 
+std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ geometry\+Parameters} () const
+\begin{DoxyCompactList}\small\item\em Get the geometry section parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a0b6439873b3b713b61c6dcbeeccf202b}} 
+std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ data\+Source\+Parameters} () const
+\begin{DoxyCompactList}\small\item\em Get the data source section parameters. \end{DoxyCompactList}\item 
+std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ processor\+Parameters} (const std\+::string \&name) const
+\begin{DoxyCompactList}\small\item\em Get the processor parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_afdcdc1497afaf351ab421577636abc39}} 
+std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ constants} () const
+\begin{DoxyCompactList}\small\item\em Get the X\+ML constants. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a14ee5375f26dfc0f508b7480fd4d5aad}} 
+std\+::vector$<$ std\+::string $>$ \textbf{ active\+Processors} () const
+\begin{DoxyCompactList}\small\item\em Get the active processor list. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a46fe2e47f8882b0472cd4bb4a6c48e6e}} 
+std\+::vector$<$ std\+::string $>$ \textbf{ processor\+Conditions} () const
+\begin{DoxyCompactList}\small\item\em Get the active processor conditions list. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_ab38e75ed8c66a064c7f02c79c23220aa}} 
+bool \textbf{ is\+Initialized} () const
+\begin{DoxyCompactList}\small\item\em Whether the application has been initialized. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a4e5dffd0b44c03ceea9dab604d223928}} 
+Logger \textbf{ logger} () const
+\begin{DoxyCompactList}\small\item\em Get the application logger instance. \end{DoxyCompactList}\item 
+Logger \textbf{ create\+Logger} (const std\+::string \&name) const
+\begin{DoxyCompactList}\small\item\em Create a new logger instance. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_abfd1da075e1954c53f97295ad2a2ca10}} 
+const \textbf{ Geometry\+Manager} \& \textbf{ geometry\+Manager} () const
+\begin{DoxyCompactList}\small\item\em Get the geometry manager. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a41954da74a034bddc101c48774d98200}} 
+const \textbf{ Random\+Seed\+Manager} \& \textbf{ random\+Seed\+Manager} () const
+\begin{DoxyCompactList}\small\item\em Get the random seed manager. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_ae77e42b93ef83a94139f69948679b288}} 
+\textbf{ Random\+Seed\+Manager} \& \textbf{ random\+Seed\+Manager} ()
+\begin{DoxyCompactList}\small\item\em Get the random seed manager. \end{DoxyCompactList}\item 
+void \textbf{ set\+Scheduler} (Scheduler scheduler)
+\begin{DoxyCompactList}\small\item\em Set the scheduler instance to use in this application. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Application_ad89081dedebca054b63d7a6b0ca73389}} 
+std\+::shared\+\_\+ptr$<$ \textbf{ I\+Parser} $>$ \textbf{ parser} () const
+\begin{DoxyCompactList}\small\item\em Get the parser instance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Application_a2c90b6881bec2d437cf2b30d21c40746}} 
+Cmd\+Line\+Arguments \textbf{ \+\_\+filtered\+Arguments} \{\}
+\begin{DoxyCompactList}\small\item\em The arguments from main function after command line arguments have been removed. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a992abb4045c13183af81b4da9ed9c7a8}} 
+\textbf{ Geometry\+Manager} \textbf{ \+\_\+geometry\+Mgr} \{\}
+\begin{DoxyCompactList}\small\item\em The geometry manager. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_a9b156e29831af3cfac6838c1ea45956a}} 
+\textbf{ Random\+Seed\+Manager} \textbf{ \+\_\+random\+Seed\+Mgr} \{\}
+\begin{DoxyCompactList}\small\item\em The random seed manager. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Application_aa3ae8c605972d6edef4459edd75de235}} 
+\textbf{ Logger\+Manager} \textbf{ \+\_\+logger\+Mgr} \{\}
+\begin{DoxyCompactList}\small\item\em The logger manager. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Application}{p.}{classmarlin_1_1Application} class Base application interface for running a Marlin application. 
+
+See daughter classes for details. 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1Application_a32a44713e83354acca7752891cc53c01}} 
+\index{marlin\+::\+Application@{marlin\+::\+Application}!create\+Logger@{create\+Logger}}
+\index{create\+Logger@{create\+Logger}!marlin\+::\+Application@{marlin\+::\+Application}}
+\subsubsection{create\+Logger()}
+{\footnotesize\ttfamily Application\+::\+Logger marlin\+::\+Application\+::create\+Logger (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption}) const}
+
+
+
+Create a new logger instance. 
+
+If the logger manager is initialized, the logger will share the same sinks as the main logger, else a fresh new logger is created.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & the logger name \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by marlin\+::\+Processor\+::base\+Init(), marlin\+::\+Simple\+Scheduler\+::init(), marlin\+::\+Geometry\+Manager\+::init(), marlin\+::\+Data\+Source\+Plugin\+::init(), marlin\+::concurrency\+::\+P\+E\+P\+Scheduler\+::init(), and marlin\+::\+Geometry\+Plugin\+::print().
+
+\mbox{\label{classmarlin_1_1Application_afb813231760091a3d8228699133e2e20}} 
+\index{marlin\+::\+Application@{marlin\+::\+Application}!init@{init}}
+\index{init@{init}!marlin\+::\+Application@{marlin\+::\+Application}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void marlin\+::\+Application\+::init (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+Initialize the application. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & argc from main function \\
+\hline
+{\em argv} & argv from main function \\
+\hline
+\end{DoxyParams}
+\mbox{\label{classmarlin_1_1Application_a921a8a39031524b83bc2e7fffd9bc38b}} 
+\index{marlin\+::\+Application@{marlin\+::\+Application}!print\+Banner@{print\+Banner}}
+\index{print\+Banner@{print\+Banner}!marlin\+::\+Application@{marlin\+::\+Application}}
+\subsubsection{print\+Banner()}
+{\footnotesize\ttfamily void marlin\+::\+Application\+::print\+Banner (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{out = {\ttfamily std\+:\+:cout} }\end{DoxyParamCaption}) const}
+
+
+
+Print the Marlin banner. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em out} & the out stream for printout \\
+\hline
+\end{DoxyParams}
+\mbox{\label{classmarlin_1_1Application_a6855cfe3e996d00e1b6a119495da01fd}} 
+\index{marlin\+::\+Application@{marlin\+::\+Application}!processor\+Parameters@{processor\+Parameters}}
+\index{processor\+Parameters@{processor\+Parameters}!marlin\+::\+Application@{marlin\+::\+Application}}
+\subsubsection{processor\+Parameters()}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ marlin\+::\+Application\+::processor\+Parameters (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption}) const}
+
+
+
+Get the processor parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & the processor name \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by marlin\+::concurrency\+::\+P\+E\+P\+Scheduler\+::end(), and marlin\+::\+Simple\+Scheduler\+::init().
+
+\mbox{\label{classmarlin_1_1Application_af42846814fa27345e3f2d95ee4ef26df}} 
+\index{marlin\+::\+Application@{marlin\+::\+Application}!set\+Scheduler@{set\+Scheduler}}
+\index{set\+Scheduler@{set\+Scheduler}!marlin\+::\+Application@{marlin\+::\+Application}}
+\subsubsection{set\+Scheduler()}
+{\footnotesize\ttfamily void marlin\+::\+Application\+::set\+Scheduler (\begin{DoxyParamCaption}\item[{Scheduler}]{scheduler }\end{DoxyParamCaption})}
+
+
+
+Set the scheduler instance to use in this application. 
+
+Must be called before init(argc, argv)
+
+
+\begin{DoxyParams}{Parameters}
+{\em scheduler} & the sceduler instance to use \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Application.\+h\item 
+Application.\+cc\end{DoxyCompactItemize}

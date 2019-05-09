@@ -1,0 +1,128 @@
+\section{marlin\+:\+:Event\+Selector\+Processor Class Reference}
+\label{classmarlin_1_1EventSelectorProcessor}\index{marlin\+::\+Event\+Selector\+Processor@{marlin\+::\+Event\+Selector\+Processor}}
+
+
+Simple event selector processor.  
+
+
+Inheritance diagram for marlin\+:\+:Event\+Selector\+Processor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classmarlin_1_1EventSelectorProcessor}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1EventSelectorProcessor_a9f595ab4d3f6c380d0ecda08244747d5}} 
+\textbf{ Event\+Selector\+Processor} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1EventSelectorProcessor_a14b8aeccbe2e3eb438c720bff7bd75e7}} 
+\textbf{ Processor} $\ast$ \textbf{ new\+Processor} ()
+\begin{DoxyCompactList}\small\item\em Return a new instance of the processor (factory method) \end{DoxyCompactList}\item 
+void \textbf{ init} ()
+\begin{DoxyCompactList}\small\item\em Initialize the processor. \end{DoxyCompactList}\item 
+void \textbf{ process\+Event} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$evt)
+\begin{DoxyCompactList}\small\item\em Process an input event. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1EventSelectorProcessor_a5bd533aee70661acc2d5f0f18f588274}} 
+const std\+::string \& \textbf{ name} () const
+\begin{DoxyCompactList}\small\item\em Return name of this event modifier. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1EventSelectorProcessor_a7363bd1e06a76e3ae4e63b0e968babcd}} 
+void \textbf{ modify\+Event} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$evt)
+\begin{DoxyCompactList}\small\item\em Implement to modify the event. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+E\+V\+E\+N\+T\+::\+Int\+Vec \textbf{ \+\_\+evt\+List} \{\}
+\begin{DoxyCompactList}\small\item\em $<$ The event list parameter (list of \char`\"{}run event\char`\"{} ids) \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1EventSelectorProcessor_a120860639677474c7e4b1253c666b3d8}} 
+Event\+Number\+Set {\bfseries \+\_\+evt\+Set} \{\}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Simple event selector processor. 
+
+Returns true if the given event was specified in the Even\+List parameter.
+
+\subparagraph*{Output}
+
+returns true or false
+
+
+\begin{DoxyParams}{Parameters}
+{\em Event\+List} & pairs of\+: Event\+Number Run\+Number\\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+\$\+Id\+:\$ 
+\end{DoxyVersion}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1EventSelectorProcessor_aeb4c233b4075fc99c5f146c21ec96d78}} 
+\index{marlin\+::\+Event\+Selector\+Processor@{marlin\+::\+Event\+Selector\+Processor}!init@{init}}
+\index{init@{init}!marlin\+::\+Event\+Selector\+Processor@{marlin\+::\+Event\+Selector\+Processor}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void marlin\+::\+Event\+Selector\+Processor\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Initialize the processor. 
+
+Called at the begin of the job before anything is read. Use to initialize the processor, e.\+g. book histograms. 
+
+Reimplemented from \textbf{ marlin\+::\+Processor} \doxyref{}{p.}{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b}.
+
+
+
+References \+\_\+evt\+List, and marlin\+::\+Processor\+::print\+Parameters().
+
+\mbox{\label{classmarlin_1_1EventSelectorProcessor_a4f669851b0ccecc53c65e0f589881d66}} 
+\index{marlin\+::\+Event\+Selector\+Processor@{marlin\+::\+Event\+Selector\+Processor}!process\+Event@{process\+Event}}
+\index{process\+Event@{process\+Event}!marlin\+::\+Event\+Selector\+Processor@{marlin\+::\+Event\+Selector\+Processor}}
+\subsubsection{process\+Event()}
+{\footnotesize\ttfamily void marlin\+::\+Event\+Selector\+Processor\+::process\+Event (\begin{DoxyParamCaption}\item[{E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Process an input event. 
+
+Called for every event -\/ the working horse. 
+
+Reimplemented from \textbf{ marlin\+::\+Processor} \doxyref{}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a}.
+
+
+
+References \+\_\+evt\+List.
+
+
+
+Referenced by modify\+Event().
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\label{classmarlin_1_1EventSelectorProcessor_a4f44b84857e78e0d318eb7e62edd4cf9}} 
+\index{marlin\+::\+Event\+Selector\+Processor@{marlin\+::\+Event\+Selector\+Processor}!\+\_\+evt\+List@{\+\_\+evt\+List}}
+\index{\+\_\+evt\+List@{\+\_\+evt\+List}!marlin\+::\+Event\+Selector\+Processor@{marlin\+::\+Event\+Selector\+Processor}}
+\subsubsection{\+\_\+evt\+List}
+{\footnotesize\ttfamily E\+V\+E\+N\+T\+::\+Int\+Vec marlin\+::\+Event\+Selector\+Processor\+::\+\_\+evt\+List \{\}\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+$<$ The event list parameter (list of \char`\"{}run event\char`\"{} ids) 
+
+The event list as a set 
+
+Referenced by Event\+Selector\+Processor(), init(), and process\+Event().
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Event\+Selector\+Processor.\+cc\end{DoxyCompactItemize}

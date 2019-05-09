@@ -1,0 +1,118 @@
+\section{marlin\+:\+:Logger\+Manager Class Reference}
+\label{classmarlin_1_1LoggerManager}\index{marlin\+::\+Logger\+Manager@{marlin\+::\+Logger\+Manager}}
+
+
+\doxyref{Logger\+Manager}{p.}{classmarlin_1_1LoggerManager} class Responsible for configuring logger for a given application.  
+
+
+
+
+{\ttfamily \#include $<$Logger\+Manager.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1LoggerManager_a315868dad72cfd81b24dd2a0f911ff79}} 
+using {\bfseries Logger} = Logging\+::\+Logger
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1LoggerManager_a854e4c9f8a1e266d29477a706634fc24}} 
+{\bfseries Logger\+Manager} (const \textbf{ Logger\+Manager} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1LoggerManager_a11c16b7548556d672f186d4b290d2526}} 
+\textbf{ Logger\+Manager} \& {\bfseries operator=} (const \textbf{ Logger\+Manager} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1LoggerManager_ac33a972dffe1dcf4e02c6276f01b9106}} 
+\textbf{ Logger\+Manager} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+void \textbf{ init} (const \textbf{ Application} $\ast$app)
+\begin{DoxyCompactList}\small\item\em Initialize the manager and the manager using the application settings. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LoggerManager_ad2ef4715cec9a1e8ad354f3149b721c2}} 
+Logger \textbf{ main\+Logger} () const
+\begin{DoxyCompactList}\small\item\em Get the main logger instance (not the global one) \end{DoxyCompactList}\item 
+Logger \textbf{ create\+Logger} (const std\+::string \&name) const
+\begin{DoxyCompactList}\small\item\em Create a new logger instance. \end{DoxyCompactList}\item 
+void \textbf{ set\+Level} (const std\+::string \&level)
+\begin{DoxyCompactList}\small\item\em Set the verbosity level of both the main and global loggers. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LoggerManager_ab1b6490a226f74d7acaf957b7282fe1c}} 
+bool \textbf{ is\+Initialized} () const
+\begin{DoxyCompactList}\small\item\em Whether the logger manager has been initialized. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Logger\+Manager}{p.}{classmarlin_1_1LoggerManager} class Responsible for configuring logger for a given application. 
+
+Can possibly configure the global logger instance. 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1LoggerManager_a2343a9ded6d465718b113c9a530ea64d}} 
+\index{marlin\+::\+Logger\+Manager@{marlin\+::\+Logger\+Manager}!create\+Logger@{create\+Logger}}
+\index{create\+Logger@{create\+Logger}!marlin\+::\+Logger\+Manager@{marlin\+::\+Logger\+Manager}}
+\subsubsection{create\+Logger()}
+{\footnotesize\ttfamily Logger\+Manager\+::\+Logger marlin\+::\+Logger\+Manager\+::create\+Logger (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption}) const}
+
+
+
+Create a new logger instance. 
+
+The logger shares the same sinks as the main logger
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & the logger name \\
+\hline
+\end{DoxyParams}
+
+
+References marlin\+::\+Logging\+::create\+Logger(), is\+Initialized(), and main\+Logger().
+
+\mbox{\label{classmarlin_1_1LoggerManager_a8b3970dc892184d30833ad16017c245d}} 
+\index{marlin\+::\+Logger\+Manager@{marlin\+::\+Logger\+Manager}!init@{init}}
+\index{init@{init}!marlin\+::\+Logger\+Manager@{marlin\+::\+Logger\+Manager}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void marlin\+::\+Logger\+Manager\+::init (\begin{DoxyParamCaption}\item[{const \textbf{ Application} $\ast$}]{app }\end{DoxyParamCaption})}
+
+
+
+Initialize the manager and the manager using the application settings. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & the application \\
+\hline
+\end{DoxyParams}
+
+
+References marlin\+::\+Application\+::global\+Parameters(), main\+Logger(), marlin\+::\+Application\+::program(), and set\+Level().
+
+\mbox{\label{classmarlin_1_1LoggerManager_a3ecf7748893c290773da233a6535f8eb}} 
+\index{marlin\+::\+Logger\+Manager@{marlin\+::\+Logger\+Manager}!set\+Level@{set\+Level}}
+\index{set\+Level@{set\+Level}!marlin\+::\+Logger\+Manager@{marlin\+::\+Logger\+Manager}}
+\subsubsection{set\+Level()}
+{\footnotesize\ttfamily void marlin\+::\+Logger\+Manager\+::set\+Level (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{level }\end{DoxyParamCaption})}
+
+
+
+Set the verbosity level of both the main and global loggers. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & the verbosity level to set \\
+\hline
+\end{DoxyParams}
+
+
+References main\+Logger().
+
+
+
+Referenced by init().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Logger\+Manager.\+h\item 
+Logger\+Manager.\+cc\end{DoxyCompactItemize}

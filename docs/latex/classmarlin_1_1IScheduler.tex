@@ -1,0 +1,123 @@
+\section{marlin\+:\+:I\+Scheduler Class Reference}
+\label{classmarlin_1_1IScheduler}\index{marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}}
+
+
+\doxyref{I\+Scheduler}{p.}{classmarlin_1_1IScheduler} interface Interface for implementing a scheduling algorithm for event processing.  
+
+
+
+
+{\ttfamily \#include $<$I\+Scheduler.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:I\+Scheduler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classmarlin_1_1IScheduler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \textbf{ init} (\textbf{ Application} $\ast$app)=0
+\begin{DoxyCompactList}\small\item\em Initialize the scheduler with app parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1IScheduler_a5b1ff631c643779e4504985ea031cb3e}} 
+virtual void \textbf{ end} ()=0
+\begin{DoxyCompactList}\small\item\em Terminate the scheduler activites Cleanup memory, etc ... \end{DoxyCompactList}\item 
+virtual void \textbf{ process\+Run\+Header} (std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $>$ rhdr)=0
+\begin{DoxyCompactList}\small\item\em Process a run header. \end{DoxyCompactList}\item 
+virtual void \textbf{ push\+Event} (std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$ event)=0
+\begin{DoxyCompactList}\small\item\em Push a new event to the scheduler for processing. \end{DoxyCompactList}\item 
+virtual void \textbf{ pop\+Finished\+Events} (std\+::vector$<$ std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$$>$ \&events)=0
+\begin{DoxyCompactList}\small\item\em Retrieve finished events from the scheduler. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1IScheduler_a040cba5dd23490c8727a8d2f2c878bb0}} 
+virtual std\+::size\+\_\+t \textbf{ free\+Slots} () const =0
+\begin{DoxyCompactList}\small\item\em Get the number of free event slots. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{I\+Scheduler}{p.}{classmarlin_1_1IScheduler} interface Interface for implementing a scheduling algorithm for event processing. 
+
+The scheduling can be sequential or parallel (inter-\/event / intra-\/event / both). See implementation classes for more details. 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1IScheduler_a043b3fac1587242d8937aaca575d0a8a}} 
+\index{marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}!init@{init}}
+\index{init@{init}!marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}}
+\subsubsection{init()}
+{\footnotesize\ttfamily virtual void marlin\+::\+I\+Scheduler\+::init (\begin{DoxyParamCaption}\item[{\textbf{ Application} $\ast$}]{app }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Initialize the scheduler with app parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & the application in which the scheduler runs \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \textbf{ marlin\+::concurrency\+::\+P\+E\+P\+Scheduler} \doxyref{}{p.}{classmarlin_1_1concurrency_1_1PEPScheduler_a0073eec7813c50ab53aa5af128a6c774}, and \textbf{ marlin\+::\+Simple\+Scheduler} \doxyref{}{p.}{classmarlin_1_1SimpleScheduler_aaa28a26180c4daa4fd8f86145fc2677d}.
+
+\mbox{\label{classmarlin_1_1IScheduler_a30b54277206eca898a0ea8ac6f44d883}} 
+\index{marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}!pop\+Finished\+Events@{pop\+Finished\+Events}}
+\index{pop\+Finished\+Events@{pop\+Finished\+Events}!marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}}
+\subsubsection{pop\+Finished\+Events()}
+{\footnotesize\ttfamily virtual void marlin\+::\+I\+Scheduler\+::pop\+Finished\+Events (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$$>$ \&}]{events }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Retrieve finished events from the scheduler. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em events} & the list of event to retrieve \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \textbf{ marlin\+::concurrency\+::\+P\+E\+P\+Scheduler} \doxyref{}{p.}{classmarlin_1_1concurrency_1_1PEPScheduler_a1ea04a94fdbe98fc3c9c0802a3bff3c5}, and \textbf{ marlin\+::\+Simple\+Scheduler} \doxyref{}{p.}{classmarlin_1_1SimpleScheduler_a3e7638dbc2a22e94053e1d7dc9fe581f}.
+
+\mbox{\label{classmarlin_1_1IScheduler_a2f77a7a3b74b875bc492311f8971ff37}} 
+\index{marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}!process\+Run\+Header@{process\+Run\+Header}}
+\index{process\+Run\+Header@{process\+Run\+Header}!marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}}
+\subsubsection{process\+Run\+Header()}
+{\footnotesize\ttfamily virtual void marlin\+::\+I\+Scheduler\+::process\+Run\+Header (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $>$}]{rhdr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Process a run header. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rhdr} & the run header to process \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \textbf{ marlin\+::concurrency\+::\+P\+E\+P\+Scheduler} \doxyref{}{p.}{classmarlin_1_1concurrency_1_1PEPScheduler_a83744239f6f487f3d515ec126d10096e}, and \textbf{ marlin\+::\+Simple\+Scheduler} \doxyref{}{p.}{classmarlin_1_1SimpleScheduler_a3f233d79be2cffcb94e14b871eb7e2fc}.
+
+\mbox{\label{classmarlin_1_1IScheduler_a336598b4b1a9643fabcc1487944208d2}} 
+\index{marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}!push\+Event@{push\+Event}}
+\index{push\+Event@{push\+Event}!marlin\+::\+I\+Scheduler@{marlin\+::\+I\+Scheduler}}
+\subsubsection{push\+Event()}
+{\footnotesize\ttfamily virtual void marlin\+::\+I\+Scheduler\+::push\+Event (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Push a new event to the scheduler for processing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & the event to push \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \textbf{ marlin\+::concurrency\+::\+P\+E\+P\+Scheduler} \doxyref{}{p.}{classmarlin_1_1concurrency_1_1PEPScheduler_a2958256e8d5b36cb00cf0326f2c01084}, and \textbf{ marlin\+::\+Simple\+Scheduler} \doxyref{}{p.}{classmarlin_1_1SimpleScheduler_a9e18cd853bf832b284b5e343d0b2399e}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+I\+Scheduler.\+h\end{DoxyCompactItemize}

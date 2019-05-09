@@ -1,0 +1,135 @@
+\section{marlin\+:\+:Simple\+Scheduler Class Reference}
+\label{classmarlin_1_1SimpleScheduler}\index{marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}}
+
+
+\doxyref{Simple\+Scheduler}{p.}{classmarlin_1_1SimpleScheduler} class.  
+
+
+
+
+{\ttfamily \#include $<$Simple\+Scheduler.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:Simple\+Scheduler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classmarlin_1_1SimpleScheduler}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1SimpleScheduler_a08f82cd32efe0cf8edf0eff0bd879b2c}} 
+using {\bfseries Logger} = Logging\+::\+Logger
+\item 
+\mbox{\label{classmarlin_1_1SimpleScheduler_a970587b6375cb9fe0e0e2c58f4087936}} 
+using {\bfseries Processor\+Sequence} = std\+::shared\+\_\+ptr$<$ \textbf{ Super\+Sequence} $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ init} (\textbf{ Application} $\ast$app)
+\begin{DoxyCompactList}\small\item\em Initialize the scheduler with app parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1SimpleScheduler_a5320c9b26d4f2ffa50806e3c2b6bcfdc}} 
+void \textbf{ end} ()
+\begin{DoxyCompactList}\small\item\em Terminate the scheduler activites Cleanup memory, etc ... \end{DoxyCompactList}\item 
+void \textbf{ process\+Run\+Header} (std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $>$ rhdr)
+\begin{DoxyCompactList}\small\item\em Process a run header. \end{DoxyCompactList}\item 
+void \textbf{ push\+Event} (std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$ event)
+\begin{DoxyCompactList}\small\item\em Push a new event to the scheduler for processing. \end{DoxyCompactList}\item 
+void \textbf{ pop\+Finished\+Events} (std\+::vector$<$ std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$$>$ \&events)
+\begin{DoxyCompactList}\small\item\em Retrieve finished events from the scheduler. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1SimpleScheduler_ade3c980b28c0cd97165a6755e0bfac6d}} 
+std\+::size\+\_\+t \textbf{ free\+Slots} () const
+\begin{DoxyCompactList}\small\item\em Get the number of free event slots. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Simple\+Scheduler}{p.}{classmarlin_1_1SimpleScheduler} class. 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1SimpleScheduler_aaa28a26180c4daa4fd8f86145fc2677d}} 
+\index{marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}!init@{init}}
+\index{init@{init}!marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void marlin\+::\+Simple\+Scheduler\+::init (\begin{DoxyParamCaption}\item[{\textbf{ Application} $\ast$}]{app }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Initialize the scheduler with app parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & the application in which the scheduler runs \\
+\hline
+\end{DoxyParams}
+
+
+Implements \textbf{ marlin\+::\+I\+Scheduler} \doxyref{}{p.}{classmarlin_1_1IScheduler_a043b3fac1587242d8937aaca575d0a8a}.
+
+
+
+References marlin\+::\+Application\+::active\+Processors(), marlin\+::\+Application\+::create\+Logger(), and marlin\+::\+Application\+::processor\+Parameters().
+
+\mbox{\label{classmarlin_1_1SimpleScheduler_a3e7638dbc2a22e94053e1d7dc9fe581f}} 
+\index{marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}!pop\+Finished\+Events@{pop\+Finished\+Events}}
+\index{pop\+Finished\+Events@{pop\+Finished\+Events}!marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}}
+\subsubsection{pop\+Finished\+Events()}
+{\footnotesize\ttfamily void marlin\+::\+Simple\+Scheduler\+::pop\+Finished\+Events (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$$>$ \&}]{events }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Retrieve finished events from the scheduler. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em events} & the list of event to retrieve \\
+\hline
+\end{DoxyParams}
+
+
+Implements \textbf{ marlin\+::\+I\+Scheduler} \doxyref{}{p.}{classmarlin_1_1IScheduler_a30b54277206eca898a0ea8ac6f44d883}.
+
+\mbox{\label{classmarlin_1_1SimpleScheduler_a3f233d79be2cffcb94e14b871eb7e2fc}} 
+\index{marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}!process\+Run\+Header@{process\+Run\+Header}}
+\index{process\+Run\+Header@{process\+Run\+Header}!marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}}
+\subsubsection{process\+Run\+Header()}
+{\footnotesize\ttfamily void marlin\+::\+Simple\+Scheduler\+::process\+Run\+Header (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $>$}]{rhdr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Process a run header. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rhdr} & the run header to process \\
+\hline
+\end{DoxyParams}
+
+
+Implements \textbf{ marlin\+::\+I\+Scheduler} \doxyref{}{p.}{classmarlin_1_1IScheduler_a2f77a7a3b74b875bc492311f8971ff37}.
+
+\mbox{\label{classmarlin_1_1SimpleScheduler_a9e18cd853bf832b284b5e343d0b2399e}} 
+\index{marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}!push\+Event@{push\+Event}}
+\index{push\+Event@{push\+Event}!marlin\+::\+Simple\+Scheduler@{marlin\+::\+Simple\+Scheduler}}
+\subsubsection{push\+Event()}
+{\footnotesize\ttfamily void marlin\+::\+Simple\+Scheduler\+::push\+Event (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ E\+V\+E\+N\+T\+::\+L\+C\+Event $>$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Push a new event to the scheduler for processing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & the event to push \\
+\hline
+\end{DoxyParams}
+
+
+Implements \textbf{ marlin\+::\+I\+Scheduler} \doxyref{}{p.}{classmarlin_1_1IScheduler_a336598b4b1a9643fabcc1487944208d2}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Simple\+Scheduler.\+h\item 
+Simple\+Scheduler.\+cc\end{DoxyCompactItemize}

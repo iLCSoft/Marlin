@@ -1,0 +1,105 @@
+\section{marlin\+:\+:concurrency\+:\+:Queue\+Element$<$ IN, O\+UT $>$ Class Template Reference}
+\label{classmarlin_1_1concurrency_1_1QueueElement}\index{marlin\+::concurrency\+::\+Queue\+Element$<$ I\+N, O\+U\+T $>$@{marlin\+::concurrency\+::\+Queue\+Element$<$ I\+N, O\+U\+T $>$}}
+
+
+\doxyref{Queue\+Element}{p.}{classmarlin_1_1concurrency_1_1QueueElement} class A template queue element used in the thread pool.  
+
+
+
+
+{\ttfamily \#include $<$Queue\+Element.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1concurrency_1_1QueueElement_a462951784529390d2adb452d0e2a7f95}} 
+{\bfseries Queue\+Element} (const \textbf{ Queue\+Element}$<$ IN, O\+UT $>$ \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1concurrency_1_1QueueElement_a0dce6fcc5d388214b031d146986cfba7}} 
+\textbf{ Queue\+Element} \& {\bfseries operator=} (const \textbf{ Queue\+Element}$<$ IN, O\+UT $>$ \&)=delete
+\item 
+\textbf{ Queue\+Element} (IN \&\&input)
+\begin{DoxyCompactList}\small\item\em Constructor with input data. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1concurrency_1_1QueueElement_a8d17ddda4ecda3206b1cbbf025682eb1}} 
+\textbf{ Queue\+Element} (\textbf{ Queue\+Element}$<$ IN, O\+UT $>$ \&\&rhs)
+\begin{DoxyCompactList}\small\item\em Move constructor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1concurrency_1_1QueueElement_afe197a16c9be7da5814cfa77b934b2fc}} 
+\textbf{ Queue\+Element} \& \textbf{ operator=} (\textbf{ Queue\+Element}$<$ IN, O\+UT $>$ \&\&rhs)
+\begin{DoxyCompactList}\small\item\em Move assignement operator. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1concurrency_1_1QueueElement_a2a0d44a899a808ae03579c166be896c6}} 
+std\+::shared\+\_\+ptr$<$ std\+::promise$<$ O\+UT $>$ $>$ \textbf{ promise} () const
+\begin{DoxyCompactList}\small\item\em Get the output promise. \end{DoxyCompactList}\item 
+void \textbf{ set\+Value} (O\+UT \&\&output)
+\begin{DoxyCompactList}\small\item\em Set the value to be retrieved in the future variable. \end{DoxyCompactList}\item 
+IN \textbf{ take\+Input} ()
+\begin{DoxyCompactList}\small\item\em Take the input data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename IN, typename O\+UT$>$\newline
+class marlin\+::concurrency\+::\+Queue\+Element$<$ I\+N, O\+U\+T $>$}
+
+\doxyref{Queue\+Element}{p.}{classmarlin_1_1concurrency_1_1QueueElement} class A template queue element used in the thread pool. 
+
+The IN type represent the actual data type pushed by the user in the thread pool queue and the O\+UT type the expected output stored in the future object returned by calling push() 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1concurrency_1_1QueueElement_a45a6848fdd4728381231e43437c92d8f}} 
+\index{marlin\+::concurrency\+::\+Queue\+Element@{marlin\+::concurrency\+::\+Queue\+Element}!Queue\+Element@{Queue\+Element}}
+\index{Queue\+Element@{Queue\+Element}!marlin\+::concurrency\+::\+Queue\+Element@{marlin\+::concurrency\+::\+Queue\+Element}}
+\subsubsection{Queue\+Element()}
+{\footnotesize\ttfamily template$<$typename IN, typename O\+UT$>$ \\
+\textbf{ marlin\+::concurrency\+::\+Queue\+Element}$<$ IN, O\+UT $>$\+::\textbf{ Queue\+Element} (\begin{DoxyParamCaption}\item[{IN \&\&}]{input }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor with input data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & user input data \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1concurrency_1_1QueueElement_a1df07f4a80f4764a9cec499e861dcf66}} 
+\index{marlin\+::concurrency\+::\+Queue\+Element@{marlin\+::concurrency\+::\+Queue\+Element}!set\+Value@{set\+Value}}
+\index{set\+Value@{set\+Value}!marlin\+::concurrency\+::\+Queue\+Element@{marlin\+::concurrency\+::\+Queue\+Element}}
+\subsubsection{set\+Value()}
+{\footnotesize\ttfamily template$<$typename IN, typename O\+UT$>$ \\
+void \textbf{ marlin\+::concurrency\+::\+Queue\+Element}$<$ IN, O\+UT $>$\+::set\+Value (\begin{DoxyParamCaption}\item[{O\+UT \&\&}]{output }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the value to be retrieved in the future variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em output} & the output data to retrieve in the future object \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by marlin\+::concurrency\+::\+Worker\+Base$<$ P\+E\+P\+Scheduler\+::\+Input\+Type, P\+E\+P\+Scheduler\+::\+Output\+Type $>$\+::process\+Element().
+
+\mbox{\label{classmarlin_1_1concurrency_1_1QueueElement_a1a04765bc6f3bfa7fefef55f76693c62}} 
+\index{marlin\+::concurrency\+::\+Queue\+Element@{marlin\+::concurrency\+::\+Queue\+Element}!take\+Input@{take\+Input}}
+\index{take\+Input@{take\+Input}!marlin\+::concurrency\+::\+Queue\+Element@{marlin\+::concurrency\+::\+Queue\+Element}}
+\subsubsection{take\+Input()}
+{\footnotesize\ttfamily template$<$typename IN, typename O\+UT$>$ \\
+IN \textbf{ marlin\+::concurrency\+::\+Queue\+Element}$<$ IN, O\+UT $>$\+::take\+Input (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Take the input data. 
+
+Note that this moves the input data and thus invalidate the stored input data of the queue element 
+
+Referenced by marlin\+::concurrency\+::\+Worker\+Base$<$ P\+E\+P\+Scheduler\+::\+Input\+Type, P\+E\+P\+Scheduler\+::\+Output\+Type $>$\+::process\+Element().
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Queue\+Element.\+h\end{DoxyCompactItemize}

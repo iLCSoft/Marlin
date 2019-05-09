@@ -1,0 +1,151 @@
+\section{marlin\+:\+:Geometry\+Plugin Class Reference}
+\label{classmarlin_1_1GeometryPlugin}\index{marlin\+::\+Geometry\+Plugin@{marlin\+::\+Geometry\+Plugin}}
+
+
+\doxyref{Geometry\+Plugin}{p.}{classmarlin_1_1GeometryPlugin} class Responsible for loading geometry in Marlin and providing access to it through the \doxyref{Geometry\+Manager}{p.}{classmarlin_1_1GeometryManager}.  
+
+
+
+
+{\ttfamily \#include $<$Geometry\+Plugin.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:Geometry\+Plugin\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classmarlin_1_1GeometryPlugin}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a6297f7a0b1b21e21f5a45db3debc0b04}} 
+using {\bfseries Logger} = Logging\+::\+Logger
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_af5b33c966fa36af014d2cc2229da5575}} 
+{\bfseries Geometry\+Plugin} (const \textbf{ Geometry\+Plugin} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_afdffe2c1f43716984d7fa7c6f0224008}} 
+\textbf{ Geometry\+Plugin} \& {\bfseries operator=} (const \textbf{ Geometry\+Plugin} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_aab2b227c1846264d395598fdc078aa39}} 
+virtual std\+::type\+\_\+index \textbf{ type\+Index} () const =0
+\begin{DoxyCompactList}\small\item\em Get a type index object from the geometry handle. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a9ef3616301d48891e1dce6e516b43c03}} 
+virtual void \textbf{ dump\+Geometry} () const =0
+\begin{DoxyCompactList}\small\item\em Dump the geometry in the console. \end{DoxyCompactList}\item 
+const std\+::string \& \textbf{ description} () const
+\begin{DoxyCompactList}\small\item\em Get the geometry description. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_acb40da794bc079dbaeaac4cb986689ed}} 
+const std\+::string \& \textbf{ type} () const
+\begin{DoxyCompactList}\small\item\em Get the geometry type. \end{DoxyCompactList}\item 
+void \textbf{ print} () const
+\begin{DoxyCompactList}\small\item\em Print the complete geometry plugin description. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Geometry\+Plugin} (const std\+::string \&gtype)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a61c63cfed87e2da46176f01fa1ab2c57}} 
+virtual void \textbf{ load\+Geometry} ()=0
+\begin{DoxyCompactList}\small\item\em Load the geometry. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a5ea49dd84089cf12a61741e974a9d31c}} 
+virtual const void $\ast$ \textbf{ handle} () const =0
+\begin{DoxyCompactList}\small\item\em Get a handle on the geometry instance. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a6ed7abe0e05e566d99f3a4218fbe85dd}} 
+virtual void \textbf{ destroy} ()=0
+\begin{DoxyCompactList}\small\item\em Cleanup geometry. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a4febb346aed5f4cd11757ab9a5eacae4}} 
+const \textbf{ Application} \& \textbf{ app} () const
+\begin{DoxyCompactList}\small\item\em Get the application in which the plugin has been created. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a9fdd5653fcca61d6b302b6574b2e4da9}} 
+const std\+::string \textbf{ \+\_\+type}
+\begin{DoxyCompactList}\small\item\em The geometry type. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a304aee7888e7af8d51b87fd8c952b375}} 
+std\+::string \textbf{ \+\_\+description} \{\char`\"{}No \textbf{ description}\char`\"{}\}
+\begin{DoxyCompactList}\small\item\em The geometry plugin description. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_ac89a395acf7e5287b95ab0bbae57811d}} 
+Logger \textbf{ \+\_\+logger} \{nullptr\}
+\begin{DoxyCompactList}\small\item\em The application logger. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a637d9d0a550bb72c269a618d5a35812e}} 
+bool \textbf{ \+\_\+dump\+Geometry} \{false\}
+\begin{DoxyCompactList}\small\item\em Whether to dump the geometry on creation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1GeometryPlugin_a52d2717cba1ffaed0a4cde1918697357}} 
+class {\bfseries Geometry\+Manager}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Geometry\+Plugin}{p.}{classmarlin_1_1GeometryPlugin} class Responsible for loading geometry in Marlin and providing access to it through the \doxyref{Geometry\+Manager}{p.}{classmarlin_1_1GeometryManager}. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1GeometryPlugin_a38e9cee84218dac5edcaaa785203d2b7}} 
+\index{marlin\+::\+Geometry\+Plugin@{marlin\+::\+Geometry\+Plugin}!Geometry\+Plugin@{Geometry\+Plugin}}
+\index{Geometry\+Plugin@{Geometry\+Plugin}!marlin\+::\+Geometry\+Plugin@{marlin\+::\+Geometry\+Plugin}}
+\subsubsection{Geometry\+Plugin()}
+{\footnotesize\ttfamily marlin\+::\+Geometry\+Plugin\+::\+Geometry\+Plugin (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{gtype }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Constructor. 
+
+To be called by sub classes
+
+
+\begin{DoxyParams}{Parameters}
+{\em gtype} & the geometry type \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+dump\+Geometry, \+\_\+logger, marlin\+::\+Logging\+::create\+Logger(), and marlin\+::\+Parametrized\+::register\+Optional\+Parameter().
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1GeometryPlugin_ad9168e8b5a4b214befd8b87606fcfe94}} 
+\index{marlin\+::\+Geometry\+Plugin@{marlin\+::\+Geometry\+Plugin}!description@{description}}
+\index{description@{description}!marlin\+::\+Geometry\+Plugin@{marlin\+::\+Geometry\+Plugin}}
+\subsubsection{description()}
+{\footnotesize\ttfamily const std\+::string \& marlin\+::\+Geometry\+Plugin\+::description (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the geometry description. 
+
+Can be set by sub-\/classes in constructor (protected) 
+
+References \+\_\+description.
+
+
+
+Referenced by print().
+
+\mbox{\label{classmarlin_1_1GeometryPlugin_a3cf9992844455efae3a827c16002d9f4}} 
+\index{marlin\+::\+Geometry\+Plugin@{marlin\+::\+Geometry\+Plugin}!print@{print}}
+\index{print@{print}!marlin\+::\+Geometry\+Plugin@{marlin\+::\+Geometry\+Plugin}}
+\subsubsection{print()}
+{\footnotesize\ttfamily void marlin\+::\+Geometry\+Plugin\+::print (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Print the complete geometry plugin description. 
+
+The geometry is dumped if the verbosity level is less than D\+E\+B\+U\+G5 
+
+References \+\_\+dump\+Geometry, \+\_\+logger, \+\_\+type, app(), marlin\+::\+Application\+::create\+Logger(), description(), dump\+Geometry(), handle(), load\+Geometry(), type(), and type\+Index().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Geometry\+Plugin.\+h\item 
+Geometry\+Plugin.\+cc\end{DoxyCompactItemize}

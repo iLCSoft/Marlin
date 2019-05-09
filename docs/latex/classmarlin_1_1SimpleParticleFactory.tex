@@ -1,0 +1,98 @@
+\section{marlin\+:\+:Simple\+Particle\+Factory Class Reference}
+\label{classmarlin_1_1SimpleParticleFactory}\index{marlin\+::\+Simple\+Particle\+Factory@{marlin\+::\+Simple\+Particle\+Factory}}
+
+
+Implementation of \doxyref{I\+Reco\+Particle\+Factory}{p.}{classmarlin_1_1IRecoParticleFactory} that implements the default behaviour as described in \doxyref{Simple\+Fast\+M\+C\+Processor}{p.}{classmarlin_1_1SimpleFastMCProcessor}, i.\+e.  
+
+
+
+
+{\ttfamily \#include $<$Simple\+Particle\+Factory.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:Simple\+Particle\+Factory\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classmarlin_1_1SimpleParticleFactory}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \textbf{ $\sim$\+Simple\+Particle\+Factory} ()
+\begin{DoxyCompactList}\small\item\em Virtual d\textquotesingle{}tor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1SimpleParticleFactory_a2c050bb3a0c06aadcb5ef9c552b409f7}} 
+virtual lcio\+::\+Reconstructed\+Particle $\ast$ \textbf{ create\+Reconstructed\+Particle} (const lcio\+::\+M\+C\+Particle $\ast$mcp)
+\begin{DoxyCompactList}\small\item\em The actual factory method that creates a new Reconstructed\+Particle. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1SimpleParticleFactory_a3f82779ebc96a54c59433f914f6eb62c}} 
+virtual void \textbf{ register\+I\+Four\+Vector\+Smearer} (\textbf{ I\+Four\+Vector\+Smearer} $\ast$sm, Fast\+M\+C\+Particle\+Type type)
+\begin{DoxyCompactList}\small\item\em Register a particle four vector smearer for the given type. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1SimpleParticleFactory_ac0fd79c9ba9d28f8108fca9fd96cdaee}} 
+virtual Fast\+M\+C\+Particle\+Type \textbf{ get\+Particle\+Type} (const lcio\+::\+M\+C\+Particle $\ast$mcp)
+\begin{DoxyCompactList}\small\item\em Returns the type of the M\+C\+Particle. \end{DoxyCompactList}\item 
+virtual void \textbf{ set\+Momentum\+Cut} (double m\+Cut)
+\begin{DoxyCompactList}\small\item\em Helper function to determine the charge from the P\+DG (charge is missing from stdhep files) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1SimpleParticleFactory_aa5e09f4fca0e2746028e76f5eed82df1}} 
+std\+::vector$<$ \textbf{ I\+Four\+Vector\+Smearer} $\ast$ $>$ {\bfseries \+\_\+smearing\+Vec}
+\item 
+\mbox{\label{classmarlin_1_1SimpleParticleFactory_a14a673f3e4ec54a13a465f53f93d3f0c}} 
+double {\bfseries \+\_\+momentum\+Cut}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementation of \doxyref{I\+Reco\+Particle\+Factory}{p.}{classmarlin_1_1IRecoParticleFactory} that implements the default behaviour as described in \doxyref{Simple\+Fast\+M\+C\+Processor}{p.}{classmarlin_1_1SimpleFastMCProcessor}, i.\+e. 
+
+have polar angle ranges with different resolutions for charged tracks, photons and neutral hadrons.
+
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+\doxyref{Simple\+Particle\+Factory.\+h}{p.}{SimpleParticleFactory_8h_source},v 1.\+3 2007-\/11-\/23 20\+:09\+:12 gaede Exp 
+\end{DoxyParagraph}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1SimpleParticleFactory_a5ed083943b298f870fd2caf91a139108}} 
+\index{marlin\+::\+Simple\+Particle\+Factory@{marlin\+::\+Simple\+Particle\+Factory}!````~Simple\+Particle\+Factory@{$\sim$\+Simple\+Particle\+Factory}}
+\index{````~Simple\+Particle\+Factory@{$\sim$\+Simple\+Particle\+Factory}!marlin\+::\+Simple\+Particle\+Factory@{marlin\+::\+Simple\+Particle\+Factory}}
+\subsubsection{$\sim$\+Simple\+Particle\+Factory()}
+{\footnotesize\ttfamily virtual marlin\+::\+Simple\+Particle\+Factory\+::$\sim$\+Simple\+Particle\+Factory (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Virtual d\textquotesingle{}tor. 
+
+
+
+References create\+Reconstructed\+Particle(), get\+Particle\+Type(), register\+I\+Four\+Vector\+Smearer(), and set\+Momentum\+Cut().
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1SimpleParticleFactory_a026d4533ca033bbf85a02341933a2dc9}} 
+\index{marlin\+::\+Simple\+Particle\+Factory@{marlin\+::\+Simple\+Particle\+Factory}!set\+Momentum\+Cut@{set\+Momentum\+Cut}}
+\index{set\+Momentum\+Cut@{set\+Momentum\+Cut}!marlin\+::\+Simple\+Particle\+Factory@{marlin\+::\+Simple\+Particle\+Factory}}
+\subsubsection{set\+Momentum\+Cut()}
+{\footnotesize\ttfamily void marlin\+::\+Simple\+Particle\+Factory\+::set\+Momentum\+Cut (\begin{DoxyParamCaption}\item[{double}]{m\+Cut }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Helper function to determine the charge from the P\+DG (charge is missing from stdhep files) 
+
+Set the momentum cut in GeV -\/ no particles are produced for ower momenta. Default is 0.\+1 eV. 
+
+Referenced by marlin\+::\+Simple\+Fast\+M\+C\+Processor\+::init(), and $\sim$\+Simple\+Particle\+Factory().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Simple\+Particle\+Factory.\+h\item 
+Simple\+Particle\+Factory.\+cc\end{DoxyCompactItemize}

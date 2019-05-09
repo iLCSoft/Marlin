@@ -1,0 +1,88 @@
+\section{Ti\+Xml\+Comment Class Reference}
+\label{classTiXmlComment}\index{Ti\+Xml\+Comment@{Ti\+Xml\+Comment}}
+
+
+An X\+ML comment.  
+
+
+
+
+{\ttfamily \#include $<$tinyxml.\+h$>$}
+
+Inheritance diagram for Ti\+Xml\+Comment\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classTiXmlComment}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlComment_aaa3252031d3e8bd3a2bf51a1c61201b7}} 
+\textbf{ Ti\+Xml\+Comment} ()
+\begin{DoxyCompactList}\small\item\em Constructs an empty comment. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlComment_a37e7802ef17bc03ebe5ae79bf0713d47}} 
+\textbf{ Ti\+Xml\+Comment} (const char $\ast$\+\_\+value)
+\begin{DoxyCompactList}\small\item\em Construct a comment from text. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlComment_afaec41ac2760ce946ba1590eb5708e50}} 
+{\bfseries Ti\+Xml\+Comment} (const \textbf{ Ti\+Xml\+Comment} \&)
+\item 
+\mbox{\label{classTiXmlComment_a46373f99b65cb960637dccb1f126bd49}} 
+void {\bfseries operator=} (const \textbf{ Ti\+Xml\+Comment} \&base)
+\item 
+\mbox{\label{classTiXmlComment_a1f9f06e2ed3f77875093436193b16c16}} 
+virtual \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Clone} () const
+\begin{DoxyCompactList}\small\item\em Returns a copy of this Comment. \end{DoxyCompactList}\item 
+virtual void \textbf{ Print} (F\+I\+LE $\ast$cfile, int depth) const
+\begin{DoxyCompactList}\small\item\em All Tiny\+Xml classes can print themselves to a filestream or the string class (\doxyref{Ti\+Xml\+String}{p.}{classTiXmlString} in non-\/\+S\+TL mode, std\+::string in S\+TL mode.) Either or both cfile and str can be null. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlComment_a43bddc18ac057734b41d84653b71d3e0}} 
+virtual const char $\ast$ {\bfseries Parse} (const char $\ast$p, \textbf{ Ti\+Xml\+Parsing\+Data} $\ast$data, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlComment_a1032e176d3eb73017ceabc698cac0f16}} 
+virtual const \textbf{ Ti\+Xml\+Comment} $\ast$ \textbf{ To\+Comment} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlComment_acc7c7e07e13c23f17797d642981511df}} 
+virtual \textbf{ Ti\+Xml\+Comment} $\ast$ \textbf{ To\+Comment} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlComment_ac894241530d1d266131a5026cb251a95}} 
+virtual bool \textbf{ Accept} (\textbf{ Ti\+Xml\+Visitor} $\ast$visitor) const
+\begin{DoxyCompactList}\small\item\em Walk the X\+ML tree visiting this node and all of its children. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlComment_aaeb8a0b2d503f603879a2d04ceb54295}} 
+void {\bfseries Copy\+To} (\textbf{ Ti\+Xml\+Comment} $\ast$target) const
+\item 
+\mbox{\label{classTiXmlComment_ad69c1024082f716462b6fd4b94488320}} 
+virtual void {\bfseries Stream\+In} (std\+::istream $\ast$in, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$tag)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+An X\+ML comment. 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classTiXmlComment_a873171beac19d40f0eaae945711c98ed}} 
+\index{Ti\+Xml\+Comment@{Ti\+Xml\+Comment}!Print@{Print}}
+\index{Print@{Print}!Ti\+Xml\+Comment@{Ti\+Xml\+Comment}}
+\subsubsection{Print()}
+{\footnotesize\ttfamily void Ti\+Xml\+Comment\+::\+Print (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{cfile,  }\item[{int}]{depth }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+All Tiny\+Xml classes can print themselves to a filestream or the string class (\doxyref{Ti\+Xml\+String}{p.}{classTiXmlString} in non-\/\+S\+TL mode, std\+::string in S\+TL mode.) Either or both cfile and str can be null. 
+
+This is a formatted print, and will insert tabs and newlines.
+
+(For an unformatted stream, use the $<$$<$ operator.) 
+
+Implements \textbf{ Ti\+Xml\+Base} \doxyref{}{p.}{classTiXmlBase_a0de56b3f2ef14c65091a3b916437b512}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+tinyxml.\+h\item 
+tinyxml.\+cc\item 
+tinyxmlparser.\+cc\end{DoxyCompactItemize}

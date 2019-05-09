@@ -1,0 +1,121 @@
+\section{Ti\+Xml\+Text Class Reference}
+\label{classTiXmlText}\index{Ti\+Xml\+Text@{Ti\+Xml\+Text}}
+
+
+X\+ML text.  
+
+
+
+
+{\ttfamily \#include $<$tinyxml.\+h$>$}
+
+Inheritance diagram for Ti\+Xml\+Text\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classTiXmlText}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Ti\+Xml\+Text} (const char $\ast$init\+Value)
+\begin{DoxyCompactList}\small\item\em Constructor for text element. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlText_a439792f6183a3d3fb6f2bc2b16fa5691}} 
+\textbf{ Ti\+Xml\+Text} (const std\+::string \&init\+Value)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlText_a8d2cc1b4af2208cbb0171cf20f6815d1}} 
+{\bfseries Ti\+Xml\+Text} (const \textbf{ Ti\+Xml\+Text} \&copy)
+\item 
+\mbox{\label{classTiXmlText_af5f15d40d048cea7cab9d0eb4fd8a7d2}} 
+void {\bfseries operator=} (const \textbf{ Ti\+Xml\+Text} \&base)
+\item 
+virtual void \textbf{ Print} (F\+I\+LE $\ast$cfile, int depth) const
+\begin{DoxyCompactList}\small\item\em All Tiny\+Xml classes can print themselves to a filestream or the string class (\doxyref{Ti\+Xml\+String}{p.}{classTiXmlString} in non-\/\+S\+TL mode, std\+::string in S\+TL mode.) Either or both cfile and str can be null. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlText_aac1f4764d220ed6bf809b16dfcb6b45a}} 
+bool \textbf{ C\+D\+A\+TA} () const
+\begin{DoxyCompactList}\small\item\em Queries whether this represents text using a C\+D\+A\+TA section. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlText_acb17ff7c5d09b2c839393445a3de5ea9}} 
+void \textbf{ Set\+C\+D\+A\+TA} (bool \+\_\+cdata)
+\begin{DoxyCompactList}\small\item\em Turns on or off a C\+D\+A\+TA representation of text. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlText_a8d2dcfa41fc73d3e62dacc2fcf633819}} 
+virtual const char $\ast$ {\bfseries Parse} (const char $\ast$p, \textbf{ Ti\+Xml\+Parsing\+Data} $\ast$data, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlText_af8973cfd4ca00c5d934cb23e8aa0f5d5}} 
+virtual const \textbf{ Ti\+Xml\+Text} $\ast$ \textbf{ To\+Text} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlText_ae7c3a8fd3e4dbf6c0c4363a943d72f5b}} 
+virtual \textbf{ Ti\+Xml\+Text} $\ast$ \textbf{ To\+Text} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlText_af65964326eac4640bfb97d4622fa0de2}} 
+virtual bool \textbf{ Accept} (\textbf{ Ti\+Xml\+Visitor} $\ast$content) const
+\begin{DoxyCompactList}\small\item\em Walk the X\+ML tree visiting this node and all of its children. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlText_a98a20d7a4f1c1478e25e34921be24bfe}} 
+virtual \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Clone} () const
+\begin{DoxyCompactList}\small\item\em [internal use] Creates a new Element and returns it. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlText_a480b8e0ad6b7833a73ecf2191195c9b5}} 
+void {\bfseries Copy\+To} (\textbf{ Ti\+Xml\+Text} $\ast$target) const
+\item 
+\mbox{\label{classTiXmlText_a0fd9005b279def46859b72f336b158da}} 
+bool {\bfseries Blank} () const
+\item 
+\mbox{\label{classTiXmlText_ab0ad9f14fd41689ced26f21a5c8919b4}} 
+virtual void {\bfseries Stream\+In} (std\+::istream $\ast$in, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$tag)
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlText_ab6592e32cb9132be517cc12a70564c4b}} 
+class {\bfseries Ti\+Xml\+Element}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+X\+ML text. 
+
+A text node can have 2 ways to output the next. \char`\"{}normal\char`\"{} output and C\+D\+A\+TA. It will default to the mode it was parsed from the X\+ML file and you generally want to leave it alone, but you can change the output mode with \doxyref{Set\+C\+D\+A\+T\+A()}{p.}{classTiXmlText_acb17ff7c5d09b2c839393445a3de5ea9} and query it with \doxyref{C\+D\+A\+T\+A()}{p.}{classTiXmlText_aac1f4764d220ed6bf809b16dfcb6b45a}. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classTiXmlText_af659e77c6b87d684827f35a8f4895960}} 
+\index{Ti\+Xml\+Text@{Ti\+Xml\+Text}!Ti\+Xml\+Text@{Ti\+Xml\+Text}}
+\index{Ti\+Xml\+Text@{Ti\+Xml\+Text}!Ti\+Xml\+Text@{Ti\+Xml\+Text}}
+\subsubsection{Ti\+Xml\+Text()}
+{\footnotesize\ttfamily Ti\+Xml\+Text\+::\+Ti\+Xml\+Text (\begin{DoxyParamCaption}\item[{const char $\ast$}]{init\+Value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor for text element. 
+
+By default, it is treated as normal, encoded text. If you want it be output as a C\+D\+A\+TA text element, set the parameter \+\_\+cdata to \textquotesingle{}true\textquotesingle{} 
+
+References Ti\+Xml\+Element\+::\+Print(), and Ti\+Xml\+Node\+::\+Set\+Value().
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classTiXmlText_a75f6895906333894e2574cc8cf77ea79}} 
+\index{Ti\+Xml\+Text@{Ti\+Xml\+Text}!Print@{Print}}
+\index{Print@{Print}!Ti\+Xml\+Text@{Ti\+Xml\+Text}}
+\subsubsection{Print()}
+{\footnotesize\ttfamily void Ti\+Xml\+Text\+::\+Print (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{cfile,  }\item[{int}]{depth }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+All Tiny\+Xml classes can print themselves to a filestream or the string class (\doxyref{Ti\+Xml\+String}{p.}{classTiXmlString} in non-\/\+S\+TL mode, std\+::string in S\+TL mode.) Either or both cfile and str can be null. 
+
+This is a formatted print, and will insert tabs and newlines.
+
+(For an unformatted stream, use the $<$$<$ operator.) 
+
+Implements \textbf{ Ti\+Xml\+Base} \doxyref{}{p.}{classTiXmlBase_a0de56b3f2ef14c65091a3b916437b512}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+tinyxml.\+h\item 
+tinyxml.\+cc\item 
+tinyxmlparser.\+cc\end{DoxyCompactItemize}

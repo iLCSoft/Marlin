@@ -1,0 +1,136 @@
+\section{marlin\+:\+:Test\+Processor Class Reference}
+\label{classmarlin_1_1TestProcessor}\index{marlin\+::\+Test\+Processor@{marlin\+::\+Test\+Processor}}
+
+
+Simple processor for testing.  
+
+
+Inheritance diagram for marlin\+:\+:Test\+Processor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classmarlin_1_1TestProcessor}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1TestProcessor_ac073820de55631e2c1cf84043b853345}} 
+\textbf{ Processor} $\ast$ \textbf{ new\+Processor} ()
+\begin{DoxyCompactList}\small\item\em Return a new instance of the processor (factory method) \end{DoxyCompactList}\item 
+void \textbf{ init} ()
+\begin{DoxyCompactList}\small\item\em Called at the begin of the job before anything is read. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1TestProcessor_a4eed8ec8838445c9ca5261add8fc3112}} 
+void \textbf{ process\+Run\+Header} (E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $\ast$run)
+\begin{DoxyCompactList}\small\item\em Called for every run. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1TestProcessor_a5ab65c443465d9407bd5adca1d798c59}} 
+void \textbf{ process\+Event} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$evt)
+\begin{DoxyCompactList}\small\item\em Called for every event -\/ the working horse. \end{DoxyCompactList}\item 
+void \textbf{ check} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$evt)
+\begin{DoxyCompactList}\small\item\em Called for every event -\/ right after \doxyref{process\+Event()}{p.}{classmarlin_1_1TestProcessor_a5ab65c443465d9407bd5adca1d798c59} has been called for this processor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1TestProcessor_adf788e37e471e1e6ff8a59c4db0afae0}} 
+void \textbf{ end} ()
+\begin{DoxyCompactList}\small\item\em Called after data processing for clean up. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ print\+End\+Message} () const
+\begin{DoxyCompactList}\small\item\em Test method for const. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1TestProcessor_a78908bd5f476c766d7708316d1cdcd0d}} 
+int {\bfseries \+\_\+n\+Run} \{0\}
+\item 
+\mbox{\label{classmarlin_1_1TestProcessor_a3f819d54419105ef06c29307bc0410bf}} 
+std\+::atomic\+\_\+int {\bfseries \+\_\+n\+Evt} \{0\}
+\item 
+\mbox{\label{classmarlin_1_1TestProcessor_a6efad1202492663ae5a3e0b818562614}} 
+bool {\bfseries \+\_\+do\+Calibration} \{false\}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Simple processor for testing. 
+
+Writes something to stdout for every callbackmethod.
+
+\subparagraph*{Input -\/ Prerequisites}
+
+none
+
+\subparagraph*{Output}
+
+none
+
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+Test\+Processor.\+h,v 1.\+7 2007-\/05-\/23 13\+:12\+:21 gaede Exp 
+\end{DoxyParagraph}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1TestProcessor_ae4c252ec319b9633c0132471c24cb3e8}} 
+\index{marlin\+::\+Test\+Processor@{marlin\+::\+Test\+Processor}!check@{check}}
+\index{check@{check}!marlin\+::\+Test\+Processor@{marlin\+::\+Test\+Processor}}
+\subsubsection{check()}
+{\footnotesize\ttfamily void marlin\+::\+Test\+Processor\+::check (\begin{DoxyParamCaption}\item[{E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Called for every event -\/ right after \doxyref{process\+Event()}{p.}{classmarlin_1_1TestProcessor_a5ab65c443465d9407bd5adca1d798c59} has been called for this processor. 
+
+Use to check processing and/or produce check plots. 
+
+Reimplemented from \textbf{ marlin\+::\+Processor} \doxyref{}{p.}{classmarlin_1_1Processor_a1e2b7d44f9e69498fb4679cb9d2b0b3b}.
+
+
+
+Referenced by new\+Processor().
+
+\mbox{\label{classmarlin_1_1TestProcessor_a642eda7da954ecd815df99f25a1c946b}} 
+\index{marlin\+::\+Test\+Processor@{marlin\+::\+Test\+Processor}!init@{init}}
+\index{init@{init}!marlin\+::\+Test\+Processor@{marlin\+::\+Test\+Processor}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void marlin\+::\+Test\+Processor\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Called at the begin of the job before anything is read. 
+
+Use to initialize the processor, e.\+g. book histograms. 
+
+Reimplemented from \textbf{ marlin\+::\+Processor} \doxyref{}{p.}{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b}.
+
+
+
+References marlin\+::\+Processor\+::name(), and marlin\+::\+Processor\+::parameters().
+
+
+
+Referenced by new\+Processor().
+
+\mbox{\label{classmarlin_1_1TestProcessor_ab7494182baf39229a6f96c8a794256ed}} 
+\index{marlin\+::\+Test\+Processor@{marlin\+::\+Test\+Processor}!print\+End\+Message@{print\+End\+Message}}
+\index{print\+End\+Message@{print\+End\+Message}!marlin\+::\+Test\+Processor@{marlin\+::\+Test\+Processor}}
+\subsubsection{print\+End\+Message()}
+{\footnotesize\ttfamily void marlin\+::\+Test\+Processor\+::print\+End\+Message (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Test method for const. 
+
+
+
+Referenced by end(), and new\+Processor().
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Test\+Processor.\+cc\end{DoxyCompactItemize}

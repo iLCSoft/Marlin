@@ -1,0 +1,51 @@
+\section{marlin\+:\+:Event\+Modifier Class Reference}
+\label{classmarlin_1_1EventModifier}\index{marlin\+::\+Event\+Modifier@{marlin\+::\+Event\+Modifier}}
+
+
+Tagging interface for processors that modify the L\+C\+IO event.  
+
+
+
+
+{\ttfamily \#include $<$Event\+Modifier.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:Event\+Modifier\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classmarlin_1_1EventModifier}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1EventModifier_a839dc570df2ed072b56bcd3c12d396b1}} 
+virtual void \textbf{ modify\+Event} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$)=0
+\begin{DoxyCompactList}\small\item\em Implement to modify the event. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1EventModifier_a87ed425ee54f74893efd0f2ee3244d2a}} 
+virtual void \textbf{ modify\+Run\+Header} (E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $\ast$)
+\begin{DoxyCompactList}\small\item\em Implement to modify the run header. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1EventModifier_a9eecc7d95199af33e9b2228140b97b27}} 
+virtual const std\+::string \& \textbf{ name} () const =0
+\begin{DoxyCompactList}\small\item\em Return name of this event modifier. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1EventModifier_aa5a2afc611df6dfbd238d95ea20e0976}} 
+virtual \textbf{ $\sim$\+Event\+Modifier} ()
+\begin{DoxyCompactList}\small\item\em Return name of log level name this event modifier. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Tagging interface for processors that modify the L\+C\+IO event. 
+
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+\doxyref{Event\+Modifier.\+h}{p.}{EventModifier_8h_source},v 1.\+2 2007-\/08-\/17 11\+:21\+:55 gaede Exp 
+\end{DoxyParagraph}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Event\+Modifier.\+h\end{DoxyCompactItemize}

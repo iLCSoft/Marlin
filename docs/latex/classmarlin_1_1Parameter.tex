@@ -1,0 +1,110 @@
+\section{marlin\+:\+:Parameter Class Reference}
+\label{classmarlin_1_1Parameter}\index{marlin\+::\+Parameter@{marlin\+::\+Parameter}}
+
+
+\doxyref{Parameter}{p.}{classmarlin_1_1Parameter} class.  
+
+
+
+
+{\ttfamily \#include $<$Parameter.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:Parameter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classmarlin_1_1Parameter}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Parameter_add0fdd82b06cc448f6b50686a16688e3}} 
+const std\+::string \& \textbf{ name} () const
+\begin{DoxyCompactList}\small\item\em Get the parameter name. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_a557de88ed210a1da18195376a5e2257e}} 
+const std\+::string \& \textbf{ description} () const
+\begin{DoxyCompactList}\small\item\em Get the parameter description. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_a90e532054f5793b8ec38727ca598b1a9}} 
+int \textbf{ set\+Size} () const
+\begin{DoxyCompactList}\small\item\em Get the set size (if the parameter is a vector) \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_a37356534d500268e011ba6bc6e095257}} 
+bool \textbf{ is\+Optional} () const
+\begin{DoxyCompactList}\small\item\em Whether the parameter is optional. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_aae9c894fc3725269a444d8527a5b2585}} 
+bool \textbf{ value\+Set} () const
+\begin{DoxyCompactList}\small\item\em Whether the value has been set during steering file parsing. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_aa1a9dd13c74a7d42899cf334cdfcd00c}} 
+virtual const std\+::string \textbf{ type} () const =0
+\begin{DoxyCompactList}\small\item\em Get the parameter type as string. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_aca3d0bd4d2941c798295b557e1678875}} 
+virtual const std\+::string \textbf{ value} () const =0
+\begin{DoxyCompactList}\small\item\em Get the parameter value as string. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_a55c1c68f505cb90df9b020987332e63b}} 
+virtual const std\+::string \textbf{ default\+Value} () const =0
+\begin{DoxyCompactList}\small\item\em Get the parameter default value. \end{DoxyCompactList}\item 
+virtual void \textbf{ set\+Value} (\textbf{ String\+Parameters} $\ast$params)=0
+\begin{DoxyCompactList}\small\item\em Set the value using the string parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Parameter_a232ac4d45f3eadec1ee0b8e5b690e2d0}} 
+std\+::string \textbf{ \+\_\+description} \{\char`\"{}\char`\"{}\}
+\begin{DoxyCompactList}\small\item\em The parameter description. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_af273f4a5651b82bd65cfe6575959a5eb}} 
+std\+::string \textbf{ \+\_\+name} \{\char`\"{}\char`\"{}\}
+\begin{DoxyCompactList}\small\item\em The parameter name. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_ab9023827d10c745ab66d737d4c6dd726}} 
+int \textbf{ \+\_\+set\+Size} \{0\}
+\begin{DoxyCompactList}\small\item\em The set size, if the parameter type is vector. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_a746762ef64f46f5712c3123d381d8dd9}} 
+bool \textbf{ \+\_\+optional} \{false\}
+\begin{DoxyCompactList}\small\item\em Whether the parameter is optional. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parameter_ac1741f10bea1c9b7f9013b3ab40a1d87}} 
+bool \textbf{ \+\_\+value\+Set} \{false\}
+\begin{DoxyCompactList}\small\item\em Whether the value has been set after parsing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Parameter_ad395c5bad5eb41cc7d1e64204857d17a}} 
+std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&, \textbf{ Parameter} \&)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Parameter}{p.}{classmarlin_1_1Parameter} class. 
+
+Holds a steering variable.
+
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+
+R. Ete, D\+E\+SY 
+\end{DoxyAuthor}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1Parameter_ad496a7fa87f2c576e60c06b183ce94af}} 
+\index{marlin\+::\+Parameter@{marlin\+::\+Parameter}!set\+Value@{set\+Value}}
+\index{set\+Value@{set\+Value}!marlin\+::\+Parameter@{marlin\+::\+Parameter}}
+\subsubsection{set\+Value()}
+{\footnotesize\ttfamily virtual void marlin\+::\+Parameter\+::set\+Value (\begin{DoxyParamCaption}\item[{\textbf{ String\+Parameters} $\ast$}]{params }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Set the value using the string parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & the string parameters to get the parameter value from \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \textbf{ marlin\+::\+Parameter\+T$<$ T $>$} \doxyref{}{p.}{classmarlin_1_1ParameterT_ae8c6cba13ed4e29b89d209bc78d40872}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Parameter.\+h\item 
+Parameter.\+cc\end{DoxyCompactItemize}

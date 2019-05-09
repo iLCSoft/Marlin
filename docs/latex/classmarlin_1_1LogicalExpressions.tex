@@ -1,0 +1,84 @@
+\section{marlin\+:\+:Logical\+Expressions Class Reference}
+\label{classmarlin_1_1LogicalExpressions}\index{marlin\+::\+Logical\+Expressions@{marlin\+::\+Logical\+Expressions}}
+
+
+Helper class that holds named boolean values and named conditions that are expressions of these values and computes the corresponding truth values.  
+
+
+
+
+{\ttfamily \#include $<$Logical\+Expressions.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1LogicalExpressions_aaf6b1462bb3a34629cfd9db2c6726731}} 
+\textbf{ Logical\+Expressions} ()
+\begin{DoxyCompactList}\small\item\em C\textquotesingle{}tor. \end{DoxyCompactList}\item 
+virtual \textbf{ $\sim$\+Logical\+Expressions} ()
+\begin{DoxyCompactList}\small\item\em Virtual d\textquotesingle{}tor. \end{DoxyCompactList}\item 
+void \textbf{ add\+Condition} (const std\+::string \&name, const std\+::string \&expression)
+\begin{DoxyCompactList}\small\item\em Add a new named logical expression formed out of [!,(,\&\&,$\vert$$\vert$,),value], e.\+g. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LogicalExpressions_a76b54f707451b712c17e28c9437046d3}} 
+void \textbf{ clear} ()
+\begin{DoxyCompactList}\small\item\em Clear all boolean values. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LogicalExpressions_a53954733e35a85e4dae0a9e2edd6288d}} 
+bool \textbf{ condition\+Is\+True} (const std\+::string \&name) const
+\begin{DoxyCompactList}\small\item\em True if the named condition (stored with add\+Condition) is true with the current values. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LogicalExpressions_a44e6f11745c32a5d27dedc1d728552e9}} 
+bool \textbf{ expression\+Is\+True} (const std\+::string \&expression) const
+\begin{DoxyCompactList}\small\item\em True if the given expression is true with the current values. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LogicalExpressions_ada41b5ce342ece132a711786fb4ca6d4}} 
+void \textbf{ set\+Value} (const std\+::string \&key, bool val)
+\begin{DoxyCompactList}\small\item\em Set the the boolean value for the given key. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1LogicalExpressions_ae864f524cb6c8287edf64b78200deab7}} 
+bool \textbf{ get\+Value} (const std\+::string \&key) const
+\begin{DoxyCompactList}\small\item\em helper function for finding return values, that actually have been set by their corresponding processor -\/ throws exception if not set \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1LogicalExpressions_aa9f5d0e32fc3c9d5545b27a67fe6e92e}} 
+Conditions\+Map {\bfseries \+\_\+cond\+Map} \{\}
+\item 
+\mbox{\label{classmarlin_1_1LogicalExpressions_abce3723595c36888a1573dd7d72574d9}} 
+Result\+Map {\bfseries \+\_\+result\+Map} \{\}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Helper class that holds named boolean values and named conditions that are expressions of these values and computes the corresponding truth values. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1LogicalExpressions_abf8b70a38de7735ba2d0c7bf5bb44fd5}} 
+\index{marlin\+::\+Logical\+Expressions@{marlin\+::\+Logical\+Expressions}!````~Logical\+Expressions@{$\sim$\+Logical\+Expressions}}
+\index{````~Logical\+Expressions@{$\sim$\+Logical\+Expressions}!marlin\+::\+Logical\+Expressions@{marlin\+::\+Logical\+Expressions}}
+\subsubsection{$\sim$\+Logical\+Expressions()}
+{\footnotesize\ttfamily virtual marlin\+::\+Logical\+Expressions\+::$\sim$\+Logical\+Expressions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Virtual d\textquotesingle{}tor. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1LogicalExpressions_a46ca6fa6d4c76ec7ad18a3500d8ebb0d}} 
+\index{marlin\+::\+Logical\+Expressions@{marlin\+::\+Logical\+Expressions}!add\+Condition@{add\+Condition}}
+\index{add\+Condition@{add\+Condition}!marlin\+::\+Logical\+Expressions@{marlin\+::\+Logical\+Expressions}}
+\subsubsection{add\+Condition()}
+{\footnotesize\ttfamily void marlin\+::\+Logical\+Expressions\+::add\+Condition (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const std\+::string \&}]{expression }\end{DoxyParamCaption})}
+
+
+
+Add a new named logical expression formed out of [!,(,\&\&,$\vert$$\vert$,),value], e.\+g. 
+
+~\newline
+ ( A \&\& ( B $\vert$$\vert$ !C ) ) $\vert$$\vert$ ( !B \&\& D ) 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Logical\+Expressions.\+h\item 
+Logical\+Expressions.\+cc\end{DoxyCompactItemize}

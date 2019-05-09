@@ -1,0 +1,79 @@
+\section{marlin\+:\+:Error\+Of\+Sigma Class Reference}
+\label{classmarlin_1_1ErrorOfSigma}\index{marlin\+::\+Error\+Of\+Sigma@{marlin\+::\+Error\+Of\+Sigma}}
+
+
+Small helper class that computes the lower and upper error of sigma assuming a normal distribution, i.\+e.  
+
+
+
+
+{\ttfamily \#include $<$Error\+Of\+Sigma.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1ErrorOfSigma_ae7b41d5337dabefc0630ef1c825e43d8}} 
+\textbf{ Error\+Of\+Sigma} (unsigned n)
+\begin{DoxyCompactList}\small\item\em C\textquotesingle{}tor takes the number of measured values. \end{DoxyCompactList}\item 
+virtual \textbf{ $\sim$\+Error\+Of\+Sigma} ()
+\begin{DoxyCompactList}\small\item\em Virtual d\textquotesingle{}tor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ErrorOfSigma_a5eea304e56dbf80281b418a8946c2097}} 
+double \textbf{ lower\+Error} (double sigma)
+\begin{DoxyCompactList}\small\item\em The lower error of sigma. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ErrorOfSigma_afeaa57f2c02cb68a66b0f6aeaa23d4d5}} 
+double \textbf{ upper\+Error} (double sigma)
+\begin{DoxyCompactList}\small\item\em The upper error of sigma. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1ErrorOfSigma_af336af4a84c4e860367f1aa760164054}} 
+virtual double \textbf{ get\+Chi\+Squared\+Plus} ()
+\begin{DoxyCompactList}\small\item\em Returns the chisquared value with P(chisquared) == 0.\+84. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ErrorOfSigma_a14ed1cbadcd749d504529ee45625a5e6}} 
+virtual double \textbf{ get\+Chi\+Squared\+Minus} ()
+\begin{DoxyCompactList}\small\item\em Returns the chisquared value with P(chisquared) == 0.\+16. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1ErrorOfSigma_ab63edd7ef4330b37ec320bab497c1370}} 
+unsigned \textbf{ \+\_\+n}
+\begin{DoxyCompactList}\small\item\em The number of degrees of freedom. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Small helper class that computes the lower and upper error of sigma assuming a normal distribution, i.\+e. 
+
+sigma has been computed as sigma = 1. / (n-\/1) $\ast$ S\+U\+M\+\_\+i\+\_\+n( x\+\_\+i -\/ a\+\_\+i )$\ast$$\ast$2.
+
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+\doxyref{Error\+Of\+Sigma.\+h}{p.}{ErrorOfSigma_8h_source},v 1.\+2 2005-\/10-\/11 12\+:56\+:28 gaede Exp 
+\end{DoxyParagraph}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1ErrorOfSigma_a481541db40c7036c9a11f9b30a195172}} 
+\index{marlin\+::\+Error\+Of\+Sigma@{marlin\+::\+Error\+Of\+Sigma}!````~Error\+Of\+Sigma@{$\sim$\+Error\+Of\+Sigma}}
+\index{````~Error\+Of\+Sigma@{$\sim$\+Error\+Of\+Sigma}!marlin\+::\+Error\+Of\+Sigma@{marlin\+::\+Error\+Of\+Sigma}}
+\subsubsection{$\sim$\+Error\+Of\+Sigma()}
+{\footnotesize\ttfamily virtual marlin\+::\+Error\+Of\+Sigma\+::$\sim$\+Error\+Of\+Sigma (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Virtual d\textquotesingle{}tor. 
+
+
+
+References get\+Chi\+Squared\+Minus(), get\+Chi\+Squared\+Plus(), lower\+Error(), and upper\+Error().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Error\+Of\+Sigma.\+h\item 
+Error\+Of\+Sigma.\+cc\end{DoxyCompactItemize}

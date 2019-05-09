@@ -1,0 +1,315 @@
+\section{Ti\+Xml\+Base Class Reference}
+\label{classTiXmlBase}\index{Ti\+Xml\+Base@{Ti\+Xml\+Base}}
+
+
+\doxyref{Ti\+Xml\+Base}{p.}{classTiXmlBase} is a base class for every class in Tiny\+Xml.  
+
+
+
+
+{\ttfamily \#include $<$tinyxml.\+h$>$}
+
+Inheritance diagram for Ti\+Xml\+Base\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.413793cm]{classTiXmlBase}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48}} 
+enum \{ \newline
+{\bfseries T\+I\+X\+M\+L\+\_\+\+N\+O\+\_\+\+E\+R\+R\+OR} = 0, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+OR}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+O\+P\+E\+N\+I\+N\+G\+\_\+\+F\+I\+LE}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+O\+U\+T\+\_\+\+O\+F\+\_\+\+M\+E\+M\+O\+RY}, 
+\newline
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+P\+A\+R\+S\+I\+N\+G\+\_\+\+E\+L\+E\+M\+E\+NT}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+F\+A\+I\+L\+E\+D\+\_\+\+T\+O\+\_\+\+R\+E\+A\+D\+\_\+\+E\+L\+E\+M\+E\+N\+T\+\_\+\+N\+A\+ME}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+E\+L\+E\+M\+E\+N\+T\+\_\+\+V\+A\+L\+UE}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+A\+T\+T\+R\+I\+B\+U\+T\+ES}, 
+\newline
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+P\+A\+R\+S\+I\+N\+G\+\_\+\+E\+M\+P\+TY}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+R\+E\+A\+D\+I\+N\+G\+\_\+\+E\+N\+D\+\_\+\+T\+AG}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+P\+A\+R\+S\+I\+N\+G\+\_\+\+U\+N\+K\+N\+O\+WN}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+P\+A\+R\+S\+I\+N\+G\+\_\+\+C\+O\+M\+M\+E\+NT}, 
+\newline
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+P\+A\+R\+S\+I\+N\+G\+\_\+\+D\+E\+C\+L\+A\+R\+A\+T\+I\+ON}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+D\+O\+C\+U\+M\+E\+N\+T\+\_\+\+E\+M\+P\+TY}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+E\+M\+B\+E\+D\+D\+E\+D\+\_\+\+N\+U\+LL}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+P\+A\+R\+S\+I\+N\+G\+\_\+\+C\+D\+A\+TA}, 
+\newline
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+D\+O\+C\+U\+M\+E\+N\+T\+\_\+\+T\+O\+P\+\_\+\+O\+N\+LY}, 
+{\bfseries T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+C\+O\+U\+NT}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \textbf{ Print} (F\+I\+LE $\ast$cfile, int depth) const =0
+\begin{DoxyCompactList}\small\item\em All Tiny\+Xml classes can print themselves to a filestream or the string class (\doxyref{Ti\+Xml\+String}{p.}{classTiXmlString} in non-\/\+S\+TL mode, std\+::string in S\+TL mode.) Either or both cfile and str can be null. \end{DoxyCompactList}\item 
+int \textbf{ Row} () const
+\begin{DoxyCompactList}\small\item\em Return the position, in the original source file, of this node or attribute. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlBase_ad283b95d9858d5d78c334f4a61b07bb4}} 
+int \textbf{ Column} () const
+\begin{DoxyCompactList}\small\item\em See \doxyref{Row()}{p.}{classTiXmlBase_ad0cacca5d76d156b26511f46080b442e} \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlBase_ac6b3e0f790930d4970ec30764e937b5d}} 
+void \textbf{ Set\+User\+Data} (void $\ast$user)
+\begin{DoxyCompactList}\small\item\em Set a pointer to arbitrary user data. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlBase_a6559a530ca6763fc301a14d77ed28c17}} 
+void $\ast$ \textbf{ Get\+User\+Data} ()
+\begin{DoxyCompactList}\small\item\em Get a pointer to arbitrary user data. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlBase_aaaaefcef8c0e6e32f8920f4982b2daf3}} 
+const void $\ast$ \textbf{ Get\+User\+Data} () const
+\begin{DoxyCompactList}\small\item\em Get a pointer to arbitrary user data. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlBase_a00e4edb0219d00a1379c856e5a1d2025}} 
+virtual const char $\ast$ {\bfseries Parse} (const char $\ast$p, \textbf{ Ti\+Xml\+Parsing\+Data} $\ast$data, Ti\+Xml\+Encoding encoding)=0
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \textbf{ Set\+Condense\+White\+Space} (bool condense)
+\begin{DoxyCompactList}\small\item\em The world does not agree on whether white space should be kept or not. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlBase_ad4b1472531c647a25b1840a87ae42438}} 
+static bool \textbf{ Is\+White\+Space\+Condensed} ()
+\begin{DoxyCompactList}\small\item\em Return the current white space setting. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const int {\bfseries utf8\+Byte\+Table} [256]
+\end{DoxyCompactItemize}
+\subsection*{Static Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlBase_ac0c3d66d8a9e6996a1fa016275e16875}} 
+static const char $\ast$ {\bfseries Skip\+White\+Space} (const char $\ast$, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_af56296d561c0bab4bc8e198cdcf5c48e}} 
+static bool {\bfseries Is\+White\+Space} (char c)
+\item 
+\mbox{\label{classTiXmlBase_a3de391ea9f4c4a8aa10d04480b048795}} 
+static bool {\bfseries Is\+White\+Space} (int c)
+\item 
+\mbox{\label{classTiXmlBase_aafe51421ca2f618d250a0541e8d61a4e}} 
+static bool {\bfseries Stream\+White\+Space} (std\+::istream $\ast$in, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$tag)
+\item 
+\mbox{\label{classTiXmlBase_aac761023c11f3216de865f0a4b2b137b}} 
+static bool {\bfseries Stream\+To} (std\+::istream $\ast$in, int character, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$tag)
+\item 
+\mbox{\label{classTiXmlBase_a1c21a6ab5f7b503acd91f35f183734b3}} 
+static const char $\ast$ {\bfseries Read\+Name} (const char $\ast$p, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$name, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_aa646c74921aa33156968b802bbf5566e}} 
+static const char $\ast$ {\bfseries Read\+Text} (const char $\ast$in, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$text, bool ignore\+White\+Space, const char $\ast$end\+Tag, bool ignore\+Case, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_ac5c08bf3deffcda0bf8ce2958372b584}} 
+static const char $\ast$ {\bfseries Get\+Entity} (const char $\ast$in, char $\ast$value, int $\ast$length, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_a5b0fde72d6f662ae1fd6303195d2159b}} 
+static const char $\ast$ {\bfseries Get\+Char} (const char $\ast$p, char $\ast$\+\_\+value, int $\ast$length, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_a283ddc4f1f53a53e7111eff4e12a63d9}} 
+static void {\bfseries Put\+String} (const T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG \&str, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$out)
+\item 
+\mbox{\label{classTiXmlBase_a51631e6986179558b9e5850723ed165a}} 
+static bool {\bfseries String\+Equal} (const char $\ast$p, const char $\ast$end\+Tag, bool ignore\+Case, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_ae22522b2e8e1ac43102d16394f639fc8}} 
+static int {\bfseries Is\+Alpha} (unsigned char any\+Byte, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_a321919055c115c78ded17f85a793f368}} 
+static int {\bfseries Is\+Alpha\+Num} (unsigned char any\+Byte, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_a799f17405a86a5c2029618e85f11a097}} 
+static int {\bfseries To\+Lower} (int v, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlBase_a07c765e3a7f979d343e646ea797b180b}} 
+static void {\bfseries Convert\+U\+T\+F32\+To\+U\+T\+F8} (unsigned long input, char $\ast$output, int $\ast$length)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlBase_a0d992580f3bc264909f898e942677a3c}} 
+\textbf{ Ti\+Xml\+Cursor} {\bfseries location}
+\item 
+\mbox{\label{classTiXmlBase_ab242c01590191f644569fa89a080d97c}} 
+void $\ast$ \textbf{ user\+Data}
+\begin{DoxyCompactList}\small\item\em Field containing a generic user pointer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ {\bfseries error\+String} [T\+I\+X\+M\+L\+\_\+\+E\+R\+R\+O\+R\+\_\+\+S\+T\+R\+I\+N\+G\+\_\+\+C\+O\+U\+NT]
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlBase_a218872a0d985ae30e78c55adc4bdb196}} 
+class {\bfseries Ti\+Xml\+Node}
+\item 
+\mbox{\label{classTiXmlBase_ab6592e32cb9132be517cc12a70564c4b}} 
+class {\bfseries Ti\+Xml\+Element}
+\item 
+\mbox{\label{classTiXmlBase_a173617f6dfe902cf484ce5552b950475}} 
+class {\bfseries Ti\+Xml\+Document}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Ti\+Xml\+Base}{p.}{classTiXmlBase} is a base class for every class in Tiny\+Xml. 
+
+It does little except to establish that Tiny\+Xml classes can be printed and provide some utility functions.
+
+In X\+ML, the document and elements can contain other elements and other types of nodes.
+
+\begin{DoxyVerb}    A Document can contain:     Element (container or leaf)
+                                                Comment (leaf)
+                                                Unknown (leaf)
+                                                Declaration( leaf )
+
+    An Element can contain:     Element (container or leaf)
+                                                Text    (leaf)
+                                                Attributes (not on tree)
+                                                Comment (leaf)
+                                                Unknown (leaf)
+
+    A Decleration contains: Attributes (not on tree)\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classTiXmlBase_a0de56b3f2ef14c65091a3b916437b512}} 
+\index{Ti\+Xml\+Base@{Ti\+Xml\+Base}!Print@{Print}}
+\index{Print@{Print}!Ti\+Xml\+Base@{Ti\+Xml\+Base}}
+\subsubsection{Print()}
+{\footnotesize\ttfamily virtual void Ti\+Xml\+Base\+::\+Print (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{cfile,  }\item[{int}]{depth }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+All Tiny\+Xml classes can print themselves to a filestream or the string class (\doxyref{Ti\+Xml\+String}{p.}{classTiXmlString} in non-\/\+S\+TL mode, std\+::string in S\+TL mode.) Either or both cfile and str can be null. 
+
+This is a formatted print, and will insert tabs and newlines.
+
+(For an unformatted stream, use the $<$$<$ operator.) 
+
+Implemented in \textbf{ Ti\+Xml\+Document} \doxyref{}{p.}{classTiXmlDocument_aa9e166fae51da603641380a964f21eeb}, \textbf{ Ti\+Xml\+Unknown} \doxyref{}{p.}{classTiXmlUnknown_a5793fbc48ab3419783c0e866ca2d334e}, \textbf{ Ti\+Xml\+Declaration} \doxyref{}{p.}{classTiXmlDeclaration_ae46cff6565f299210ab945e78bf28514}, \textbf{ Ti\+Xml\+Text} \doxyref{}{p.}{classTiXmlText_a75f6895906333894e2574cc8cf77ea79}, \textbf{ Ti\+Xml\+Comment} \doxyref{}{p.}{classTiXmlComment_a873171beac19d40f0eaae945711c98ed}, \textbf{ Ti\+Xml\+Element} \doxyref{}{p.}{classTiXmlElement_aa31a15cddfb8601a31236fe7d2569fb4}, and \textbf{ Ti\+Xml\+Attribute} \doxyref{}{p.}{classTiXmlAttribute_a68ae373e03b9c35be4c9d0c3c233b894}.
+
+
+
+Referenced by Ti\+Xml\+Element\+::\+Print(), and Ti\+Xml\+Document\+::\+Print().
+
+\mbox{\label{classTiXmlBase_ad0cacca5d76d156b26511f46080b442e}} 
+\index{Ti\+Xml\+Base@{Ti\+Xml\+Base}!Row@{Row}}
+\index{Row@{Row}!Ti\+Xml\+Base@{Ti\+Xml\+Base}}
+\subsubsection{Row()}
+{\footnotesize\ttfamily int Ti\+Xml\+Base\+::\+Row (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return the position, in the original source file, of this node or attribute. 
+
+The row and column are 1-\/based. (That is the first row and first column is 1,1). If the returns values are 0 or less, then the parser does not have a row and column value.
+
+Generally, the row and column value will be set when the Ti\+Xml\+Document\+::\+Load(), \doxyref{Ti\+Xml\+Document\+::\+Load\+File()}{p.}{classTiXmlDocument_a4c852a889c02cf251117fd1d9fe1845f}, or any Ti\+Xml\+Node\+::\+Parse() is called. It will N\+OT be set when the D\+OM was created from operator$>$$>$.
+
+The values reflect the initial load. Once the D\+OM is modified programmatically (by adding or changing nodes and attributes) the new values will N\+OT update to reflect changes in the document.
+
+There is a minor performance cost to computing the row and column. Computation can be disabled if \doxyref{Ti\+Xml\+Document\+::\+Set\+Tab\+Size()}{p.}{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e} is called with 0 as the value.
+
+\begin{DoxySeeAlso}{See also}
+\doxyref{Ti\+Xml\+Document\+::\+Set\+Tab\+Size()}{p.}{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e} 
+\end{DoxySeeAlso}
+\mbox{\label{classTiXmlBase_a0f799ec645bfb8d8a969e83478f379c1}} 
+\index{Ti\+Xml\+Base@{Ti\+Xml\+Base}!Set\+Condense\+White\+Space@{Set\+Condense\+White\+Space}}
+\index{Set\+Condense\+White\+Space@{Set\+Condense\+White\+Space}!Ti\+Xml\+Base@{Ti\+Xml\+Base}}
+\subsubsection{Set\+Condense\+White\+Space()}
+{\footnotesize\ttfamily static void Ti\+Xml\+Base\+::\+Set\+Condense\+White\+Space (\begin{DoxyParamCaption}\item[{bool}]{condense }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+The world does not agree on whether white space should be kept or not. 
+
+In order to make everyone happy, these global, static functions are provided to set whether or not Tiny\+Xml will condense all white space into a single space or not. The default is to condense. Note changing this value is not thread safe. 
+
+\subsection{Member Data Documentation}
+\mbox{\label{classTiXmlBase_a7ac8feec4100e446b3d78e1ac0659700}} 
+\index{Ti\+Xml\+Base@{Ti\+Xml\+Base}!error\+String@{error\+String}}
+\index{error\+String@{error\+String}!Ti\+Xml\+Base@{Ti\+Xml\+Base}}
+\subsubsection{error\+String}
+{\footnotesize\ttfamily const char $\ast$ Ti\+Xml\+Base\+::error\+String\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+=
+\{
+        \textcolor{stringliteral}{"No error"},
+        \textcolor{stringliteral}{"Error"},
+        \textcolor{stringliteral}{"Failed to open file"},
+        \textcolor{stringliteral}{"Memory allocation failed."},
+        \textcolor{stringliteral}{"Error parsing Element."},
+        \textcolor{stringliteral}{"Failed to read Element name"},
+        \textcolor{stringliteral}{"Error reading Element value."},
+        \textcolor{stringliteral}{"Error reading Attributes."},
+        \textcolor{stringliteral}{"Error: empty tag."},
+        \textcolor{stringliteral}{"Error reading end tag."},
+        \textcolor{stringliteral}{"Error parsing Unknown."},
+        \textcolor{stringliteral}{"Error parsing Comment."},
+        \textcolor{stringliteral}{"Error parsing Declaration."},
+        \textcolor{stringliteral}{"Error document empty."},
+        \textcolor{stringliteral}{"Error null (0) or unexpected EOF found in input stream."},
+        \textcolor{stringliteral}{"Error parsing CDATA."},
+        \textcolor{stringliteral}{"Error when TiXmlDocument added to document, because TiXmlDocument can only be at the root."},
+\}
+\end{DoxyCode}
+\mbox{\label{classTiXmlBase_ac8c86058137bdb4b413c3eca58f2d467}} 
+\index{Ti\+Xml\+Base@{Ti\+Xml\+Base}!utf8\+Byte\+Table@{utf8\+Byte\+Table}}
+\index{utf8\+Byte\+Table@{utf8\+Byte\+Table}!Ti\+Xml\+Base@{Ti\+Xml\+Base}}
+\subsubsection{utf8\+Byte\+Table}
+{\footnotesize\ttfamily const int Ti\+Xml\+Base\+::utf8\+Byte\+Table\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= 
+\{
+        
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1,      
+                1,      1,      2,      2,      2,      2,      2,      2,      2,      2,      2,      2,      
+      2,       2,      2,      2,      
+                2,      2,      2,      2,      2,      2,      2,      2,      2,      2,      2,      2,      
+      2,       2,      2,      2,      
+                3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      
+      3,       3,      3,      3,      
+                4,      4,      4,      4,      4,      1,      1,      1,      1,      1,      1,      1,      
+      1,       1,      1,      1       
+\}
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+tinyxml.\+h\item 
+tinyxml.\+cc\item 
+tinyxmlerror.\+cc\item 
+tinyxmlparser.\+cc\end{DoxyCompactItemize}

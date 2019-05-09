@@ -1,0 +1,90 @@
+\section{marlin\+:\+:C\+P\+U\+Crunching\+Processor Class Reference}
+\label{classmarlin_1_1CPUCrunchingProcessor}\index{marlin\+::\+C\+P\+U\+Crunching\+Processor@{marlin\+::\+C\+P\+U\+Crunching\+Processor}}
+
+
+Simple processor crunching C\+PU time for n milliseconds.  
+
+
+Inheritance diagram for marlin\+:\+:C\+P\+U\+Crunching\+Processor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classmarlin_1_1CPUCrunchingProcessor}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1CPUCrunchingProcessor_a5036b337fface30a808b59d55b645f12}} 
+\textbf{ Processor} $\ast$ \textbf{ new\+Processor} ()
+\begin{DoxyCompactList}\small\item\em Return a new instance of the processor (factory method) \end{DoxyCompactList}\item 
+void \textbf{ init} ()
+\begin{DoxyCompactList}\small\item\em Initialize the processor. \end{DoxyCompactList}\item 
+void \textbf{ process\+Event} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$evt)
+\begin{DoxyCompactList}\small\item\em Process an input event. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Simple processor crunching C\+PU time for n milliseconds. 
+
+\subparagraph*{Input -\/ Prerequisites}
+
+none \subparagraph*{Output}
+
+none  Crunch\+Time the time in millisecond to crunch C\+PU
+
+\begin{DoxyAuthor}{Author}
+R.\+Ete, D\+E\+SY 
+\end{DoxyAuthor}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1CPUCrunchingProcessor_a7b59906fb597c07394f95c3c2dcf978b}} 
+\index{marlin\+::\+C\+P\+U\+Crunching\+Processor@{marlin\+::\+C\+P\+U\+Crunching\+Processor}!init@{init}}
+\index{init@{init}!marlin\+::\+C\+P\+U\+Crunching\+Processor@{marlin\+::\+C\+P\+U\+Crunching\+Processor}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void marlin\+::\+C\+P\+U\+Crunching\+Processor\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Initialize the processor. 
+
+Called at the begin of the job before anything is read. Use to initialize the processor, e.\+g. book histograms. 
+
+Reimplemented from \textbf{ marlin\+::\+Processor} \doxyref{}{p.}{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b}.
+
+
+
+References marlin\+::\+Processor\+::print\+Parameters(), and marlin\+::\+Processor\+Api\+::register\+For\+Random\+Seeds().
+
+
+
+Referenced by new\+Processor().
+
+\mbox{\label{classmarlin_1_1CPUCrunchingProcessor_a72dd012f547e203c22fdfc15396a9281}} 
+\index{marlin\+::\+C\+P\+U\+Crunching\+Processor@{marlin\+::\+C\+P\+U\+Crunching\+Processor}!process\+Event@{process\+Event}}
+\index{process\+Event@{process\+Event}!marlin\+::\+C\+P\+U\+Crunching\+Processor@{marlin\+::\+C\+P\+U\+Crunching\+Processor}}
+\subsubsection{process\+Event()}
+{\footnotesize\ttfamily void marlin\+::\+C\+P\+U\+Crunching\+Processor\+::process\+Event (\begin{DoxyParamCaption}\item[{E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Process an input event. 
+
+Called for every event -\/ the working horse. 
+
+Reimplemented from \textbf{ marlin\+::\+Processor} \doxyref{}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a}.
+
+
+
+References marlin\+::\+Processor\+Api\+::get\+Random\+Seed().
+
+
+
+Referenced by new\+Processor().
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+P\+U\+Crunching\+Processor.\+cc\end{DoxyCompactItemize}

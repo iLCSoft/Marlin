@@ -1,0 +1,315 @@
+\section{Ti\+Xml\+Element Class Reference}
+\label{classTiXmlElement}\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+
+
+The element is a container class.  
+
+
+
+
+{\ttfamily \#include $<$tinyxml.\+h$>$}
+
+Inheritance diagram for Ti\+Xml\+Element\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classTiXmlElement}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlElement_a01bc3ab372d35da08efcbbe65ad90c60}} 
+\textbf{ Ti\+Xml\+Element} (const char $\ast$in\+\_\+value)
+\begin{DoxyCompactList}\small\item\em Construct an element. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a40fc2e3c1a955e2f78e1a32350d180e7}} 
+\textbf{ Ti\+Xml\+Element} (const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em std\+::string constructor. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a1ca4465f3c2eac6a60e641cd7f1d9f7e}} 
+{\bfseries Ti\+Xml\+Element} (const \textbf{ Ti\+Xml\+Element} \&)
+\item 
+\mbox{\label{classTiXmlElement_af5cd4156e082ef3bf23adfe0ed173340}} 
+void {\bfseries operator=} (const \textbf{ Ti\+Xml\+Element} \&base)
+\item 
+\mbox{\label{classTiXmlElement_a6042f518748f475a7ac4b4e0b509eb05}} 
+const char $\ast$ \textbf{ Attribute} (const char $\ast$name) const
+\begin{DoxyCompactList}\small\item\em Given an attribute name, \doxyref{Attribute()}{p.}{classTiXmlElement_a6042f518748f475a7ac4b4e0b509eb05} returns the value for the attribute of that name, or null if none exists. \end{DoxyCompactList}\item 
+const char $\ast$ \textbf{ Attribute} (const char $\ast$name, int $\ast$i) const
+\begin{DoxyCompactList}\small\item\em Given an attribute name, \doxyref{Attribute()}{p.}{classTiXmlElement_a6042f518748f475a7ac4b4e0b509eb05} returns the value for the attribute of that name, or null if none exists. \end{DoxyCompactList}\item 
+const char $\ast$ \textbf{ Attribute} (const char $\ast$name, double $\ast$d) const
+\begin{DoxyCompactList}\small\item\em Given an attribute name, \doxyref{Attribute()}{p.}{classTiXmlElement_a6042f518748f475a7ac4b4e0b509eb05} returns the value for the attribute of that name, or null if none exists. \end{DoxyCompactList}\item 
+int \textbf{ Query\+Int\+Attribute} (const char $\ast$name, int $\ast$\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em Query\+Int\+Attribute examines the attribute -\/ it is an alternative to the \doxyref{Attribute()}{p.}{classTiXmlElement_a6042f518748f475a7ac4b4e0b509eb05} method with richer error checking. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_ae04bad29ddb281a7e6c662b3882e9928}} 
+int \textbf{ Query\+Double\+Attribute} (const char $\ast$name, double $\ast$\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em Query\+Double\+Attribute examines the attribute -\/ see \doxyref{Query\+Int\+Attribute()}{p.}{classTiXmlElement_a5c0f739e0f6f5905a201364532e54a60}. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a5591929834178699b4561ab6ab460068}} 
+int \textbf{ Query\+Float\+Attribute} (const char $\ast$name, float $\ast$\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em Query\+Float\+Attribute examines the attribute -\/ see \doxyref{Query\+Int\+Attribute()}{p.}{classTiXmlElement_a5c0f739e0f6f5905a201364532e54a60}. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\int \textbf{ Query\+Value\+Attribute} (const std\+::string \&name, T $\ast$out\+Value) const
+\begin{DoxyCompactList}\small\item\em Template form of the attribute query which will try to read the attribute into the specified type. \end{DoxyCompactList}\item 
+void \textbf{ Set\+Attribute} (const char $\ast$name, const char $\ast$\+\_\+value)
+\begin{DoxyCompactList}\small\item\em Sets an attribute of name to a given value. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a9c3d9bfacd95cf549fcd859238bb8f93}} 
+const std\+::string $\ast$ {\bfseries Attribute} (const std\+::string \&name) const
+\item 
+\mbox{\label{classTiXmlElement_a51227b271c63c370eb3477b25a529606}} 
+const std\+::string $\ast$ {\bfseries Attribute} (const std\+::string \&name, int $\ast$i) const
+\item 
+\mbox{\label{classTiXmlElement_abf7279768e400864271dc163258bb1e9}} 
+const std\+::string $\ast$ {\bfseries Attribute} (const std\+::string \&name, double $\ast$d) const
+\item 
+\mbox{\label{classTiXmlElement_aa368685cfa6efae820b8e7ec18114865}} 
+int {\bfseries Query\+Int\+Attribute} (const std\+::string \&name, int $\ast$\+\_\+value) const
+\item 
+\mbox{\label{classTiXmlElement_a442a0180263ff9a61d30711dc213d9e4}} 
+int {\bfseries Query\+Double\+Attribute} (const std\+::string \&name, double $\ast$\+\_\+value) const
+\item 
+void \textbf{ Set\+Attribute} (const std\+::string \&name, const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a6f18d54fbe25bbc527936ee65363b3c5}} 
+void {\bfseries Set\+Attribute} (const std\+::string \&name, int \+\_\+value)
+\item 
+void \textbf{ Set\+Attribute} (const char $\ast$name, int value)
+\begin{DoxyCompactList}\small\item\em Sets an attribute of name to a given value. \end{DoxyCompactList}\item 
+void \textbf{ Set\+Double\+Attribute} (const char $\ast$name, double value)
+\begin{DoxyCompactList}\small\item\em Sets an attribute of name to a given value. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a56979767deca794376b1dfa69a525b2a}} 
+void \textbf{ Remove\+Attribute} (const char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Deletes an attribute with the given name. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a1afa6aea716511326a608e4c05df4f3a}} 
+void \textbf{ Remove\+Attribute} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a003131b1bbf0b8054b11571c1b9a4d3a}} 
+const \textbf{ Ti\+Xml\+Attribute} $\ast$ \textbf{ First\+Attribute} () const
+\begin{DoxyCompactList}\small\item\em Access the first attribute in this element. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a4b33780fc565d38d6b54f640e0cf1737}} 
+\textbf{ Ti\+Xml\+Attribute} $\ast$ {\bfseries First\+Attribute} ()
+\item 
+\mbox{\label{classTiXmlElement_a42939f55ed4cec5fc1daaecfded7ba16}} 
+const \textbf{ Ti\+Xml\+Attribute} $\ast$ \textbf{ Last\+Attribute} () const
+\begin{DoxyCompactList}\small\item\em Access the last attribute in this element. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a222f81cf06155cd108f2a68d4d176004}} 
+\textbf{ Ti\+Xml\+Attribute} $\ast$ {\bfseries Last\+Attribute} ()
+\item 
+const char $\ast$ \textbf{ Get\+Text} () const
+\begin{DoxyCompactList}\small\item\em Convenience function for easy access to the text inside an element. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a810ea8fa40844c01334e5af2a26794cb}} 
+virtual \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Clone} () const
+\begin{DoxyCompactList}\small\item\em Creates a new Element and returns it -\/ the returned element is a copy. \end{DoxyCompactList}\item 
+virtual void \textbf{ Print} (F\+I\+LE $\ast$cfile, int depth) const
+\begin{DoxyCompactList}\small\item\em All Tiny\+Xml classes can print themselves to a filestream or the string class (\doxyref{Ti\+Xml\+String}{p.}{classTiXmlString} in non-\/\+S\+TL mode, std\+::string in S\+TL mode.) Either or both cfile and str can be null. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_af95c9165159fd9dfdcc5b894a3fcf85b}} 
+virtual const char $\ast$ {\bfseries Parse} (const char $\ast$p, \textbf{ Ti\+Xml\+Parsing\+Data} $\ast$data, Ti\+Xml\+Encoding encoding)
+\item 
+\mbox{\label{classTiXmlElement_a940fc8aa953e0ef0de6e110b7d98b8ee}} 
+virtual const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ To\+Element} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a9def86337ea7a755eb41cac980f60c7a}} 
+virtual \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ To\+Element} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlElement_a01d33358cce9d1817b557d314dda3779}} 
+virtual bool \textbf{ Accept} (\textbf{ Ti\+Xml\+Visitor} $\ast$visitor) const
+\begin{DoxyCompactList}\small\item\em Walk the X\+ML tree visiting this node and all of its children. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlElement_ab931f2208ed76ba03465d8a1f86b5935}} 
+void {\bfseries Copy\+To} (\textbf{ Ti\+Xml\+Element} $\ast$target) const
+\item 
+\mbox{\label{classTiXmlElement_a5670933ec2d7d9763b9891acc05d7f7d}} 
+void {\bfseries Clear\+This} ()
+\item 
+\mbox{\label{classTiXmlElement_acc42052299e0bcf04871f3c2d229fe93}} 
+virtual void {\bfseries Stream\+In} (std\+::istream $\ast$in, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$tag)
+\item 
+\mbox{\label{classTiXmlElement_ac786bce103042d3837c4cc2ff6967d41}} 
+const char $\ast$ {\bfseries Read\+Value} (const char $\ast$in, \textbf{ Ti\+Xml\+Parsing\+Data} $\ast$prev\+Data, Ti\+Xml\+Encoding encoding)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+The element is a container class. 
+
+It has a value, the element name, and can contain other elements, text, comments, and unknowns. Elements also contain an arbitrary number of attributes. 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classTiXmlElement_a8005d0b808fd02bd1246710cdf95e5f6}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Attribute@{Attribute}}
+\index{Attribute@{Attribute}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Attribute()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily const char $\ast$ Ti\+Xml\+Element\+::\+Attribute (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{int $\ast$}]{i }\end{DoxyParamCaption}) const}
+
+
+
+Given an attribute name, \doxyref{Attribute()}{p.}{classTiXmlElement_a6042f518748f475a7ac4b4e0b509eb05} returns the value for the attribute of that name, or null if none exists. 
+
+If the attribute exists and can be converted to an integer, the integer value will be put in the return \textquotesingle{}i\textquotesingle{}, if \textquotesingle{}i\textquotesingle{} is non-\/null. 
+
+References Attribute().
+
+\mbox{\label{classTiXmlElement_a09df893402d0ab1402c8725e6d30ec04}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Attribute@{Attribute}}
+\index{Attribute@{Attribute}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Attribute()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily const char $\ast$ Ti\+Xml\+Element\+::\+Attribute (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{double $\ast$}]{d }\end{DoxyParamCaption}) const}
+
+
+
+Given an attribute name, \doxyref{Attribute()}{p.}{classTiXmlElement_a6042f518748f475a7ac4b4e0b509eb05} returns the value for the attribute of that name, or null if none exists. 
+
+If the attribute exists and can be converted to an double, the double value will be put in the return \textquotesingle{}d\textquotesingle{}, if \textquotesingle{}d\textquotesingle{} is non-\/null. 
+
+References Attribute().
+
+\mbox{\label{classTiXmlElement_af0f814ecbd43d50d4cdbdf4354d3da39}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Get\+Text@{Get\+Text}}
+\index{Get\+Text@{Get\+Text}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Get\+Text()}
+{\footnotesize\ttfamily const char $\ast$ Ti\+Xml\+Element\+::\+Get\+Text (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Convenience function for easy access to the text inside an element. 
+
+Although easy and concise, \doxyref{Get\+Text()}{p.}{classTiXmlElement_af0f814ecbd43d50d4cdbdf4354d3da39} is limited compared to getting the \doxyref{Ti\+Xml\+Text}{p.}{classTiXmlText} child and accessing it directly.
+
+If the first child of \textquotesingle{}this\textquotesingle{} is a \doxyref{Ti\+Xml\+Text}{p.}{classTiXmlText}, the \doxyref{Get\+Text()}{p.}{classTiXmlElement_af0f814ecbd43d50d4cdbdf4354d3da39} returns the character string of the Text node, else null is returned.
+
+This is a convenient method for getting the text of simple contained text\+: \begin{DoxyVerb}    <foo>This is text</foo>
+    const char* str = fooElement->GetText();\end{DoxyVerb}
+
+
+\textquotesingle{}str\textquotesingle{} will be a pointer to \char`\"{}\+This is text\char`\"{}.
+
+Note that this function can be misleading. If the element foo was created from this X\+ML\+: \begin{DoxyVerb}    <foo><b>This is text</b></foo> \end{DoxyVerb}
+
+
+then the value of str would be null. The first child node isn\textquotesingle{}t a text node, it is another element. From this X\+ML\+: \begin{DoxyVerb}    <foo>This is <b>text</b></foo> \end{DoxyVerb}
+ \doxyref{Get\+Text()}{p.}{classTiXmlElement_af0f814ecbd43d50d4cdbdf4354d3da39} will return \char`\"{}\+This is \char`\"{}.
+
+W\+A\+R\+N\+I\+NG\+: \doxyref{Get\+Text()}{p.}{classTiXmlElement_af0f814ecbd43d50d4cdbdf4354d3da39} accesses a child node -\/ don\textquotesingle{}t become confused with the similarly named \doxyref{Ti\+Xml\+Handle\+::\+Text()}{p.}{classTiXmlHandle_ad3b502c72059421e4dfcc7bda3c392fe} and \doxyref{Ti\+Xml\+Node\+::\+To\+Text()}{p.}{classTiXmlNode_a3ddfbcac78fbea041fad57e5c6d60a03} which are safe type casts on the referenced node. 
+
+References Ti\+Xml\+Node\+::\+First\+Child(), Ti\+Xml\+Node\+::\+To\+Text(), and Ti\+Xml\+Node\+::\+Value().
+
+\mbox{\label{classTiXmlElement_aa31a15cddfb8601a31236fe7d2569fb4}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Print@{Print}}
+\index{Print@{Print}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Print()}
+{\footnotesize\ttfamily void Ti\+Xml\+Element\+::\+Print (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{cfile,  }\item[{int}]{depth }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+All Tiny\+Xml classes can print themselves to a filestream or the string class (\doxyref{Ti\+Xml\+String}{p.}{classTiXmlString} in non-\/\+S\+TL mode, std\+::string in S\+TL mode.) Either or both cfile and str can be null. 
+
+This is a formatted print, and will insert tabs and newlines.
+
+(For an unformatted stream, use the $<$$<$ operator.) 
+
+Implements \textbf{ Ti\+Xml\+Base} \doxyref{}{p.}{classTiXmlBase_a0de56b3f2ef14c65091a3b916437b512}.
+
+
+
+References Ti\+Xml\+Node\+::\+Clone(), Ti\+Xml\+Node\+::\+Link\+End\+Child(), Ti\+Xml\+Attribute\+::\+Name(), Ti\+Xml\+Attribute\+::\+Next(), Ti\+Xml\+Node\+::\+Next\+Sibling(), Ti\+Xml\+Base\+::\+Print(), Set\+Attribute(), Ti\+Xml\+Node\+::\+To\+Text(), and Ti\+Xml\+Attribute\+::\+Value().
+
+
+
+Referenced by Ti\+Xml\+Text\+::\+Ti\+Xml\+Text().
+
+\mbox{\label{classTiXmlElement_a5c0f739e0f6f5905a201364532e54a60}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Query\+Int\+Attribute@{Query\+Int\+Attribute}}
+\index{Query\+Int\+Attribute@{Query\+Int\+Attribute}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Query\+Int\+Attribute()}
+{\footnotesize\ttfamily int Ti\+Xml\+Element\+::\+Query\+Int\+Attribute (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{int $\ast$}]{\+\_\+value }\end{DoxyParamCaption}) const}
+
+
+
+Query\+Int\+Attribute examines the attribute -\/ it is an alternative to the \doxyref{Attribute()}{p.}{classTiXmlElement_a6042f518748f475a7ac4b4e0b509eb05} method with richer error checking. 
+
+If the attribute is an integer, it is stored in \textquotesingle{}value\textquotesingle{} and the call returns T\+I\+X\+M\+L\+\_\+\+S\+U\+C\+C\+E\+SS. If it is not an integer, it returns T\+I\+X\+M\+L\+\_\+\+W\+R\+O\+N\+G\+\_\+\+T\+Y\+PE. If the attribute does not exist, then T\+I\+X\+M\+L\+\_\+\+N\+O\+\_\+\+A\+T\+T\+R\+I\+B\+U\+TE is returned. 
+
+References Ti\+Xml\+Attribute\+::\+Query\+Int\+Value().
+
+\mbox{\label{classTiXmlElement_a7530db879b81ebaba61bf62a9770d204}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Query\+Value\+Attribute@{Query\+Value\+Attribute}}
+\index{Query\+Value\+Attribute@{Query\+Value\+Attribute}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Query\+Value\+Attribute()}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+int Ti\+Xml\+Element\+::\+Query\+Value\+Attribute (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{T $\ast$}]{out\+Value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Template form of the attribute query which will try to read the attribute into the specified type. 
+
+Very easy, very powerful, but be careful to make sure to call this with the correct type.
+
+\begin{DoxyReturn}{Returns}
+T\+I\+X\+M\+L\+\_\+\+S\+U\+C\+C\+E\+SS, T\+I\+X\+M\+L\+\_\+\+W\+R\+O\+N\+G\+\_\+\+T\+Y\+PE, or T\+I\+X\+M\+L\+\_\+\+N\+O\+\_\+\+A\+T\+T\+R\+I\+B\+U\+TE 
+\end{DoxyReturn}
+
+
+References Ti\+Xml\+Attribute\+::\+Value\+Str().
+
+\mbox{\label{classTiXmlElement_abf0b3bd7f0e4c746a89ec6e7f101fc32}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Set\+Attribute@{Set\+Attribute}}
+\index{Set\+Attribute@{Set\+Attribute}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Set\+Attribute()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void Ti\+Xml\+Element\+::\+Set\+Attribute (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{const char $\ast$}]{\+\_\+value }\end{DoxyParamCaption})}
+
+
+
+Sets an attribute of name to a given value. 
+
+The attribute will be created if it does not exist, or changed if it does. 
+
+References Ti\+Xml\+Node\+::\+Get\+Document(), and Ti\+Xml\+Attribute\+::\+Set\+Value().
+
+
+
+Referenced by marlin\+::\+X\+M\+L\+Parser\+::parameters\+From\+Node(), Print(), marlin\+::\+X\+M\+L\+Parser\+::processconditions(), marlin\+::\+X\+M\+L\+Parser\+::process\+Include\+Elements(), marlin\+::\+X\+M\+L\+Parser\+::replacegroups(), Set\+Attribute(), and Set\+Double\+Attribute().
+
+\mbox{\label{classTiXmlElement_a80ed65b1d194c71c6c9986ae42337d7d}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Set\+Attribute@{Set\+Attribute}}
+\index{Set\+Attribute@{Set\+Attribute}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Set\+Attribute()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily void Ti\+Xml\+Element\+::\+Set\+Attribute (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const std\+::string \&}]{\+\_\+value }\end{DoxyParamCaption})}
+
+
+
+S\+TL std\+::string form. 
+
+S\+TL std\+::string form. \mbox{\label{classTiXmlElement_ace6f4be75e373726d4774073d666d1a7}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Set\+Attribute@{Set\+Attribute}}
+\index{Set\+Attribute@{Set\+Attribute}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Set\+Attribute()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily void Ti\+Xml\+Element\+::\+Set\+Attribute (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets an attribute of name to a given value. 
+
+The attribute will be created if it does not exist, or changed if it does. 
+
+References Set\+Attribute().
+
+\mbox{\label{classTiXmlElement_a0d1dd975d75496778177e35abfe0ec0b}} 
+\index{Ti\+Xml\+Element@{Ti\+Xml\+Element}!Set\+Double\+Attribute@{Set\+Double\+Attribute}}
+\index{Set\+Double\+Attribute@{Set\+Double\+Attribute}!Ti\+Xml\+Element@{Ti\+Xml\+Element}}
+\subsubsection{Set\+Double\+Attribute()}
+{\footnotesize\ttfamily void Ti\+Xml\+Element\+::\+Set\+Double\+Attribute (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{double}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets an attribute of name to a given value. 
+
+The attribute will be created if it does not exist, or changed if it does. 
+
+References Set\+Attribute().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+tinyxml.\+h\item 
+tinyxml.\+cc\item 
+tinyxmlparser.\+cc\end{DoxyCompactItemize}

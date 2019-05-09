@@ -1,0 +1,92 @@
+\section{marlin\+:\+:concurrency\+:\+:Worker\+Base$<$ IN, O\+UT $>$ Class Template Reference}
+\label{classmarlin_1_1concurrency_1_1WorkerBase}\index{marlin\+::concurrency\+::\+Worker\+Base$<$ I\+N, O\+U\+T $>$@{marlin\+::concurrency\+::\+Worker\+Base$<$ I\+N, O\+U\+T $>$}}
+
+
+\doxyref{Worker\+Base}{p.}{classmarlin_1_1concurrency_1_1WorkerBase} class Base class to implement processing of task data (so called queued-\/element) pushed in a thread pool.  
+
+
+
+
+{\ttfamily \#include $<$Worker.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1concurrency_1_1WorkerBase_aaed18cd6efbee237183378738b92d5b6}} 
+using {\bfseries Input} = IN
+\item 
+\mbox{\label{classmarlin_1_1concurrency_1_1WorkerBase_abf64f64e9e63fbed57ba72174e634c59}} 
+using {\bfseries Output} = O\+UT
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual O\+UT \textbf{ process} (IN \&\&data)=0
+\begin{DoxyCompactList}\small\item\em Process a single queued data taken form the thread pool. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ process\+Element} (\textbf{ Queue\+Element}$<$ IN, O\+UT $>$ \&element)
+\begin{DoxyCompactList}\small\item\em Process queued element from the thread pool. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1concurrency_1_1WorkerBase_a491b906d2052cbe1c394c75e0e2d72a5}} 
+class {\bfseries Worker$<$ I\+N, O\+U\+T $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename IN, typename O\+UT$>$\newline
+class marlin\+::concurrency\+::\+Worker\+Base$<$ I\+N, O\+U\+T $>$}
+
+\doxyref{Worker\+Base}{p.}{classmarlin_1_1concurrency_1_1WorkerBase} class Base class to implement processing of task data (so called queued-\/element) pushed in a thread pool. 
+
+The IN and O\+UT types must be movable. See also specialization for void IN and O\+UT types 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1concurrency_1_1WorkerBase_a543763db083b1c4cf846a3e1434ada11}} 
+\index{marlin\+::concurrency\+::\+Worker\+Base@{marlin\+::concurrency\+::\+Worker\+Base}!process@{process}}
+\index{process@{process}!marlin\+::concurrency\+::\+Worker\+Base@{marlin\+::concurrency\+::\+Worker\+Base}}
+\subsubsection{process()}
+{\footnotesize\ttfamily template$<$typename IN, typename O\+UT$>$ \\
+virtual O\+UT \textbf{ marlin\+::concurrency\+::\+Worker\+Base}$<$ IN, O\+UT $>$\+::process (\begin{DoxyParamCaption}\item[{IN \&\&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Process a single queued data taken form the thread pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & the data value to process \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by marlin\+::concurrency\+::\+Worker\+Base$<$ P\+E\+P\+Scheduler\+::\+Input\+Type, P\+E\+P\+Scheduler\+::\+Output\+Type $>$\+::process\+Element().
+
+\mbox{\label{classmarlin_1_1concurrency_1_1WorkerBase_ad426c1a9d78e564385a48293ef6c0ae7}} 
+\index{marlin\+::concurrency\+::\+Worker\+Base@{marlin\+::concurrency\+::\+Worker\+Base}!process\+Element@{process\+Element}}
+\index{process\+Element@{process\+Element}!marlin\+::concurrency\+::\+Worker\+Base@{marlin\+::concurrency\+::\+Worker\+Base}}
+\subsubsection{process\+Element()}
+{\footnotesize\ttfamily template$<$typename IN , typename O\+UT $>$ \\
+void \textbf{ marlin\+::concurrency\+::\+Worker\+Base}$<$ IN, O\+UT $>$\+::process\+Element (\begin{DoxyParamCaption}\item[{\textbf{ Queue\+Element}$<$ IN, O\+UT $>$ \&}]{element }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Process queued element from the thread pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em element} & a thread pool queued element \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by marlin\+::concurrency\+::\+Worker\+Base$<$ P\+E\+P\+Scheduler\+::\+Input\+Type, P\+E\+P\+Scheduler\+::\+Output\+Type $>$\+::process\+Element().
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Worker.\+h\end{DoxyCompactItemize}

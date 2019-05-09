@@ -1,0 +1,418 @@
+\section{marlin\+:\+:Processor Class Reference}
+\label{classmarlin_1_1Processor}\index{marlin\+::\+Processor@{marlin\+::\+Processor}}
+
+
+\doxyref{Processor}{p.}{classmarlin_1_1Processor} class.  
+
+
+
+
+{\ttfamily \#include $<$Processor.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:Processor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.159420cm]{classmarlin_1_1Processor}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \textbf{ Runtime\+Option} \{ {\bfseries Critical}, 
+\textbf{ Runtime\+Option\+::\+Clone}
+ \}\begin{DoxyCompactList}\small\item\em Runtime\+Option enumerator. \end{DoxyCompactList}
+\item 
+\mbox{\label{classmarlin_1_1Processor_a7ea4ef8fdb4a2c291b2a505f96e945d3}} 
+using {\bfseries Runtime\+Options} = std\+::map$<$ \textbf{ Runtime\+Option}, bool $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Processor} (const std\+::string \&type\+Name)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a75ba6b66644e5273a896053df31aac4d}} 
+virtual \textbf{ Processor} $\ast$ \textbf{ new\+Processor} ()=0
+\begin{DoxyCompactList}\small\item\em Return a new instance of the processor (factory method) \end{DoxyCompactList}\item 
+virtual void \textbf{ init} ()
+\begin{DoxyCompactList}\small\item\em Initialize the processor. \end{DoxyCompactList}\item 
+virtual void \textbf{ process\+Run\+Header} (E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $\ast$)
+\begin{DoxyCompactList}\small\item\em Process a run header (start of run) Called for every run, e.\+g. \end{DoxyCompactList}\item 
+virtual void \textbf{ process\+Event} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$)
+\begin{DoxyCompactList}\small\item\em Process an input event. \end{DoxyCompactList}\item 
+virtual void \textbf{ check} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$)
+\begin{DoxyCompactList}\small\item\em Called for every event -\/ right after \doxyref{process\+Event()}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a} has been called for this processor. \end{DoxyCompactList}\item 
+virtual void \textbf{ end} ()
+\begin{DoxyCompactList}\small\item\em Terminate the processor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a35f96eb55174f2cb718cb7a148aa7f92}} 
+virtual const std\+::string \& \textbf{ type} () const
+\begin{DoxyCompactList}\small\item\em Return type name for the processor (as set in constructor). \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a86628d7158feffaa5e1559dde5a72cb9}} 
+virtual const std\+::string \& \textbf{ name} () const
+\begin{DoxyCompactList}\small\item\em Return the name of this processor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_afab806e3ddaa4750aadfaec08dd36fb4}} 
+virtual const std\+::string \& \textbf{ log\+Level\+Name} () const
+\begin{DoxyCompactList}\small\item\em Return the name of the local verbosity level of this processor -\/ \char`\"{}\char`\"{} if not set. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a40e2d0226beb00eef02b10d90b67d5c2}} 
+virtual std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ parameters} () const
+\begin{DoxyCompactList}\small\item\em Return the parameters defined for this \doxyref{Processor}{p.}{classmarlin_1_1Processor}. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_ad1a3456636aefed5614da48ae1505e90}} 
+virtual void \textbf{ print\+Description} () const
+\begin{DoxyCompactList}\small\item\em Print information about this processor in A\+S\+C\+II steering file format. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a9e02bd77fda1bfae6094317c731bbf76}} 
+virtual void \textbf{ print\+Description\+X\+ML} (std\+::ostream \&stream=std\+::cout) const
+\begin{DoxyCompactList}\small\item\em Print information about this processor in X\+ML steering file format. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_ae5c9d2f7b807eb1918865cbcfea2a3eb}} 
+{\footnotesize template$<$class T $>$ }\\void \textbf{ print\+Parameters} () const
+\begin{DoxyCompactList}\small\item\em Print the parameters and their values depending on the given verbosity level. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_ac04b1c9bd81e0220e1061bfcb78e06b2}} 
+void \textbf{ print\+Parameters} () const
+\begin{DoxyCompactList}\small\item\em Print the parameters and their values with verbosity level M\+E\+S\+S\+A\+GE. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a91a0b8c0134bb7b20bd1a964fe90130b}} 
+const std\+::string \& \textbf{ description} () const
+\begin{DoxyCompactList}\small\item\em Description of processor. \end{DoxyCompactList}\item 
+std\+::pair$<$ bool, bool $>$ \textbf{ get\+Forced\+Runtime\+Option} (\textbf{ Runtime\+Option} option) const
+\begin{DoxyCompactList}\small\item\em Get the forced runtime option settings. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a1e85f5c5bad8928bedb2b1df520ee76d}} 
+void \textbf{ base\+Init} (\textbf{ Application} $\ast$application)
+\begin{DoxyCompactList}\small\item\em Sets the registered steering parameters before calling \doxyref{init()}{p.}{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b} \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a545071fed6d403b15ac865df372615b1}} 
+void \textbf{ set\+Parameters} (std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ parameters})
+\begin{DoxyCompactList}\small\item\em Initialize the parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_ac2f12ef3d8d1fe42482c034778446439}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries message} (const std\+::ostream \&m) const
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ force\+Runtime\+Option} (\textbf{ Runtime\+Option} option, bool value)
+\begin{DoxyCompactList}\small\item\em Force the runtime option to a given boolean value. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_ac2e6decb4ba336ec5c09289bd6bc9896}} 
+{\footnotesize template$<$class T $>$ }\\void \textbf{ register\+Processor\+Parameter} (const std\+::string \&parameter\+Name, const std\+::string \&parameter\+Description, T \&parameter, const T \&default\+Val, int set\+Size=0)
+\begin{DoxyCompactList}\small\item\em Alias function to \doxyref{Parametrized\+::register\+Parameter}{p.}{classmarlin_1_1Parametrized_a0ca3ad605ee4535cd98d2dd861c99fc3}. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\void \textbf{ message} (const std\+::string \&m) const
+\begin{DoxyCompactList}\small\item\em Print message according to verbosity level of the templated parameter (one of D\+E\+B\+UG, M\+E\+S\+S\+A\+GE, W\+A\+R\+N\+I\+NG, E\+R\+R\+OR ) and the global parameter \char`\"{}\+Verbosity\char`\"{}. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\void \textbf{ message} (const std\+::basic\+\_\+ostream$<$ char, std\+::char\+\_\+traits$<$ char $>$ $>$ \&m) const
+\begin{DoxyCompactList}\small\item\em Same as message(const std\+::string\& message) except that it allows the output of more complex messages in the argument using the \doxyref{log()}{p.}{classmarlin_1_1Processor_a3d421117527ad5b032606aeae9a19bb7} method, e.\+g. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\Logging\+::\+Stream\+Type \textbf{ log} () const
+\begin{DoxyCompactList}\small\item\em \doxyref{Logging}{p.}{classmarlin_1_1Logging} function Example usage\+: \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_ac31a163ba6f9fc19cf4a76fc2de87399}} 
+const \textbf{ Application} \& \textbf{ app} () const
+\begin{DoxyCompactList}\small\item\em Get the application in which the processor is running Throws if the application is not set. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_aa02fafe468d85c0084287238dad5d0b1}} 
+\textbf{ Application} \& \textbf{ app} ()
+\begin{DoxyCompactList}\small\item\em Get the application in which the processor is running Throws if the application is not set. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Processor_ac69835884a0c89d19d80b0390e975072}} 
+std\+::string \textbf{ \+\_\+description} \{\char`\"{}\char`\"{}\}
+\begin{DoxyCompactList}\small\item\em The processor description. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_aff5084639628a3a03965bb6447f5a3b9}} 
+std\+::string \textbf{ \+\_\+type\+Name} \{\char`\"{}\char`\"{}\}
+\begin{DoxyCompactList}\small\item\em The processor type. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_aa9c918e6bcc52fa366e222e39b0d236e}} 
+std\+::string \textbf{ \+\_\+processor\+Name} \{\char`\"{}\char`\"{}\}
+\begin{DoxyCompactList}\small\item\em The processor name. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_aa3c9d4bfa1dbf5c8203fb7317b9f2d33}} 
+std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ \+\_\+parameters} \{nullptr\}
+\begin{DoxyCompactList}\small\item\em The processor parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Processor_a84c2ba2bfd62a1dded6a1063d8dbdaf1}} 
+std\+::string \textbf{ \+\_\+log\+Level\+Name} \{\}
+\begin{DoxyCompactList}\small\item\em The processor logger level. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Processor_aac8b87d74c175bcf7a4590a5f39d8650}} 
+class {\bfseries Processor\+Api}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Processor}{p.}{classmarlin_1_1Processor} class. 
+
+Base class for Marlin processors. Users can optionaly overwrite the following methods\+: ~\newline
+ init, process\+Run, process\+Event and end.~\newline
+ Use register\+Processor\+Parameter to define all parameters that the module uses. Registered parameters are filled automatically before \doxyref{init()}{p.}{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b} is called. With My\+Aplication -\/l you can print a list of available processors including the steering parameters they use/need.~\newline
+ With My\+Aplication -\/x you can print an example X\+ML steering file for all known processors.
+
+\begin{DoxySeeAlso}{See also}
+\doxyref{init}{p.}{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b} 
+
+process\+Run 
+
+\doxyref{process\+Event}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a} 
+
+\doxyref{end}{p.}{classmarlin_1_1Processor_a40c4bc6d5b67906954392c5bb1df28c1}
+\end{DoxySeeAlso}
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+\doxyref{Processor.\+h}{p.}{Processor_8h_source},v 1.\+38 2008-\/06-\/26 10\+:25\+:36 gaede Exp 
+\end{DoxyParagraph}
+
+
+\subsection{Member Enumeration Documentation}
+\mbox{\label{classmarlin_1_1Processor_a6e9824ecab9436bd789348e6d6e06502}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!Runtime\+Option@{Runtime\+Option}}
+\index{Runtime\+Option@{Runtime\+Option}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{Runtime\+Option}
+{\footnotesize\ttfamily enum \textbf{ marlin\+::\+Processor\+::\+Runtime\+Option}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Runtime\+Option enumerator. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Clone@{Clone}!marlin\+::\+Processor@{marlin\+::\+Processor}}\index{marlin\+::\+Processor@{marlin\+::\+Processor}!Clone@{Clone}}}\mbox{\label{classmarlin_1_1Processor_a6e9824ecab9436bd789348e6d6e06502aff24590464659ee8cdec688128c35f89}} 
+Clone&Whether the processor has to be executed in a critical section. Whether the processor must be cloned in each thread worker \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1Processor_a64c6a13ca7131ad05b016b2185f3dea0}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!Processor@{Processor}}
+\index{Processor@{Processor}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{Processor()}
+{\footnotesize\ttfamily marlin\+::\+Processor\+::\+Processor (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{type\+Name }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+Subclasses need to call this in their default constructor.
+
+
+\begin{DoxyParams}{Parameters}
+{\em type\+Name} & the processor type \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+log\+Level\+Name, \+\_\+type\+Name, marlin\+::\+Logging\+::create\+Logger(), marlin\+::\+Plugin\+Manager\+::instance(), new\+Processor(), marlin\+::\+Parametrized\+::register\+Optional\+Parameter(), marlin\+::\+Plugin\+Manager\+::register\+Plugin(), and type().
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1Processor_a1e2b7d44f9e69498fb4679cb9d2b0b3b}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!check@{check}}
+\index{check@{check}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{check()}
+{\footnotesize\ttfamily virtual void marlin\+::\+Processor\+::check (\begin{DoxyParamCaption}\item[{E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Called for every event -\/ right after \doxyref{process\+Event()}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a} has been called for this processor. 
+
+Use to check processing and/or produce check plots. 
+
+Reimplemented in \textbf{ marlin\+::\+Test\+Processor} \doxyref{}{p.}{classmarlin_1_1TestProcessor_ae4c252ec319b9633c0132471c24cb3e8}.
+
+\mbox{\label{classmarlin_1_1Processor_a40c4bc6d5b67906954392c5bb1df28c1}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!end@{end}}
+\index{end@{end}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{end()}
+{\footnotesize\ttfamily virtual void marlin\+::\+Processor\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Terminate the processor. 
+
+Called after data processing for clean up in the inverse order of the \doxyref{init()}{p.}{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b} method so that resources allocated in the first processor also will be available for all following processors. 
+
+Reimplemented in \textbf{ marlin\+::\+L\+C\+I\+O\+Output\+Processor} \doxyref{}{p.}{classmarlin_1_1LCIOOutputProcessor_a03a7ac4d65110b0555dbfdec51a819a1}, \textbf{ marlin\+::\+Test\+Processor} \doxyref{}{p.}{classmarlin_1_1TestProcessor_adf788e37e471e1e6ff8a59c4db0afae0}, and \textbf{ marlin\+::\+Statusmonitor} \doxyref{}{p.}{classmarlin_1_1Statusmonitor_ac431675646f711f978a0f1ca2faf9e02}.
+
+
+
+References app(), base\+Init(), description(), force\+Runtime\+Option(), get\+Forced\+Runtime\+Option(), log(), log\+Level\+Name(), message(), name(), parameters(), print\+Description(), print\+Description\+X\+M\+L(), print\+Parameters(), register\+Processor\+Parameter(), set\+Parameters(), and type().
+
+\mbox{\label{classmarlin_1_1Processor_a535b615b430954f623b94a46687e68b4}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!force\+Runtime\+Option@{force\+Runtime\+Option}}
+\index{force\+Runtime\+Option@{force\+Runtime\+Option}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{force\+Runtime\+Option()}
+{\footnotesize\ttfamily void marlin\+::\+Processor\+::force\+Runtime\+Option (\begin{DoxyParamCaption}\item[{\textbf{ Runtime\+Option}}]{option,  }\item[{bool}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Force the runtime option to a given boolean value. 
+
+Depending on the implementation of your processor, setting one of the runtime option might be a necessity. For example, you handle a lot of data in your processor members that you don\textquotesingle{}t want to duplicate. In this case you should call in the constructor 
+\begin{DoxyCode}
+forceRuntimeOption( Processor::RuntimeOption::Clone, \textcolor{keyword}{false} ) ;
+\end{DoxyCode}
+ The code contained in \doxyref{process\+Event()}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a} might also not be thread safe. In this case you can ask the Marlin framework to call the \doxyref{process\+Event()}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a} method in a critical section (using std\+::mutex). Do to so, call\+: 
+\begin{DoxyCode}
+forceRuntimeOption( RuntimeOption::Critical, \textcolor{keyword}{true} ) ;
+\end{DoxyCode}
+ If a runtime option is forced in the code and the steering file tries to overwrite it, an exception will be raised.
+
+Note that this method must be called in user processor constructor to ensure it is correctly handled by the framework at configuration time.
+
+
+\begin{DoxyParams}{Parameters}
+{\em option} & the runtime option to force \\
+\hline
+{\em value} & the boolean value to set \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by end(), marlin\+::\+Memory\+Monitor\+Processor\+::\+Memory\+Monitor\+Processor(), marlin\+::\+Statusmonitor\+::new\+Processor(), and marlin\+::\+L\+C\+I\+O\+Output\+Processor\+::new\+Processor().
+
+\mbox{\label{classmarlin_1_1Processor_a0b0fe0197d977ee57323024afb9fa45a}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!get\+Forced\+Runtime\+Option@{get\+Forced\+Runtime\+Option}}
+\index{get\+Forced\+Runtime\+Option@{get\+Forced\+Runtime\+Option}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{get\+Forced\+Runtime\+Option()}
+{\footnotesize\ttfamily std\+::pair$<$ bool, bool $>$ marlin\+::\+Processor\+::get\+Forced\+Runtime\+Option (\begin{DoxyParamCaption}\item[{\textbf{ Runtime\+Option}}]{option }\end{DoxyParamCaption}) const}
+
+
+
+Get the forced runtime option settings. 
+
+The pair returned contains two boolean values\+:
+\begin{DoxyItemize}
+\item first\+: whether the option appears in the forced options
+\item second\+: if first is true, then contains the option flag
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em option} & the runtime option to get \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by end().
+
+\mbox{\label{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!init@{init}}
+\index{init@{init}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{init()}
+{\footnotesize\ttfamily virtual void marlin\+::\+Processor\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Initialize the processor. 
+
+Called at the begin of the job before anything is read. Use to initialize the processor, e.\+g. book histograms. 
+
+Reimplemented in \textbf{ marlin\+::\+Simple\+Fast\+M\+C\+Processor} \doxyref{}{p.}{classmarlin_1_1SimpleFastMCProcessor_aea0d8a3a1bde4211398554449ba61e34}, \textbf{ marlin\+::\+L\+C\+I\+O\+Output\+Processor} \doxyref{}{p.}{classmarlin_1_1LCIOOutputProcessor_a23c540ec3d9be10fc4e4b5431bfe64e4}, \textbf{ marlin\+::\+Memory\+Monitor\+Processor} \doxyref{}{p.}{classmarlin_1_1MemoryMonitorProcessor_aa7d3b4ce08bfd0a5cd44c2ce39b8f76e}, \textbf{ marlin\+::\+Test\+Processor} \doxyref{}{p.}{classmarlin_1_1TestProcessor_a642eda7da954ecd815df99f25a1c946b}, \textbf{ marlin\+::\+Event\+Selector\+Processor} \doxyref{}{p.}{classmarlin_1_1EventSelectorProcessor_aeb4c233b4075fc99c5f146c21ec96d78}, \textbf{ marlin\+::\+Statusmonitor} \doxyref{}{p.}{classmarlin_1_1Statusmonitor_a2a01fb3ca1afe2677efad92aa9bb48c5}, and \textbf{ marlin\+::\+C\+P\+U\+Crunching\+Processor} \doxyref{}{p.}{classmarlin_1_1CPUCrunchingProcessor_a7b59906fb597c07394f95c3c2dcf978b}.
+
+
+
+Referenced by base\+Init().
+
+\mbox{\label{classmarlin_1_1Processor_a3d421117527ad5b032606aeae9a19bb7}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!log@{log}}
+\index{log@{log}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{log()}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+Logging\+::\+Stream\+Type marlin\+::\+Processor\+::log (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+\doxyref{Logging}{p.}{classmarlin_1_1Logging} function Example usage\+: 
+
+
+\begin{DoxyCode}
+log<DEBUG>() << \textcolor{stringliteral}{"This is a DEBUG message"} << std::endl ;
+\end{DoxyCode}
+ 
+
+References \+\_\+processor\+Name, and set\+Parameters().
+
+
+
+Referenced by marlin\+::\+Processor\+Api\+::abort(), end(), and marlin\+::\+Processor\+Api\+::skip\+Current\+Event().
+
+\mbox{\label{classmarlin_1_1Processor_adadc86eb0d909668cd52103a676de137}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!message@{message}}
+\index{message@{message}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{message()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void marlin\+::\+Processor\+::message (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{m }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Print message according to verbosity level of the templated parameter (one of D\+E\+B\+UG, M\+E\+S\+S\+A\+GE, W\+A\+R\+N\+I\+NG, E\+R\+R\+OR ) and the global parameter \char`\"{}\+Verbosity\char`\"{}. 
+
+If Marlin is compiled w/o debug mode (\$\+M\+A\+R\+L\+I\+N\+D\+E\+B\+UG not set) then D\+E\+B\+UG messages will be ignored completely at compile time, i.\+e. no output (and code!) will be generated, regardless of the value of the \char`\"{}\+Verbosity\char`\"{} parameter. This is useful in order to save C\+PU time in production mode.~\newline
+ Every line of the output string will be prepended by the verbosity level of the message and the processor name, e.\+g\+: 
+\begin{DoxyPre}
+  [ MESSAGE "MyTestProcessor" ]  processing event 42 in run 4711
+\end{DoxyPre}
+ Use this method for simple strings. In order to use more complex messages, including numbers, use\+: \begin{DoxySeeAlso}{See also}
+void message( const std\+::basic\+\_\+ostream$<$char, std\+::char\+\_\+traits$<$char$>$ $>$\& m) 
+\end{DoxySeeAlso}
+\begin{DoxyRefDesc}{Deprecated}
+\item[\textbf{ Deprecated}]\end{DoxyRefDesc}
+
+
+Referenced by end().
+
+\mbox{\label{classmarlin_1_1Processor_aa96941adc5376016dceadf43d8479b0b}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!message@{message}}
+\index{message@{message}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{message()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void marlin\+::\+Processor\+::message (\begin{DoxyParamCaption}\item[{const std\+::basic\+\_\+ostream$<$ char, std\+::char\+\_\+traits$<$ char $>$ $>$ \&}]{m }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Same as message(const std\+::string\& message) except that it allows the output of more complex messages in the argument using the \doxyref{log()}{p.}{classmarlin_1_1Processor_a3d421117527ad5b032606aeae9a19bb7} method, e.\+g. 
+
+\+: 
+\begin{DoxyPre}
+message<MESSAGE>( \doxyref{log()}{p.}{classmarlin_1_1Processor_a3d421117527ad5b032606aeae9a19bb7}
+                  << " processing event " << evt->getEventNumber()
+                  << "  in run "          << evt->getRunNumber()
+                  ) ;
+\end{DoxyPre}
+
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\textbf{ Deprecated}]\end{DoxyRefDesc}
+\begin{DoxySeeAlso}{See also}
+void message(  const std\+::string\& message ) 
+
+std\+::stringstream\& \doxyref{log()}{p.}{classmarlin_1_1Processor_a3d421117527ad5b032606aeae9a19bb7} 
+\end{DoxySeeAlso}
+\mbox{\label{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!process\+Event@{process\+Event}}
+\index{process\+Event@{process\+Event}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{process\+Event()}
+{\footnotesize\ttfamily virtual void marlin\+::\+Processor\+::process\+Event (\begin{DoxyParamCaption}\item[{E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Process an input event. 
+
+Called for every event -\/ the working horse. 
+
+Reimplemented in \textbf{ marlin\+::\+Simple\+Fast\+M\+C\+Processor} \doxyref{}{p.}{classmarlin_1_1SimpleFastMCProcessor_aa4c8ea6b05fd5620870b527589098f20}, \textbf{ marlin\+::\+L\+C\+I\+O\+Output\+Processor} \doxyref{}{p.}{classmarlin_1_1LCIOOutputProcessor_a07ab3e9f18f80ad76372cdfa17b674e2}, \textbf{ marlin\+::\+Test\+Processor} \doxyref{}{p.}{classmarlin_1_1TestProcessor_a5ab65c443465d9407bd5adca1d798c59}, \textbf{ marlin\+::\+Statusmonitor} \doxyref{}{p.}{classmarlin_1_1Statusmonitor_a845784ae1226f43f2d4db27ee6d261cf}, \textbf{ marlin\+::\+Memory\+Monitor\+Processor} \doxyref{}{p.}{classmarlin_1_1MemoryMonitorProcessor_ad1f4a9c63f04cd6a4dc1ab4ecccafa2f}, \textbf{ marlin\+::\+Event\+Selector\+Processor} \doxyref{}{p.}{classmarlin_1_1EventSelectorProcessor_a4f669851b0ccecc53c65e0f589881d66}, and \textbf{ marlin\+::\+C\+P\+U\+Crunching\+Processor} \doxyref{}{p.}{classmarlin_1_1CPUCrunchingProcessor_a72dd012f547e203c22fdfc15396a9281}.
+
+\mbox{\label{classmarlin_1_1Processor_ab39f746a309bd096433a2bdaf3e75e43}} 
+\index{marlin\+::\+Processor@{marlin\+::\+Processor}!process\+Run\+Header@{process\+Run\+Header}}
+\index{process\+Run\+Header@{process\+Run\+Header}!marlin\+::\+Processor@{marlin\+::\+Processor}}
+\subsubsection{process\+Run\+Header()}
+{\footnotesize\ttfamily virtual void marlin\+::\+Processor\+::process\+Run\+Header (\begin{DoxyParamCaption}\item[{E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $\ast$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Process a run header (start of run) Called for every run, e.\+g. 
+
+overwrite to initialize run dependent histograms. 
+
+Reimplemented in \textbf{ marlin\+::\+L\+C\+I\+O\+Output\+Processor} \doxyref{}{p.}{classmarlin_1_1LCIOOutputProcessor_af7db9cfb92e19cff720c5171af86a4c8}, \textbf{ marlin\+::\+Test\+Processor} \doxyref{}{p.}{classmarlin_1_1TestProcessor_a4eed8ec8838445c9ca5261add8fc3112}, and \textbf{ marlin\+::\+Statusmonitor} \doxyref{}{p.}{classmarlin_1_1Statusmonitor_adeab025d06acb75cb089490b8be09b3a}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Processor.\+h\item 
+Processor.\+cc\end{DoxyCompactItemize}

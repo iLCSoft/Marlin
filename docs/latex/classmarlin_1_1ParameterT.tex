@@ -1,0 +1,121 @@
+\section{marlin\+:\+:ParameterT$<$ T $>$ Class Template Reference}
+\label{classmarlin_1_1ParameterT}\index{marlin\+::\+Parameter\+T$<$ T $>$@{marlin\+::\+Parameter\+T$<$ T $>$}}
+
+
+\doxyref{ParameterT}{p.}{classmarlin_1_1ParameterT} template class.  
+
+
+
+
+{\ttfamily \#include $<$Parameter.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:ParameterT$<$ T $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classmarlin_1_1ParameterT}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ ParameterT} (const std\+::string \&parameter\+Name, const std\+::string \&parameter\+Description, T \&parameter, const T \&parameter\+Default\+Value, bool optional, int parameter\+Set\+Size=0)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ParameterT_ae1ec6d1265286ab3d22f706b94ce7e4d}} 
+const T \& \textbf{ valueT} () const
+\begin{DoxyCompactList}\small\item\em Get the parameter value. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ParameterT_a887a9af4990127cea332b3c581052aee}} 
+const T \& \textbf{ default\+ValueT} () const
+\begin{DoxyCompactList}\small\item\em Get the parameter default value. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ParameterT_a2ceaf2e914ab37dd76de70081cd4db94}} 
+const std\+::string \textbf{ type} () const override
+\begin{DoxyCompactList}\small\item\em Get the parameter type as string. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ParameterT_ac8dfbd4d1e1cbbfe0a005cc7877dcda8}} 
+const std\+::string \textbf{ default\+Value} () const override
+\begin{DoxyCompactList}\small\item\em Get the parameter default value. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ParameterT_a1ec2b70acb1805d6ac21ad3b8acaa7b4}} 
+const std\+::string \textbf{ value} () const override
+\begin{DoxyCompactList}\small\item\em Get the parameter value as string. \end{DoxyCompactList}\item 
+void \textbf{ set\+Value} (\textbf{ String\+Parameters} $\ast$params) override
+\begin{DoxyCompactList}\small\item\em Set the value using the string parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1ParameterT_af787a95b2abbe0f7fcb295e07e23dae5}} 
+T \& \textbf{ \+\_\+value}
+\begin{DoxyCompactList}\small\item\em The parameter value reference. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1ParameterT_a1e84477db0f227f33802f2636557e63f}} 
+T \textbf{ \+\_\+default\+Value}
+\begin{DoxyCompactList}\small\item\em The default parameter value reference. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class marlin\+::\+Parameter\+T$<$ T $>$}
+
+\doxyref{ParameterT}{p.}{classmarlin_1_1ParameterT} template class. 
+
+Templated implementation of \doxyref{Parameter}{p.}{classmarlin_1_1Parameter} class. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1ParameterT_aabc6b6c14504c2245aa5e58a7fb8a61a}} 
+\index{marlin\+::\+ParameterT@{marlin\+::\+ParameterT}!ParameterT@{ParameterT}}
+\index{ParameterT@{ParameterT}!marlin\+::\+ParameterT@{marlin\+::\+ParameterT}}
+\subsubsection{Parameter\+T()}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\textbf{ marlin\+::\+ParameterT}$<$ T $>$\+::\textbf{ ParameterT} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameter\+Name,  }\item[{const std\+::string \&}]{parameter\+Description,  }\item[{T \&}]{parameter,  }\item[{const T \&}]{parameter\+Default\+Value,  }\item[{bool}]{optional,  }\item[{int}]{parameter\+Set\+Size = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parameter\+Name} & the parameter name \\
+\hline
+{\em parameter\+Description} & the parameter description \\
+\hline
+{\em parameter} & the parameter value reference \\
+\hline
+{\em parameter\+Default\+Value} & the parameter default value \\
+\hline
+{\em optional} & whether the parameter is optional while parsing the steering file \\
+\hline
+{\em parameter\+Set\+Size} & the set size of the parameter, if of type vector \\
+\hline
+\end{DoxyParams}
+
+
+References marlin\+::\+Parameter\+::\+\_\+description, marlin\+::\+Parameter\+::\+\_\+name, marlin\+::\+Parameter\+::\+\_\+optional, marlin\+::\+Parameter\+::\+\_\+set\+Size, marlin\+::\+Parameter\+T$<$ T $>$\+::\+\_\+value, and marlin\+::\+Parameter\+::\+\_\+value\+Set.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1ParameterT_ae8c6cba13ed4e29b89d209bc78d40872}} 
+\index{marlin\+::\+ParameterT@{marlin\+::\+ParameterT}!set\+Value@{set\+Value}}
+\index{set\+Value@{set\+Value}!marlin\+::\+ParameterT@{marlin\+::\+ParameterT}}
+\subsubsection{set\+Value()}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \textbf{ marlin\+::\+ParameterT}$<$ T $>$\+::set\+Value (\begin{DoxyParamCaption}\item[{\textbf{ String\+Parameters} $\ast$}]{params }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Set the value using the string parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & the string parameters to get the parameter value from \\
+\hline
+\end{DoxyParams}
+
+
+Implements \textbf{ marlin\+::\+Parameter} \doxyref{}{p.}{classmarlin_1_1Parameter_ad496a7fa87f2c576e60c06b183ce94af}.
+
+
+
+References marlin\+::\+Parameter\+T$<$ T $>$\+::\+\_\+value, marlin\+::\+Parameter\+::\+\_\+value\+Set, marlin\+::\+String\+Parameters\+::get(), marlin\+::\+String\+Parameters\+::is\+Parameter\+Set(), and marlin\+::\+Parameter\+::name().
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Parameter.\+h\end{DoxyCompactItemize}

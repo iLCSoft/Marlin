@@ -1,0 +1,189 @@
+\section{marlin\+:\+:Parametrized Class Reference}
+\label{classmarlin_1_1Parametrized}\index{marlin\+::\+Parametrized@{marlin\+::\+Parametrized}}
+Inheritance diagram for marlin\+:\+:Parametrized\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.057971cm]{classmarlin_1_1Parametrized}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Parametrized_a7e44e5f8ad96aa69ed4c6d8beb38dde7}} 
+typedef std\+::shared\+\_\+ptr$<$ \textbf{ Parameter} $>$ {\bfseries Parameter\+Ptr}
+\item 
+\mbox{\label{classmarlin_1_1Parametrized_a1f4d3aa2858d0c28c174699e32e23e09}} 
+typedef std\+::map$<$ std\+::string, Parameter\+Ptr $>$ {\bfseries Parameter\+Map}
+\item 
+\mbox{\label{classmarlin_1_1Parametrized_ae29f5e5170556c89e627ccda0ffc3948}} 
+typedef std\+::map$<$ std\+::string, std\+::string $>$ {\bfseries L\+C\+I\+O\+Type\+Map}
+\item 
+\mbox{\label{classmarlin_1_1Parametrized_ace720ac8a6f7444ef5e2587cbc71b339}} 
+typedef Parameter\+Map\+::iterator {\bfseries iterator}
+\item 
+\mbox{\label{classmarlin_1_1Parametrized_aa2acea26618105c924df2a17913035f9}} 
+typedef Parameter\+Map\+::const\+\_\+iterator {\bfseries const\+\_\+iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1Parametrized_a92848a36098a3b07bfe61c504837c927}} 
+{\bfseries Parametrized} (const \textbf{ Parametrized} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1Parametrized_aa0bc8559aff223df77c59d21b161a270}} 
+\textbf{ Parametrized} \& {\bfseries operator=} (const \textbf{ Parametrized} \&)=delete
+\item 
+{\footnotesize template$<$class T $>$ }\\void \textbf{ register\+Parameter} (const std\+::string \&parameter\+Name, const std\+::string \&parameter\+Description, T \&parameter, const T \&default\+Val, int set\+Size=0)
+\begin{DoxyCompactList}\small\item\em Register a steering variable. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\void \textbf{ register\+Optional\+Parameter} (const std\+::string \&parameter\+Name, const std\+::string \&parameter\+Description, T \&parameter, const T \&default\+Val, int set\+Size=0)
+\begin{DoxyCompactList}\small\item\em Same as register\+Parameter except that the parameter is optional. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_af6546dee2f8673688677a42e2290381a}} 
+void \textbf{ register\+Input\+Collection} (const std\+::string \&collection\+Type, const std\+::string \&parameter\+Name, const std\+::string \&parameter\+Description, std\+::string \&parameter, const std\+::string \&default\+Val, int set\+Size=0)
+\begin{DoxyCompactList}\small\item\em Specialization of \doxyref{register\+Parameter()}{p.}{classmarlin_1_1Parametrized_a0ca3ad605ee4535cd98d2dd861c99fc3} for a parameter that defines an input collection -\/ can be used fo checking the consistency of the steering file. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_aad86edee8d20a9e480557326f2723bf8}} 
+void \textbf{ register\+Input\+Collections} (const std\+::string \&collection\+Type, const std\+::string \&parameter\+Name, const std\+::string \&parameter\+Description, std\+::vector$<$ std\+::string $>$ \&parameter, const std\+::vector$<$ std\+::string $>$ \&default\+Val, int set\+Size=0)
+\begin{DoxyCompactList}\small\item\em Specialization of \doxyref{register\+Parameter()}{p.}{classmarlin_1_1Parametrized_a0ca3ad605ee4535cd98d2dd861c99fc3} for a parameter that defines one or several input collections -\/ can be used fo checking the consistency of the steering file. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_a0d3f93922a7e4b51eb58d70e73c98e0a}} 
+void \textbf{ register\+Output\+Collection} (const std\+::string \&collection\+Type, const std\+::string \&parameter\+Name, const std\+::string \&parameter\+Description, std\+::string \&parameter, const std\+::string \&default\+Val, int set\+Size=0)
+\begin{DoxyCompactList}\small\item\em Specialization of \doxyref{register\+Parameter()}{p.}{classmarlin_1_1Parametrized_a0ca3ad605ee4535cd98d2dd861c99fc3} for a parameter that defines an output collection -\/ can be used fo checking the consistency of the steering file. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_a8a0d19d32c4db1b2d12f3aa34668ce32}} 
+bool \textbf{ parameter\+Set} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em Tests whether the parameter has been set in the steering file. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_aed2440e7fe755c79481d246dbd1e613d}} 
+void \textbf{ clear\+Parameters} ()
+\begin{DoxyCompactList}\small\item\em Clear the parameter map. \end{DoxyCompactList}\item 
+void \textbf{ set\+Parameters} (std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ parameters)
+\begin{DoxyCompactList}\small\item\em Update the parameter map with the input parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_a9650c1fb7ceda93f6132ac134e5a575d}} 
+std\+::vector$<$ std\+::string $>$ \textbf{ parameter\+Names} () const
+\begin{DoxyCompactList}\small\item\em Get the list of parameter names. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\T \textbf{ get\+Parameter} (const std\+::string \&name) const
+\begin{DoxyCompactList}\small\item\em Get a parameter value. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_a97b4c36ff7fe69c82992d02e920ec1e4}} 
+std\+::string \textbf{ get\+L\+C\+I\+O\+In\+Type} (const std\+::string \&col\+Name) const
+\begin{DoxyCompactList}\small\item\em Return the L\+C\+IO input type for the collection col\+Name -\/ empty string if col\+Name is not a registered collection name. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_aeb6651841982821e73262a5bca0bbeb5}} 
+std\+::string \textbf{ get\+L\+C\+I\+O\+Out\+Type} (const std\+::string \&col\+Name) const
+\begin{DoxyCompactList}\small\item\em Return the L\+C\+IO output type for the collection col\+Name -\/ empty string if col\+Name is not a registered collection name. \end{DoxyCompactList}\item 
+bool \textbf{ is\+Input\+Collection\+Name} (const std\+::string \&parameter\+Name) const
+\begin{DoxyCompactList}\small\item\em True if the given parameter defines an L\+C\+IO input collection, i.\+e. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_ae7e2d46e9789313d1f0278e792df59a8}} 
+bool \textbf{ is\+Output\+Collection\+Name} (const std\+::string \&parameter\+Name) const
+\begin{DoxyCompactList}\small\item\em True if the given parameter defines an L\+C\+IO output collection. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_adea8de32e6464b55c8f65abcadcd2cf0}} 
+iterator \textbf{ pbegin} ()
+\begin{DoxyCompactList}\small\item\em Begin iterator to parameter map. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_a555eabe87c17af8711602c830661eff8}} 
+iterator \textbf{ pend} ()
+\begin{DoxyCompactList}\small\item\em End iterator of parameter map. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_a826e4f088048827ddee76af63e510bf6}} 
+const\+\_\+iterator \textbf{ pbegin} () const
+\begin{DoxyCompactList}\small\item\em Begin iterator to parameter map. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1Parametrized_a450d68c405b69b13f80836cdfd245eaa}} 
+const\+\_\+iterator \textbf{ pend} () const
+\begin{DoxyCompactList}\small\item\em End iterator of parameter map. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1Parametrized_a22769ccaee2510f1dbc9be534470c15f}} 
+\index{marlin\+::\+Parametrized@{marlin\+::\+Parametrized}!get\+Parameter@{get\+Parameter}}
+\index{get\+Parameter@{get\+Parameter}!marlin\+::\+Parametrized@{marlin\+::\+Parametrized}}
+\subsubsection{get\+Parameter()}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T marlin\+::\+Parametrized\+::get\+Parameter (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get a parameter value. 
+
+If the parameter exists, an attempt to cast the parameter type to the same type as it was registered is done. It it fails, an exception is thrown. If the parameter doesn\textquotesingle{}t exists, an exception is thrown. If the parameter exists but is not set, the default value is returned.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & the parameter name \\
+\hline
+\end{DoxyParams}
+\mbox{\label{classmarlin_1_1Parametrized_a4897f750fb36f6ecc17a04f27fb1c894}} 
+\index{marlin\+::\+Parametrized@{marlin\+::\+Parametrized}!is\+Input\+Collection\+Name@{is\+Input\+Collection\+Name}}
+\index{is\+Input\+Collection\+Name@{is\+Input\+Collection\+Name}!marlin\+::\+Parametrized@{marlin\+::\+Parametrized}}
+\subsubsection{is\+Input\+Collection\+Name()}
+{\footnotesize\ttfamily bool marlin\+::\+Parametrized\+::is\+Input\+Collection\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameter\+Name }\end{DoxyParamCaption}) const}
+
+
+
+True if the given parameter defines an L\+C\+IO input collection, i.\+e. 
+
+the type has been defined with set\+L\+C\+I\+O\+In\+Type(). 
+
+Referenced by marlin\+::\+Processor\+::print\+Description\+X\+M\+L().
+
+\mbox{\label{classmarlin_1_1Parametrized_ab682086b30a9798e0773bc01c4fb0671}} 
+\index{marlin\+::\+Parametrized@{marlin\+::\+Parametrized}!register\+Optional\+Parameter@{register\+Optional\+Parameter}}
+\index{register\+Optional\+Parameter@{register\+Optional\+Parameter}!marlin\+::\+Parametrized@{marlin\+::\+Parametrized}}
+\subsubsection{register\+Optional\+Parameter()}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void marlin\+::\+Parametrized\+::register\+Optional\+Parameter (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameter\+Name,  }\item[{const std\+::string \&}]{parameter\+Description,  }\item[{T \&}]{parameter,  }\item[{const T \&}]{default\+Val,  }\item[{int}]{set\+Size = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Same as register\+Parameter except that the parameter is optional. 
+
+The value of the parameter will still be set to the default value, which is used to print an example steering line. Use \doxyref{parameter\+Set()}{p.}{classmarlin_1_1Parametrized_a8a0d19d32c4db1b2d12f3aa34668ce32} to check whether it actually has been set in the steering file. 
+
+References marlin\+::\+Parameter\+::set\+Size().
+
+
+
+Referenced by marlin\+::\+Geometry\+Plugin\+::\+Geometry\+Plugin(), marlin\+::\+L\+C\+I\+O\+Output\+Processor\+::new\+Processor(), and marlin\+::\+Processor\+::\+Processor().
+
+\mbox{\label{classmarlin_1_1Parametrized_a0ca3ad605ee4535cd98d2dd861c99fc3}} 
+\index{marlin\+::\+Parametrized@{marlin\+::\+Parametrized}!register\+Parameter@{register\+Parameter}}
+\index{register\+Parameter@{register\+Parameter}!marlin\+::\+Parametrized@{marlin\+::\+Parametrized}}
+\subsubsection{register\+Parameter()}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void marlin\+::\+Parametrized\+::register\+Parameter (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameter\+Name,  }\item[{const std\+::string \&}]{parameter\+Description,  }\item[{T \&}]{parameter,  }\item[{const T \&}]{default\+Val,  }\item[{int}]{set\+Size = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Register a steering variable. 
+
+The default value has to be of the {\itshape same} type as the parameter, e.\+g. 
+\begin{DoxyCode}
+\textcolor{keywordtype}{float} \_cut ;
+\textcolor{comment}{// ...}
+registerParameter( \textcolor{stringliteral}{"Cut"}, \textcolor{stringliteral}{"cut..."}, \_cut , \textcolor{keywordtype}{float}( 3.141592 ) ) ;
+\end{DoxyCode}
+ as implicit conversions don\textquotesingle{}t work for templates.~\newline
+ The optional parameter set\+Size is used for formating the printout of parameters. This can be used if the parameter values are expected to come in sets of fixed size. 
+
+References marlin\+::\+Parameter\+::set\+Size().
+
+
+
+Referenced by marlin\+::\+Processor\+::register\+Processor\+Parameter().
+
+\mbox{\label{classmarlin_1_1Parametrized_a2d4cb5f740ab82587786cd27dcab2d46}} 
+\index{marlin\+::\+Parametrized@{marlin\+::\+Parametrized}!set\+Parameters@{set\+Parameters}}
+\index{set\+Parameters@{set\+Parameters}!marlin\+::\+Parametrized@{marlin\+::\+Parametrized}}
+\subsubsection{set\+Parameters()}
+{\footnotesize\ttfamily void marlin\+::\+Parametrized\+::set\+Parameters (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$}]{parameters }\end{DoxyParamCaption})}
+
+
+
+Update the parameter map with the input parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parameters} & the input parameter list \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by marlin\+::\+Data\+Source\+Plugin\+::init().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Parameter.\+h\item 
+Parameter.\+cc\end{DoxyCompactItemize}

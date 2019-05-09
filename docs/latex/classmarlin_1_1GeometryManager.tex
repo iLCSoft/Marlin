@@ -1,0 +1,102 @@
+\section{marlin\+:\+:Geometry\+Manager Class Reference}
+\label{classmarlin_1_1GeometryManager}\index{marlin\+::\+Geometry\+Manager@{marlin\+::\+Geometry\+Manager}}
+
+
+\doxyref{Geometry\+Manager}{p.}{classmarlin_1_1GeometryManager} class.  
+
+
+
+
+{\ttfamily \#include $<$Geometry\+Manager.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1GeometryManager_a807e36fb23ea8f72a87e7bac28afda04}} 
+using {\bfseries Logger} = Logging\+::\+Logger
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1GeometryManager_a13b43f563d9520fef922664ecefd6a5e}} 
+{\bfseries Geometry\+Manager} (const \textbf{ Geometry\+Manager} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1GeometryManager_ab7691a6717d5c854ded5b6cc3b31cda5}} 
+\textbf{ Geometry\+Manager} \& {\bfseries operator=} (const \textbf{ Geometry\+Manager} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1GeometryManager_ac763e57cba29706f027c4f9964660ba6}} 
+\textbf{ Geometry\+Manager} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+void \textbf{ init} (const \textbf{ Application} $\ast$\textbf{ app})
+\begin{DoxyCompactList}\small\item\em Initialize the geometry manager. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\const T $\ast$ \textbf{ geometry} () const
+\begin{DoxyCompactList}\small\item\em Get the underlying geometry handle Example\+: \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryManager_ace34efe0ef2d8aeff33a51444e89599f}} 
+std\+::type\+\_\+index \textbf{ type\+Index} () const
+\begin{DoxyCompactList}\small\item\em Get the underlying geometry type info. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryManager_a3ce06d1eae5637dd82026348e4b0da4b}} 
+void \textbf{ clear} ()
+\begin{DoxyCompactList}\small\item\em Clear the geometry content. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryManager_a248cc35ec62b4ee2de6deee5f7845bea}} 
+bool \textbf{ is\+Initialized} () const
+\begin{DoxyCompactList}\small\item\em Whether the geometry has been initialized. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1GeometryManager_aebaf3709c7d06c51a70aa742682d4268}} 
+const \textbf{ Application} \& \textbf{ app} () const
+\begin{DoxyCompactList}\small\item\em Get the application in which the manager is running Valid only after initialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Geometry\+Manager}{p.}{classmarlin_1_1GeometryManager} class. 
+
+Handle a user plugin in charge of loading the geometry in the framework and providing access to it. 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1GeometryManager_a4257ccc9849a8077c559054aa60fd2ef}} 
+\index{marlin\+::\+Geometry\+Manager@{marlin\+::\+Geometry\+Manager}!geometry@{geometry}}
+\index{geometry@{geometry}!marlin\+::\+Geometry\+Manager@{marlin\+::\+Geometry\+Manager}}
+\subsubsection{geometry()}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+const T $\ast$ marlin\+::\+Geometry\+Manager\+::geometry (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the underlying geometry handle Example\+: 
+
+
+\begin{DoxyCode}
+\textcolor{comment}{// assume Gear geometry has been loaded}
+\textcolor{keyword}{const} gear::GearMgr* gearGeo = mgr->geometry<gear::GearMgr>() ;
+\textcolor{comment}{// assume DD4hep geometry has been loaded}
+\textcolor{keyword}{const} dd4hep::Detector* dd4hepGeo = mgr->geometry<dd4hep::Detector>() ;
+\end{DoxyCode}
+ 
+
+Referenced by marlin\+::\+Processor\+Api\+::gear\+Detector(), and marlin\+::\+Processor\+Api\+::is\+First\+Event().
+
+\mbox{\label{classmarlin_1_1GeometryManager_ab2afa2543af80f642bdbe3f11e96607a}} 
+\index{marlin\+::\+Geometry\+Manager@{marlin\+::\+Geometry\+Manager}!init@{init}}
+\index{init@{init}!marlin\+::\+Geometry\+Manager@{marlin\+::\+Geometry\+Manager}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void marlin\+::\+Geometry\+Manager\+::init (\begin{DoxyParamCaption}\item[{const \textbf{ Application} $\ast$}]{app }\end{DoxyParamCaption})}
+
+
+
+Initialize the geometry manager. 
+
+Load the geometry plugin service and create the geometry
+
+
+\begin{DoxyParams}{Parameters}
+{\em app} & the application from which to get settings \\
+\hline
+\end{DoxyParams}
+
+
+References app(), marlin\+::\+Application\+::create\+Logger(), marlin\+::\+Application\+::geometry\+Parameters(), marlin\+::\+Plugin\+Manager\+::instance(), and is\+Initialized().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Geometry\+Manager.\+h\item 
+Geometry\+Manager.\+cc\end{DoxyCompactItemize}

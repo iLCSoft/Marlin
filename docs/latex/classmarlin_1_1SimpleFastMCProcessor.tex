@@ -1,0 +1,137 @@
+\section{marlin\+:\+:Simple\+Fast\+M\+C\+Processor Class Reference}
+\label{classmarlin_1_1SimpleFastMCProcessor}\index{marlin\+::\+Simple\+Fast\+M\+C\+Processor@{marlin\+::\+Simple\+Fast\+M\+C\+Processor}}
+
+
+A simple smearing \char`\"{}\+Monte Carlo\char`\"{} processor.  
+
+
+Inheritance diagram for marlin\+:\+:Simple\+Fast\+M\+C\+Processor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classmarlin_1_1SimpleFastMCProcessor}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1SimpleFastMCProcessor_a47cc7c8344ae0be24d621f311d4c7ac1}} 
+{\bfseries Simple\+Fast\+M\+C\+Processor} (const \textbf{ marlin\+::\+Simple\+Fast\+M\+C\+Processor} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1SimpleFastMCProcessor_a3bb3441abbab4edc7df6f10b36aa3579}} 
+\textbf{ Simple\+Fast\+M\+C\+Processor} \& {\bfseries operator=} (const \textbf{ marlin\+::\+Simple\+Fast\+M\+C\+Processor} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1SimpleFastMCProcessor_a7d5ba5c7f2d639b0d15d1d61e45fd2a9}} 
+\textbf{ Processor} $\ast$ \textbf{ new\+Processor} ()
+\begin{DoxyCompactList}\small\item\em Return a new instance of the processor (factory method) \end{DoxyCompactList}\item 
+void \textbf{ init} ()
+\begin{DoxyCompactList}\small\item\em Initialize the processor. \end{DoxyCompactList}\item 
+void \textbf{ process\+Event} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$evt)
+\begin{DoxyCompactList}\small\item\em Process an input event. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+A simple smearing \char`\"{}\+Monte Carlo\char`\"{} processor. 
+
+It creates Reconstructed\+Particles from M\+C\+Particles according to the resolution that is specified for the particle type, one of\+: 
+\begin{DoxyItemize}
+\item photon 
+\item charged\+: e+-\/,mu+-\/,pi+-\/,K+-\/,p+-\/,.... 
+\item neutral hadron\+: K0L, n, Lambda0,... 
+\end{DoxyItemize}The resolutions for charged particles are given as delta(1/P) for a certain polar angle range (mapped to [0.,pi/2.]), e.\+g. ~\newline
+ {\bfseries Charged\+Resolution ~ .7e-\/5 ~ 0. ~ 3.\+141593/2. }~\newline
+ sets the resolution for all charged particles to 0.\+7$\ast$10$^\wedge$-\/5.~\newline
+ Specifying different resolutions for different polar angle ranges allows to mimic degrading detector performance in the very forward region. ~\newline
+ The energy of the charged Reconstructed\+Particles is set from the \char`\"{}measured\char`\"{} momentum using the energy momentum relation for electrons and muons and assuming the pion mass for all other charged tracks.~\newline
+ The resolutions for neutral particles are given as A and B for a certain polar angle range, where d\+E/E = A \char`\"{}+\char`\"{} B / sqrt(E/\+GeV), e.\+g. ~\newline
+ {\bfseries Neutral\+Hadron\+Resolution ~ 0.\+03 ~ .30 ~ 0. ~ 3.\+141593/2. }~\newline
+ sets the resolution for all neutral hadrons to 3\% \char`\"{}+\char`\"{} 30\% / sqrt( E /\+GeV ). The resolution for gammas is specified in {\bfseries Photon\+Resolution}~\newline
+ No Reconstructed\+Particles are created if there is no resolution defined at that polar angle, e.\+g.~\newline
+ {\bfseries Photon\+Resolution ~ .7e-\/5 ~ 0.\+083 ~ 3.\+141593/2. }~\newline
+ effectively limits the acceptance region for photons to theta $>$ 83mrad.~\newline
+
+
+A collection of L\+C\+Relations, called \char`\"{}\+M\+C\+Truth\+Mapping\char`\"{} holds the relation between the Reconstructed\+Particles and their proper M\+C\+Particles.
+
+\subparagraph*{Input -\/ Prerequisites}
+
+A collection of M\+C\+Particles (the M\+C\+P\+Article collection).
+
+\subparagraph*{Output}
+
+
+\begin{DoxyItemize}
+\item {\bfseries Reconstructed\+Particles}\+: the collection of reconstructed particles 
+\item {\bfseries M\+C\+Truth\+Mapping}\+: holds L\+C\+Relations that map the Reconstructed\+Particles to their proper M\+C\+Particles  
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Charged\+Resolution} & Resolution of charged particles in polar angle range\+: d(1/P) th\+\_\+min th\+\_\+max \\
+\hline
+{\em Input\+Collection\+Name} & Name of the M\+C\+Particle input collection \\
+\hline
+{\em Momentum\+Cut} & No reconstructed particles are produced for smaller momenta (in [GeV]) \\
+\hline
+{\em Neutral\+Hadron\+Resolution} & Resolution d\+E/E=A+\+B/sqrt(E/\+GeV) of neutral hadrons in polar angle range\+: A B th\+\_\+min th\+\_\+max \\
+\hline
+{\em Photon\+Resolution} & Resolution d\+E/E=A+\+B/sqrt(E/\+GeV) of photons in polar angle range\+: A B th\+\_\+min th\+\_\+max\\
+\hline
+{\em Reco\+Particle\+Collection\+Name} & default is \char`\"{}\+Reconstructed\+Particles\char`\"{} \\
+\hline
+{\em M\+C\+Truth\+Mapping\+Collection\+Name} & default is \char`\"{}\+M\+C\+Truth\+Mapping\char`\"{}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+Simple\+Fast\+M\+C\+Processor.\+h,v 1.\+4 2007-\/07-\/04 12\+:13\+:06 gaede Exp 
+\end{DoxyParagraph}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1SimpleFastMCProcessor_aea0d8a3a1bde4211398554449ba61e34}} 
+\index{marlin\+::\+Simple\+Fast\+M\+C\+Processor@{marlin\+::\+Simple\+Fast\+M\+C\+Processor}!init@{init}}
+\index{init@{init}!marlin\+::\+Simple\+Fast\+M\+C\+Processor@{marlin\+::\+Simple\+Fast\+M\+C\+Processor}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void marlin\+::\+Simple\+Fast\+M\+C\+Processor\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Initialize the processor. 
+
+Called at the begin of the job before anything is read. Use to initialize the processor, e.\+g. book histograms. 
+
+Reimplemented from \textbf{ marlin\+::\+Processor} \doxyref{}{p.}{classmarlin_1_1Processor_a8194fb92a428de40ea9d891c8c8aed6b}.
+
+
+
+References marlin\+::\+Processor\+::print\+Parameters(), marlin\+::\+Simple\+Particle\+Factory\+::register\+I\+Four\+Vector\+Smearer(), and marlin\+::\+Simple\+Particle\+Factory\+::set\+Momentum\+Cut().
+
+\mbox{\label{classmarlin_1_1SimpleFastMCProcessor_aa4c8ea6b05fd5620870b527589098f20}} 
+\index{marlin\+::\+Simple\+Fast\+M\+C\+Processor@{marlin\+::\+Simple\+Fast\+M\+C\+Processor}!process\+Event@{process\+Event}}
+\index{process\+Event@{process\+Event}!marlin\+::\+Simple\+Fast\+M\+C\+Processor@{marlin\+::\+Simple\+Fast\+M\+C\+Processor}}
+\subsubsection{process\+Event()}
+{\footnotesize\ttfamily void marlin\+::\+Simple\+Fast\+M\+C\+Processor\+::process\+Event (\begin{DoxyParamCaption}\item[{E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Process an input event. 
+
+Called for every event -\/ the working horse. 
+
+Reimplemented from \textbf{ marlin\+::\+Processor} \doxyref{}{p.}{classmarlin_1_1Processor_a5bee49b5515f59fae755e0a26dfae91a}.
+
+
+
+References marlin\+::\+I\+Reco\+Particle\+Factory\+::create\+Reconstructed\+Particle().
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Simple\+Fast\+M\+C\+Processor.\+cc\end{DoxyCompactItemize}

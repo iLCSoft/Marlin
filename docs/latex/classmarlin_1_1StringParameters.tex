@@ -1,0 +1,437 @@
+\section{marlin\+:\+:String\+Parameters Class Reference}
+\label{classmarlin_1_1StringParameters}\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+
+
+Simple parameters class for Marlin.  
+
+
+
+
+{\ttfamily \#include $<$String\+Parameters.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1StringParameters_ac77daec7e6d882404fa588671e445944}} 
+{\bfseries String\+Parameters} (const \textbf{ String\+Parameters} \&sp)=default
+\item 
+void \textbf{ add} (const std\+::string \&key)
+\begin{DoxyCompactList}\small\item\em Add a parameter without value. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \textbf{ add} (const std\+::string \&key, const T \&value)
+\begin{DoxyCompactList}\small\item\em Add a parameter with its value. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \textbf{ add} (const std\+::string \&key, const std\+::vector$<$ T $>$ \&values)
+\begin{DoxyCompactList}\small\item\em Add a parameter with its values. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \textbf{ replace} (const std\+::string \&key, const T \&value)
+\begin{DoxyCompactList}\small\item\em Replace a parameter with a new value. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \textbf{ replace} (const std\+::string \&key, const std\+::vector$<$ T $>$ \&values)
+\begin{DoxyCompactList}\small\item\em Replace a parameter with a new values. \end{DoxyCompactList}\item 
+void \textbf{ erase} (const std\+::string \&key)
+\begin{DoxyCompactList}\small\item\em Erase a parameter. \end{DoxyCompactList}\item 
+bool \textbf{ is\+Parameter\+Set} (const std\+::string \&key) const
+\begin{DoxyCompactList}\small\item\em Whether the parameter is set, meaning the entry already exists, but has no value. \end{DoxyCompactList}\item 
+bool \textbf{ exists} (const std\+::string \&key) const
+\begin{DoxyCompactList}\small\item\em Whether the parameter exists. \end{DoxyCompactList}\item 
+void \textbf{ unset} (const std\+::string \&key)
+\begin{DoxyCompactList}\small\item\em Unset a parameter. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1StringParameters_af3b142c6b4ddc37e64ed3b8f2af0f287}} 
+void \textbf{ unset} ()
+\begin{DoxyCompactList}\small\item\em Unset all parameters. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1StringParameters_aacaa6d24f3012a5bb74679608b3975df}} 
+std\+::vector$<$ std\+::string $>$ \textbf{ keys} () const
+\begin{DoxyCompactList}\small\item\em Get the parameter keys. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\T \textbf{ get\+Value} (const std\+::string \&key) const
+\begin{DoxyCompactList}\small\item\em Get a parameter value. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::vector$<$ T $>$ \textbf{ get\+Values} (const std\+::string \&key) const
+\begin{DoxyCompactList}\small\item\em Get parameter values. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\T \textbf{ get\+Value} (const std\+::string \&key, const T \&fallback) const
+\begin{DoxyCompactList}\small\item\em Get a parameter value. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::vector$<$ T $>$ \textbf{ get\+Values} (const std\+::string \&key, const std\+::vector$<$ T $>$ \&fallback) const
+\begin{DoxyCompactList}\small\item\em Get parameter values. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \textbf{ get} (const std\+::string \&key, T \&value) const
+\begin{DoxyCompactList}\small\item\em Get a parameter value by reference. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \textbf{ get} (const std\+::string \&key, std\+::vector$<$ T $>$ \&values) const
+\begin{DoxyCompactList}\small\item\em Get parameter values by reference. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1StringParameters_a57b12116d1220edd90ddfb5a85f6e88b}} 
+Parameters\+Map \textbf{ \+\_\+map} \{\}
+\begin{DoxyCompactList}\small\item\em $<$ The parameters map \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1StringParameters_a8ea205e1f0462cefd77c51231b34917f}} 
+std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&, const \textbf{ String\+Parameters} \&)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Simple parameters class for Marlin. 
+
+Holds named parameters as string vectors. \begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+
+R. Ete, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+\doxyref{String\+Parameters.\+h}{p.}{StringParameters_8h_source},v 1.\+5 2006-\/11-\/10 11\+:56\+:07 engels Exp 
+\end{DoxyParagraph}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1StringParameters_a66e54faeeb784b5f06c8f5dc4f0dc5cf}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!add@{add}}
+\index{add@{add}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{add()\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void marlin\+::\+String\+Parameters\+::add (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption})}
+
+
+
+Add a parameter without value. 
+
+Does nothing if the parameter exists
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the prameter key \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+
+
+Referenced by add(), marlin\+::\+Parser\+::parse(), and replace().
+
+\mbox{\label{classmarlin_1_1StringParameters_a83f7c882fd90473619169f3d4cbe2c30}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!add@{add}}
+\index{add@{add}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{add()\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void marlin\+::\+String\+Parameters\+::add (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{const T \&}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Add a parameter with its value. 
+
+Note that the value is appended to the parameter list. To overwrite a parameter value, use \doxyref{replace()}{p.}{classmarlin_1_1StringParameters_afa4a13eccfd8692f01423d22beb6c28b} instead
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+{\em value} & the parameter value \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map, and add().
+
+\mbox{\label{classmarlin_1_1StringParameters_a17aac2fa25b6d675843a5615ea25f0d6}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!add@{add}}
+\index{add@{add}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{add()\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void marlin\+::\+String\+Parameters\+::add (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{const std\+::vector$<$ T $>$ \&}]{values }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Add a parameter with its values. 
+
+Note that the values are appended to the parameter list. To overwrite a parameter value, use \doxyref{replace()}{p.}{classmarlin_1_1StringParameters_afa4a13eccfd8692f01423d22beb6c28b} instead
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+{\em values} & the parameter values \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map, and add().
+
+\mbox{\label{classmarlin_1_1StringParameters_a4b2bac2a57934a1c85c0327a011f9b0e}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!erase@{erase}}
+\index{erase@{erase}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{erase()}
+{\footnotesize\ttfamily void marlin\+::\+String\+Parameters\+::erase (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption})}
+
+
+
+Erase a parameter. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+
+
+Referenced by replace().
+
+\mbox{\label{classmarlin_1_1StringParameters_a3193ba4d1d33d7417823261b88340bfc}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!exists@{exists}}
+\index{exists@{exists}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{exists()}
+{\footnotesize\ttfamily bool marlin\+::\+String\+Parameters\+::exists (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption}) const}
+
+
+
+Whether the parameter exists. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+\mbox{\label{classmarlin_1_1StringParameters_aac2a0dfcfdc004fa4f3e07f38d7d9cf9}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!get@{get}}
+\index{get@{get}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{get()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void marlin\+::\+String\+Parameters\+::get (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{T \&}]{value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get a parameter value by reference. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+{\em value} & the value to receive \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+
+
+Referenced by marlin\+::\+Parser\+::parse(), marlin\+::\+X\+M\+L\+Parser\+::parse(), and marlin\+::\+Parameter\+T$<$ T $>$\+::set\+Value().
+
+\mbox{\label{classmarlin_1_1StringParameters_a322143c457d87d615f73346ce051e0d8}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!get@{get}}
+\index{get@{get}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{get()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void marlin\+::\+String\+Parameters\+::get (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{std\+::vector$<$ T $>$ \&}]{values }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get parameter values by reference. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+{\em values} & the values to receive \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+\mbox{\label{classmarlin_1_1StringParameters_a8aa058fc6d4969250e7497826accfab4}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!get\+Value@{get\+Value}}
+\index{get\+Value@{get\+Value}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{get\+Value()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T marlin\+::\+String\+Parameters\+::get\+Value (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get a parameter value. 
+
+If the value doesn\textquotesingle{}t exists, an exception is thrown.
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+
+
+Referenced by marlin\+::\+Parser\+::parse().
+
+\mbox{\label{classmarlin_1_1StringParameters_a1600af85fd6b79de266ad96698647c64}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!get\+Value@{get\+Value}}
+\index{get\+Value@{get\+Value}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{get\+Value()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T marlin\+::\+String\+Parameters\+::get\+Value (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{const T \&}]{fallback }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get a parameter value. 
+
+If the value doesn\textquotesingle{}t exists, the fallback value provided as second argument is returned
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+{\em fallback} & the fallback value if not found \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+\mbox{\label{classmarlin_1_1StringParameters_a483014ccaadc2ad38f5cf03ad15a591c}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!get\+Values@{get\+Values}}
+\index{get\+Values@{get\+Values}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{get\+Values()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::vector$<$ T $>$ marlin\+::\+String\+Parameters\+::get\+Values (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get parameter values. 
+
+If the values do not exists, an exception is thrown.
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+\mbox{\label{classmarlin_1_1StringParameters_a22034f768bc5a208f33799fe1b536671}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!get\+Values@{get\+Values}}
+\index{get\+Values@{get\+Values}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{get\+Values()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::vector$<$ T $>$ marlin\+::\+String\+Parameters\+::get\+Values (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{const std\+::vector$<$ T $>$ \&}]{fallback }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get parameter values. 
+
+If the values do not exists, the fallback values provided as second argument is returned
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+{\em fallback} & the fallback value if not found \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+\mbox{\label{classmarlin_1_1StringParameters_a51f2fde182c52d292766b5d3029c7a5f}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!is\+Parameter\+Set@{is\+Parameter\+Set}}
+\index{is\+Parameter\+Set@{is\+Parameter\+Set}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{is\+Parameter\+Set()}
+{\footnotesize\ttfamily bool marlin\+::\+String\+Parameters\+::is\+Parameter\+Set (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption}) const}
+
+
+
+Whether the parameter is set, meaning the entry already exists, but has no value. 
+
+To check if a parameter exists, use \doxyref{exists()}{p.}{classmarlin_1_1StringParameters_a3193ba4d1d33d7417823261b88340bfc} instead
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+
+
+Referenced by marlin\+::\+Parameter\+T$<$ T $>$\+::set\+Value().
+
+\mbox{\label{classmarlin_1_1StringParameters_afa4a13eccfd8692f01423d22beb6c28b}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!replace@{replace}}
+\index{replace@{replace}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{replace()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void marlin\+::\+String\+Parameters\+::replace (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{const T \&}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Replace a parameter with a new value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+{\em value} & the parameter value \\
+\hline
+\end{DoxyParams}
+
+
+References add(), and erase().
+
+\mbox{\label{classmarlin_1_1StringParameters_a2da733d0f5f9e5ff5a626d9f7dbe7763}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!replace@{replace}}
+\index{replace@{replace}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{replace()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void marlin\+::\+String\+Parameters\+::replace (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key,  }\item[{const std\+::vector$<$ T $>$ \&}]{values }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Replace a parameter with a new values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+{\em values} & the parameter values \\
+\hline
+\end{DoxyParams}
+
+
+References add(), and erase().
+
+\mbox{\label{classmarlin_1_1StringParameters_ab23f013a75f38607b718246d45dc207f}} 
+\index{marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}!unset@{unset}}
+\index{unset@{unset}!marlin\+::\+String\+Parameters@{marlin\+::\+String\+Parameters}}
+\subsubsection{unset()}
+{\footnotesize\ttfamily void marlin\+::\+String\+Parameters\+::unset (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption})}
+
+
+
+Unset a parameter. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & the parameter key \\
+\hline
+\end{DoxyParams}
+
+
+References \+\_\+map.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+String\+Parameters.\+h\item 
+String\+Parameters.\+cc\end{DoxyCompactItemize}

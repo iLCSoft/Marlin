@@ -1,0 +1,89 @@
+\section{marlin\+:\+:L\+C\+I\+O\+Output\+Processor Class Reference}
+\label{classmarlin_1_1LCIOOutputProcessor}\index{marlin\+::\+L\+C\+I\+O\+Output\+Processor@{marlin\+::\+L\+C\+I\+O\+Output\+Processor}}
+
+
+Default output processor.  
+
+
+Inheritance diagram for marlin\+:\+:L\+C\+I\+O\+Output\+Processor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classmarlin_1_1LCIOOutputProcessor}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1LCIOOutputProcessor_a425a069f55fd2f5a304cfb7f281c720c}} 
+{\bfseries L\+C\+I\+O\+Output\+Processor} (const \textbf{ L\+C\+I\+O\+Output\+Processor} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1LCIOOutputProcessor_a64e6d2939a1e42ed9d1f26365e59b920}} 
+\textbf{ L\+C\+I\+O\+Output\+Processor} \& {\bfseries operator=} (const \textbf{ L\+C\+I\+O\+Output\+Processor} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1LCIOOutputProcessor_ac53eb5a49c585a26f7177c3841185c97}} 
+\textbf{ Processor} $\ast$ \textbf{ new\+Processor} ()
+\begin{DoxyCompactList}\small\item\em Return a new instance of the processor (factory method) \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LCIOOutputProcessor_a23c540ec3d9be10fc4e4b5431bfe64e4}} 
+void \textbf{ init} ()
+\begin{DoxyCompactList}\small\item\em Open the L\+C\+IO outputfile. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LCIOOutputProcessor_af7db9cfb92e19cff720c5171af86a4c8}} 
+void \textbf{ process\+Run\+Header} (E\+V\+E\+N\+T\+::\+L\+C\+Run\+Header $\ast$run)
+\begin{DoxyCompactList}\small\item\em Write every run header. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LCIOOutputProcessor_a07ab3e9f18f80ad76372cdfa17b674e2}} 
+void \textbf{ process\+Event} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$evt)
+\begin{DoxyCompactList}\small\item\em Write every event. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LCIOOutputProcessor_a03a7ac4d65110b0555dbfdec51a819a1}} 
+void \textbf{ end} ()
+\begin{DoxyCompactList}\small\item\em Close outputfile. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1LCIOOutputProcessor_a861bcbba9e0af1094af55672a3ce0067}} 
+void \textbf{ drop\+Collections} (E\+V\+E\+N\+T\+::\+L\+C\+Event $\ast$evt)
+\begin{DoxyCompactList}\small\item\em Drops the collections specified in the steering file parameters Drop\+Collection\+Names and Drop\+Collection\+Types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Default output processor. 
+
+If active every event is writen to the specified L\+C\+IO file. Make sure that the processor is the last one in your list of active processors. You can optionally drop some collections from the event before it gets written to the file, e.\+g. you can drop all collections of types Sim\+Calorimeter\+Hit and Sim\+Tracker\+Hit. It is the users responsibility to check whether the droped objects are still referenced by other objects (e.\+g. L\+C\+Relations) and drop those collections as well -\/ if needed. If Calorimeter\+Hit and Tracker\+Hit objects are droped then Tracks and clusters will be store w/o pointers to hits.
+
+\subparagraph*{Output}
+
+file containing the L\+C\+IO events
+
+
+\begin{DoxyParams}{Parameters}
+{\em L\+C\+I\+O\+Output\+File} & name of outputfile incl. path \\
+\hline
+{\em L\+C\+I\+O\+Write\+Mode} & W\+R\+I\+T\+E\+\_\+\+N\+EW, W\+R\+I\+T\+E\+\_\+\+A\+P\+P\+E\+ND [optional] \\
+\hline
+{\em Drop\+Collection\+Names} & name of collections to be droped [optional] \\
+\hline
+{\em Drop\+Collection\+Types} & type of collections to be droped [optional]\\
+\hline
+{\em Drop\+Collection\+Names} & drops the named collections from the event \\
+\hline
+{\em Drop\+Collection\+Types} & drops all collections of the given type from the event \\
+\hline
+{\em L\+C\+I\+O\+Output\+File} & name of output file \\
+\hline
+{\em L\+C\+I\+O\+Write\+Mode} & write mode for output file\+: W\+R\+I\+T\+E\+\_\+\+A\+P\+P\+E\+ND or W\+R\+I\+T\+E\+\_\+\+N\+EW \\
+\hline
+{\em Keep\+Collection\+Names} & names of collections that are to be kept unconditionally \\
+\hline
+{\em full\+Subset\+Collections} & optionally write all objects in subset collections to the file\\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+L\+C\+I\+O\+Output\+Processor.\+h,v 1.\+8 2008-\/04-\/15 10\+:14\+:24 gaede Exp 
+\end{DoxyParagraph}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+L\+C\+I\+O\+Output\+Processor.\+cc\end{DoxyCompactItemize}

@@ -1,0 +1,82 @@
+\section{marlin\+:\+:Random\+Seed\+Extension Class Reference}
+\label{classmarlin_1_1RandomSeedExtension}\index{marlin\+::\+Random\+Seed\+Extension@{marlin\+::\+Random\+Seed\+Extension}}
+
+
+\doxyref{Random\+Seed\+Extension}{p.}{classmarlin_1_1RandomSeedExtension} class Event extension providing access to random seeds.  
+
+
+
+
+{\ttfamily \#include $<$Event\+Extensions.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedExtension_a988c9b4f409f8a756f78f325f53b2788}} 
+using {\bfseries Random\+Seed\+Map} = std\+::unique\+\_\+ptr$<$ Random\+Seed\+Manager\+::\+Random\+Seed\+Map $>$
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedExtension_af2c49ce62d77583439c41bf305e1ce14}} 
+using {\bfseries Random\+Seed\+Type} = Random\+Seed\+Manager\+::\+Seed\+Type
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedExtension_a230b61a07f10a420346076564dce4917}} 
+{\bfseries Random\+Seed\+Extension} (const \textbf{ Random\+Seed\+Extension} \&)=delete
+\item 
+\mbox{\label{classmarlin_1_1RandomSeedExtension_af7937e2bffdba6d3075b582c05db1896}} 
+\textbf{ Random\+Seed\+Extension} \& {\bfseries operator=} (const \textbf{ Random\+Seed\+Extension} \&)=delete
+\item 
+\textbf{ Random\+Seed\+Extension} (Random\+Seed\+Map seeds)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+Random\+Seed\+Type \textbf{ random\+Seed} (const \textbf{ Processor} $\ast$const processor) const
+\begin{DoxyCompactList}\small\item\em Get the random seed for a given processor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\doxyref{Random\+Seed\+Extension}{p.}{classmarlin_1_1RandomSeedExtension} class Event extension providing access to random seeds. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1RandomSeedExtension_a712601308d021827076b36da7bb52e47}} 
+\index{marlin\+::\+Random\+Seed\+Extension@{marlin\+::\+Random\+Seed\+Extension}!Random\+Seed\+Extension@{Random\+Seed\+Extension}}
+\index{Random\+Seed\+Extension@{Random\+Seed\+Extension}!marlin\+::\+Random\+Seed\+Extension@{marlin\+::\+Random\+Seed\+Extension}}
+\subsubsection{Random\+Seed\+Extension()}
+{\footnotesize\ttfamily marlin\+::\+Random\+Seed\+Extension\+::\+Random\+Seed\+Extension (\begin{DoxyParamCaption}\item[{Random\+Seed\+Map}]{seeds }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em seeds} & the random seed set for the current event \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1RandomSeedExtension_a66d251314f49d07ddfef014894deccae}} 
+\index{marlin\+::\+Random\+Seed\+Extension@{marlin\+::\+Random\+Seed\+Extension}!random\+Seed@{random\+Seed}}
+\index{random\+Seed@{random\+Seed}!marlin\+::\+Random\+Seed\+Extension@{marlin\+::\+Random\+Seed\+Extension}}
+\subsubsection{random\+Seed()}
+{\footnotesize\ttfamily Random\+Seed\+Extension\+::\+Random\+Seed\+Type marlin\+::\+Random\+Seed\+Extension\+::random\+Seed (\begin{DoxyParamCaption}\item[{const \textbf{ Processor} $\ast$const}]{processor }\end{DoxyParamCaption}) const}
+
+
+
+Get the random seed for a given processor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em processor} & the processor pointer \\
+\hline
+\end{DoxyParams}
+
+
+References marlin\+::\+Processor\+::name().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Event\+Extensions.\+h\item 
+Event\+Extensions.\+cc\end{DoxyCompactItemize}

@@ -1,0 +1,51 @@
+\section{marlin\+:\+:I\+Parser Class Reference}
+\label{classmarlin_1_1IParser}\index{marlin\+::\+I\+Parser@{marlin\+::\+I\+Parser}}
+
+
+Interface for a parser of a steering file to be used with marlin.  
+
+
+
+
+{\ttfamily \#include $<$I\+Parser.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:I\+Parser\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classmarlin_1_1IParser}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1IParser_a7df3aa5d16d95ca2716915897a2a2cea}} 
+virtual void \textbf{ parse} ()=0
+\begin{DoxyCompactList}\small\item\em Parse the input file. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1IParser_a45db55bec1004de22f41066bf490b74d}} 
+virtual void \textbf{ set\+Cmd\+Line\+Parameters} (const Command\+Line\+Parameters\+Map \&cmdlineparams)=0
+\begin{DoxyCompactList}\small\item\em set command line parameters \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1IParser_ab59774f48976295413b2e83931f2c477}} 
+virtual std\+::shared\+\_\+ptr$<$ \textbf{ String\+Parameters} $>$ \textbf{ get\+Parameters} (const std\+::string \&section\+Name) const =0
+\begin{DoxyCompactList}\small\item\em Return the \doxyref{String\+Parameters}{p.}{classmarlin_1_1StringParameters} defined for this section of the steering file. \end{DoxyCompactList}\item 
+\mbox{\label{classmarlin_1_1IParser_aa65a00a0ce3aff902eb0e73578a5cd10}} 
+virtual void \textbf{ write} (const std\+::string \&fname) const =0
+\begin{DoxyCompactList}\small\item\em Write down the parsed file in a new file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Interface for a parser of a steering file to be used with marlin. 
+
+\begin{DoxyAuthor}{Author}
+F. Gaede, D\+E\+SY 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Id}
+\doxyref{I\+Parser.\+h}{p.}{IParser_8h_source},v 1.\+2 2005-\/10-\/11 12\+:56\+:28 gaede Exp 
+\end{DoxyParagraph}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+I\+Parser.\+h\end{DoxyCompactItemize}

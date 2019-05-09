@@ -1,0 +1,669 @@
+\section{Ti\+Xml\+Node Class Reference}
+\label{classTiXmlNode}\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+
+
+The parent class for everything in the Document Object Model.  
+
+
+
+
+{\ttfamily \#include $<$tinyxml.\+h$>$}
+
+Inheritance diagram for Ti\+Xml\+Node\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.413793cm]{classTiXmlNode}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \textbf{ Node\+Type} \{ \newline
+{\bfseries D\+O\+C\+U\+M\+E\+NT}, 
+{\bfseries E\+L\+E\+M\+E\+NT}, 
+{\bfseries C\+O\+M\+M\+E\+NT}, 
+{\bfseries U\+N\+K\+N\+O\+WN}, 
+\newline
+{\bfseries T\+E\+XT}, 
+{\bfseries D\+E\+C\+L\+A\+R\+A\+T\+I\+ON}, 
+{\bfseries T\+Y\+P\+E\+C\+O\+U\+NT}
+ \}\begin{DoxyCompactList}\small\item\em The types of X\+ML nodes supported by Tiny\+Xml. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+const char $\ast$ \textbf{ Value} () const
+\begin{DoxyCompactList}\small\item\em The meaning of \textquotesingle{}value\textquotesingle{} changes for the specific type of \doxyref{Ti\+Xml\+Node}{p.}{classTiXmlNode}. \end{DoxyCompactList}\item 
+const std\+::string \& \textbf{ Value\+Str} () const
+\begin{DoxyCompactList}\small\item\em Return \doxyref{Value()}{p.}{classTiXmlNode_ad44dfe927d49a74dd78b72b7514417ad} as a std\+::string. \end{DoxyCompactList}\item 
+void \textbf{ Set\+Value} (const char $\ast$\+\_\+value)
+\begin{DoxyCompactList}\small\item\em Changes the value of the node. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a2598d5f448042c1abbeae4503dd45ff2}} 
+void \textbf{ Set\+Value} (const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a708e7f953df61d4d2d12f73171550a4b}} 
+void \textbf{ Clear} ()
+\begin{DoxyCompactList}\small\item\em Delete all the children of this node. Does not affect \textquotesingle{}this\textquotesingle{}. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_ab643043132ffd794f8602685d34a982e}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Parent} ()
+\begin{DoxyCompactList}\small\item\em One step up the D\+OM. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_af13df38878a5798142693d01d6133ba0}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Parent} () const
+\item 
+\mbox{\label{classTiXmlNode_aa66bceae19707c90c1db12d7c98894a4}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ First\+Child} () const
+\begin{DoxyCompactList}\small\item\em The first child of this node. Will be null if there are no children. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a5e97d69b7c0ebd27fb7286be56559b77}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries First\+Child} ()
+\item 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ First\+Child} (const char $\ast$value) const
+\begin{DoxyCompactList}\small\item\em The first child of this node with the matching \textquotesingle{}value\textquotesingle{}. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_abc8bf32be6419ec453a731868de19554}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ First\+Child} (const char $\ast$\+\_\+value)
+\begin{DoxyCompactList}\small\item\em The first child of this node with the matching \textquotesingle{}value\textquotesingle{}. Will be null if none found. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_af3a04120b1ed2fead2f4bb72cbea845e}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Last\+Child} () const
+\item 
+\mbox{\label{classTiXmlNode_a6432d2b2495f6caf9cb4278df706a031}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Last\+Child} ()
+\begin{DoxyCompactList}\small\item\em The last child of this node. Will be null if there are no children. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_afdd7b6ba456fdd570610c1d841f91eb3}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Last\+Child} (const char $\ast$value) const
+\item 
+\mbox{\label{classTiXmlNode_abad5bf1059c48127b958711ef89e8e5d}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Last\+Child} (const char $\ast$\+\_\+value)
+\begin{DoxyCompactList}\small\item\em The last child of this node matching \textquotesingle{}value\textquotesingle{}. Will be null if there are no children. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_ab7f52e96c41fca07e81521b5f5ea35b9}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ First\+Child} (const std\+::string \&\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a10d2669ccb5e29e02fcb0e4408685ef6}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ First\+Child} (const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a96b721f14d5393dac70a0eff0d08520e}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Last\+Child} (const std\+::string \&\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a69772c9202f70553f940b15c06b07be3}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Last\+Child} (const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Iterate\+Children} (const \textbf{ Ti\+Xml\+Node} $\ast$previous) const
+\begin{DoxyCompactList}\small\item\em An alternate way to walk the children of a node. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a2358e747118fdbf0e467b1e4f7d03de1}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Iterate\+Children} (const \textbf{ Ti\+Xml\+Node} $\ast$previous)
+\item 
+\mbox{\label{classTiXmlNode_a74bc68a536c279a42af346cb1454f143}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Iterate\+Children} (const char $\ast$value, const \textbf{ Ti\+Xml\+Node} $\ast$previous) const
+\begin{DoxyCompactList}\small\item\em This flavor of Iterate\+Children searches for children with a particular \textquotesingle{}value\textquotesingle{}. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a67ba8275e533e6f76340236c42ea0aea}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Iterate\+Children} (const char $\ast$\+\_\+value, const \textbf{ Ti\+Xml\+Node} $\ast$previous)
+\item 
+\mbox{\label{classTiXmlNode_a412c25b2b7e6709a4b291b13df0632eb}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Iterate\+Children} (const std\+::string \&\+\_\+value, const \textbf{ Ti\+Xml\+Node} $\ast$previous) const
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a16e9ad53e2f5445b14bf325c90aa862c}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Iterate\+Children} (const std\+::string \&\+\_\+value, const \textbf{ Ti\+Xml\+Node} $\ast$previous)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Insert\+End\+Child} (const \textbf{ Ti\+Xml\+Node} \&add\+This)
+\begin{DoxyCompactList}\small\item\em Add a new node related to this. \end{DoxyCompactList}\item 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Link\+End\+Child} (\textbf{ Ti\+Xml\+Node} $\ast$add\+This)
+\begin{DoxyCompactList}\small\item\em Add a new node related to this. \end{DoxyCompactList}\item 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Insert\+Before\+Child} (\textbf{ Ti\+Xml\+Node} $\ast$before\+This, const \textbf{ Ti\+Xml\+Node} \&add\+This)
+\begin{DoxyCompactList}\small\item\em Add a new node related to this. \end{DoxyCompactList}\item 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Insert\+After\+Child} (\textbf{ Ti\+Xml\+Node} $\ast$after\+This, const \textbf{ Ti\+Xml\+Node} \&add\+This)
+\begin{DoxyCompactList}\small\item\em Add a new node related to this. \end{DoxyCompactList}\item 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Replace\+Child} (\textbf{ Ti\+Xml\+Node} $\ast$replace\+This, const \textbf{ Ti\+Xml\+Node} \&with\+This)
+\begin{DoxyCompactList}\small\item\em Replace a child of this node. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_ae19d8510efc90596552f4feeac9a8fbf}} 
+bool \textbf{ Remove\+Child} (\textbf{ Ti\+Xml\+Node} $\ast$remove\+This)
+\begin{DoxyCompactList}\small\item\em Delete a child of this node. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a8aacf06b1a577ff0d7cfa502cc76da32}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Previous\+Sibling} () const
+\begin{DoxyCompactList}\small\item\em Navigate to a sibling node. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_af8c0642ad6ecc03f62953e68896ed1cc}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Previous\+Sibling} ()
+\item 
+\mbox{\label{classTiXmlNode_ace1b618fe58b2b9305fe89bfbc8dd17b}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Previous\+Sibling} (const char $\ast$) const
+\begin{DoxyCompactList}\small\item\em Navigate to a sibling node. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a6c977049207177ef21b51972315c2053}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Previous\+Sibling} (const char $\ast$\+\_\+prev)
+\item 
+\mbox{\label{classTiXmlNode_a64ee1c722b607040cd02bd0fd05eb04a}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Previous\+Sibling} (const std\+::string \&\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_acc8a0434c7f401d4a3b6dee77c1a5912}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Previous\+Sibling} (const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a5f0bf3809d4a35456d28cc9522c26245}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Next\+Sibling} (const std\+::string \&\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a1757c1f4d01e8c9596ffdbd561c76aea}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Next\+Sibling} (const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_ae99c572ac7901a15993ea7a4efaa10e7}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Next\+Sibling} () const
+\begin{DoxyCompactList}\small\item\em Navigate to a sibling node. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a4d05f7b1d7b470ac6887edd072d4892a}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Next\+Sibling} ()
+\item 
+\mbox{\label{classTiXmlNode_a0864ea784b53cdca0a37829d3391ca4b}} 
+const \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Next\+Sibling} (const char $\ast$) const
+\begin{DoxyCompactList}\small\item\em Navigate to a sibling node with the given \textquotesingle{}value\textquotesingle{}. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a4080bc5cc8a5c139e7cf308669e850fc}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Next\+Sibling} (const char $\ast$\+\_\+next)
+\item 
+const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ Next\+Sibling\+Element} () const
+\begin{DoxyCompactList}\small\item\em Convenience function to get through elements. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a1b211cb5034655a04358e0e2f6fc5010}} 
+\textbf{ Ti\+Xml\+Element} $\ast$ {\bfseries Next\+Sibling\+Element} ()
+\item 
+const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ Next\+Sibling\+Element} (const char $\ast$) const
+\begin{DoxyCompactList}\small\item\em Convenience function to get through elements. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a6e1ac6b800e18049bc75e9f8e63a8e5f}} 
+\textbf{ Ti\+Xml\+Element} $\ast$ {\bfseries Next\+Sibling\+Element} (const char $\ast$\+\_\+next)
+\item 
+\mbox{\label{classTiXmlNode_a2dd7a81689a717fe5d15b3520879ff00}} 
+const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ Next\+Sibling\+Element} (const std\+::string \&\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a506958e34406729a4e4c5326ea39d081}} 
+\textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ Next\+Sibling\+Element} (const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a12c973e1da9e90a178924b8ea5a5f4d1}} 
+const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ First\+Child\+Element} () const
+\begin{DoxyCompactList}\small\item\em Convenience function to get through elements. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_aa0fecff1f3866ab33a8a25506e95db1d}} 
+\textbf{ Ti\+Xml\+Element} $\ast$ {\bfseries First\+Child\+Element} ()
+\item 
+\mbox{\label{classTiXmlNode_aab23fca4c2455c1d926c35d85a663842}} 
+const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ First\+Child\+Element} (const char $\ast$\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em Convenience function to get through elements. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a6936ae323675071808ac4840379e57f5}} 
+\textbf{ Ti\+Xml\+Element} $\ast$ {\bfseries First\+Child\+Element} (const char $\ast$\+\_\+value)
+\item 
+\mbox{\label{classTiXmlNode_abfe4a2abe61324def87fe421946f9df9}} 
+const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ First\+Child\+Element} (const std\+::string \&\+\_\+value) const
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a7f1d7291880534c1e5cdeb392d8c1f45}} 
+\textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ First\+Child\+Element} (const std\+::string \&\+\_\+value)
+\begin{DoxyCompactList}\small\item\em S\+TL std\+::string form. \end{DoxyCompactList}\item 
+int \textbf{ Type} () const
+\begin{DoxyCompactList}\small\item\em Query the type (as an enumerated value, above) of this node. \end{DoxyCompactList}\item 
+const \textbf{ Ti\+Xml\+Document} $\ast$ \textbf{ Get\+Document} () const
+\begin{DoxyCompactList}\small\item\em Return a pointer to the Document this node lives in. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a7b2372c0e7adfb32f5b6902fe49a39b2}} 
+\textbf{ Ti\+Xml\+Document} $\ast$ {\bfseries Get\+Document} ()
+\item 
+\mbox{\label{classTiXmlNode_abe85e0ec04ea59c033f324c8504653e5}} 
+bool \textbf{ No\+Children} () const
+\begin{DoxyCompactList}\small\item\em Returns true if this node has no children. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a775a904618cad6e4a8049bda4f5a6aa9}} 
+virtual const \textbf{ Ti\+Xml\+Document} $\ast$ \textbf{ To\+Document} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a4080428f2cac46e92ef4d284202fad0b}} 
+virtual const \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ To\+Element} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a5ad43b9d545315e9bb4f50d4cb70de9e}} 
+virtual const \textbf{ Ti\+Xml\+Comment} $\ast$ \textbf{ To\+Comment} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_ab4f2e6ce87d36c1b9b7de2529128a460}} 
+virtual const \textbf{ Ti\+Xml\+Unknown} $\ast$ \textbf{ To\+Unknown} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a2591700660b308571c09166559a39332}} 
+virtual const \textbf{ Ti\+Xml\+Text} $\ast$ \textbf{ To\+Text} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a0dc0831e89d499ca911a3be61a413d45}} 
+virtual const \textbf{ Ti\+Xml\+Declaration} $\ast$ \textbf{ To\+Declaration} () const
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a6a4c8ac28ee7a745d059db6691e03bae}} 
+virtual \textbf{ Ti\+Xml\+Document} $\ast$ \textbf{ To\+Document} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_aa65d000223187d22a4dcebd7479e9ebc}} 
+virtual \textbf{ Ti\+Xml\+Element} $\ast$ \textbf{ To\+Element} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a383e06a0787f7063953934867990f849}} 
+virtual \textbf{ Ti\+Xml\+Comment} $\ast$ \textbf{ To\+Comment} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a06de5af852668c7e4af0d09c205f0b0d}} 
+virtual \textbf{ Ti\+Xml\+Unknown} $\ast$ \textbf{ To\+Unknown} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a3ddfbcac78fbea041fad57e5c6d60a03}} 
+virtual \textbf{ Ti\+Xml\+Text} $\ast$ \textbf{ To\+Text} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a4027136ca820ff4a636b607231b6a6df}} 
+virtual \textbf{ Ti\+Xml\+Declaration} $\ast$ \textbf{ To\+Declaration} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \end{DoxyCompactList}\item 
+virtual \textbf{ Ti\+Xml\+Node} $\ast$ \textbf{ Clone} () const =0
+\begin{DoxyCompactList}\small\item\em Create an exact duplicate of this node and return it. \end{DoxyCompactList}\item 
+virtual bool \textbf{ Accept} (\textbf{ Ti\+Xml\+Visitor} $\ast$visitor) const =0
+\begin{DoxyCompactList}\small\item\em Accept a hierchical visit the nodes in the Tiny\+X\+ML D\+OM. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlNode_a3f46721695868667113c7487ff123f20}} 
+{\bfseries Ti\+Xml\+Node} (\textbf{ Node\+Type} \+\_\+type)
+\item 
+\mbox{\label{classTiXmlNode_aaadd5bb9c94f84c4472b649b95de4a0b}} 
+void {\bfseries Copy\+To} (\textbf{ Ti\+Xml\+Node} $\ast$target) const
+\item 
+\mbox{\label{classTiXmlNode_ab4b4af1a6b486dcbc0e327cf291270af}} 
+virtual void {\bfseries Stream\+In} (std\+::istream $\ast$in, T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG $\ast$tag)=0
+\item 
+\mbox{\label{classTiXmlNode_ac1e3a8e7578be463b04617786120c2bb}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries Identify} (const char $\ast$start, Ti\+Xml\+Encoding encoding)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlNode_a662c4de61244e4fa5bd4e2d8c63143a5}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries parent}
+\item 
+\mbox{\label{classTiXmlNode_a2619c6379181c16ba95ae6922e2ca839}} 
+\textbf{ Node\+Type} {\bfseries type}
+\item 
+\mbox{\label{classTiXmlNode_af749fb7f22010b80e8f904c32653d50e}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries first\+Child}
+\item 
+\mbox{\label{classTiXmlNode_a5b30756d21b304580d22a841ec9d61f8}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries last\+Child}
+\item 
+\mbox{\label{classTiXmlNode_aead528b3cedc33c16a6c539872c7cc8b}} 
+T\+I\+X\+M\+L\+\_\+\+S\+T\+R\+I\+NG {\bfseries value}
+\item 
+\mbox{\label{classTiXmlNode_a9c5370ea2cbfd9f0e0f7b30a57fd68f5}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries prev}
+\item 
+\mbox{\label{classTiXmlNode_a2f329cc993d2d34df76e17dcbb776b45}} 
+\textbf{ Ti\+Xml\+Node} $\ast$ {\bfseries next}
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classTiXmlNode_a173617f6dfe902cf484ce5552b950475}} 
+class {\bfseries Ti\+Xml\+Document}
+\item 
+\mbox{\label{classTiXmlNode_ab6592e32cb9132be517cc12a70564c4b}} 
+class {\bfseries Ti\+Xml\+Element}
+\item 
+std\+::istream \& \textbf{ operator$>$$>$} (std\+::istream \&in, \textbf{ Ti\+Xml\+Node} \&base)
+\begin{DoxyCompactList}\small\item\em An input stream operator, for every class. \end{DoxyCompactList}\item 
+std\+::ostream \& \textbf{ operator$<$$<$} (std\+::ostream \&out, const \textbf{ Ti\+Xml\+Node} \&base)
+\begin{DoxyCompactList}\small\item\em An output stream operator, for every class. \end{DoxyCompactList}\item 
+\mbox{\label{classTiXmlNode_a52ef17e7080df2490cf87bde380685ab}} 
+std\+::string \& \textbf{ operator$<$$<$} (std\+::string \&out, const \textbf{ Ti\+Xml\+Node} \&base)
+\begin{DoxyCompactList}\small\item\em Appends the X\+ML node or attribute to a std\+::string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+The parent class for everything in the Document Object Model. 
+
+(Except for attributes). Nodes have siblings, a parent, and children. A node can be in a document, or stand on its own. The type of a \doxyref{Ti\+Xml\+Node}{p.}{classTiXmlNode} can be queried, and it can be cast to its more defined type. 
+
+\subsection{Member Enumeration Documentation}
+\mbox{\label{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Node\+Type@{Node\+Type}}
+\index{Node\+Type@{Node\+Type}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Node\+Type}
+{\footnotesize\ttfamily enum \textbf{ Ti\+Xml\+Node\+::\+Node\+Type}}
+
+
+
+The types of X\+ML nodes supported by Tiny\+Xml. 
+
+(All the unsupported types are picked up by U\+N\+K\+N\+O\+WN.) 
+
+\subsection{Member Function Documentation}
+\mbox{\label{classTiXmlNode_acc0f88b7462c6cb73809d410a4f5bb86}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Accept@{Accept}}
+\index{Accept@{Accept}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Accept()}
+{\footnotesize\ttfamily virtual bool Ti\+Xml\+Node\+::\+Accept (\begin{DoxyParamCaption}\item[{\textbf{ Ti\+Xml\+Visitor} $\ast$}]{visitor }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Accept a hierchical visit the nodes in the Tiny\+X\+ML D\+OM. 
+
+Every node in the X\+ML tree will be conditionally visited and the host will be called back via the \doxyref{Ti\+Xml\+Visitor}{p.}{classTiXmlVisitor} interface.
+
+This is essentially a S\+AX interface for Tiny\+X\+ML. (Note however it doesn\textquotesingle{}t re-\/parse the X\+ML for the callbacks, so the performance of Tiny\+X\+ML is unchanged by using this interface versus any other.)
+
+The interface has been based on ideas from\+:
+
+
+\begin{DoxyItemize}
+\item {\tt http\+://www.\+saxproject.\+org/}
+\item {\tt http\+://c2.\+com/cgi/wiki?\+Hierarchical\+Visitor\+Pattern}
+\end{DoxyItemize}
+
+Which are both good references for \char`\"{}visiting\char`\"{}.
+
+An example of using \doxyref{Accept()}{p.}{classTiXmlNode_acc0f88b7462c6cb73809d410a4f5bb86}\+: \begin{DoxyVerb}    TiXmlPrinter printer;
+    tinyxmlDoc.Accept( &printer );
+    const char* xmlcstr = printer.CStr();\end{DoxyVerb}
+ 
+
+Implemented in \textbf{ Ti\+Xml\+Document} \doxyref{}{p.}{classTiXmlDocument_a8ddd6eec722cbd25900bbac664909bac}, \textbf{ Ti\+Xml\+Unknown} \doxyref{}{p.}{classTiXmlUnknown_aafdf1b2d4f561979c7907bad91004999}, \textbf{ Ti\+Xml\+Declaration} \doxyref{}{p.}{classTiXmlDeclaration_aa1b6bade6c989407ce9881bdfc73c1e6}, \textbf{ Ti\+Xml\+Text} \doxyref{}{p.}{classTiXmlText_af65964326eac4640bfb97d4622fa0de2}, \textbf{ Ti\+Xml\+Comment} \doxyref{}{p.}{classTiXmlComment_ac894241530d1d266131a5026cb251a95}, and \textbf{ Ti\+Xml\+Element} \doxyref{}{p.}{classTiXmlElement_a01d33358cce9d1817b557d314dda3779}.
+
+
+
+Referenced by Ti\+Xml\+Element\+::\+Accept(), Ti\+Xml\+Document\+::\+Accept(), and Ti\+Xml\+Unknown\+::\+Clone().
+
+\mbox{\label{classTiXmlNode_a4508cc3a2d7a98e96a54cc09c37a78a4}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Clone@{Clone}}
+\index{Clone@{Clone}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Clone()}
+{\footnotesize\ttfamily virtual \textbf{ Ti\+Xml\+Node}$\ast$ Ti\+Xml\+Node\+::\+Clone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Create an exact duplicate of this node and return it. 
+
+The memory must be deleted by the caller. 
+
+Implemented in \textbf{ Ti\+Xml\+Document} \doxyref{}{p.}{classTiXmlDocument_a46a4dda6c56eb106d46d4046ae1e5353}, \textbf{ Ti\+Xml\+Unknown} \doxyref{}{p.}{classTiXmlUnknown_a3dea7689de5b1931fd6657992948fde0}, \textbf{ Ti\+Xml\+Declaration} \doxyref{}{p.}{classTiXmlDeclaration_a35dc1455f69b79e81cae28e186944610}, \textbf{ Ti\+Xml\+Text} \doxyref{}{p.}{classTiXmlText_a98a20d7a4f1c1478e25e34921be24bfe}, \textbf{ Ti\+Xml\+Comment} \doxyref{}{p.}{classTiXmlComment_a1f9f06e2ed3f77875093436193b16c16}, and \textbf{ Ti\+Xml\+Element} \doxyref{}{p.}{classTiXmlElement_a810ea8fa40844c01334e5af2a26794cb}.
+
+
+
+Referenced by Insert\+After\+Child(), Insert\+Before\+Child(), Insert\+End\+Child(), marlin\+::\+X\+M\+L\+Parser\+::parse(), Ti\+Xml\+Element\+::\+Print(), marlin\+::\+X\+M\+L\+Parser\+::processconditions(), Replace\+Child(), and Ti\+Xml\+Document\+::\+Save\+File().
+
+\mbox{\label{classTiXmlNode_ae98c367f664890c4b5a5183481ec128a}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!First\+Child@{First\+Child}}
+\index{First\+Child@{First\+Child}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{First\+Child()}
+{\footnotesize\ttfamily const \textbf{ Ti\+Xml\+Node} $\ast$ Ti\+Xml\+Node\+::\+First\+Child (\begin{DoxyParamCaption}\item[{const char $\ast$}]{value }\end{DoxyParamCaption}) const}
+
+
+
+The first child of this node with the matching \textquotesingle{}value\textquotesingle{}. 
+
+Will be null if none found. 
+
+References Value().
+
+\mbox{\label{classTiXmlNode_adcb070acefcbaedaa0673d82e530538b}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Get\+Document@{Get\+Document}}
+\index{Get\+Document@{Get\+Document}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Get\+Document()}
+{\footnotesize\ttfamily const \textbf{ Ti\+Xml\+Document} $\ast$ Ti\+Xml\+Node\+::\+Get\+Document (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Return a pointer to the Document this node lives in. 
+
+Returns null if not in a document. 
+
+References To\+Document().
+
+
+
+Referenced by Link\+End\+Child(), Ti\+Xml\+Document\+::\+Parse(), marlin\+::\+X\+M\+L\+Parser\+::process\+Include\+Elements(), Ti\+Xml\+Element\+::\+Set\+Attribute(), and Type().
+
+\mbox{\label{classTiXmlNode_a274db3292218202805c093f66a964cb5}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Insert\+After\+Child@{Insert\+After\+Child}}
+\index{Insert\+After\+Child@{Insert\+After\+Child}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Insert\+After\+Child()}
+{\footnotesize\ttfamily \textbf{ Ti\+Xml\+Node} $\ast$ Ti\+Xml\+Node\+::\+Insert\+After\+Child (\begin{DoxyParamCaption}\item[{\textbf{ Ti\+Xml\+Node} $\ast$}]{after\+This,  }\item[{const \textbf{ Ti\+Xml\+Node} \&}]{add\+This }\end{DoxyParamCaption})}
+
+
+
+Add a new node related to this. 
+
+Adds a child after the specified child. Returns a pointer to the new object or N\+U\+LL if an error occured. 
+
+References Clone(), and Type().
+
+
+
+Referenced by Iterate\+Children(), and marlin\+::\+X\+M\+L\+Parser\+::process\+Include\+Elements().
+
+\mbox{\label{classTiXmlNode_a71e54e393336382bc9875f64aab5cb15}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Insert\+Before\+Child@{Insert\+Before\+Child}}
+\index{Insert\+Before\+Child@{Insert\+Before\+Child}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Insert\+Before\+Child()}
+{\footnotesize\ttfamily \textbf{ Ti\+Xml\+Node} $\ast$ Ti\+Xml\+Node\+::\+Insert\+Before\+Child (\begin{DoxyParamCaption}\item[{\textbf{ Ti\+Xml\+Node} $\ast$}]{before\+This,  }\item[{const \textbf{ Ti\+Xml\+Node} \&}]{add\+This }\end{DoxyParamCaption})}
+
+
+
+Add a new node related to this. 
+
+Adds a child before the specified child. Returns a pointer to the new object or N\+U\+LL if an error occured. 
+
+References Clone(), and Type().
+
+
+
+Referenced by Iterate\+Children(), marlin\+::\+X\+M\+L\+Parser\+::parse(), marlin\+::\+X\+M\+L\+Parser\+::processconditions(), and marlin\+::\+X\+M\+L\+Parser\+::replacegroups().
+
+\mbox{\label{classTiXmlNode_af287a913ce46d8dbf7ef24fec69bbaf0}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Insert\+End\+Child@{Insert\+End\+Child}}
+\index{Insert\+End\+Child@{Insert\+End\+Child}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Insert\+End\+Child()}
+{\footnotesize\ttfamily \textbf{ Ti\+Xml\+Node} $\ast$ Ti\+Xml\+Node\+::\+Insert\+End\+Child (\begin{DoxyParamCaption}\item[{const \textbf{ Ti\+Xml\+Node} \&}]{add\+This }\end{DoxyParamCaption})}
+
+
+
+Add a new node related to this. 
+
+Adds a child past the Last\+Child. Returns a pointer to the new object or N\+U\+LL if an error occured. 
+
+References Clone(), and Type().
+
+
+
+Referenced by Iterate\+Children(), and marlin\+::\+X\+M\+L\+Parser\+::parse().
+
+\mbox{\label{classTiXmlNode_a67c3a02b797f08d9a31b2553661257e1}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Iterate\+Children@{Iterate\+Children}}
+\index{Iterate\+Children@{Iterate\+Children}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Iterate\+Children()}
+{\footnotesize\ttfamily const \textbf{ Ti\+Xml\+Node} $\ast$ Ti\+Xml\+Node\+::\+Iterate\+Children (\begin{DoxyParamCaption}\item[{const \textbf{ Ti\+Xml\+Node} $\ast$}]{previous }\end{DoxyParamCaption}) const}
+
+
+
+An alternate way to walk the children of a node. 
+
+One way to iterate over nodes is\+: \begin{DoxyVerb}        for( child = parent->FirstChild(); child; child = child->NextSibling() )\end{DoxyVerb}
+
+
+Iterate\+Children does the same thing with the syntax\+: \begin{DoxyVerb}        child = 0;
+        while( child = parent->IterateChildren( child ) )\end{DoxyVerb}
+
+
+Iterate\+Children takes the previous child as input and finds the next one. If the previous child is null, it returns the first. Iterate\+Children will return null when done. 
+
+References Next\+Sibling().
+
+
+
+Referenced by marlin\+::\+X\+M\+L\+Parser\+::find\+Element(), Last\+Child(), marlin\+::\+X\+M\+L\+Parser\+::parameters\+From\+Node(), marlin\+::\+X\+M\+L\+Parser\+::parse(), marlin\+::\+X\+M\+L\+Parser\+::processconditions(), and marlin\+::\+X\+M\+L\+Parser\+::replacegroups().
+
+\mbox{\label{classTiXmlNode_a1a881212554b759865f6cac79a851d38}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Link\+End\+Child@{Link\+End\+Child}}
+\index{Link\+End\+Child@{Link\+End\+Child}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Link\+End\+Child()}
+{\footnotesize\ttfamily \textbf{ Ti\+Xml\+Node} $\ast$ Ti\+Xml\+Node\+::\+Link\+End\+Child (\begin{DoxyParamCaption}\item[{\textbf{ Ti\+Xml\+Node} $\ast$}]{add\+This }\end{DoxyParamCaption})}
+
+
+
+Add a new node related to this. 
+
+Adds a child past the Last\+Child.
+
+N\+O\+TE\+: the node to be added is passed by pointer, and will be henceforth owned (and deleted) by tiny\+Xml. This method is efficient and avoids an extra copy, but should be used with care as it uses a different memory model than the other insert functions.
+
+\begin{DoxySeeAlso}{See also}
+\doxyref{Insert\+End\+Child}{p.}{classTiXmlNode_af287a913ce46d8dbf7ef24fec69bbaf0} 
+\end{DoxySeeAlso}
+
+
+References Get\+Document(), and Type().
+
+
+
+Referenced by Iterate\+Children(), Ti\+Xml\+Document\+::\+Parse(), Ti\+Xml\+Element\+::\+Print(), and Ti\+Xml\+Document\+::\+Save\+File().
+
+\mbox{\label{classTiXmlNode_ac6105781c913a42aa7f3f17bd1964f7c}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Next\+Sibling\+Element@{Next\+Sibling\+Element}}
+\index{Next\+Sibling\+Element@{Next\+Sibling\+Element}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Next\+Sibling\+Element()\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily const \textbf{ Ti\+Xml\+Element} $\ast$ Ti\+Xml\+Node\+::\+Next\+Sibling\+Element (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Convenience function to get through elements. 
+
+Calls Next\+Sibling and To\+Element. Will skip all non-\/\+Element nodes. Returns 0 if there is not another element. 
+
+References Next\+Sibling(), and To\+Element().
+
+
+
+Referenced by Ti\+Xml\+Handle\+::\+Child\+Element(), Next\+Sibling(), marlin\+::\+X\+M\+L\+Parser\+::parse(), and marlin\+::\+X\+M\+L\+Parser\+::process\+Include\+Elements().
+
+\mbox{\label{classTiXmlNode_a22def4746238abaee042f99b47ef3c94}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Next\+Sibling\+Element@{Next\+Sibling\+Element}}
+\index{Next\+Sibling\+Element@{Next\+Sibling\+Element}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Next\+Sibling\+Element()\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily const \textbf{ Ti\+Xml\+Element} $\ast$ Ti\+Xml\+Node\+::\+Next\+Sibling\+Element (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+value }\end{DoxyParamCaption}) const}
+
+
+
+Convenience function to get through elements. 
+
+Calls Next\+Sibling and To\+Element. Will skip all non-\/\+Element nodes. Returns 0 if there is not another element. 
+
+References Next\+Sibling(), and To\+Element().
+
+\mbox{\label{classTiXmlNode_a543208c2c801c84a213529541e904b9f}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Replace\+Child@{Replace\+Child}}
+\index{Replace\+Child@{Replace\+Child}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Replace\+Child()}
+{\footnotesize\ttfamily \textbf{ Ti\+Xml\+Node} $\ast$ Ti\+Xml\+Node\+::\+Replace\+Child (\begin{DoxyParamCaption}\item[{\textbf{ Ti\+Xml\+Node} $\ast$}]{replace\+This,  }\item[{const \textbf{ Ti\+Xml\+Node} \&}]{with\+This }\end{DoxyParamCaption})}
+
+
+
+Replace a child of this node. 
+
+Returns a pointer to the new object or N\+U\+LL if an error occured. 
+
+References Clone().
+
+
+
+Referenced by Iterate\+Children().
+
+\mbox{\label{classTiXmlNode_a2a38329ca5d3f28f98ce932b8299ae90}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Set\+Value@{Set\+Value}}
+\index{Set\+Value@{Set\+Value}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Set\+Value()}
+{\footnotesize\ttfamily void Ti\+Xml\+Node\+::\+Set\+Value (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Changes the value of the node. 
+
+Defined as\+: \begin{DoxyVerb}    Document:   filename of the xml file
+    Element:    name of the element
+    Comment:    the comment text
+    Unknown:    the tag contents
+    Text:               the text string\end{DoxyVerb}
+ 
+
+References Clear().
+
+
+
+Referenced by marlin\+::\+X\+M\+L\+Parser\+::parameters\+From\+Node(), marlin\+::\+X\+M\+L\+Parser\+::process\+Include\+Elements(), Ti\+Xml\+Attribute\+::\+Set\+Double\+Value(), Ti\+Xml\+Attribute\+::\+Set\+Int\+Value(), and Ti\+Xml\+Text\+::\+Ti\+Xml\+Text().
+
+\mbox{\label{classTiXmlNode_a0f4dd916b2afc2ab2f1a84f3e2b8fd5d}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Type@{Type}}
+\index{Type@{Type}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Type()}
+{\footnotesize\ttfamily int Ti\+Xml\+Node\+::\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Query the type (as an enumerated value, above) of this node. 
+
+The possible types are\+: D\+O\+C\+U\+M\+E\+NT, E\+L\+E\+M\+E\+NT, C\+O\+M\+M\+E\+NT, U\+N\+K\+N\+O\+WN, T\+E\+XT, and D\+E\+C\+L\+A\+R\+A\+T\+I\+ON. 
+
+References Get\+Document().
+
+
+
+Referenced by Insert\+After\+Child(), Insert\+Before\+Child(), Insert\+End\+Child(), and Link\+End\+Child().
+
+\mbox{\label{classTiXmlNode_ad44dfe927d49a74dd78b72b7514417ad}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Value@{Value}}
+\index{Value@{Value}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Value()}
+{\footnotesize\ttfamily const char$\ast$ Ti\+Xml\+Node\+::\+Value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The meaning of \textquotesingle{}value\textquotesingle{} changes for the specific type of \doxyref{Ti\+Xml\+Node}{p.}{classTiXmlNode}. 
+
+\begin{DoxyVerb}    Document:   filename of the xml file
+    Element:    name of the element
+    Comment:    the comment text
+    Unknown:    the tag contents
+    Text:               the text string\end{DoxyVerb}
+
+
+The subclasses will wrap this function. 
+
+Referenced by Ti\+Xml\+Element\+::\+Clone(), First\+Child(), marlin\+::\+X\+M\+L\+Parser\+::get\+Attribute(), Ti\+Xml\+Element\+::\+Get\+Text(), Ti\+Xml\+Document\+::\+Load\+File(), Next\+Sibling(), marlin\+::\+X\+M\+L\+Parser\+::parameters\+From\+Node(), Previous\+Sibling(), marlin\+::\+X\+M\+L\+Parser\+::processconditions(), marlin\+::\+X\+M\+L\+Parser\+::process\+Include\+Elements(), marlin\+::\+X\+M\+L\+Parser\+::replacegroups(), Ti\+Xml\+Document\+::\+Save\+File(), Ti\+Xml\+Printer\+::\+Visit(), Ti\+Xml\+Printer\+::\+Visit\+Enter(), and Ti\+Xml\+Printer\+::\+Visit\+Exit().
+
+\mbox{\label{classTiXmlNode_a74bda074919e4a5e08d700204793f898}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!Value\+Str@{Value\+Str}}
+\index{Value\+Str@{Value\+Str}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{Value\+Str()}
+{\footnotesize\ttfamily const std\+::string\& Ti\+Xml\+Node\+::\+Value\+Str (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return \doxyref{Value()}{p.}{classTiXmlNode_ad44dfe927d49a74dd78b72b7514417ad} as a std\+::string. 
+
+If you only use S\+TL, this is more efficient than calling \doxyref{Value()}{p.}{classTiXmlNode_ad44dfe927d49a74dd78b72b7514417ad}. Only available in S\+TL mode. 
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\label{classTiXmlNode_a86cd49cfb17a844c0010b3136ac966c7}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{operator$<$$<$}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{out,  }\item[{const \textbf{ Ti\+Xml\+Node} \&}]{base }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+An output stream operator, for every class. 
+
+Note that this outputs without any newlines or formatting, as opposed to \doxyref{Print()}{p.}{classTiXmlBase_a0de56b3f2ef14c65091a3b916437b512}, which includes tabs and new lines.
+
+The operator$<$$<$ and operator$>$$>$ are not completely symmetric. Writing a node to a stream is very well defined. You\textquotesingle{}ll get a nice stream of output, without any extra whitespace or newlines.
+
+But reading is not as well defined. (As it always is.) If you create a \doxyref{Ti\+Xml\+Element}{p.}{classTiXmlElement} (for example) and read that from an input stream, the text needs to define an element or junk will result. This is true of all input streams, but it\textquotesingle{}s worth keeping in mind.
+
+A \doxyref{Ti\+Xml\+Document}{p.}{classTiXmlDocument} will read nodes until it reads a root element, and all the children of that root element. 
+
+Referenced by Ti\+Xml\+Unknown\+::\+Clone().
+
+\mbox{\label{classTiXmlNode_ab57bd426563c926844f65a78412e18b9}} 
+\index{Ti\+Xml\+Node@{Ti\+Xml\+Node}!operator$>$$>$@{operator$>$$>$}}
+\index{operator$>$$>$@{operator$>$$>$}!Ti\+Xml\+Node@{Ti\+Xml\+Node}}
+\subsubsection{operator$>$$>$}
+{\footnotesize\ttfamily std\+::istream\& operator$>$$>$ (\begin{DoxyParamCaption}\item[{std\+::istream \&}]{in,  }\item[{\textbf{ Ti\+Xml\+Node} \&}]{base }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+An input stream operator, for every class. 
+
+Tolerant of newlines and formatting, but doesn\textquotesingle{}t expect them. 
+
+Referenced by Ti\+Xml\+Unknown\+::\+Clone().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+tinyxml.\+h\item 
+tinyxml.\+cc\item 
+tinyxmlparser.\+cc\end{DoxyCompactItemize}

@@ -1,0 +1,75 @@
+\section{marlin\+:\+:Simple\+Cluster\+Smearer Class Reference}
+\label{classmarlin_1_1SimpleClusterSmearer}\index{marlin\+::\+Simple\+Cluster\+Smearer@{marlin\+::\+Simple\+Cluster\+Smearer}}
+
+
+Smears the four vectors of (neutral) clusters according to d\+E/E = A \char`\"{}+\char`\"{} B / sqrt( E/\+GeV ) for a given range of the polar angle.  
+
+
+
+
+{\ttfamily \#include $<$Simple\+Cluster\+Smearer.\+h$>$}
+
+Inheritance diagram for marlin\+:\+:Simple\+Cluster\+Smearer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classmarlin_1_1SimpleClusterSmearer}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1SimpleClusterSmearer_a1b1449168817bbb42ba93e6c1d5e5297}} 
+{\bfseries Simple\+Cluster\+Smearer} (const std\+::vector$<$ float $>$ \&res\+Vec)
+\item 
+virtual \textbf{ $\sim$\+Simple\+Cluster\+Smearer} ()
+\begin{DoxyCompactList}\small\item\em Virtual d\textquotesingle{}tor. \end{DoxyCompactList}\item 
+virtual Hep\+Lorentz\+Vector \textbf{ smeared\+Four\+Vector} (const Hep\+Lorentz\+Vector \&v, int pdg\+Code)
+\begin{DoxyCompactList}\small\item\em Smears the given four vector according to the resolution for the polar angle of the cluster. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\label{classmarlin_1_1SimpleClusterSmearer_aab7dbe0afca58835a2be6942a0c3d37f}} 
+Res\+Vec {\bfseries \+\_\+res\+Vec}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Smears the four vectors of (neutral) clusters according to d\+E/E = A \char`\"{}+\char`\"{} B / sqrt( E/\+GeV ) for a given range of the polar angle. 
+
+The resolution parameters A and B are given in the constructor as a vector holding quadruples of\+: A0, B0, th\+\_\+min0, th\+\_\+max0, A0, B0, th\+\_\+min1, th\+\_\+max1, ...~\newline
+ Momenta are assigned assumig massless particles. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classmarlin_1_1SimpleClusterSmearer_a7eec35bfde7e3cc856351555f0045c4e}} 
+\index{marlin\+::\+Simple\+Cluster\+Smearer@{marlin\+::\+Simple\+Cluster\+Smearer}!````~Simple\+Cluster\+Smearer@{$\sim$\+Simple\+Cluster\+Smearer}}
+\index{````~Simple\+Cluster\+Smearer@{$\sim$\+Simple\+Cluster\+Smearer}!marlin\+::\+Simple\+Cluster\+Smearer@{marlin\+::\+Simple\+Cluster\+Smearer}}
+\subsubsection{$\sim$\+Simple\+Cluster\+Smearer()}
+{\footnotesize\ttfamily virtual marlin\+::\+Simple\+Cluster\+Smearer\+::$\sim$\+Simple\+Cluster\+Smearer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Virtual d\textquotesingle{}tor. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classmarlin_1_1SimpleClusterSmearer_a99b596644eccdb5380976fde0d49bd45}} 
+\index{marlin\+::\+Simple\+Cluster\+Smearer@{marlin\+::\+Simple\+Cluster\+Smearer}!smeared\+Four\+Vector@{smeared\+Four\+Vector}}
+\index{smeared\+Four\+Vector@{smeared\+Four\+Vector}!marlin\+::\+Simple\+Cluster\+Smearer@{marlin\+::\+Simple\+Cluster\+Smearer}}
+\subsubsection{smeared\+Four\+Vector()}
+{\footnotesize\ttfamily Hep\+Lorentz\+Vector marlin\+::\+Simple\+Cluster\+Smearer\+::smeared\+Four\+Vector (\begin{DoxyParamCaption}\item[{const Hep\+Lorentz\+Vector \&}]{v,  }\item[{int}]{pdg\+Code }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Smears the given four vector according to the resolution for the polar angle of the cluster. 
+
+Returns a vector with all elements 0. if no resolution is defined. 
+
+Implements \textbf{ marlin\+::\+I\+Four\+Vector\+Smearer} \doxyref{}{p.}{classmarlin_1_1IFourVectorSmearer_a69a3ece59f66350310e1eb1c696464ce}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Simple\+Cluster\+Smearer.\+h\item 
+Simple\+Cluster\+Smearer.\+cc\end{DoxyCompactItemize}
