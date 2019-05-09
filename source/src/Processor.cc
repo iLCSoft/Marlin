@@ -81,7 +81,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void Processor::printDescriptionXML(std::ostream& stream) const {
-    if(&stream == &std::cout){
+    if( name().empty() ){
       stream << " <processor name=\"My" <<  type()  << "\""
 	     << " type=\"" <<  type() << "\">"
 	     << std::endl ;
@@ -148,9 +148,9 @@ namespace marlin {
       i->second->setValue( _parameters.get() ) ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   std::pair<bool,bool> Processor::getForcedRuntimeOption( RuntimeOption option ) const {
     std::pair<bool,bool> result ;
     result.first = false ;
@@ -161,24 +161,24 @@ namespace marlin {
     }
     return result ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void Processor::forceRuntimeOption( RuntimeOption option, bool value ) {
     _forcedRuntimeOptions[option] = value ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   const Application &Processor::app() const {
     if ( nullptr == _application ) {
       throw Exception( "Processor::app: app pointer not set!" ) ;
     }
     return *_application ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   Application &Processor::app() {
     if ( nullptr == _application ) {
       throw Exception( "Processor::app: app pointer not set!" ) ;
