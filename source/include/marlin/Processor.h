@@ -22,7 +22,6 @@ namespace marlin {
 
   class Application ;
   class ProcessorApi ;
-  class XMLFixCollTypes ;
 
   /**
    *  @brief  Processor class
@@ -46,7 +45,6 @@ namespace marlin {
    *  @version $Id: Processor.h,v 1.38 2008-06-26 10:25:36 gaede Exp $
    */
   class Processor : public Parametrized {
-    friend class XMLFixCollTypes ;
     friend class ProcessorApi ;
     using Logger = Logging::Logger ;
 
@@ -55,10 +53,10 @@ namespace marlin {
     Processor() = delete ;
     Processor(const Processor&) = delete ;
     Processor& operator=(const Processor&) = delete ;
-    
+
   public:
     virtual ~Processor() = default ;
-    
+
     /**
      *  @brief  RuntimeOption enumerator
      */
@@ -270,7 +268,7 @@ namespace marlin {
      *  Throws if the application is not set
      */
     const Application &app() const ;
-    
+
     /**
      *  @brief  Get the application in which the processor is running
      *  Throws if the application is not set
