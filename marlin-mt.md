@@ -14,9 +14,9 @@
   - SimpleTrackSmearer.h / .cc -> Move to MarlinUtil
 
 
-- Merge MarlinApplication and MarlinMTApplication in one code
-- Deal with Application::printUsage() for normal and MT apps (merge them ?)
-- Implement the clock calculation at end of application
-- Find a registration mechanism for random seeds for processors
+- Fixed issue with processor lock (not working somehow ??) 
+- Fill Application::printUsage() when adding new options !
 - Make the test random seed processor working again
 - Re-implement MarlinSteerCheck again with the option -x to dump processors
+- Re-implement MarlinGUI with new APIs
+
