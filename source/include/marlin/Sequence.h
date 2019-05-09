@@ -40,12 +40,19 @@ namespace marlin {
     ~SequenceItem() = default ;
 
     /**
+     *  @brief  Constructor. No internal locking
+     *
+     *  @param  proc a pointer on a processor
+     */
+    SequenceItem( std::shared_ptr<Processor> proc ) ;
+
+    /**
      *  @brief  Constructor
      *
      *  @param  proc a pointer on a processor
-     *  @param  lock whether to use a lock
+     *  @param  lock the mutex instance to use
      */
-    SequenceItem( std::shared_ptr<Processor> proc, bool lock = false ) ;
+    SequenceItem( std::shared_ptr<Processor> proc, std::shared_ptr<std::mutex> lock ) ;
 
     /**
      *  @brief  Process the run header
@@ -151,9 +158,9 @@ namespace marlin {
      *  Use addItem() to add it.
      *
      *  @param  processor a processor pointer
-     *  @param  lock whether to lock on processEvent/modifyEvent calls
+     *  @param  lock the lock to use on processEvent/modifyEvent calls
      */
-    std::shared_ptr<SequenceItem> createItem( std::shared_ptr<Processor> processor, bool lock ) const ;
+    std::shared_ptr<SequenceItem> createItem( std::shared_ptr<Processor> processor, std::shared_ptr<std::mutex> lock ) const ;
 
     /**
      *  @brief  Add an item to the sequence
@@ -206,12 +213,12 @@ namespace marlin {
      *  @brief  Generate a clock measure summary of all items
      */
     ClockMeasure clockMeasureSummary() const ;
-    
+
     /**
      *  @brief  Get all the clock measurements of the sequence
      */
     const ClockMeasureMap &clockMeasures() const ;
-    
+
     /**
      *  @brief  Get all the skipped events of the sequence
      */
@@ -272,11 +279,11 @@ namespace marlin {
 
     /**
      *  @brief  Add a processor using the input parameters.
-     *  The processor is added to each sequence. Depending on 
+     *  The processor is added to each sequence. Depending on
      *  the parameter "ProcessorClone" and the processor forced
-     *  runtime policy, the processor is either cloned for each 
-     *  sequence or shared by all sequences  
-     *  
+     *  runtime policy, the processor is either cloned for each
+     *  sequence or shared by all sequences
+     *
      *  @param  parameters the processor input parameters
      */
     void addProcessor( std::shared_ptr<StringParameters> parameters ) ;
@@ -311,7 +318,7 @@ namespace marlin {
      *  @brief  Call Processor::end() for all processors
      */
     void end() ;
-    
+
     /**
      *  @brief  Print statistics at end of application
      *

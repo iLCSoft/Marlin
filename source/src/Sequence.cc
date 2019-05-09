@@ -13,9 +13,19 @@
 
 namespace marlin {
 
-  SequenceItem::SequenceItem( std::shared_ptr<Processor> proc, bool lock ) :
+  SequenceItem::SequenceItem( std::shared_ptr<Processor> proc ) :
     _processor(proc),
-    _mutex(lock ? std::make_shared<std::mutex>() : nullptr) {
+    _mutex(nullptr) {
+    if( nullptr == _processor ) {
+      throw Exception( "SequenceItem: got a nullptr for processor" ) ;
+    }
+  }
+
+  //--------------------------------------------------------------------------
+
+  SequenceItem::SequenceItem( std::shared_ptr<Processor> proc, std::shared_ptr<std::mutex> lock ) :
+    _processor(proc),
+    _mutex(lock) {
     if( nullptr == _processor ) {
       throw Exception( "SequenceItem: got a nullptr for processor" ) ;
     }
@@ -116,7 +126,7 @@ namespace marlin {
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
-  std::shared_ptr<SequenceItem> Sequence::createItem( std::shared_ptr<Processor> processor, bool lock ) const {
+  std::shared_ptr<SequenceItem> Sequence::createItem( std::shared_ptr<Processor> processor, std::shared_ptr<std::mutex> lock ) const {
     return std::make_shared<SequenceItem>( processor, lock ) ;
   }
 
@@ -215,15 +225,15 @@ namespace marlin {
     }
     return summary ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   const Sequence::ClockMeasureMap &Sequence::clockMeasures() const {
     return _clockMeasures ;
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   const Sequence::SkippedEventMap &Sequence::skippedEvents() const {
     return _skipEventMap ;
   }
@@ -291,22 +301,23 @@ namespace marlin {
       critical = criticalOpt.second ;
     }
     processor->setParameters( parameters ) ;
+    std::shared_ptr<std::mutex> lock = critical ? std::make_shared<std::mutex>() : nullptr ;
     if( clone ) {
       // add the first but then create new processor instances and add them
-      auto item = _sequences.at(0)->createItem( processor, critical ) ;
+      auto item = _sequences.at(0)->createItem( processor, lock ) ;
       _sequences.at(0)->addItem( item ) ;
       _uniqueItems.insert( item ) ;
       for( SizeType i=1 ; i<size() ; ++i ) {
         processor = pluginMgr.create<Processor>( PluginType::Processor, type ) ;
         processor->setParameters( parameters ) ;
-        item = _sequences.at(i)->createItem( processor, critical ) ;
+        item = _sequences.at(i)->createItem( processor, lock ) ;
         _sequences.at(i)->addItem( item ) ;
         _uniqueItems.insert( item ) ;
       }
     }
     else {
       // add the first and re-use the same item
-      auto item = _sequences.at(0)->createItem( processor, critical ) ;
+      auto item = _sequences.at(0)->createItem( processor, lock ) ;
       _sequences.at(0)->addItem( item ) ;
       _uniqueItems.insert( item ) ;
       for( SizeType i=1 ; i<size() ; ++i ) {
@@ -344,9 +355,9 @@ namespace marlin {
       item->processor()->end() ;
     }
   }
-  
+
   //--------------------------------------------------------------------------
-  
+
   void SuperSequence::printStatistics( Logging::Logger logger ) const {
     // first merge measurements from the different sequences
     Sequence::SkippedEventMap skippedEvents {} ;
@@ -377,18 +388,18 @@ namespace marlin {
         }
       }
     }
-    logger->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl ;
-    logger->log<MESSAGE>() << "  Events skipped by processors : " << std::endl ;
+    logger->log<MESSAGE>() << "--------------------------------------------------------- " << std::endl ;
+    logger->log<MESSAGE>() << "-- Events skipped by processors : " << std::endl ;
     unsigned int nSkipped = 0 ;
     for( auto skip : skippedEvents ) {
-      logger->log<MESSAGE>() << "       " << skip.first << ": \t" << skip.second << std::endl ;
-      nSkipped += skip.second ;	
+      logger->log<MESSAGE>() << "--       " << skip.first << ": \t" << skip.second << std::endl ;
+      nSkipped += skip.second ;
     }
-    logger->log<MESSAGE>() << "  Total: " << nSkipped  << std::endl ;
-    logger->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl 
+    logger->log<MESSAGE>() << "-- Total: " << nSkipped  << std::endl ;
+    logger->log<MESSAGE>() << "--------------------------------------------------------- " << std::endl
           << std::endl ;
-    logger->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl
-          << "      Time used by processors ( in processEvent() ) :      " << std::endl 
+    logger->log<MESSAGE>() << "--------------------------------------------------------- " << std::endl
+          << "      Time used by processors ( in processEvent() ) :      " << std::endl
           << std::endl ;
     std::list<Sequence::ClockMeasureMap::value_type> clockList( clockMeasures.begin() , clockMeasures.end() ) ;
     typedef std::list<Sequence::ClockMeasureMap::value_type>::value_type elt ;
@@ -401,6 +412,7 @@ namespace marlin {
       std::string procName = clockMeasure.first ;
       procName.resize(40, ' ') ;
       clockTotal += clockMeasure.second._procClock ;
+      int lockTimeFraction = ((clockMeasure.second._appClock - clockMeasure.second._procClock) / clockMeasure.second._appClock) * 100. ;
       if( clockMeasure.second._counter > eventTotal ){
         eventTotal = clockMeasure.second._counter ;
       }
@@ -411,13 +423,17 @@ namespace marlin {
       else {
         ss << "NaN" ;
       }
-      logger->log<MESSAGE>() 
-        //<< std::left << std::setw(30)
+      std::stringstream lockPrint ;
+      if( size() > 1 ) {
+        lockPrint << "(lock: " << lockTimeFraction << " %)";
+      }
+      logger->log<MESSAGE>()
         << procName
         << std::setw(12) << std::scientific  << clockMeasure.second._procClock  << " s "
-        << "in " << std::setw(12) << clockMeasure.second._counter 
-        << " events  ==> " 
+        << "in " << std::setw(12) << clockMeasure.second._counter
+        << " events  ==> "
         << std::setw(12) << std::scientific << ss.str() << " [ s/evt.] "
+        << lockPrint.str()
         << std::endl << std::endl ;
     }
     std::stringstream ss ;
@@ -427,13 +443,13 @@ namespace marlin {
     else {
       ss << "NaN" ;
     }
-    logger->log<MESSAGE>() 
+    logger->log<MESSAGE>()
       << "Total:                                  "
       <<  std::setw(12) << std::scientific  << clockTotal << " s in "
-      <<  std::setw(12) << eventTotal << " events  ==> " 
+      <<  std::setw(12) << eventTotal << " events  ==> "
       <<  std::setw(12) << std::scientific << ss.str() << " [ s/evt.] "
       << std::endl << std::endl ;
-    logger->log<MESSAGE>() << " --------------------------------------------------------- " << std::endl ;
+    logger->log<MESSAGE>() << "--------------------------------------------------------- " << std::endl ;
   }
 
 }
