@@ -10,5 +10,5 @@ plugins:
   - doxygen:
       packages:
         - doxygen:
-            url : docs/
+            url : doc/mkdoxygen
 theme: readthedocs
