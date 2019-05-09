@@ -1,0 +1,135 @@
+/** 
+
+\mainpage <a href="http://ilcsoft.desy.de/marlin">Marlin</a>
+ 
+<b>Marlin [Modular Analysis and Reconstruction for the LINear collider]</b>
+is a simple modular application framework for analysis and reconstruction code based
+on LCIO.
+
+<h2>Overview</h2>
+
+The main purpose of Marlin is to facilitate the modular development of reconstruction 
+and analysis code based on LCIO. As a lot of different groups are involved it should 
+be simple and straight forward to have distributed development of modules and combine 
+existing modules as needed in a larger application. <br>
+The base class for a Marlin module is called marlin::Processor. It defines a set of
+callbacks that the user can implement in their subclasses. A steering file mechanism
+allows to activate the needed processors. These are then called for every event using 
+the LCEvent as container for input and output data in terms of LCCollections:
+
+<img src="../marlin_overview.gif" alt="marlin schema">
+
+
+<h2>Installation</h2>
+
+The installation of Marlin is described in the <a href="../README.md">README.md</a>.
+<b>Note that since v00-09-08 the default build process has been changed to use CMake and create
+shared libraries. This allows for a flexible plugin mechanism that does not involve recompiling and 
+relinking of Marlin and the needed packages if only one package is changed !</b>
+
+
+<h2>Running Marlin</h2>
+After having installed Marlin you have to write your own marlin::Processor(s) subclass 
+that performs the computation. This is fairly straight forward and Marlin provides 
+an example in "$MARLIN/examples/mymarlin" that can serve as a template for your own
+projects.
+<p>
+Note: there is no need to write a main program as this is provided by Marlin. Existing 
+Processors are automatically registered with Marlin provided one instance exists in the
+library as described in the <a href="../README.md">README.md</a>.
+
+
+<h3>Steering files</h3>
+A Marlin application is controlled via a steering file that defines the active processors
+and the order in which they are called as well as global and processor specific 
+parameters. The default format of the steering files is xml (older ascci steering files are still supported
+for a transition period)
+
+
+<h4>XML steering files</h4>
+
+You can get an example XML steering file with:
+<ul>
+<li>
+  <b>./bin/Marlin -x > example.xml</b>
+</li>
+</ul> 
+The XML steering files provide the following features:
+<ul>
+<li> definition of the program flow (order of processors to be executed)</li>
+<li> global parameters</li>
+<li> processor parameters</li>
+<li> conditional execution of processors (depending on flags set by other processors)</li>
+<li> grouping of processors sharing common parameters</li>
+</ul> 
+
+See marlin::XMLParser for a detailed description of the xml steering files.
+
+The application is run by:
+<ul>
+<li>
+  <b>./bin/Marlin example.xml</b>
+</li>
+</ul> 
+
+<h4>Old Ascii steering files</h4>
+
+You can convert old ascii steering files to xml steering files by typing:
+<ul>
+<li>
+  <b>./bin/Marlin -o old.steer new.xml </b>
+</li>
+</ul> 
+
+<h4> Other commands </h4>
+You can get a list of all supported command line options with
+<ul>
+<li>
+  <b>./bin/Marlin -h </b>
+</li>
+</ul> 
+This will create the following output:
+<pre>
+ Usage: Marlin [OPTION] [FILE]...
+   runs a Marlin application
+
+ Running the application with a given steering file:
+   Marlin steer.xml
+
+   Marlin -h                     print this help information
+   Marlin -?                     print this help information
+   Marlin -x                     print an example steering file to stdout
+   Marlin -c steer.xml           check the given steering file for consistency
+   Marlin -f old.xml new.xml     convert old xml files to new xml files for consistency check
+   Marlin -o old.steer new.xml   convert old steering file to xml steering file
+   Marlin -l                     [deprecated: old format steering file example]
+   Marlin -d steer.xml flow.dot  create a program flow diagram (see: http://www.graphviz.org)
+
+ Example:
+ To create a new default steering file from any Marlin application, run
+     Marlin -x > mysteer.xml
+ and then use either an editor or the MarlinGUI to modify the created steering file
+ to configure your application and then run it. e.g. :
+     Marlin mysteer.xml > marlin.out 2>&1 &
+
+</pre>
+
+<h3>Release Notes</h3>
+Marlin is under development and there are frequent releases. Please check the 
+<a href="../ReleaseNotes.md">./ReleaseNotes.md</a>
+
+<hr>
+<p>
+If you have any questions or proposals for new features please contact the author:
+
+<a href="mailto:Frank Gaede &lt;frank.gaede@desy.de&gt;">frank.gaede@desy.de</a>
+
+*/
+
+
+/** The main namespace in Marlin. */
+ namespace marlin{}
+
+/** A general logging library that is used in Marlin */
+ namespace streamlog{}
+
