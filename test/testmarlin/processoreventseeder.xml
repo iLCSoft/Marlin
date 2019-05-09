@@ -2,17 +2,26 @@
 
 <marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
  <execute>
-  <processor name="MyTestProcessorEventSeeder"/>  
+  <processor name="MyTestProcessorEventSeeder"/>
  </execute>
 
  <global>
-  <parameter name="LCIOInputFiles"> simjob.slcio simjob.slcio </parameter>
-  <parameter name="MaxRecordNumber" value="1000" />  
-  <parameter name="SkipNEvents" value="50" />  
-  <parameter name="GearXMLFile"> gear_simjob.xml </parameter>  
   <!--parameter name="RandomSeed" value="1234567890" /-->
-  <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> DEBUG MESSAGE3 DEBUG </parameter> 
+  <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> DEBUG MESSAGE3 DEBUG </parameter>
  </global>
+
+ <datasource type="LCIO">
+   <parameter name="LCIOInputFiles">
+     simjob.slcio simjob.slcio
+   </parameter>
+   <parameter name="MaxRecordNumber" value="1000"/>
+   <parameter name="SkipNEvents" value="50" />
+ </datasource>
+
+ <geometry type="GearGeometry">
+   <parameter name="GearFile"> gear_simjob.xml </parameter>
+   <parameter name="DumpGeometry"> false </parameter>
+ </geometry>
 
  <processor name="MyTestProcessorEventSeeder" type="TestProcessorEventSeeder">
  </processor>
