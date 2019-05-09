@@ -45,6 +45,7 @@ var searchData=
   ['stop',['stop',['../classmarlin_1_1concurrency_1_1ThreadPool.html#acbaed70df966cb82296cf7ba794e6705',1,'marlin::concurrency::ThreadPool::stop()'],['../classmarlin_1_1concurrency_1_1Worker.html#ae61da10a43d96508ed876c467693c581',1,'marlin::concurrency::Worker::stop()']]],
   ['stopprocessingexception',['StopProcessingException',['../classmarlin_1_1StopProcessingException.html',1,'marlin']]],
   ['str',['Str',['../classTiXmlPrinter.html#a3bd4daf44309b41f5813a833caa0d1c9',1,'TiXmlPrinter']]],
+  ['streamlog',['streamlog',['../namespacestreamlog.html',1,'']]],
   ['stringparameters',['StringParameters',['../classmarlin_1_1StringParameters.html',1,'marlin']]],
   ['stringtotype',['stringToType',['../classmarlin_1_1StringUtil.html#a1bb877d157d2618e2876656aecfc0530',1,'marlin::StringUtil::stringToType(const std::string &amp;str)'],['../classmarlin_1_1StringUtil.html#aecc2c900115f339569fa9cf4072e3ac0',1,'marlin::StringUtil::stringToType(const std::vector&lt; std::string &gt; &amp;strs)']]],
   ['stringutil',['StringUtil',['../classmarlin_1_1StringUtil.html',1,'marlin']]],

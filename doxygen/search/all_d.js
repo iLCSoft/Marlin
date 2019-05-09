@@ -1,6 +1,7 @@
 var searchData=
 [
   ['mainlogger',['mainLogger',['../classmarlin_1_1LoggerManager.html#ad2ef4715cec9a1e8ad354f3149b721c2',1,'marlin::LoggerManager']]],
+  ['marlin',['marlin',['../namespacemarlin.html',1,'']]],
   ['maxsize',['maxSize',['../classmarlin_1_1concurrency_1_1Queue.html#a11cbf80dbde64a3e1de97e31ba33b7e2',1,'marlin::concurrency::Queue']]],
   ['memorymonitorprocessor',['MemoryMonitorProcessor',['../classmarlin_1_1MemoryMonitorProcessor.html',1,'marlin::MemoryMonitorProcessor'],['../classmarlin_1_1MemoryMonitorProcessor.html#a866f3f0873222ad4d98cb32f88422b11',1,'marlin::MemoryMonitorProcessor::MemoryMonitorProcessor()']]],
   ['message',['message',['../classmarlin_1_1Processor.html#adadc86eb0d909668cd52103a676de137',1,'marlin::Processor::message(const std::string &amp;m) const'],['../classmarlin_1_1Processor.html#aa96941adc5376016dceadf43d8479b0b',1,'marlin::Processor::message(const std::basic_ostream&lt; char, std::char_traits&lt; char &gt; &gt; &amp;m) const']]],

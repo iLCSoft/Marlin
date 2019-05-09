@@ -58,7 +58,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>marlin</b></li><li class="navelem"><a class="el" href="classmarlin_1_1PluginManager.html">PluginManager</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacemarlin.html">marlin</a></li><li class="navelem"><a class="el" href="classmarlin_1_1PluginManager.html">PluginManager</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -89,7 +89,7 @@ typedef std::function&lt; PluginPtr()&gt;&#160;</td><td class="memItemRight" val
 typedef std::map&lt; std::string, FactoryFunction &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>FactoryMap</b></td></tr>
 <tr class="separator:a71c1c15ffe8950ff59ecf433a1718f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23181783ed967345be21fc1ef646df61"><td class="memItemLeft" align="right" valign="top"><a id="a23181783ed967345be21fc1ef646df61"></a>
-typedef std::map&lt; PluginType, FactoryMap &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>PluginFactoryMap</b></td></tr>
+typedef std::map&lt; <a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a>, FactoryMap &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>PluginFactoryMap</b></td></tr>
 <tr class="separator:a23181783ed967345be21fc1ef646df61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e8e716c2e9cc49b8d5893f27cb51fc4"><td class="memItemLeft" align="right" valign="top"><a id="a8e8e716c2e9cc49b8d5893f27cb51fc4"></a>
 typedef std::vector&lt; void * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>LibraryList</b></td></tr>
@@ -107,23 +107,23 @@ typedef std::lock_guard&lt; mutex_type &gt;&#160;</td><td class="memItemRight" v
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7727b55557b222b891e99a609acc66c7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a7727b55557b222b891e99a609acc66c7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a7727b55557b222b891e99a609acc66c7">registerPlugin</a> (PluginType type, const std::string &amp;name, bool ignoreDuplicate=true)</td></tr>
+<tr class="memitem:a7727b55557b222b891e99a609acc66c7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a7727b55557b222b891e99a609acc66c7">registerPlugin</a> (<a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a> type, const std::string &amp;name, bool ignoreDuplicate=true)</td></tr>
 <tr class="memdesc:a7727b55557b222b891e99a609acc66c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a new plugin to the manager.  <a href="#a7727b55557b222b891e99a609acc66c7">More...</a><br /></td></tr>
 <tr class="separator:a7727b55557b222b891e99a609acc66c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a596aff81039e87c56109da3062f2bc51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a596aff81039e87c56109da3062f2bc51">registerPlugin</a> (PluginType type, const std::string &amp;name, FactoryFunction factoryFunction, bool ignoreDuplicate=true)</td></tr>
+<tr class="memitem:a596aff81039e87c56109da3062f2bc51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a596aff81039e87c56109da3062f2bc51">registerPlugin</a> (<a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a> type, const std::string &amp;name, FactoryFunction factoryFunction, bool ignoreDuplicate=true)</td></tr>
 <tr class="memdesc:a596aff81039e87c56109da3062f2bc51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a new plugin to the manager.  <a href="#a596aff81039e87c56109da3062f2bc51">More...</a><br /></td></tr>
 <tr class="separator:a596aff81039e87c56109da3062f2bc51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad74d076f457c0df28461dd89d932eee0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#ad74d076f457c0df28461dd89d932eee0">loadLibraries</a> (const std::string &amp;envvar=&quot;MARLIN_DLL&quot;)</td></tr>
 <tr class="memdesc:ad74d076f457c0df28461dd89d932eee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load shared libraries to populate the list of plugins.  <a href="#ad74d076f457c0df28461dd89d932eee0">More...</a><br /></td></tr>
 <tr class="separator:ad74d076f457c0df28461dd89d932eee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a845d591efb847a544bf9a0d2c81bc9f3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a845d591efb847a544bf9a0d2c81bc9f3">pluginNames</a> (PluginType type) const</td></tr>
+<tr class="memitem:a845d591efb847a544bf9a0d2c81bc9f3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a845d591efb847a544bf9a0d2c81bc9f3">pluginNames</a> (<a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a> type) const</td></tr>
 <tr class="memdesc:a845d591efb847a544bf9a0d2c81bc9f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all registered plugin name for the given type.  <a href="#a845d591efb847a544bf9a0d2c81bc9f3">More...</a><br /></td></tr>
 <tr class="separator:a845d591efb847a544bf9a0d2c81bc9f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fba86581eb9b75007f6fea095ea00a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a5fba86581eb9b75007f6fea095ea00a0">pluginRegistered</a> (PluginType type, const std::string &amp;name) const</td></tr>
+<tr class="memitem:a5fba86581eb9b75007f6fea095ea00a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a5fba86581eb9b75007f6fea095ea00a0">pluginRegistered</a> (<a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a> type, const std::string &amp;name) const</td></tr>
 <tr class="memdesc:a5fba86581eb9b75007f6fea095ea00a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the plugin of given type and name is registered.  <a href="#a5fba86581eb9b75007f6fea095ea00a0">More...</a><br /></td></tr>
 <tr class="separator:a5fba86581eb9b75007f6fea095ea00a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a637d123bd1f6bd8f4bc1ae6ee33d214c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a637d123bd1f6bd8f4bc1ae6ee33d214c"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a637d123bd1f6bd8f4bc1ae6ee33d214c">create</a> (PluginType type, const std::string &amp;name) const</td></tr>
+<tr class="memitem:a637d123bd1f6bd8f4bc1ae6ee33d214c"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmarlin_1_1PluginManager.html#a637d123bd1f6bd8f4bc1ae6ee33d214c">create</a> (<a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a> type, const std::string &amp;name) const</td></tr>
 <tr class="memdesc:a637d123bd1f6bd8f4bc1ae6ee33d214c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new plugin instance.  <a href="#a637d123bd1f6bd8f4bc1ae6ee33d214c">More...</a><br /></td></tr>
 <tr class="separator:a637d123bd1f6bd8f4bc1ae6ee33d214c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac23d6fb4eff58932c797517efdfe4bbf"><td class="memItemLeft" align="right" valign="top"><a id="ac23d6fb4eff58932c797517efdfe4bbf"></a>
@@ -160,7 +160,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">std::shared_ptr&lt; T &gt; marlin::PluginManager::create </td>
           <td>(</td>
-          <td class="paramtype">PluginType&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a>&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
         <tr>
@@ -229,7 +229,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">std::vector&lt; std::string &gt; marlin::PluginManager::pluginNames </td>
           <td>(</td>
-          <td class="paramtype">PluginType&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a>&#160;</td>
           <td class="paramname"><em>type</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -255,7 +255,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">bool marlin::PluginManager::pluginRegistered </td>
           <td>(</td>
-          <td class="paramtype">PluginType&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a>&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
         <tr>
@@ -297,7 +297,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">void marlin::PluginManager::registerPlugin </td>
           <td>(</td>
-          <td class="paramtype">PluginType&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a>&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
         <tr>
@@ -349,7 +349,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">void marlin::PluginManager::registerPlugin </td>
           <td>(</td>
-          <td class="paramtype">PluginType&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7">PluginType</a>&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
         <tr>

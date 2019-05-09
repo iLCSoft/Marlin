@@ -17,6 +17,7 @@ var searchData=
   ['pluginmanager',['PluginManager',['../classmarlin_1_1PluginManager.html',1,'marlin']]],
   ['pluginnames',['pluginNames',['../classmarlin_1_1PluginManager.html#a845d591efb847a544bf9a0d2c81bc9f3',1,'marlin::PluginManager']]],
   ['pluginregistered',['pluginRegistered',['../classmarlin_1_1PluginManager.html#a5fba86581eb9b75007f6fea095ea00a0',1,'marlin::PluginManager']]],
+  ['plugintype',['PluginType',['../namespacemarlin.html#a6ad17ce494432d6edfb53e89ee988de7',1,'marlin']]],
   ['pop',['pop',['../classmarlin_1_1concurrency_1_1Queue.html#a2a4fe2f64d546fca839ed30121cc2052',1,'marlin::concurrency::Queue']]],
   ['popfinishedevents',['popFinishedEvents',['../classmarlin_1_1concurrency_1_1PEPScheduler.html#a1ea04a94fdbe98fc3c9c0802a3bff3c5',1,'marlin::concurrency::PEPScheduler::popFinishedEvents()'],['../classmarlin_1_1IScheduler.html#a30b54277206eca898a0ea8ac6f44d883',1,'marlin::IScheduler::popFinishedEvents()'],['../classmarlin_1_1SimpleScheduler.html#a3e7638dbc2a22e94053e1d7dc9fe581f',1,'marlin::SimpleScheduler::popFinishedEvents()']]],
   ['previous',['Previous',['../classTiXmlAttribute.html#afc7bbfdf83d59fbc4ff5e283d27b5d7d',1,'TiXmlAttribute']]],
