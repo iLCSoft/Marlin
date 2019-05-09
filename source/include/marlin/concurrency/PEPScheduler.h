@@ -27,7 +27,7 @@ namespace marlin {
       ///< An exception potential throw in the worker thread
       std::exception_ptr                  _exception {nullptr} ;
     };
-    
+
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ namespace marlin {
       using EventList = std::vector<std::shared_ptr<EVENT::LCEvent>> ;
       using Clock = std::chrono::steady_clock ;
       using TimePoint = std::chrono::steady_clock::time_point ;
-      
+
 
     public:
       PEPScheduler() = default ;
@@ -81,10 +81,12 @@ namespace marlin {
       ProcessorSequence                _superSequence {nullptr} ;
       ///< The list of worker output promises
       PushResultList                   _pushResults {} ;
-      ///< The start time (end of init() function)
+      ///< The start time
       clock::time_point                _startTime {} ;
-      ///< The end time (start of end() function)
+      ///< The end time
       clock::time_point                _endTime {} ;
+      ///< The total time spent on processing run headers
+      clock::duration_rep              _runHeaderTime {0} ;
     };
 
   }

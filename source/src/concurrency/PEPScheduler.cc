@@ -99,7 +99,7 @@ namespace marlin {
       // print some statistics
       _superSequence->printStatistics( _logger ) ;
       // print additional threading summary
-      const auto parallelTime = clock::time_difference( _startTime, _endTime ) ;
+      const auto parallelTime = clock::time_difference( _startTime, _endTime ) - _runHeaderTime ;
       double totalProcessorClock {0.0} ;
       double totalApplicationClock {0.0} ;
       for ( unsigned int i=0 ; i<_superSequence->size() ; ++i ) {
@@ -220,8 +220,11 @@ namespace marlin {
       while( _pool.active() ) {
         std::this_thread::sleep_for( std::chrono::milliseconds(1) ) ;
       }
+      auto rhdrStart = clock::now() ;
       _superSequence->modifyRunHeader( rhdr ) ;
       _superSequence->processRunHeader( rhdr ) ;
+      auto rhdrEnd = clock::now() ;
+      _runHeaderTime += clock::time_difference<clock::seconds>( rhdrStart, rhdrEnd ) ;
       _pool.setAcceptPush( true ) ;
     }
 
