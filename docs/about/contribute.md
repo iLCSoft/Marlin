@@ -21,10 +21,11 @@ git checkout -b dev
 
 then work on the package as you need. When changes are done, do some commits :
 
+```shell
 git add 'modified files'
 git commit -m "your commit message"
 git push fork dev
-
+```
 
 Finally, go to the official GitHub package page [https://github.com/iLCSoft/Marlin/pulls](https://github.com/iLCSoft/Marlin/pulls) and create a new pull-request.
 
