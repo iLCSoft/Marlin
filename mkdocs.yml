@@ -4,6 +4,7 @@ nav:
     - About:
       - License: 'about/license.md'
       - Contribute: 'about/contribute.md'
+      - Citing Marlin: 'about/citing.md'
     - Documentation:
       - Doxygen: 'doxygen/index.html'
 plugins:
