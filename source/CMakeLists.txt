@@ -87,6 +87,15 @@ TARGET_LINK_LIBRARIES( bin_MarlinMT Marlin )
 INSTALL( TARGETS bin_MarlinMT DESTINATION bin )
 # ----------------------------------------------------------------------------
 
+# ----- MarlinMTBounds executable ----------------------------------------------------
+IF( ROOT_FOUND )
+  ADD_EXECUTABLE( bin_MarlinMT_IOCPUBounds ./main/MarlinMT_IOCPUBounds.cc )
+  SET_TARGET_PROPERTIES( bin_MarlinMT_IOCPUBounds PROPERTIES OUTPUT_NAME MarlinMT_IOCPUBounds )
+  TARGET_LINK_LIBRARIES( bin_MarlinMT_IOCPUBounds Marlin )
+  INSTALL( TARGETS bin_MarlinMT_IOCPUBounds DESTINATION bin )
+ENDIF()
+# ----------------------------------------------------------------------------
+
 # ----- MarlinGUI ------------------------------------------------------------
 IF( MARLIN_GUI )
     ADD_SUBDIRECTORY( ./gui )
