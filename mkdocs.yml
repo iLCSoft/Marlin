@@ -1,13 +1,24 @@
 site_name: Marlin
 nav:
-    - Home: index.md
+    - Home: 'index.md'
     - About:
       - License: 'about/license.md'
       - Contribute: 'about/contribute.md'
       - Citing Marlin: 'about/citing.md'
-    - Documentation:
-      - Doxygen: 'doxygen/index.html'
+    - User manual:
+      - Introduction: 'user-manual/introduction.md'
+      - Installation: 'user-manual/installation.md'
+      - Getting started: 'user-manual/getting-started.md'
+      - Geometry: 'user-manual/geometry.md'
+      - Data source: 'user-manual/data-source.md'
+      - XML parser: 'user-manual/xml-parser.md'
+      - Processor API: 'user-manual/processor-api.md'
+      - Multi-threading with MarlinMT: 'user-manual/marlin-mt.md'
+    - Reference manual: 'doxygen/index.html'
 plugins:
+  - search:
+      separator: '[\s\-\.]+'
+      lang: 'en'
   - doxygen:
       packages:
         - doxygen:
