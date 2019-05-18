@@ -1,6 +1,6 @@
 
 
-Marlin [Modular Analysis and Reconstruction for the LINear collider] is a simple modular application framework for analysis and reconstruction code based on LCIO.
+Marlin (**M**odular **A**nalysis and **R**econstruction for the **LIN**ear collider) is a simple modular application framework for analysis and reconstruction code based on LCIO.
 
 # Overview
 
@@ -12,14 +12,14 @@ The base class for a Marlin module is called `marlin::Processor`. It defines a s
 The processors are compiled in shared libraries (i.e libMyProcessor.so) and loaded at runtime using the `marlin::PluginManager`. The libraries to use when running Marlin are exported in the environment variable `MARLIN_DLL`:
 
 ```shell
-export MARLIN_DLL=./lib/libMyProcessor.so
+$ export MARLIN_DLL=./lib/libMyProcessor.so
 ```
 
-or with multiple libraries:
+or with multiple libraries (split by `:`):
 
 
 ```shell
-export MARLIN_DLL=./lib/libMyProcessor.so:./libOtherProcessor.so
+$ export MARLIN_DLL=./lib/libMyProcessor.so:./libOtherProcessor.so
 ```
 
 # Marlin usage
@@ -57,7 +57,7 @@ The XML steering file list all configuration parameters of the different Marlin 
 - data source
 - global parameters
 
-The `<execute>` section of the steering file lists the processors to run sequentially in the application. 
+The `<execute>` section of the steering file lists the processors to run sequentially in the application.
 
 For more information see [XML parser documentation](xml-parser.md).
 
@@ -93,7 +93,7 @@ Using `MARLIN_DLL` variable:
 
 ```shell
 # Contains a processor called 'MyProcessor'
-$ export MARLIN_DLL=./libProcessor.so
+$ export MARLIN_DLL=./lib/libMyProcessor.so
 $ MarlinDumpPlugins
 [ MESSAGE "PluginManager"] ------------------------------------
 [ MESSAGE "PluginManager"]  ** Marlin plugin manager dump **
