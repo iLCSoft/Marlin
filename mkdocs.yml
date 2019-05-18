@@ -23,4 +23,4 @@ plugins:
       packages:
         - doxygen:
             url : doc/mkdoxygen
-theme: readthedocs
+theme: mkdocs
