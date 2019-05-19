@@ -42,11 +42,7 @@ With all optional dependencies, the order would be the following:
      - Gear (optional)
      - LCIO (optional but recommended)
 
-
-## Dependencies installation
-
-
-### Qt
+## Qt
 
 Qt can be downloaded with `git`:
 
@@ -79,7 +75,7 @@ $ ./configure \
 $ make install
 ```
 
-### iLCUtil
+## iLCUtil
 
 iLCUtil can be downloaded with `git`:
 
@@ -103,7 +99,7 @@ $ cmake ..
 $ make install
 ```
 
-### XercesC
+## XercesC
 
 XercesC can be downloaded with `git`:
 
@@ -127,7 +123,7 @@ $ cmake ..
 $ make install
 ```
 
-### ROOT
+## ROOT
 
 ROOT can be downloaded with `git`:
 
@@ -163,7 +159,7 @@ $ make install
 
 For more details on ROOT dependencies, see [https://root.cern.ch/build-prerequisites](https://root.cern.ch/build-prerequisites).
 
-### Geant4
+## Geant4
 
 Geant4 can be downloaded with `git`:
 
@@ -197,7 +193,7 @@ $ cmake \
 $ make install
 ```
 
-### Gear
+## Gear
 
 Gear can be downloaded with `git`:
 
@@ -224,7 +220,7 @@ $ cmake \
 $ make install
 ```
 
-### LCIO
+## LCIO
 
 LCIO can be downloaded with `git`:
 
@@ -255,7 +251,7 @@ $ cmake \
 $ make install
 ```
 
-### DD4hep
+## DD4hep
 
 DD4hep can be downloaded with `git`:
 
@@ -325,5 +321,3 @@ $ cmake \
   ..
 $ make install
 ```
-
-%
