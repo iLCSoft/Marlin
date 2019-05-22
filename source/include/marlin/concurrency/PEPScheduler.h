@@ -87,6 +87,10 @@ namespace marlin {
       clock::time_point                _endTime {} ;
       ///< The total time spent on processing run headers
       clock::duration_rep              _runHeaderTime {0} ;
+      ///< The total time spent on locking on thread pool queue access
+      clock::duration_rep              _lockingTime {0} ;
+      ///< The total time spent on popping events from the output event pool
+      clock::duration_rep              _popTime {0} ;
     };
 
   }

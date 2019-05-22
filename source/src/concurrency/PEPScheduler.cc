@@ -120,6 +120,8 @@ namespace marlin {
         }
         _logger->log<MESSAGE>() << "--   Speedup percentage:             " << speedupPercent << " " << '%' << std::endl ;
       }
+      _logger->log<MESSAGE>() << "--   Queue lock time:                " << _lockingTime << " ms" << std::endl ;
+      _logger->log<MESSAGE>() << "--   Pop event time:                 " << _popTime << " ms" << std::endl ;
       _logger->log<MESSAGE>() << "--   Lock time fraction:             " << lockTimeFraction << " %" << std::endl ;
       _logger->log<MESSAGE>() << "---------------------------------------------------" << std::endl ;
     }
@@ -200,7 +202,7 @@ namespace marlin {
       }
       _logger->log<DEBUG5>() << "starting thread pool" << std::endl ;
       // start with a default small number
-      _pool.setMaxQueueSize(10) ;
+      _pool.setMaxQueueSize( 2 * _superSequence->size() ) ;
       _pool.start() ;
       _pool.setAcceptPush( true ) ;
       _logger->log<DEBUG5>() << "configurePool ... DONE" << std::endl ;
@@ -218,7 +220,7 @@ namespace marlin {
       // need to wait for all current tasks to finish
       // and then process run header
       while( _pool.active() ) {
-        std::this_thread::sleep_for( std::chrono::milliseconds(1) ) ;
+        std::this_thread::sleep_for( std::chrono::microseconds(10) ) ;
       }
       auto rhdrStart = clock::now() ;
       _superSequence->modifyRunHeader( rhdr ) ;
@@ -232,12 +234,15 @@ namespace marlin {
 
     void PEPScheduler::pushEvent( std::shared_ptr<EVENT::LCEvent> event ) {
       // push event to thread pool queue. It might throw !
+      auto start = clock::now() ;
       _pushResults.push_back( _pool.push( WorkerPool::PushPolicy::ThrowIfFull, std::move(event) ) ) ;
+      _lockingTime += clock::elapsed_since<clock::milliseconds>( start ) ;
     }
 
     //--------------------------------------------------------------------------
 
     void PEPScheduler::popFinishedEvents( std::vector<std::shared_ptr<EVENT::LCEvent>> &events ) {
+      auto start = clock::now() ;
       auto iter = _pushResults.begin() ;
       while( iter != _pushResults.end() ) {
         const bool finished = (iter->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) ;
@@ -254,6 +259,7 @@ namespace marlin {
         }
         ++iter ;
       }
+      _popTime += clock::elapsed_since<clock::milliseconds>( start ) ;
     }
 
     //--------------------------------------------------------------------------
