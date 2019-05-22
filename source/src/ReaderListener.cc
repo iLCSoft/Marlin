@@ -14,13 +14,7 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
 
-  void ReaderListener::processEvent( std::shared_ptr<EVENT::LCEvent> /*event*/ ) {
-    /* nop */
-  }
-  
-  //--------------------------------------------------------------------------
-  
-  void ReaderListener::modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) {
+  void ReaderListener::processEvent( std::shared_ptr<EVENT::LCEvent> event ) {
     if( nullptr != _onEventRead ) {
       _onEventRead( event ) ;
     }
@@ -28,13 +22,7 @@ namespace marlin {
   
   //--------------------------------------------------------------------------
   
-  void ReaderListener::processRunHeader( std::shared_ptr<EVENT::LCRunHeader> /*hdr*/ ) {
-    /* nop */
-  }
-  
-  //--------------------------------------------------------------------------
-  
-  void ReaderListener::modifyRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) {
+  void ReaderListener::processRunHeader( std::shared_ptr<EVENT::LCRunHeader> rhdr ) {
     if( nullptr != _onRunHeaderRead ) {
       _onRunHeaderRead( rhdr ) ;
     }

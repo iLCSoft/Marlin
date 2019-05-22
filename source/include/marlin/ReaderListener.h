@@ -64,9 +64,7 @@ namespace marlin {
   private:
     // from MT::LCReaderListener
     void processEvent( std::shared_ptr<EVENT::LCEvent> event ) override ;
-    void modifyEvent( std::shared_ptr<EVENT::LCEvent> event ) override ;
     void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> hdr ) override ;
-    void modifyRunHeader( std::shared_ptr<EVENT::LCRunHeader> hdr ) override ;
 
   private:
     ///< Callback function on event read
