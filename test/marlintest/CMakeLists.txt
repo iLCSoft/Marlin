@@ -67,5 +67,6 @@ function ( MARLIN_ADD_TEST test_name )
 endfunction()
 
 MARLIN_ADD_TEST ( test-thread-pool BUILD_EXEC REGEX_FAIL "TEST_FAILED" )
+MARLIN_ADD_TEST ( test-clock BUILD_EXEC REGEX_FAIL "TEST_FAILED" )
 
 #INSTALL_SHARED_LIBRARY( ${libname} DESTINATION lib )
