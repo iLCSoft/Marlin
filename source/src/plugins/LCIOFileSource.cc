@@ -25,7 +25,6 @@ namespace marlin {
    */
   class LCIOFileSource : public DataSourcePlugin {
     using FileReader = MT::LCReader ;
-    using ListenerList = MT::LCReaderListenerList ;
 
   public:
     LCIOFileSource() ;
@@ -46,8 +45,6 @@ namespace marlin {
     EVENT::StringVec            _readCollectionNames {} ;
     ///< The LCIO file listener
     ReaderListener              _listener {} ;
-    ///< The list of listeners to pass to readNextRecord function
-    ListenerList                _listeners {} ;
     ///< The LCIO file reader
     FileReader                  _fileReader {FileReader::directAccess} ;
     ///< The current number of read records
@@ -108,14 +105,13 @@ namespace marlin {
         << " *************************************************************************************************** " << std::endl ;
       _fileReader.setReadCollectionNames( _readCollectionNames ) ;
     }
-    _listeners.insert( &_listener ) ;
   }
 
   //--------------------------------------------------------------------------
 
   bool LCIOFileSource::readOne() {
     try {
-      _fileReader.readNextRecord( _listeners ) ;
+      _fileReader.readNextRecord( &_listener ) ;
       ++_currentReadRecords ;
       if( (_maxRecordNumber > 0) and (_currentReadRecords >= _maxRecordNumber) ) {
         return false ;
