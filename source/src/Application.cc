@@ -15,6 +15,10 @@
 // -- std headers
 #include <cstring>
 
+// -- lcio headers
+#include <EVENT/LCEvent.h>
+#include <EVENT/LCRunHeader.h>
+
 using namespace std::placeholders ;
 
 namespace marlin {
