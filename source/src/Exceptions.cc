@@ -1,22 +1,40 @@
 #include <marlin/Exceptions.h>
-#include <marlin/Processor.h>
 
 namespace marlin {
-
-  ParseException::ParseException( const std::string &text ) {
-    message = "marlin::ParseException: " + text ;
+  
+  Exception::Exception( const std::string &message ) : 
+    _message(message) {
+    /* nop */
   }
-
-  SkipEventException::SkipEventException( const Processor* proc ) {
-    message = proc->name() ;
+  
+  //--------------------------------------------------------------------------
+  
+  Exception::Exception( unsigned int line, const std::string &func, const std::string &fname, const std::string &message ) :
+    _message(createMessage(line, func, fname, message)) {
+    /* nop */
   }
-
-  StopProcessingException::StopProcessingException( const Processor* proc ) {
-    message = proc->name() ;
+  
+  //--------------------------------------------------------------------------
+  
+  const char* Exception::what() const noexcept {
+    return _message.c_str() ;
   }
-
-  RewindDataFilesException::RewindDataFilesException( const Processor* proc ) {
-    message = proc->name() ;
+  
+  //--------------------------------------------------------------------------
+  
+  std::string Exception::createMessage( unsigned int line, const std::string &func, const std::string &fname, const std::string &message ) const {
+    return fname + " (l." + std::to_string(line) + ") in " + func + ": " + message ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  std::string Exception::createMessage( const std::string &previous, unsigned int line, const std::string &func, const std::string &fname, const std::string &message ) const {
+    if( previous.empty() ) {
+      return createMessage(line, func, fname, message) ;
+    }
+    else {
+      return previous + "\n" + createMessage(line, func, fname, message) ;
+    }
   }
 
 }
