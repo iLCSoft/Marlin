@@ -8,6 +8,7 @@
 #include <sstream>
 #include <typeinfo>
 #include <chrono>
+#include <vector>
 
 // -- marlin headers
 #include <marlin/Exceptions.h>
