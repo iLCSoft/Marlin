@@ -7,6 +7,7 @@
 #include <sstream>
 #include <typeinfo>
 #include <memory>
+#include <vector>
 
 // -- marlin headers
 #include <marlin/Utils.h>
@@ -367,13 +368,13 @@ namespace marlin {
   template <typename T>
   inline const std::string ParameterT<T>::type() const {
     // make this human readable
-    if     ( typeid( _value ) == typeid( EVENT::IntVec    )) return "IntVec" ;
-    else if( typeid( _value ) == typeid( EVENT::FloatVec  )) return "FloatVec" ;
-    else if( typeid( _value ) == typeid( EVENT::StringVec )) return "StringVec" ;
+    if     ( typeid( _value ) == typeid( std::vector<int> )) return "IntVec" ;
+    else if( typeid( _value ) == typeid( std::vector<float>  )) return "FloatVec" ;
+    else if( typeid( _value ) == typeid( std::vector<std::string> )) return "StringVec" ;
     else if( typeid( _value ) == typeid( int   )) return "int" ;
     else if( typeid( _value ) == typeid( float )) return "float" ;
     else if( typeid( _value ) == typeid( double )) return "double" ;
-    else if( typeid( _value ) == typeid(std::string) ) return "string" ;
+    else if( typeid( _value ) == typeid( std::string ) ) return "string" ;
     else if( typeid( _value ) == typeid( bool ) ) return "bool";
     else return typeid( _value ).name() ;
   }
