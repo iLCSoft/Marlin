@@ -10,27 +10,7 @@ INCLUDE_DIRECTORIES( BEFORE "${PROJECT_BINARY_DIR}" ) # generated MarlinConfig.h
 
 # install header files
 FILE( GLOB marlin_headers RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" ./include/marlin/*.h ./tinyxml/include/marlin/*.h ./include/marlin/concurrency/*.h )
-
-IF( NOT MARLIN_AIDA )
-    LIST( REMOVE_ITEM marlin_headers ./include/marlin/AIDAProcessor.h )
-ENDIF()
-
-IF( NOT MARLIN_CLHEP )
-    LIST( REMOVE_ITEM marlin_headers
-        ./include/marlin/IFourVectorSmearer.h
-        ./include/marlin/SimpleClusterSmearer.h
-        ./include/marlin/SimpleParticleFactory.h
-        ./include/marlin/SimpleTrackSmearer.h
-    )
-ENDIF()
-
 INSTALL( FILES ${marlin_headers} DESTINATION include/marlin )
-
-
-
-# require proper c++
-#ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
-#ADD_DEFINITIONS( "-Wno-long-long" )
 
 IF( ROOT_FOUND )
   ADD_DEFINITIONS( "${ROOT_DEFINITIONS}" )
@@ -50,6 +30,9 @@ AUX_SOURCE_DIRECTORY( ./src/concurrency library_sources )
 AUX_SOURCE_DIRECTORY( ./tinyxml/src tinyxml_sources )
 IF( NOT MARLIN_DD4HEP )
     LIST( REMOVE_ITEM library_sources ./src/plugins/DD4hepGeometry.cc )
+ENDIF()
+IF( NOT MARLIN_GEAR )
+    LIST( REMOVE_ITEM library_sources ./src/plugins/GearGeometry.cc )
 ENDIF()
 INCLUDE_DIRECTORIES( SYSTEM tinyxml/include )
 

@@ -27,34 +27,13 @@ INCLUDE( ilcsoft_default_settings )
 # required packages
 FIND_PACKAGE( Threads REQUIRED )
 FIND_PACKAGE( LCIO REQUIRED )
-FIND_PACKAGE( GEAR REQUIRED )
 
 # export Marlin_DEPENDS_INCLUDE_DIRS to MarlinConfig.cmake
-SET( Marlin_DEPENDS_INCLUDE_DIRS ${LCIO_INCLUDE_DIRS} ${GEAR_INCLUDE_DIRS} ${streamlog_INCLUDE_DIRS} )
-SET( Marlin_DEPENDS_LIBRARY_DIRS ${LCIO_LIBRARY_DIRS} ${GEAR_LIBRARY_DIRS} ${streamlog_LIBRARY_DIRS} )
-SET( Marlin_DEPENDS_LIBRARIES ${LCIO_LIBRARIES} ${GEAR_LIBRARIES} ${streamlog_LIBRARIES} )
+SET( Marlin_DEPENDS_INCLUDE_DIRS ${LCIO_INCLUDE_DIRS} ${streamlog_INCLUDE_DIRS} )
+SET( Marlin_DEPENDS_LIBRARY_DIRS ${LCIO_LIBRARY_DIRS} ${streamlog_LIBRARY_DIRS} )
+SET( Marlin_DEPENDS_LIBRARIES ${LCIO_LIBRARIES} ${streamlog_LIBRARIES} )
 
 INCLUDE_DIRECTORIES( SYSTEM ${Marlin_DEPENDS_INCLUDE_DIRS} )
-
-# WARNING: Kept for backward compatibility only
-SET( MARLIN_AIDA OFF )
-# OPTION( MARLIN_AIDA "Set to ON to build Marlin with AIDA" OFF )
-# IF( MARLIN_AIDA )
-#     FIND_PACKAGE( AIDA )
-#     IF( NOT AIDA_FOUND )
-#         MESSAGE( SEND_ERROR "AIDA not found. Please set MARLIN_AIDA to OFF or AIDA_DIR=/path/to/AIDA" )
-#     ENDIF()
-# ENDIF()
-
-
-OPTION( MARLIN_CLHEP "Set to ON to build Marlin with CLHEP" ON )
-IF( MARLIN_CLHEP )
-    FIND_PACKAGE( CLHEP )
-    IF( NOT CLHEP_FOUND )
-        MESSAGE( SEND_ERROR "CLHEP not found. Please set MARLIN_CLHEP to OFF or CLHEP_DIR=/path/to/CLHEP" )
-    ENDIF()
-ENDIF()
-
 
 OPTION( MARLIN_DD4HEP "Set to ON to build Marlin with DD4hep" ON )
 IF( MARLIN_DD4HEP )
@@ -68,8 +47,16 @@ IF( MARLIN_DD4HEP )
     ENDIF()
 ENDIF()
 
+OPTION( MARLIN_GEAR "Set to ON to build Marlin with Gear" OFF )
+IF( MARLIN_GEAR )
+    FIND_PACKAGE( GEAR REQUIRED )
+    IF( NOT GEAR_FOUND )
+        MESSAGE( SEND_ERROR "GEAR not found. Please set MARLIN_GEAR to OFF or GEAR_DIR=/path/to/GEAR" )
+    ENDIF()
+ENDIF()
 
-FOREACH( pkg AIDA CLHEP DD4hep ROOT )
+
+FOREACH( pkg GEAR DD4hep ROOT )
     IF( ${pkg}_FOUND )
         INCLUDE_DIRECTORIES( SYSTEM ${${pkg}_INCLUDE_DIRS} )
     ENDIF()

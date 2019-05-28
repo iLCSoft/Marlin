@@ -8,8 +8,7 @@
 
 #define MARLIN_VERSION_GE( MAJV , MINV , PLEV )  ( (MARLIN_MAJOR_VERSION > MAJV) || ( (MARLIN_MAJOR_VERSION == MAJV) && (MARLIN_MINOR_VERSION > MINV) ) || ( (MARLIN_MAJOR_VERSION == MAJV) && (MARLIN_MINOR_VERSION == MINV) && (MARLIN_PATCH_LEVEL >= PLEV) ) )
 
-#cmakedefine MARLIN_AIDA
-#cmakedefine MARLIN_CLHEP
+#cmakedefine MARLIN_GEAR
 #cmakedefine MARLIN_DD4HEP
 
 #endif // MarlinConfig_h
