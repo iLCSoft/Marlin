@@ -10,7 +10,7 @@ Marlin can also be compiled with optional packages to enable additional componen
 
 - [Gear](https://github.com/iLCSoft/gear): The old geometry package for linear colliders (deprecated)
 - [DD4hep](https://github.com/AIDASoft/DD4hep): The new geometry package for high energy physics
-- [Qt](www.qt.io): To build the Marlin graphical user interface
+- [Qt](http://www.qt.io): To build the Marlin graphical user interface
 
 ## Installation order
 
