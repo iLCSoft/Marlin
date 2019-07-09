@@ -118,6 +118,10 @@ void LCIOOutputProcessor::init() {
     
     _lcWrt = LCFactory::getInstance()->createLCWriter() ;
   }
+  
+  if( parameterSet("CompressionLevel") ) {
+    _lcWrt->setCompressionLevel( _compressionLevel ) ;
+  }
 
 
   if( _lcioWriteMode == "WRITE_APPEND" ) {
@@ -130,10 +134,6 @@ void LCIOOutputProcessor::init() {
   }
   else {
     _lcWrt->open( _lcioOutputFile ) ;
-  }
-  
-  if( parameterSet("CompressionLevel") ) {
-    _lcWrt->setCompressionLevel( _compressionLevel ) ;
   }
 
 //   _lcWrt->writeRunHeader( new LCRunHeaderImpl ) ;
