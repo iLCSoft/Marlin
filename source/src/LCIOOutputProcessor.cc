@@ -95,6 +95,11 @@ namespace marlin{
 			       "will split output file if size in kB exceeds given value - doesn't work with APPEND and NEW"  ,
 			       _splitFileSizekB, 
 			       1992294 ) ;  // 1.9 GB in kB
+             
+    registerOptionalParameter( "CompressionLevel" , 
+			       "The ZLIB compression level on writing"  ,
+			       _compressionLevel, 
+			       _compressionLevel ) ;  // -1 by default
 
   }
 
@@ -125,6 +130,10 @@ void LCIOOutputProcessor::init() {
   }
   else {
     _lcWrt->open( _lcioOutputFile ) ;
+  }
+  
+  if( parameterSet("CompressionLevel") ) {
+    _lcWrt->setCompressionLevel( _compressionLevel ) ;
   }
 
 //   _lcWrt->writeRunHeader( new LCRunHeaderImpl ) ;
