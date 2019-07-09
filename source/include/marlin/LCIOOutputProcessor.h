@@ -103,6 +103,7 @@ namespace marlin{
     LCWriter* _lcWrt=NULL;
     int _nRun=-1;
     int _nEvt=-1;
+    int _compressionLevel{-1};
 
   private:
   
