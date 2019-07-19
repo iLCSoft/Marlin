@@ -220,6 +220,12 @@ namespace marlin{
 //      */
 //     ProcessorParameter* getProcessorParameter( const std::string name) ;
     
+    /** Initialize the parameters */
+    virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
+
+    /** Set processor name */
+    virtual void setName( const std::string & processorName) { _processorName = processorName ; }
+
   protected:
 
     /** Set the return value for this processor - typically at end of processEvent(). 
@@ -409,12 +415,6 @@ namespace marlin{
     
     /** Allow friend class CCProcessor to update processor parameters */
     virtual void updateParameters();
-
-    /** Set processor name */
-    virtual void setName( const std::string & processorName) { _processorName = processorName ; }
-    
-    /** Initialize the parameters */
-    virtual void setParameters( std::shared_ptr<StringParameters> parameters) ;
     
     /** Sets the registered steering parameters before calling init() 
      */
