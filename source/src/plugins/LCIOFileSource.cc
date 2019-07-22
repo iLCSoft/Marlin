@@ -25,6 +25,7 @@ namespace marlin {
    */
   class LCIOFileSource : public DataSourcePlugin {
     using FileReader = MT::LCReader ;
+    using FileReaderPtr = std::shared_ptr<FileReader> ;
 
   public:
     LCIOFileSource() ;
@@ -46,9 +47,11 @@ namespace marlin {
     ///< The LCIO file listener
     ReaderListener              _listener {} ;
     ///< The LCIO file reader
-    FileReader                  _fileReader {FileReader::directAccess} ;
+    FileReaderPtr               _fileReader {nullptr} ;
     ///< The current number of read records
     int                         _currentReadRecords {0} ;
+    ///< Whether to perform a lazy unpack of event
+    bool                        _lazyUnpack {false} ;
   };
 
   //--------------------------------------------------------------------------
@@ -78,21 +81,32 @@ namespace marlin {
       "An optional list of LCIO collections to read from event",
       _readCollectionNames,
       EVENT::StringVec()) ;
+      
+    registerParameter( "LazyUnpack",
+      "Set to true to perform a lazy unpacking after reading out an event",
+      _lazyUnpack,
+      false) ;
+      
   }
 
   //--------------------------------------------------------------------------
 
   void LCIOFileSource::init() {
+    auto flag = FileReader::directAccess ;
+    if( _lazyUnpack ) {
+      flag |= FileReader::lazyUnpack ;
+    }
+    _fileReader = std::make_shared<FileReader>( flag ) ;
     _listener.onRunHeaderRead( std::bind( &LCIOFileSource::processRunHeader, this, _1 ) ) ;
     _listener.onEventRead( std::bind( &LCIOFileSource::processEvent, this, _1 ) ) ;
 
     if( _inputFileNames.empty() ) {
       throw Exception( "LCIOFileSource::init: LCIO input file list is empty" ) ;
     }
-    _fileReader.open( _inputFileNames ) ;
+    _fileReader->open( _inputFileNames ) ;
     if ( _skipNEvents > 0 ) {
       logger()->log<WARNING>() << " --- Will skip first " << _skipNEvents << " event(s)" << std::endl ;
-      _fileReader.skipNEvents( _skipNEvents ) ;
+      _fileReader->skipNEvents( _skipNEvents ) ;
     }
     if ( not _readCollectionNames.empty() ) {
       logger()->log<WARNING>()
@@ -103,7 +117,7 @@ namespace marlin {
       }
       logger()->log<WARNING>()
         << " *************************************************************************************************** " << std::endl ;
-      _fileReader.setReadCollectionNames( _readCollectionNames ) ;
+      _fileReader->setReadCollectionNames( _readCollectionNames ) ;
     }
   }
 
@@ -111,7 +125,7 @@ namespace marlin {
 
   bool LCIOFileSource::readOne() {
     try {
-      _fileReader.readNextRecord( &_listener ) ;
+      _fileReader->readNextRecord( &_listener ) ;
       ++_currentReadRecords ;
       if( (_maxRecordNumber > 0) and (_currentReadRecords >= _maxRecordNumber) ) {
         return false ;
