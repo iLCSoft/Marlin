@@ -49,6 +49,14 @@ TARGET_LINK_LIBRARIES( Marlin ${CMAKE_DL_LIBS} MarlinXML ${Marlin_DEPENDS_LIBRAR
   ${AIDA_LIBRARIES} ${CLHEP_LIBRARIES} ${LCCD_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}
   ${DD4hep_LIBRARIES} ${DD4hep_COMPONENT_LIBRARIES} ${ROOT_LIBRARIES}  )
 
+
+# ----- MarlinShellCompletion executable ----------------------------------------------------
+ADD_EXECUTABLE( bin_MarlinShellCompletion ./main/MarlinShellCompletion.cc )
+SET_TARGET_PROPERTIES( bin_MarlinShellCompletion PROPERTIES OUTPUT_NAME MarlinShellCompletion )
+TARGET_LINK_LIBRARIES( bin_MarlinShellCompletion Marlin )
+INSTALL( TARGETS bin_MarlinShellCompletion DESTINATION bin )
+# ----------------------------------------------------------------------------
+
 # ----- MarlinDumpPlugins executable ----------------------------------------------------
 ADD_EXECUTABLE( bin_MarlinDumpPlugins ./main/MarlinDumpPlugins.cc )
 SET_TARGET_PROPERTIES( bin_MarlinDumpPlugins PROPERTIES OUTPUT_NAME MarlinDumpPlugins )
