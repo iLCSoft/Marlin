@@ -22,6 +22,15 @@ namespace marlin{
 
     XMLParser::~XMLParser(){
     }
+    
+    std::vector<std::string> XMLParser::getSections() const {
+      std::vector<std::string> sections {};
+      sections.reserve( _map.size() ) ;
+      for( auto iter : _map ) {
+        sections.push_back( iter.first ) ;
+      }
+      return sections ;
+    }
 
     void XMLParser::parse(){
 

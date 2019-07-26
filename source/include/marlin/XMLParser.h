@@ -163,6 +163,8 @@ namespace marlin{
     
     /** Write the parsed XML tree in an other file */
     void write(const std::string &filen) const ;
+    
+    std::vector<std::string> getSections() const ;
   protected:
 
     /** Extracts all parameters from the given node and adss them to the current StringParameters object
