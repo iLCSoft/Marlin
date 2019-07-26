@@ -71,8 +71,6 @@ namespace marlin{
             for ( auto cst : constants ) {
               constantsParameters->add( cst.first, cst.second ) ;
             }
-        } else {
-          std::cout << "XMLParser::parse : no <constants/> section found in " << _fileName << std::endl ;
         }
 
         processIncludeElements( root , constants ) ;
