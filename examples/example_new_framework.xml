@@ -4,6 +4,7 @@
   <execute>
     <processor name="Status"/>
     <processor name="CPUCrunch"/>
+    <processor name="MyDumpEvent"/>
   </execute>
 
   <global>
@@ -19,21 +20,28 @@
     </parameter>
     <parameter name="MaxRecordNumber" value="0"/>
     <parameter name="SkipNEvents" value="0"/>
+    <parameter name="LazyUnpack" value="false"/>
   </datasource>
 
-  <geometry type="GearGeometry">
+  <!-- <geometry type="GearGeometry">
     <parameter name="GearFile"> test/testmarlin/gear_ILD_00.xml </parameter>
     <parameter name="DumpGeometry"> false </parameter>
-  </geometry>
+  </geometry> -->
+  
+  <geometry type="EmptyGeometry" />
 
   <!-- <geometry type="DD4hepGeometry">
-    <parameter name="CompactFile"> /afs/desy.de/project/ilcsoft/sw/x86_64_gcc54_ub1604/v02-00-01/lcgeo/v00-16-01/ILD/compact/ILD_l5_v02/ILD_l5_v02.xml </parameter>
+    <parameter name="CompactFile"> /home/eteremi/soft/lcgeo/ILD/compact/ILD_l5_v02/ILD_l5_v02.xml </parameter>
     <parameter name="DumpGeometry"> false </parameter>
   </geometry> -->
 
+  <processor name="MyDumpEvent" type="DumpEvent" clone="true" critical="false">
+    <parameter name="DumpDetailed"> true </parameter>
+  </processor>
+
   <processor name="CPUCrunch" type="CPUCrunching" clone="false" critical="false">
-    <parameter name="CrunchTime"> 3000 </parameter>
-    <parameter name="CrunchSigma"> 0 </parameter>
+    <parameter name="CrunchTime"> 200 </parameter>
+    <parameter name="CrunchSigma"> 100 </parameter>
   </processor>
 
   <processor name="Status" type="Statusmonitor" clone="false">
