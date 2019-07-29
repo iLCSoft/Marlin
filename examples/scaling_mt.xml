@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<marlin>
+  <execute>
+    <processor name="Status"/>
+    <processor name="CPUCrunch"/>
+  </execute>
+
+  <global>
+    <parameter name="Verbosity"> MESSAGE </parameter>
+    <parameter name="Concurrency"> 10 </parameter>
+    <parameter name="ColoredConsole"> 0 </parameter>
+  </global>
+
+  <datasource type="LCIO">
+    <parameter name="LCIOInputFiles">
+      
+    </parameter>
+    <parameter name="MaxRecordNumber" value="0"/>
+    <parameter name="SkipNEvents" value="0"/>
+    <parameter name="LazyUnpack" value="false"/>
+  </datasource>
+
+  
+  <geometry type="EmptyGeometry" />
+
+  <processor name="CPUCrunch" type="CPUCrunching" clone="false" critical="false">
+    <parameter name="CrunchTime"> 200 </parameter>
+    <parameter name="CrunchSigma"> 100 </parameter>
+  </processor>
+
+  <processor name="Status" type="Statusmonitor" clone="false">
+    <parameter name="Verbosity"> MESSAGE </parameter>
+  </processor>
+
+
+</marlin>
