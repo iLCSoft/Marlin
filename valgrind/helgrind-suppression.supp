@@ -1,0 +1,32 @@
+# Valgrind error suppression file
+# To be used while running helgrind with MarlinMT
+# Author: R. Ete, DESY
+# Date: 08/2019
+
+{
+   std::shared_ptr destructor
+   Helgrind:Race
+   fun:~__shared_count
+}
+
+{
+   std::future_base atomic state 
+   Helgrind:Race
+   fun:_ZNSt13__future_base13_State_baseV2D1Ev
+   fun:_M_release
+   fun:~__shared_count
+}
+
+{
+   WorkerOutput destructor with std::shared_ptr
+   Helgrind:Race
+   obj:*/libstdc++.so*
+   fun:~WorkerOutput
+   fun:~_Result
+}
+
+
+
+
+
+
