@@ -25,54 +25,50 @@ using namespace marlin ;
  */
 namespace marlin {
 
-class EventSelector : public Processor, public marlin::EventModifier {
-  
-  typedef std::set< std::pair< int, int > > SET ;
+  class EventSelector : public Processor, public marlin::EventModifier {
 
- public:
-  
-  virtual Processor*  newProcessor() { return new EventSelector ; }
-  
-  
-  EventSelector() ;
-  
-  /** Called at the begin of the job before anything is read.
-   * Use to initialize the processor, e.g. book histograms.
-   */
-  virtual void init() ;
-  
-  /** Called for every run.
-   */
-  virtual void processRunHeader( LCRunHeader* run ) ;
-  
-  /** Called for every event - the working horse.
-   */
-  virtual void processEvent( LCEvent * evt ) ; 
-  
-  
-  virtual void check( LCEvent * evt ) ; 
-  
-  
-  virtual void modifyEvent( LCEvent *evt ) ;
-  
-  
-  /** Called after data processing for clean up.
-   */
-  virtual void end() ;
-  
-  virtual const std::string & name() const { return Processor::name() ; }
-  
-  
- protected:
+    typedef std::set< std::pair< int, int > > SET ;
 
-  /** Input collection name.
-   */
-  IntVec _evtList{};
-  SET _evtSet{};
+  public:
 
-  int _nRun=-1;
-  int _nEvt=-1;
-} ;
+    virtual Processor*  newProcessor() { return new EventSelector ; }
+
+    EventSelector() ;
+
+    /** Called at the begin of the job before anything is read.
+     * Use to initialize the processor, e.g. book histograms.
+     */
+    virtual void init() ;
+
+    /** Called for every run.
+     */
+    virtual void processRunHeader( LCRunHeader* run ) ;
+
+    /** Called for every event - the working horse.
+     */
+    virtual void processEvent( LCEvent * evt ) ;
+
+    virtual void check( LCEvent * evt ) ;
+
+    virtual void modifyEvent( LCEvent *evt ) ;
+
+    /** Called after data processing for clean up.
+     */
+    virtual void end() ;
+
+    virtual const std::string & name() const { return Processor::name() ; }
+
+
+  protected:
+
+    /** Input collection name.
+     */
+    IntVec _evtList{};
+    SET _evtSet{};
+
+    int _nRun=-1;
+    int _nEvt=-1;
+  } ;
 
 } // namespace marlin
 
