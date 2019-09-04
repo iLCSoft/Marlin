@@ -23,6 +23,7 @@ using namespace marlin ;
  * @author F. Gaede, DESY
  * @version $Id:$ 
  */
+namespace marlin {
 
 class EventSelector : public Processor, public marlin::EventModifier {
   
@@ -72,6 +73,8 @@ class EventSelector : public Processor, public marlin::EventModifier {
   int _nRun=-1;
   int _nEvt=-1;
 } ;
+
+} // namespace marlin
 
 #endif
 
