@@ -43,6 +43,11 @@ namespace marlin {
   	// modify processor description
   	_description = "Simple processor to dump an event" ;
 
+    registerProcessorParameter("DumpDetailed" , 
+  			     "Whether to make a deteiled dump of the event" ,
+  			     _dumpDetailed,
+  			     _dumpDetailed );
+             
     // duplicate and don't lock. Anyway, this processor in MT mode doesn't make sense...    
     forceRuntimeOption( Processor::RuntimeOption::Critical, false ) ;
     forceRuntimeOption( Processor::RuntimeOption::Clone, true ) ;
