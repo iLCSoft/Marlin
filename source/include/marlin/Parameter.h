@@ -436,8 +436,10 @@ namespace marlin {
 
   template <typename T>
   inline T Parametrized::getParameter( const std::string& name ) const {
-    checkForExistingParameter( name ) ;
     auto parameter = _parameters.find( name ) ;
+    if (parameter == _parameters.end() ) {
+      throw Exception( "Parameter " + name + " not found!" ) ;
+    }
     auto parameterT = std::static_pointer_cast<ParameterT<T>>( parameter->second ) ;
     if ( nullptr == parameterT ) {
       throw Exception( "Wrong parameter cast !" ) ;
