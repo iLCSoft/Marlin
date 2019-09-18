@@ -442,7 +442,7 @@ namespace marlin {
     if ( nullptr == parameterT ) {
       throw Exception( "Wrong parameter cast !" ) ;
     }
-    return (parameterT->isSet() ? parameterT->valueT() : parameterT->defaultValueT() ) ;
+    return (parameterT->valueSet() ? parameterT->valueT() : parameterT->defaultValueT() ) ;
   }
 
 } // end namespace marlin
