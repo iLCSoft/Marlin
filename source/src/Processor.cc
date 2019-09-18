@@ -135,6 +135,7 @@ namespace marlin {
     _logger = app().createLogger( name() ) ;
     log<DEBUG2>() << "Creating logger for processor " << name() << std::endl ;
     if( parameterSet("Verbosity") ) {
+      _logLevelName = getParameter<std::string>("Verbosity") ;
       _logger->setLevel( _logLevelName ) ;
     }
     log<DEBUG2>() << "Processor " << name() << ": init ..." << std::endl ;
