@@ -331,6 +331,186 @@ namespace marlin {
     LCIOTypeMap                        _outTypeMap {} ;
   };
 
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+
+  /**
+   *  @brief  PropertyBase template class.
+   *          Base class for property registration, e.g , for processors
+   */
+  template <typename T>
+  class PropertyBase {
+  protected:
+    /// Default constructor
+    PropertyBase() = default ;
+    /// Default copy constructor
+    PropertyBase( const PropertyBase & ) = default ;
+    /// Default assignement operator
+    PropertyBase &operator=( const PropertyBase & ) = default ;
+    /// Default destructor
+    ~PropertyBase() = default ;
+
+  public:    
+    /// Type conversion function
+    inline operator T() const {
+      return _valueT ;
+    }
+    /// Value getter
+    inline const T &get() const {
+      return _valueT ;
+    }
+    
+  protected:
+    /// The property variable
+    T                    _valueT {} ;
+  };
+  
+  //--------------------------------------------------------------------------
+  
+  template <typename T>
+  inline std::ostream &operator <<( std::ostream &stream, const PropertyBase<T> &rhs ) {
+    stream << rhs.get() ;
+    return stream ;
+  }
+  
+  //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+  
+  /**
+   *  @brief  Property template class.
+   *          Declare a simple (scalar, vector, etc ...) property
+   */
+  template <typename T>
+  class Property : public PropertyBase<T> {
+  public:
+    /// Deleted constructor
+    Property() = delete ;
+    /// Default copy constructor
+    Property( const Property<T> & ) = default ;
+    /// Default assignement operator
+    Property<T> &operator=( const Property<T> & ) = default ;
+    /// Default destructor
+    ~Property() = default ;
+    
+    /// Assignement operator
+    inline Property<T> &operator= ( const T &rhs ) {
+      PropertyBase<T>::_valueT = rhs ;
+      return *this ;
+    }
+    
+  public:
+    /// Simple parameter property constructor with default value
+    template <class S>
+    inline Property( S *owner, const std::string &nam, const std::string &desc, const T &def ) {
+      owner->registerParameter( nam, desc, PropertyBase<T>::_valueT, def, false ) ;
+    }
+    
+    /// Simple parameter property constructor without default value
+    template <class S>
+    inline Property( S *owner, const std::string &nam, const std::string &desc ) {
+      owner->registerParameter( nam, desc, PropertyBase<T>::_valueT, T(), false ) ;
+    }
+  };
+  
+  //--------------------------------------------------------------------------
+  
+  /**
+   *  @brief  OptionalProperty template class.
+   *          Declare a simple (scalar, vector, etc ...) property with the flag 'optional'
+   */
+  template <typename T>
+  class OptionalProperty : public PropertyBase<T> {
+  public:
+    /// Deleted constructor
+    OptionalProperty() = delete ;
+    /// Default copy constructor
+    OptionalProperty( const OptionalProperty<T> & ) = default ;
+    /// Default assignement operator
+    OptionalProperty<T> &operator=( const OptionalProperty<T> & ) = default ;
+    /// Default destructor
+    ~OptionalProperty() = default ;
+    
+    /// Assignement operator
+    inline OptionalProperty<T> &operator= ( const T &rhs ) {
+      PropertyBase<T>::_valueT = rhs ;
+      return *this ;
+    }
+  public:
+    /// Simple parameter property constructor with default value
+    template <class S>
+    inline OptionalProperty( S *owner, const std::string &nam, const std::string &desc, const T &def ) {
+      owner->registerParameter( nam, desc, PropertyBase<T>::_valueT, def, true ) ;
+    }
+    
+    /// Simple parameter property constructor without default value
+    template <class S>
+    inline OptionalProperty( S *owner, const std::string &nam, const std::string &desc ) {
+      owner->registerParameter( nam, desc, PropertyBase<T>::_valueT, T(), true ) ;
+    }
+  };
+
+  //--------------------------------------------------------------------------
+  
+  /**
+   *  @brief  InputCollectionProperty class.
+   *          Declare a LCIO input collection property
+   */
+  class InputCollectionProperty : public PropertyBase<std::string> {
+  public:
+    /// Constructor with default value
+    template <class S>
+    inline InputCollectionProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc, const std::string &def ) {
+      owner->registerInputCollection( typ, nam, desc, PropertyBase<std::string>::_valueT, def ) ;
+    }
+    
+    /// Constructor without default value
+    template <class S>
+    inline InputCollectionProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc ) {
+      owner->registerInputCollection( typ, nam, desc, PropertyBase<std::string>::_valueT, {} ) ;
+    }
+  };
+  
+  //--------------------------------------------------------------------------
+  
+  /**
+   *  @brief  InputCollectionsProperty class.
+   *          Declare a LCIO input collections property
+   */
+  class InputCollectionsProperty : public PropertyBase<std::vector<std::string>> {
+  public:
+    /// Constructor with default value
+    template <class S>
+    inline InputCollectionsProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc, const std::vector<std::string> &def ) {
+      owner->registerInputCollections( typ, nam, desc, PropertyBase<std::vector<std::string>>::_valueT, def ) ;
+    }
+    
+    /// Constructor without default value
+    template <class S>
+    inline InputCollectionsProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc ) {
+      owner->registerInputCollections( typ, nam, desc, PropertyBase<std::vector<std::string>>::_valueT, {} ) ;
+    }
+  };
+  
+  //--------------------------------------------------------------------------
+
+  /**
+   *  @brief  OutputCollectionProperty class.
+   *          Declare a LCIO output collection property
+   */
+  class OutputCollectionProperty : public PropertyBase<std::string> {
+  public:
+    /// Constructor with default value
+    template <class S>
+    inline OutputCollectionProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc, const std::string &def ) {
+      owner->registerOutputCollection( typ, nam, desc, PropertyBase<std::string>::_valueT, def ) ;
+    }
+    
+    /// Constructor without default value
+    template <class S>
+    inline OutputCollectionProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc ) {
+      owner->registerOutputCollection( typ, nam, desc, PropertyBase<std::string>::_valueT, {} ) ;
+    }
+  };
 
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
