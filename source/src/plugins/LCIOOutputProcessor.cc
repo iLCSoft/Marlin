@@ -4,12 +4,11 @@
 
 // -- lcio headers
 #include <lcio.h>
-#include <IO/LCWriter.h>
+#include <MT/LCWriter.h>
 #include <IMPL/LCRunHeaderImpl.h>
 #include <UTIL/LCTOOLS.h>
 #include <EVENT/LCCollection.h>
 #include <IMPL/LCCollectionVec.h>
-#include <UTIL/LCSplitWriter.h>
 
 // -- std headers
 #include <iostream>
@@ -52,6 +51,7 @@ namespace marlin {
   class LCIOOutputProcessor : public Processor {
   private:
     typedef std::vector< IMPL::LCCollectionVec* > SubSetVec ;
+    typedef std::shared_ptr<MT::LCWriter> Writer ;
 
   public:
     LCIOOutputProcessor() ;
@@ -83,22 +83,34 @@ namespace marlin {
      *  DropCollectionTypes. 
      */
     void dropCollections( EVENT::LCEvent * evt ) ;
+    
+    
+  private:
+    std::set<std::string> getWriteCollections( EVENT::LCEvent * evt ) const ;
 
   private:
-    // processor parameters
-    std::string           _lcioOutputFile {""} ;
-    std::string           _lcioWriteMode {""} ;
-    EVENT::StringVec      _dropCollectionNames {} ;
-    EVENT::StringVec      _dropCollectionTypes {} ;
-    EVENT::StringVec      _keepCollectionNames {} ;
-    EVENT::StringVec      _fullSubsetCollections {} ;
-    int                   _splitFileSizekB {1992294} ; // 1.9 GB in kB
+    Property<std::string> _lcioOutputFile {this, "LCIOOutputFile", 
+             "Name of the LCIO output file", "outputfile.slcio" } ;
+    
+    Property<std::string> _lcioWriteMode {this, "LCIOWriteMode",
+             "Write mode for output file:  WRITE_APPEND, WRITE_NEW or None", "None" } ;
+
+    OptionalProperty<std::vector<std::string>> _dropCollectionNames {this, "DropCollectionNames" , 
+             "drops the named collections from the event", {"TPCHits", "HCalHits"} } ; 
+    
+    OptionalProperty<std::vector<std::string>> _dropCollectionTypes {this, "DropCollectionTypes" , 
+             "drops all collections of the given type from the event", {"SimTrackerHit", "SimCalorimeterHit"} } ; 
+    
+    OptionalProperty<std::vector<std::string>> _keepCollectionNames {this, "KeepCollectionNames" , 
+             "force keep of the named collections - overrules DropCollectionTypes (and DropCollectionNames)", {"MyPreciousSimTrackerHits"} } ; 
+    
+    // OptionalProperty<int> _splitFileSizekB {this, "SplitFileSizekB" , 
+    //          "will split output file if size in kB exceeds given value - doesn't work with APPEND and NEW", 1992294 } ;
 
     // runtime members
-    SubSetVec             _subSets{} ;
-    IO::LCWriter         *_lcWrt {nullptr} ;
-    int                   _nRun {0} ;
-    int                   _nEvt {0} ;
+    Writer                _writer {nullptr} ;
+    std::atomic<int>      _nRuns {0} ;
+    std::atomic<int>      _nEvents {0} ;
   };
   
   //--------------------------------------------------------------------------
@@ -106,61 +118,9 @@ namespace marlin {
 
   LCIOOutputProcessor::LCIOOutputProcessor() : 
     Processor("LCIOOutputProcessor") {
-      
-    _description = "Writes the current event to the specified LCIO outputfile."
-      " Needs to be the last ActiveProcessor." ;
-    
-    registerProcessorParameter( "LCIOOutputFile" , 
-				" name of output file "  ,
-				_lcioOutputFile ,
-				std::string("outputfile.slcio") ) ;
-    
-    registerProcessorParameter( "LCIOWriteMode" , 
-				"write mode for output file:  WRITE_APPEND, WRITE_NEW or None"  ,
-				_lcioWriteMode ,
-				std::string("None") ) ;
-
-    EVENT::StringVec dropNamesExamples ;
-    dropNamesExamples.push_back("TPCHits");
-    dropNamesExamples.push_back("HCalHits");
-
-    registerOptionalParameter( "DropCollectionNames" , 
- 			       "drops the named collections from the event"  ,
- 			       _dropCollectionNames ,
- 			       dropNamesExamples ) ;
-    
-    EVENT::StringVec dropTypesExample ;
-    dropTypesExample.push_back("SimTrackerHit");
-    dropTypesExample.push_back("SimCalorimeterHit");
-    
-    registerOptionalParameter( "DropCollectionTypes" , 
-			       "drops all collections of the given type from the event"  ,
-			       _dropCollectionTypes ,
-			       dropTypesExample ) ;
-    
-    EVENT::StringVec keepNamesExample ;
-    keepNamesExample.push_back("MyPreciousSimTrackerHits");
-
-    registerOptionalParameter( "KeepCollectionNames" , 
-			       "force keep of the named collections - overrules DropCollectionTypes (and DropCollectionNames)"  ,
-			       _keepCollectionNames ,
-			       keepNamesExample ) ;
-
-    EVENT::StringVec fullSubsetExample ;
-    fullSubsetExample.push_back("MCParticlesSkimmed");
-
-    registerOptionalParameter( "FullSubsetCollections" , 
-			       " write complete objects in subset collections to the file (i.e. ignore subset flag)"  ,
-			       _fullSubsetCollections ,
-			       fullSubsetExample ) ;
-
-    registerOptionalParameter( "SplitFileSizekB" , 
-			       "will split output file if size in kB exceeds given value - doesn't work with APPEND and NEW"  ,
-			       _splitFileSizekB, 
-			       _splitFileSizekB ) ;
-                        
-    // make it thread-safe by using a lock
-    forceRuntimeOption( Processor::RuntimeOption::Critical, true ) ;
+    _description = "Writes the current event to the specified LCIO outputfile." ;    
+    // no lock, the writer implementation is thread safe
+    forceRuntimeOption( Processor::RuntimeOption::Critical, false ) ;
     // don't duplicate opening/writing of output file
     forceRuntimeOption( Processor::RuntimeOption::Clone, false ) ;
   }
@@ -168,123 +128,71 @@ namespace marlin {
   //--------------------------------------------------------------------------
 
   void LCIOOutputProcessor::init() {
-
     printParameters() ;
-
-    if (  parameterSet("SplitFileSizekB") ) {
-      _lcWrt = new UTIL::LCSplitWriter( IOIMPL::LCFactory::getInstance()->createLCWriter(), _splitFileSizekB*1024  ) ;
-    } 
-    else {
-      _lcWrt = IOIMPL::LCFactory::getInstance()->createLCWriter() ;
-    }
-
+    _writer = std::make_shared<Writer::element_type>() ;
     if ( _lcioWriteMode == "WRITE_APPEND" ) {  	 
-      _lcWrt->open( _lcioOutputFile , EVENT::LCIO::WRITE_APPEND ) ;
+      _writer->open( _lcioOutputFile , EVENT::LCIO::WRITE_APPEND ) ;
     }
     else if ( _lcioWriteMode == "WRITE_NEW" ) {
-      _lcWrt->open( _lcioOutputFile , EVENT::LCIO::WRITE_NEW ) ;
+      _writer->open( _lcioOutputFile , EVENT::LCIO::WRITE_NEW ) ;
     }
     else {
-      _lcWrt->open( _lcioOutputFile ) ;
+      _writer->open( _lcioOutputFile ) ;
     }
   }
   
   //--------------------------------------------------------------------------
 
   void LCIOOutputProcessor::processRunHeader( EVENT::LCRunHeader* run) { 
-    _lcWrt->writeRunHeader( run ) ;
-    _nRun++ ;
+    _writer->writeRunHeader( run ) ;
+    _nRuns++ ;
   }
   
   //--------------------------------------------------------------------------
 
-  void LCIOOutputProcessor::dropCollections( EVENT::LCEvent * evt ) {
-    const EVENT::StringVec*  colNames = evt->getCollectionNames() ;
-
-    // if all tracker hits are droped we don't store the hit pointers with the tracks below ...
-    bool trackerHitsDroped = false ;
-    bool calorimeterHitsDroped = false ;
-
-    if( parameterSet("DropCollectionTypes") ) {
-      if( std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end()
-		     , EVENT::LCIO::TRACKERHIT ) != _dropCollectionTypes.end() ) {
-	      trackerHitsDroped =  true ;
-      }
-      if( std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end()
-		     , EVENT::LCIO::CALORIMETERHIT )   != _dropCollectionTypes.end()  ) {
-	      calorimeterHitsDroped =  true ;
-      }
-    }      
-    
-    for( auto it = colNames->begin(); it != colNames->end() ; it++ ) {
-      
-      IMPL::LCCollectionVec*  col =  dynamic_cast<IMPL::LCCollectionVec*> (evt->getCollection( *it ) ) ;
-      
+  std::set<std::string> LCIOOutputProcessor::getWriteCollections( EVENT::LCEvent * evt ) const {
+    auto colNames = evt->getCollectionNames() ;
+    std::set<std::string> writeCollections {} ;
+    // loop over collections and collect the ones to actually write
+    for( auto colName : *colNames ) {
+      auto col = evt->getCollection( colName ) ;
       std::string collectionType  = col->getTypeName() ;
-      auto typeIter = std::find( _dropCollectionTypes.begin(), _dropCollectionTypes.end(), collectionType ) ;
-      auto nameIter = std::find( _dropCollectionNames.begin(), _dropCollectionNames.end(), *it ) ;
-      auto keepIter = std::find( _keepCollectionNames.begin(), _keepCollectionNames.end(), *it ) ;
-      auto subsetIter = std::find( _fullSubsetCollections.begin(), _fullSubsetCollections.end(), *it ) ;
-      
-      if ( parameterSet("DropCollectionTypes") && typeIter != _dropCollectionTypes.end() ) {
-	       col->setTransient( true ) ;
+      auto typeIter = std::find( _dropCollectionTypes.get().begin(), _dropCollectionTypes.get().end(), collectionType ) ;
+      auto nameIter = std::find( _dropCollectionNames.get().begin(), _dropCollectionNames.get().end(), colName ) ;
+      auto keepIter = std::find( _keepCollectionNames.get().begin(), _keepCollectionNames.get().end(), colName ) ;
+      if ( _dropCollectionTypes.isSet() && typeIter != _dropCollectionTypes.get().end() ) {
+         continue ;
       }
-      if ( parameterSet("DropCollectionNames") && nameIter != _dropCollectionNames.end() ) {	
-	       col->setTransient( true ) ;
+      if ( _dropCollectionNames.isSet() && nameIter != _dropCollectionNames.get().end() ) {	
+         continue ;
       }
-
-      if( parameterSet("KeepCollectionNames") && keepIter != _keepCollectionNames.end() ) {	
-	       col->setTransient( false ) ;
+      if( _keepCollectionNames.isSet() && keepIter != _keepCollectionNames.get().end() ) {	
+         continue ;
       }
-      if( parameterSet("FullSubsetCollections") && subsetIter != _fullSubsetCollections.end() ) {
-      	if( col->isSubset() ) {
-      	  col->setSubset( false ) ;
-      	  _subSets.push_back(col) ;
-      	}
-      }
-      // don't store hit pointers if hits are droped
-      if ( collectionType == EVENT::LCIO::TRACK && trackerHitsDroped ) {
-      	std::bitset<32> flag( col->getFlag() ) ;
-      	flag[ EVENT::LCIO::TRBIT_HITS ] = 0 ;
-       	col->setFlag( flag.to_ulong() ) ;
-      }
-      if(  collectionType == EVENT::LCIO::CLUSTER && calorimeterHitsDroped ) {
-      	std::bitset<32> flag( col->getFlag() ) ;
-      	flag[ EVENT::LCIO::CLBIT_HITS ] = 0 ;
-       	col->setFlag( flag.to_ulong() ) ;
-      }
+      writeCollections.insert( colName ) ;
     }
+    return writeCollections ;
   }
   
   //--------------------------------------------------------------------------
 
   void LCIOOutputProcessor::processEvent( EVENT::LCEvent * evt ) {
-    dropCollections( evt ) ;
-    _lcWrt->writeEvent( evt ) ;
-    // revert subset flag - if any 
-    for( auto sIt = _subSets.begin() ; 
-         sIt != _subSets.end() ;  ++sIt  ) {
-      
-      (*sIt)->setSubset( true ) ;
-    }
-    _subSets.clear() ;
-    _nEvt ++ ;
+    auto writeCols = getWriteCollections( evt ) ;
+    _writer->writeEvent( evt, writeCols ) ;
+    _nEvents ++ ;
   }
   
   //--------------------------------------------------------------------------
 
   void LCIOOutputProcessor::end() { 
-
     log<MESSAGE4>() << std::endl 
   			      << "LCIOOutputProcessor::end()  " << name() 
-  			      << ": " << _nEvt << " events in " << _nRun << " runs written to file  " 
-  			      <<  _lcioOutputFile  
+  			      << ": " << _nEvents.load() << " events in " << _nRuns.load() << " runs written to file  " 
+  			      <<  _lcioOutputFile
   			      << std::endl
   			      << std::endl ;
-    
-    _lcWrt->close() ;
-    delete _lcWrt;
-    _lcWrt = nullptr;
+    _writer->close() ;
+    _writer = nullptr ;
   }
 
   LCIOOutputProcessor anLCIOOutputProcessor ;
