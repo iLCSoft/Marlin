@@ -143,8 +143,13 @@ namespace marlin {
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
+  template <typename T>
+  class PropertyBase ;
+
   class Parametrized {
   public:
+    template <typename T>
+    friend class PropertyBase ;
     typedef std::shared_ptr<Parameter>            ParameterPtr ;
     typedef std::map<std::string, ParameterPtr>   ParameterMap ;
     typedef std::map<std::string, std::string>    LCIOTypeMap ;
@@ -321,6 +326,11 @@ namespace marlin {
      *  i.e. the type has been defined with setLCIOOutType().
      */
     void setLCIOOutType(const std::string& collectionName,  const std::string& lcioOutType) ;
+    
+    /**
+     *  @brief  Retrieve a parameter pointer in the internal map
+     */
+    ParameterPtr findParameter( const std::string& parameterName ) const ;
 
   private:
     ///< The parameter map
@@ -340,6 +350,9 @@ namespace marlin {
    */
   template <typename T>
   class PropertyBase {
+  public:
+    typedef std::shared_ptr<Parameter> ParameterPtr ;
+    
   protected:
     /// Default constructor
     PropertyBase() = default ;
@@ -359,10 +372,30 @@ namespace marlin {
     inline const T &get() const {
       return _valueT ;
     }
+    /// Whether a value was parsed and set
+    inline bool isSet() const {
+      return _parameter->valueSet() ;
+    }
+    /// Get the property name
+    inline const std::string &name() const {
+      return _parameter->name() ;
+    }
+    /// Get the property name
+    inline const std::string &description() const {
+      return _parameter->description() ;
+    }
+    
+  protected:
+    template <typename S>
+    inline void retrieveParameter( S *owner, const std::string &parameterName ) {
+      _parameter = owner->findParameter( parameterName ) ;
+    }
     
   protected:
     /// The property variable
     T                    _valueT {} ;
+    /// The internal parameter
+    ParameterPtr         _parameter {nullptr} ;
   };
   
   //--------------------------------------------------------------------------
@@ -371,6 +404,48 @@ namespace marlin {
   inline std::ostream &operator <<( std::ostream &stream, const PropertyBase<T> &rhs ) {
     stream << rhs.get() ;
     return stream ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  template <typename T, typename S>
+  inline bool operator ==( const PropertyBase<T> &lhs, const S &rhs ) {
+    return ( lhs.get() == rhs ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  template <typename T, typename S>
+  inline bool operator !=( const PropertyBase<T> &lhs, const S &rhs ) {
+    return ( lhs.get() != rhs ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  template <typename T, typename S>
+  inline bool operator <( const PropertyBase<T> &lhs, const S &rhs ) {
+    return ( lhs.get() < rhs ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  template <typename T, typename S>
+  inline bool operator <=( const PropertyBase<T> &lhs, const S &rhs ) {
+    return ( lhs.get() <= rhs ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  template <typename T, typename S>
+  inline bool operator >( const PropertyBase<T> &lhs, const S &rhs ) {
+    return ( lhs.get() > rhs ) ;
+  }
+  
+  //--------------------------------------------------------------------------
+  
+  template <typename T, typename S>
+  inline bool operator >=( const PropertyBase<T> &lhs, const S &rhs ) {
+    return ( lhs.get() >= rhs ) ;
   }
   
   //--------------------------------------------------------------------------
@@ -403,12 +478,14 @@ namespace marlin {
     template <class S>
     inline Property( S *owner, const std::string &nam, const std::string &desc, const T &def ) {
       owner->registerParameter( nam, desc, PropertyBase<T>::_valueT, def, false ) ;
+      PropertyBase<T>::retrieveParameter( owner, nam ) ;
     }
     
     /// Simple parameter property constructor without default value
     template <class S>
     inline Property( S *owner, const std::string &nam, const std::string &desc ) {
       owner->registerParameter( nam, desc, PropertyBase<T>::_valueT, T(), false ) ;
+      PropertyBase<T>::retrieveParameter( owner, nam ) ;
     }
   };
   
@@ -440,12 +517,14 @@ namespace marlin {
     template <class S>
     inline OptionalProperty( S *owner, const std::string &nam, const std::string &desc, const T &def ) {
       owner->registerParameter( nam, desc, PropertyBase<T>::_valueT, def, true ) ;
+      PropertyBase<T>::retrieveParameter( owner, nam ) ;
     }
     
     /// Simple parameter property constructor without default value
     template <class S>
     inline OptionalProperty( S *owner, const std::string &nam, const std::string &desc ) {
       owner->registerParameter( nam, desc, PropertyBase<T>::_valueT, T(), true ) ;
+      PropertyBase<T>::retrieveParameter( owner, nam ) ;
     }
   };
 
@@ -461,12 +540,14 @@ namespace marlin {
     template <class S>
     inline InputCollectionProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc, const std::string &def ) {
       owner->registerInputCollection( typ, nam, desc, PropertyBase<std::string>::_valueT, def ) ;
+      PropertyBase<std::string>::retrieveParameter( owner, nam ) ;
     }
     
     /// Constructor without default value
     template <class S>
     inline InputCollectionProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc ) {
       owner->registerInputCollection( typ, nam, desc, PropertyBase<std::string>::_valueT, {} ) ;
+      PropertyBase<std::string>::retrieveParameter( owner, nam ) ;
     }
   };
   
@@ -482,12 +563,14 @@ namespace marlin {
     template <class S>
     inline InputCollectionsProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc, const std::vector<std::string> &def ) {
       owner->registerInputCollections( typ, nam, desc, PropertyBase<std::vector<std::string>>::_valueT, def ) ;
+      PropertyBase<std::vector<std::string>>::retrieveParameter( owner, nam ) ;
     }
     
     /// Constructor without default value
     template <class S>
     inline InputCollectionsProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc ) {
       owner->registerInputCollections( typ, nam, desc, PropertyBase<std::vector<std::string>>::_valueT, {} ) ;
+      PropertyBase<std::vector<std::string>>::retrieveParameter( owner, nam ) ;
     }
   };
   
@@ -503,12 +586,14 @@ namespace marlin {
     template <class S>
     inline OutputCollectionProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc, const std::string &def ) {
       owner->registerOutputCollection( typ, nam, desc, PropertyBase<std::string>::_valueT, def ) ;
+      PropertyBase<std::string>::retrieveParameter( owner, nam ) ;
     }
     
     /// Constructor without default value
     template <class S>
     inline OutputCollectionProperty( S *owner, const std::string &typ, const std::string &nam, const std::string &desc ) {
       owner->registerOutputCollection( typ, nam, desc, PropertyBase<std::string>::_valueT, {} ) ;
+      PropertyBase<std::string>::retrieveParameter( owner, nam ) ;
     }
   };
 

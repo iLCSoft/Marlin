@@ -174,5 +174,12 @@ namespace marlin {
   Parametrized::const_iterator Parametrized::pend() const {
     return _parameters.end() ;
   }
+  
+  //--------------------------------------------------------------------------
+  
+  Parametrized::ParameterPtr Parametrized::findParameter( const std::string& parameterName ) const {
+    auto iter = _parameters.find( parameterName ) ;
+    return (iter != _parameters.end()) ? iter->second : nullptr ;
+  }
 
 }
