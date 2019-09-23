@@ -76,11 +76,6 @@ namespace marlin {
     Processor(const std::string& typeName) ;
 
     /**
-     *  @brief  Return a new instance of the processor (factory method)
-     */
-    virtual Processor* newProcessor() = 0 ;
-
-    /**
      *  @brief  Initialize the processor.
      *  Called at the begin of the job before anything is read.
      *  Use to initialize the processor, e.g. book histograms.
