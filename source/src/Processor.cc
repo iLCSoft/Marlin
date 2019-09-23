@@ -1,7 +1,7 @@
 #include "marlin/Processor.h"
 
 // -- marlin headers
-#include "marlin/PluginManager.h"
+// #include "marlin/PluginManager.h"
 #include "marlin/Application.h"
 
 namespace marlin {
@@ -11,10 +11,6 @@ namespace marlin {
     _typeName( typeName ) ,
     _parameters(0) ,
     _logLevelName("") {
-    //register processor
-    PluginManager::instance().registerPlugin( PluginType::Processor, type(), [this](){
-      return std::shared_ptr<void>( this->newProcessor() ) ;
-    }, true ) ;
     // verbosity default parameter
     registerOptionalParameter( "Verbosity" ,
 			       "verbosity level of this processor (\"DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT\")"  ,
