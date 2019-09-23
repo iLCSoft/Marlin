@@ -1,6 +1,7 @@
 
 // -- marlin headers
 #include <marlin/Processor.h>
+#include <marlin/PluginManager.h>
 #include <marlin/Exceptions.h>
 #include <marlin/Logging.h>
 #include <marlin/EventExtensions.h>
@@ -29,11 +30,7 @@ namespace marlin {
    */
 
   class TestProcessor : public Processor {
-    
   public:
-    
-    Processor*  newProcessor() { return new TestProcessor ; }
-    
     TestProcessor() ;
     
     /** Called at the begin of the job before anything is read.
@@ -168,6 +165,5 @@ namespace marlin {
   }
   
   // processor declaration
-  TestProcessor aTestProcessor ;
-  
-}// namespace marlin
+  MARLIN_DECLARE_PROCESSOR( TestProcessor )
+}

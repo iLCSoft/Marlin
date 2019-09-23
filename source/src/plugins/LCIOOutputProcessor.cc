@@ -1,6 +1,7 @@
 
 // -- marlin headers
 #include <marlin/Processor.h>
+#include <marlin/PluginManager.h>
 
 // -- lcio headers
 #include <lcio.h>
@@ -58,10 +59,6 @@ namespace marlin {
     LCIOOutputProcessor(const LCIOOutputProcessor&) = delete ;
     LCIOOutputProcessor& operator=(const LCIOOutputProcessor&) = delete ;
     ~LCIOOutputProcessor() = default ;
-    
-    Processor *newProcessor() { 
-      return new LCIOOutputProcessor ; 
-    }
 
     /**Open the LCIO outputfile.
      */
@@ -195,6 +192,5 @@ namespace marlin {
     _writer = nullptr ;
   }
 
-  LCIOOutputProcessor anLCIOOutputProcessor ;
-
+  MARLIN_DECLARE_PROCESSOR( LCIOOutputProcessor )
 }

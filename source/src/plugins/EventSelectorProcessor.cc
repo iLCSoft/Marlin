@@ -1,6 +1,7 @@
 
 // -- marlin headers
 #include <marlin/Processor.h>
+#include <marlin/PluginManager.h>
 #include <marlin/EventModifier.h>
 #include <marlin/EventExtensions.h>
 
@@ -34,7 +35,6 @@ namespace marlin {
     EventSelectorProcessor() ;
     
     // from Processor
-    Processor* newProcessor() ;
     void init() ;
     void processEvent( EVENT::LCEvent * evt ) ; 
     
@@ -64,13 +64,7 @@ namespace marlin {
   			      _evtList ,
   			      evtsExample ) ;
   }
-  
-  //--------------------------------------------------------------------------
-  
-  Processor *EventSelectorProcessor::newProcessor() { 
-    return new EventSelectorProcessor() ; 
-  }
-  
+
   //--------------------------------------------------------------------------
   
   const std::string &EventSelectorProcessor::name() const {
@@ -117,7 +111,7 @@ namespace marlin {
   }
 
   // plugin declaration
-  EventSelectorProcessor anEventSelector ;
+  MARLIN_DECLARE_PROCESSOR( EventSelectorProcessor )
 }
 
 

@@ -1,6 +1,7 @@
 
 // -- marlin headers
 #include <marlin/Processor.h>
+#include <marlin/PluginManager.h>
 
 // -- lcio headers
 #include <lcio.h>
@@ -38,7 +39,6 @@ namespace marlin {
   	MemoryMonitorProcessor() ;
 
     // from Processor
-    Processor *newProcessor() ;
   	void init() ;
   	void processEvent( EVENT::LCEvent * evt ) ;  	
   	
@@ -67,12 +67,6 @@ namespace marlin {
     forceRuntimeOption( Processor::RuntimeOption::Critical, true ) ;
     // don't duplicate opening/writing of output file
     forceRuntimeOption( Processor::RuntimeOption::Clone, false ) ;
-  }
-  
-  //--------------------------------------------------------------------------
-  
-  Processor *MemoryMonitorProcessor::newProcessor() { 
-    return new MemoryMonitorProcessor() ;
   }
   
   //--------------------------------------------------------------------------
@@ -112,7 +106,7 @@ namespace marlin {
   }
   
   // plugin declaration
-  MemoryMonitorProcessor aMemoryMonitor ;
+  MARLIN_DECLARE_PROCESSOR( MemoryMonitorProcessor )
 }
 
 

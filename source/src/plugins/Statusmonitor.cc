@@ -1,6 +1,7 @@
 
 // -- marlin headers
 #include <marlin/Processor.h>
+#include <marlin/PluginManager.h>
 #include <marlin/Logging.h>
 
 // -- lcio headers
@@ -30,8 +31,6 @@ namespace marlin {
     
    public:     
     Statusmonitor() ;
-    
-    Processor *newProcessor() { return new Statusmonitor ; }
 
     void init() ;
     
@@ -107,7 +106,6 @@ namespace marlin {
   }
   
   // processor declaration
-  Statusmonitor aStatusmonitor ;
-  
+  MARLIN_DECLARE_PROCESSOR( Statusmonitor )
 }
 

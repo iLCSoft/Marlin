@@ -1,6 +1,7 @@
 
 // -- marlin headers
 #include <marlin/Processor.h>
+#include <marlin/PluginManager.h>
 
 // -- lcio headers
 #include <UTIL/LCTOOLS.h>
@@ -26,7 +27,6 @@ namespace marlin {
   	DumpEventProcessor() ;
 
     // from Processor
-    Processor *newProcessor() ;
   	void init() ;
   	void processEvent( EVENT::LCEvent * evt ) ;  	
   	
@@ -54,12 +54,6 @@ namespace marlin {
   }
   
   //--------------------------------------------------------------------------
-  
-  Processor *DumpEventProcessor::newProcessor() { 
-    return new DumpEventProcessor() ;
-  }
-  
-  //--------------------------------------------------------------------------
 
   void DumpEventProcessor::init() {
   	// Print the initial parameters
@@ -78,7 +72,7 @@ namespace marlin {
   }
   
   // plugin declaration
-  DumpEventProcessor aDumpEventProcessor ;
+  MARLIN_DECLARE_PROCESSOR( DumpEventProcessor ) 
 }
 
 

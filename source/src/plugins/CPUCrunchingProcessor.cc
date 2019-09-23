@@ -3,6 +3,7 @@
 #include <marlin/Processor.h>
 #include <marlin/ProcessorApi.h>
 #include <marlin/Logging.h>
+#include <marlin/PluginManager.h>
 
 // -- lcio headers
 #include <lcio.h>
@@ -28,7 +29,6 @@ namespace marlin {
 
    public:
     CPUCrunchingProcessor() ;
-    Processor *newProcessor() { return new CPUCrunchingProcessor ; }
     void init() ;
     void processEvent( EVENT::LCEvent * evt ) ;
 
@@ -79,6 +79,5 @@ namespace marlin {
   }
 
   // processor declaration
-  CPUCrunchingProcessor aCPUCrunchingProcessor ;
-
+  MARLIN_DECLARE_PROCESSOR( CPUCrunchingProcessor )
 }
