@@ -29,8 +29,11 @@
 #define MARLIN_DECLARE_GEOPLUGIN_NAME( Class, NameStr ) MARLIN_DECLARE_PLUGIN( Class, NameStr, marlin::PluginType::GeometryPlugin )
 #define MARLIN_DECLARE_GEOPLUGIN( Class ) MARLIN_DECLARE_GEOPLUGIN_NAME( Class, #Class )
 // processor plugin declaration
-#define MARLIN_DECLARE_PROCESSOR_NAME( Class, NameStr ) MARLIN_DECLARE_PLUGIN( Class, NameStr, marlin::PluginType::Processor )
-#define MARLIN_DECLARE_PROCESSOR( Class ) MARLIN_DECLARE_PROCESSOR_NAME( Class, #Class )
+#define MARLIN_DECLARE_PROCESSOR( Class ) namespace { \
+  static const auto __type__ = Class().type() ; \
+  MARLIN_DECLARE_PLUGIN( Class, __type__, marlin::PluginType::Processor ) \
+}
+
 // data source plugin declaration
 #define MARLIN_DECLARE_DATASOURCE_NAME( Class, NameStr ) MARLIN_DECLARE_PLUGIN( Class, NameStr, marlin::PluginType::DataSource )
 #define MARLIN_DECLARE_DATASOURCE( Class ) MARLIN_DECLARE_DATASOURCE_NAME( Class, #Class )
