@@ -43,12 +43,14 @@ namespace marlin {
     void printDetectorSets( const std::string &name, unsigned int includeFlag, unsigned int excludeFlag ) const ;
     
   private:
-    /// The DD4hep geometry compact XML file
-    std::string         _compactFile {} ;
-    /// Whether to dump detector data while dumping the geometry
-    bool                _dumpDetectorData {false} ;
-    /// Whether to dump surfaces while dumping the geometry
-    bool                _dumpDetectorSurfaces {false} ;
+    Property<std::string> _compactFile {this, "CompactFile",
+             "The DD4hep geometry compact XML file" } ;
+
+    OptionalProperty<bool> _dumpDetectorData {this, "DumpDetectorData",
+             "Whether to dump detector data while dumping the geometry", false } ;
+             
+    OptionalProperty<bool> _dumpDetectorSurfaces {this, "DumpDetectorSurfaces",
+             "Whether to dump surfaces while dumping the geometry", false } ;
   };
   
   //--------------------------------------------------------------------------
@@ -56,22 +58,7 @@ namespace marlin {
 
   DD4hepGeometry::DD4hepGeometry() :
     GeometryPlugin("DD4hep") {
-      _description = "DD4hep geometry plugin. Use geoMgr->geometry<dd4hep::Detector>() to access the geometry" ;
-    // compact file
-    registerParameter( "CompactFile",
-      "The DD4hep geometry compact XML file",
-      _compactFile,
-      std::string("")) ;
-    // dump detector data ?
-    registerOptionalParameter( "DumpDetectorData",
-      "Whether to dump detector data while dumping the geometry",
-      _dumpDetectorData,
-      false) ;
-    // dump detector surfaces ?
-    registerOptionalParameter( "DumpDetectorSurfaces",
-      "Whether to dump surfaces while dumping the geometry",
-      _dumpDetectorSurfaces,
-      false) ;
+    _description = "DD4hep geometry plugin. Use geoMgr->geometry<dd4hep::Detector>() to access the geometry" ;
   }
 
   //--------------------------------------------------------------------------
