@@ -490,6 +490,71 @@ namespace marlin {
   };
   
   //--------------------------------------------------------------------------
+  //--------------------------------------------------------------------------
+  
+  /**
+   *  @brief  Property template class.
+   *          Declare a simple (scalar, vector, etc ...) property
+   */
+  template <typename T>
+  class Property<std::vector<T>> : public PropertyBase<std::vector<T>> {
+  public:
+    typedef typename std::vector<T>::iterator iterator ;
+    typedef typename std::vector<T>::const_iterator const_iterator ;
+    typedef typename std::vector<T>::reverse_iterator reverse_iterator ;
+    typedef typename std::vector<T>::const_reverse_iterator const_reverse_iterator ;
+    
+  public:
+    /// Deleted constructor
+    Property() = delete ;
+    /// Default copy constructor
+    Property( const Property<std::vector<T>> & ) = default ;
+    /// Default assignement operator
+    Property<std::vector<T>> &operator=( const Property<std::vector<T>> & ) = default ;
+    /// Default destructor
+    ~Property() = default ;
+    
+    /// Assignement operator
+    inline Property<std::vector<T>> &operator= ( const std::vector<T> &rhs ) {
+      PropertyBase<std::vector<T>>::_valueT = rhs ;
+      return *this ;
+    }
+    
+    // vector const interface (only) aliases
+    auto at( typename std::vector<T>::size_type idx ) const { return PropertyBase<std::vector<T>>::_valueT.at(idx) ; }
+    auto operator[]( typename std::vector<T>::size_type idx ) const { return PropertyBase<std::vector<T>>::_valueT[idx] ; }
+    auto front() const { return PropertyBase<std::vector<T>>::_valueT.front() ; }
+    auto back() const { return PropertyBase<std::vector<T>>::_valueT.back() ; }
+    auto data() const { return PropertyBase<std::vector<T>>::_valueT.data() ; }
+    auto begin() const { return PropertyBase<std::vector<T>>::_valueT.begin() ; }
+    auto end() const { return PropertyBase<std::vector<T>>::_valueT.end() ; }
+    auto cbegin() const { return PropertyBase<std::vector<T>>::_valueT.cbegin() ; }
+    auto cend() const { return PropertyBase<std::vector<T>>::_valueT.cend() ; }
+    auto rbegin() const { return PropertyBase<std::vector<T>>::_valueT.rbegin() ; }
+    auto rend() const { return PropertyBase<std::vector<T>>::_valueT.rend() ; }
+    auto crbegin() const { return PropertyBase<std::vector<T>>::_valueT.crbegin() ; }
+    auto crend() const { return PropertyBase<std::vector<T>>::_valueT.crend() ; }
+    auto empty() const { return PropertyBase<std::vector<T>>::_valueT.empty() ; }
+    auto size() const { return PropertyBase<std::vector<T>>::_valueT.size() ; }
+    auto max_size() const { return PropertyBase<std::vector<T>>::_valueT.max_size() ; }
+
+  public:
+    /// Simple parameter property constructor with default value
+    template <class S>
+    inline Property( S *owner, const std::string &nam, const std::string &desc, const std::vector<T> &def ) {
+      owner->registerParameter( nam, desc, PropertyBase<std::vector<T>>::_valueT, def, false ) ;
+      PropertyBase<std::vector<T>>::retrieveParameter( owner, nam ) ;
+    }
+    
+    /// Simple parameter property constructor without default value
+    template <class S>
+    inline Property( S *owner, const std::string &nam, const std::string &desc ) {
+      owner->registerParameter( nam, desc, PropertyBase<std::vector<T>>::_valueT, std::vector<T>(), false ) ;
+      PropertyBase<std::vector<T>>::retrieveParameter( owner, nam ) ;
+    }
+  };
+  
+  //--------------------------------------------------------------------------
   
   /**
    *  @brief  OptionalProperty template class.
