@@ -47,8 +47,8 @@ namespace marlin {
     void end() ;
     
   private:
-    // processor parameters
-    int                 _howOften {1} ;
+    Property<int> _howOften {this, "howOften",
+              "Print event number every N events", 1 } ;
 
     // runtime members
     int                 _nRun {0} ;
@@ -61,13 +61,7 @@ namespace marlin {
   Statusmonitor::Statusmonitor() : Processor("Statusmonitor") {
     
     // modify processor description
-    _description = "Statusmonitor prints out information on running Marlin Job: Prints number of runs run and current number of the event. Counting is sequential and not the run or event ID." ;
-
-    registerProcessorParameter("HowOften",
-  			     "Print the event number every N events",
-  			     _howOften, 
-  			     int(1) ) ;
-             
+    _description = "Statusmonitor prints out information on running Marlin Job: Prints number of runs run and current number of the event. Counting is sequential and not the run or event ID." ;             
    // no need to lock, this processor is thread safe
    forceRuntimeOption( Processor::RuntimeOption::Critical, false ) ;
    // don't duplicate since it is thread safe and hold no big data
