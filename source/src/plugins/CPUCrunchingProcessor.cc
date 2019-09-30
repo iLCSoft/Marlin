@@ -33,28 +33,20 @@ namespace marlin {
     void processEvent( EVENT::LCEvent * evt ) ;
 
   private:
-    // processor parameters
-    int    _crunchTime {200} ; // unit ms
-    float  _crunchSigma {0} ;
+    Property<int> _crunchTime {this, "CrunchTime",
+             "The crunching time (unit ms)", 200 } ;
+
+    Property<float> _crunchSigma {this, "CrunchSigma",
+             "Smearing factor on the crunching time using a gaussian generator (unit ms)", 0 } ;
   };
 
   //--------------------------------------------------------------------------
   //--------------------------------------------------------------------------
 
-  CPUCrunchingProcessor::CPUCrunchingProcessor() : Processor("CPUCrunching") {
-
+  CPUCrunchingProcessor::CPUCrunchingProcessor() : 
+    Processor("CPUCrunching") {
     // modify processor description
     _description = "CPUCrunchingProcessor crunch CPU time for n milliseconds" ;
-
-    registerProcessorParameter("CrunchTime",
-  			     "The crunching time (unit ms)",
-  			     _crunchTime,
-  			     _crunchTime ) ;
-
-    registerProcessorParameter("CrunchSigma",
-            "Smearing factor on the crunching time using a gaussian generator (unit ms)",
-            _crunchSigma,
-            _crunchSigma ) ;
   }
 
   //--------------------------------------------------------------------------
