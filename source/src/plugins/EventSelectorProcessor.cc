@@ -43,8 +43,8 @@ namespace marlin {
     void modifyEvent( EVENT::LCEvent *evt ) ;
     
    protected:
-    ///< The event list parameter (list of "run event" ids)
-    EVENT::IntVec         _evtList {} ;
+     Property<std::vector<int>> _evtList {this, "EventList",
+              "event list - pairs of Eventnumber RunNumber" } ;
     ///< The event list as a set
     EventNumberSet        _evtSet {} ;
   };
@@ -56,13 +56,6 @@ namespace marlin {
     Processor("EventSelector") {
     // modify processor description
     _description = "EventSelectorProcessor returns true if given event was specified in EventList" ;
-    EVENT::IntVec evtsExample ;
-    // evtsExample.push_back( 42 );
-    // evtsExample.push_back( 1024 );
-    registerProcessorParameter( "EventList" ,
-  			      "event list - pairs of Eventnumber RunNumber"  ,
-  			      _evtList ,
-  			      evtsExample ) ;
   }
 
   //--------------------------------------------------------------------------

@@ -43,8 +43,9 @@ namespace marlin {
   	void processEvent( EVENT::LCEvent * evt ) ;  	
   	
   protected:
-  	///< Print event number every N events
-    int               _howOften {1} ;
+    Property<int> _howOften {this, "howOften",
+              "Print event number every N events", 1 } ;
+
     ///< Event counter
     unsigned int      _eventNumber {0} ;
   };
@@ -56,11 +57,6 @@ namespace marlin {
     Processor("MemoryMonitor") {
   	// modify processor description
   	_description = "Simple processor to print out the memory consumption at defined intervals" ;
-    
-    registerProcessorParameter("howOften",
-                               "Print event number every N events",
-                               _howOften, 
-                               _howOften ) ;
     // It doesn't make sense to create clones of this processor in MT environement
     // So we don't duplicate it per thread. To make it thread-safe we thus need to lock 
     // make it thread-safe by using a lock

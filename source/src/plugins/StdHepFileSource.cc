@@ -35,12 +35,15 @@ namespace marlin {
     bool readOne() ;
 
   private:
-    ///< The stdhep input file
-    std::string                 _fileName {} ;
-    ///< The MCParticle collection name to add in the event
-    std::string                 _collectionName {} ;
-    ///< The maximum nuber of events to read
-    int                         _maxRecordNumber {0} ;
+    Property<std::string> _fileName {this, "StdHepFileName",
+            "The StdHep input file name" } ;
+            
+    Property<int> _maxRecordNumber {this, "MaxRecordNumber",
+            "The maximum number of events to read", 0 } ;
+
+    Property<std::string> _collectionName {this, "CollectionName",
+            "The name of the MCParticle collection to add in the event", "MCParticle" } ;
+
     ///< The stdhep file reader
     FileReader                  _fileReader {nullptr} ;
     ///< Whether we are processing the first event
@@ -54,30 +57,14 @@ namespace marlin {
 
   StdHepFileSource::StdHepFileSource() :
     DataSourcePlugin("StdHep") {
-
     _description = "Reads StdHep files as input and creates LCIO events with MCParticle collections" ;
-
-    registerParameter( "StdHepFileName",
-      "The StdHep input file name",
-      _fileName,
-      std::string("")) ;
-
-    registerParameter( "MaxRecordNumber",
-      "The maximum number of events to read",
-      _maxRecordNumber,
-      static_cast<int>(0)) ;
-
-    registerParameter( "CollectionName",
-      "The name of the MCParticle collection to add in the event",
-      _collectionName,
-      std::string("MCParticle")) ;
   }
 
   //--------------------------------------------------------------------------
 
   void StdHepFileSource::init() {
     // create the file reader
-    _fileReader = std::make_shared<FileReader::element_type>( _fileName.c_str() ) ;
+    _fileReader = std::make_shared<FileReader::element_type>( _fileName.get().c_str() ) ;
   }
 
   //--------------------------------------------------------------------------
@@ -86,7 +73,7 @@ namespace marlin {
     // first call is a run header
     if( _isFirstEvent ) {
       auto rhdr = std::make_shared<IMPL::LCRunHeaderImpl>() ;
-      rhdr->setDescription( " Events read from stdhep input file: " + _fileName ) ;
+      rhdr->setDescription( " Events read from stdhep input file: " + _fileName.get() ) ;
       rhdr->setRunNumber( 0 ) ;
       processRunHeader( rhdr ) ;
       _isFirstEvent = false ;

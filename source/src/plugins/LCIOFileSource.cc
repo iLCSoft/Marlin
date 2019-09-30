@@ -36,22 +36,27 @@ namespace marlin {
     bool readOne() ;
 
   private:
-    ///< The LCIO input file list
-    EVENT::StringVec            _inputFileNames {} ;
-    ///< The number of events to skip on file open
-    int                         _skipNEvents {0} ;
-    ///< The maximum nuber of records to read
-    int                         _maxRecordNumber {0} ;
-    ///< The list of LCIO collections to read
-    EVENT::StringVec            _readCollectionNames {} ;
+    Property<std::vector<std::string>> _inputFileNames {this, "LCIOInputFiles",
+                "The list of LCIO input files" } ;
+
+    Property<int> _maxRecordNumber {this, "MaxRecordNumber",
+                "The maximum number of records to read", 0 } ;
+      
+    Property<int> _skipNEvents {this, "SkipNEvents",
+                "The number of events to skip on file open", 0 } ;
+                
+    Property<std::vector<std::string>> _readCollectionNames {this, "LCIOReadCollectionNames",
+                "An optional list of LCIO collections to read from event" } ;
+                
+    Property<bool> _lazyUnpack {this, "LazyUnpack",
+                "Set to true to perform a lazy unpacking after reading out an event", false } ;
+    
     ///< The LCIO file listener
     ReaderListener              _listener {} ;
     ///< The LCIO file reader
     FileReaderPtr               _fileReader {nullptr} ;
     ///< The current number of read records
     int                         _currentReadRecords {0} ;
-    ///< Whether to perform a lazy unpack of event
-    bool                        _lazyUnpack {false} ;
   };
 
   //--------------------------------------------------------------------------
@@ -59,34 +64,7 @@ namespace marlin {
 
   LCIOFileSource::LCIOFileSource() :
     DataSourcePlugin("LCIO") {
-
     _description = "Read LCIO events and run headers from files on disk" ;
-
-    registerParameter( "LCIOInputFiles",
-      "The list of LCIO input files",
-      _inputFileNames,
-      EVENT::StringVec()) ;
-
-    registerParameter( "MaxRecordNumber",
-      "The maximum number of records to read",
-      _maxRecordNumber,
-      static_cast<int>(0)) ;
-
-    registerParameter( "SkipNEvents",
-      "The number of events to skip on file open",
-      _skipNEvents,
-      static_cast<int>(0)) ;
-
-    registerParameter( "LCIOReadCollectionNames",
-      "An optional list of LCIO collections to read from event",
-      _readCollectionNames,
-      EVENT::StringVec()) ;
-      
-    registerParameter( "LazyUnpack",
-      "Set to true to perform a lazy unpacking after reading out an event",
-      _lazyUnpack,
-      false) ;
-      
   }
 
   //--------------------------------------------------------------------------

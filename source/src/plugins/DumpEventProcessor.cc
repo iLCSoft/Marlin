@@ -31,8 +31,8 @@ namespace marlin {
   	void processEvent( EVENT::LCEvent * evt ) ;  	
   	
   protected:
-  	///< Whether to print detailed infos
-    bool               _dumpDetailed {true} ;
+    OptionalProperty<bool> _dumpDetailed {this, "DumpDetailed",
+             "Whether to make a detailed dump of the event", true } ;
   };
 
   //--------------------------------------------------------------------------
@@ -41,13 +41,7 @@ namespace marlin {
   DumpEventProcessor::DumpEventProcessor() : 
     Processor("DumpEvent") {
   	// modify processor description
-  	_description = "Simple processor to dump an event" ;
-
-    registerProcessorParameter("DumpDetailed" , 
-  			     "Whether to make a deteiled dump of the event" ,
-  			     _dumpDetailed,
-  			     _dumpDetailed );
-             
+  	_description = "Simple processor to dump an event" ;             
     // duplicate and don't lock. Anyway, this processor in MT mode doesn't make sense...    
     forceRuntimeOption( Processor::RuntimeOption::Critical, false ) ;
     forceRuntimeOption( Processor::RuntimeOption::Clone, true ) ;
