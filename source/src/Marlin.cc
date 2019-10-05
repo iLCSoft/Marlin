@@ -251,8 +251,9 @@ int main(int argc, char** argv ){
     //###### init streamlog ######
     std::string binname = argv[0]  ;
     binname = binname.substr( binname.find_last_of("/") + 1 , binname.size() ) ;
-    streamlog::out.init( std::cout , binname ) ;
-
+    auto &logger = streamlog::logstream::global() ;
+    logger.setName( binname ) ;
+    logger.setSinks( { streamlog::logstream::console() } ) ;
 
 
     std::unique_ptr<IParser> parser;
@@ -298,58 +299,59 @@ int main(int argc, char** argv ){
     }
 
     // //-----  register log level names with the logstream ---------
-    streamlog::out.addLevelName<DEBUG>() ;
-    streamlog::out.addLevelName<DEBUG0>() ;
-    streamlog::out.addLevelName<DEBUG1>() ;
-    streamlog::out.addLevelName<DEBUG2>() ;
-    streamlog::out.addLevelName<DEBUG3>() ;
-    streamlog::out.addLevelName<DEBUG4>() ;
-    streamlog::out.addLevelName<DEBUG5>() ;
-    streamlog::out.addLevelName<DEBUG6>() ;
-    streamlog::out.addLevelName<DEBUG7>() ;
-    streamlog::out.addLevelName<DEBUG8>() ;
-    streamlog::out.addLevelName<DEBUG9>() ;
-    streamlog::out.addLevelName<MESSAGE>() ;
-    streamlog::out.addLevelName<MESSAGE0>() ;
-    streamlog::out.addLevelName<MESSAGE1>() ;
-    streamlog::out.addLevelName<MESSAGE2>() ;
-    streamlog::out.addLevelName<MESSAGE3>() ;
-    streamlog::out.addLevelName<MESSAGE4>() ;
-    streamlog::out.addLevelName<MESSAGE5>() ;
-    streamlog::out.addLevelName<MESSAGE6>() ;
-    streamlog::out.addLevelName<MESSAGE7>() ;
-    streamlog::out.addLevelName<MESSAGE8>() ;
-    streamlog::out.addLevelName<MESSAGE9>() ;
-    streamlog::out.addLevelName<WARNING>() ;
-    streamlog::out.addLevelName<WARNING0>() ;
-    streamlog::out.addLevelName<WARNING1>() ;
-    streamlog::out.addLevelName<WARNING2>() ;
-    streamlog::out.addLevelName<WARNING3>() ;
-    streamlog::out.addLevelName<WARNING4>() ;
-    streamlog::out.addLevelName<WARNING5>() ;
-    streamlog::out.addLevelName<WARNING6>() ;
-    streamlog::out.addLevelName<WARNING7>() ;
-    streamlog::out.addLevelName<WARNING8>() ;
-    streamlog::out.addLevelName<WARNING9>() ;
-    streamlog::out.addLevelName<ERROR>() ;
-    streamlog::out.addLevelName<ERROR0>() ;
-    streamlog::out.addLevelName<ERROR1>() ;
-    streamlog::out.addLevelName<ERROR2>() ;
-    streamlog::out.addLevelName<ERROR3>() ;
-    streamlog::out.addLevelName<ERROR4>() ;
-    streamlog::out.addLevelName<ERROR5>() ;
-    streamlog::out.addLevelName<ERROR6>() ;
-    streamlog::out.addLevelName<ERROR7>() ;
-    streamlog::out.addLevelName<ERROR8>() ;
-    streamlog::out.addLevelName<ERROR9>() ;
-    streamlog::out.addLevelName<SILENT>() ;
+    // streamlog::out.addLevelName<DEBUG>() ;
+    // streamlog::out.addLevelName<DEBUG0>() ;
+    // streamlog::out.addLevelName<DEBUG1>() ;
+    // streamlog::out.addLevelName<DEBUG2>() ;
+    // streamlog::out.addLevelName<DEBUG3>() ;
+    // streamlog::out.addLevelName<DEBUG4>() ;
+    // streamlog::out.addLevelName<DEBUG5>() ;
+    // streamlog::out.addLevelName<DEBUG6>() ;
+    // streamlog::out.addLevelName<DEBUG7>() ;
+    // streamlog::out.addLevelName<DEBUG8>() ;
+    // streamlog::out.addLevelName<DEBUG9>() ;
+    // streamlog::out.addLevelName<MESSAGE>() ;
+    // streamlog::out.addLevelName<MESSAGE0>() ;
+    // streamlog::out.addLevelName<MESSAGE1>() ;
+    // streamlog::out.addLevelName<MESSAGE2>() ;
+    // streamlog::out.addLevelName<MESSAGE3>() ;
+    // streamlog::out.addLevelName<MESSAGE4>() ;
+    // streamlog::out.addLevelName<MESSAGE5>() ;
+    // streamlog::out.addLevelName<MESSAGE6>() ;
+    // streamlog::out.addLevelName<MESSAGE7>() ;
+    // streamlog::out.addLevelName<MESSAGE8>() ;
+    // streamlog::out.addLevelName<MESSAGE9>() ;
+    // streamlog::out.addLevelName<WARNING>() ;
+    // streamlog::out.addLevelName<WARNING0>() ;
+    // streamlog::out.addLevelName<WARNING1>() ;
+    // streamlog::out.addLevelName<WARNING2>() ;
+    // streamlog::out.addLevelName<WARNING3>() ;
+    // streamlog::out.addLevelName<WARNING4>() ;
+    // streamlog::out.addLevelName<WARNING5>() ;
+    // streamlog::out.addLevelName<WARNING6>() ;
+    // streamlog::out.addLevelName<WARNING7>() ;
+    // streamlog::out.addLevelName<WARNING8>() ;
+    // streamlog::out.addLevelName<WARNING9>() ;
+    // streamlog::out.addLevelName<ERROR>() ;
+    // streamlog::out.addLevelName<ERROR0>() ;
+    // streamlog::out.addLevelName<ERROR1>() ;
+    // streamlog::out.addLevelName<ERROR2>() ;
+    // streamlog::out.addLevelName<ERROR3>() ;
+    // streamlog::out.addLevelName<ERROR4>() ;
+    // streamlog::out.addLevelName<ERROR5>() ;
+    // streamlog::out.addLevelName<ERROR6>() ;
+    // streamlog::out.addLevelName<ERROR7>() ;
+    // streamlog::out.addLevelName<ERROR8>() ;
+    // streamlog::out.addLevelName<ERROR9>() ;
+    // streamlog::out.addLevelName<SILENT>() ;
 
 
     //-------- init logging level ------------
     std::string verbosity = Global::parameters->getStringVal("Verbosity" ) ;
-    streamlog::logscope scope( streamlog::out ) ;
+    // streamlog::logscope scope( streamlog::out ) ;
 
-    scope.setLevel( verbosity ) ;
+    // scope.setLevel( verbosity ) ;
+    logger.setLevel( verbosity ) ;
 
     createProcessors( *parser ) ;
 

@@ -16,8 +16,7 @@ namespace marlin{
     _typeName( typeName ) ,
     _parameters(0) ,
     _isFirstEvent( true ),
-    _logLevelName(""),
-    _str(0) {
+    _logLevelName("") {
   
     //register processor in map
     ProcessorMgr::instance()->registerProcessor( this ) ;
@@ -31,12 +30,9 @@ namespace marlin{
   }
 
 
-  Processor::Processor() : _parameters(NULL), _isFirstEvent(false), _str(NULL) {}
+  Processor::Processor() : _parameters(NULL), _isFirstEvent(false) {}
 
   Processor::~Processor() {
-
-    if( _str !=0 )
-      delete _str ;
   
     typedef ProcParamMap::iterator PMI ;
   
@@ -66,16 +62,6 @@ namespace marlin{
     // 			  << " parameterSet : " << parameterSet("Verbosity") 
     // 			  << " log level name : " << _logLevelName << std::endl ; 
     
-  }
-  
-  std::stringstream& Processor::log() const {
-    
-    if( _str !=0 )
-      delete _str ;
-
-    _str = new std::stringstream ;
-
-    return *_str ;
   }
 
 
