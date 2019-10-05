@@ -155,13 +155,17 @@ namespace marlin{
     template <class T>
     void printParameters() {
     
-      
+      // Can't use the streamlog macros
+      // as the compiler can't replace
+      // the template parameter in the streamlog macros.
+      // Use the global logger here
+      auto &logger = streamlog::logstream::global() ;
       //if( streamlog::out.template write<T>() ) {
 
 	
 	typedef ProcParamMap::iterator PMI ;
 
-	streamlog_out(T)  << std::endl  
+	logger.log<T>()  << std::endl  
 			<< "---- " << name()  <<" -  parameters: " << std::endl ;
 	
 	
@@ -169,14 +173,14 @@ namespace marlin{
 	  
 	  if( ! i->second->isOptional() || i->second->valueSet() ){
 	    //streamlog::out.template write<T>() ;
-	    streamlog_out(T) << "\t"   << i->second->name()   
+	    logger.log<T>() << "\t"   << i->second->name()   
 			     << ":  "  << i->second->value() 
 			     << std::endl ;
 	  }
 	}
 	
 	//streamlog::out.template write<T>() ;
-	streamlog_out(T) << "-------------------------------------------------" 
+	logger.log<T>() << "-------------------------------------------------" 
 			 << std::endl ;
 	
 	//}
@@ -365,7 +369,7 @@ namespace marlin{
       
 
       //if( streamlog::out.template write<T>() ) 
-	streamlog_out(T) << m << std::endl ;
+      streamlog::logstream::global().log<T>() << m << std::endl ;
       
     }
     
