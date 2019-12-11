@@ -1,3 +1,27 @@
+# v01-17
+
+* 2019-09-04 Andre Sailer ([PR#36](https://github.com/iLCSoft/Marlin/pull/36))
+  - Marlin::Processor: make setParameters and setName public functions
+  - Marlin::EventSelector: moved to marlin namespace
+
+* 2019-07-12 Remi Ete ([PR#35](https://github.com/iLCSoft/Marlin/pull/35))
+  - LCIOOutputProcessor:
+      - Added `CompressionLevel` processor parameter to set the compression level of the `LCWriter` instance
+
+* 2019-03-27 Andre Sailer ([PR#34](https://github.com/iLCSoft/Marlin/pull/34))
+  - XMLParser: Fix "random" crash during XML parsing. Depends on XML Steering file and memory runtime behaviour, when some freed memory is overwritten
+    ```
+     /Marlin/source/tinyxml/src/tinyxml.cc:377: const TiXmlNode* TiXmlNode::IterateChildren(const char*, const TiXmlNode*) const: Assertion `previous->parent == this' failed.
+    ```
+  - XMLParser: Fix "invalid read errors" reported by valgrind. Objects were removed before they were used again, which probably lead to the above mentioned crashs
+
+* 2019-03-05 Andre Sailer ([PR#33](https://github.com/iLCSoft/Marlin/pull/33))
+  - Marlin command line arguments: parameter names may now contain dots, solves lcfiplus/lcfiplus#3
+  - LCTokenizer: add optional max parameter to limit the number of resulting tokens
+
+* 2018-07-02 Andre Sailer ([PR#32](https://github.com/iLCSoft/Marlin/pull/32))
+  - Make Doxygen documentation compatible with doxygen 1.8.8+
+
 # v01-16
 
 * 2017-12-07 Andre Sailer ([PR#28](https://github.com/iLCSoft/Marlin/pull/28))
