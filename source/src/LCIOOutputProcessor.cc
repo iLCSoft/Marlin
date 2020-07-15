@@ -97,9 +97,9 @@ namespace marlin{
 			       1992294 ) ;  // 1.9 GB in kB
              
     registerOptionalParameter( "CompressionLevel" , 
-			       "The ZLIB compression level on writing"  ,
+			       "The ZLIB compression level on writing. Set it to 0 for no compression"  ,
 			       _compressionLevel, 
-			       _compressionLevel ) ;  // -1 by default
+			       _compressionLevel ) ;  // 6 by default
 
   }
 
@@ -119,9 +119,7 @@ void LCIOOutputProcessor::init() {
     _lcWrt = LCFactory::getInstance()->createLCWriter() ;
   }
   
-  if( parameterSet("CompressionLevel") ) {
-    _lcWrt->setCompressionLevel( _compressionLevel ) ;
-  }
+  _lcWrt->setCompressionLevel( _compressionLevel ) ;
 
 
   if( _lcioWriteMode == "WRITE_APPEND" ) {
