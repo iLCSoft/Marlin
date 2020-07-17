@@ -1,3 +1,8 @@
+# v01-17-01
+
+* 2020-07-15 Remi Ete ([PR#39](https://github.com/iLCSoft/Marlin/pull/39))
+  - Set LCIO output compression to ON by default, and compression level to 6 (ZLIB default)
+
 # v01-17
 
 * 2019-09-04 Andre Sailer ([PR#36](https://github.com/iLCSoft/Marlin/pull/36))
