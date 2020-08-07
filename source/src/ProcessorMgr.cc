@@ -12,11 +12,35 @@
 #include "marlin/EventModifier.h"
 #include "marlin/ProcessorEventSeeder.h"
 #include "streamlog/streamlog.h"
-#include "streamlog/logbuffer.h"
+//#include "streamlog/logbuffer.h"
 
 #include <time.h>
 
 namespace marlin{
+
+  template <typename LOGGER_TYPE>
+  struct logscopeT {
+  public:
+    logscopeT( LOGGER_TYPE &logger, const std::string &level, const std::string &name ) :
+      _logger(logger),
+      _oldLevel(logger.levelName()),
+      _oldName(logger.name()) {
+      logger.setLevel( level ) ;
+      logger.setName( name ) ;
+    }
+
+    ~logscopeT() {
+      _logger.setLevel( _oldLevel ) ;
+      _logger.setName( _oldName ) ;
+    }
+
+  private:
+    LOGGER_TYPE           &_logger ;
+    const std::string      _oldLevel ;
+    const std::string      _oldName ;
+  };
+
+  using logscope = logscopeT<streamlog::logstream::default_logger_type> ;
 
     ProcessorMgr* ProcessorMgr::_me = 0 ;
 
@@ -267,19 +291,19 @@ namespace marlin{
 
     void ProcessorMgr::init(){ 
 
-        streamlog::logbuffer* lb = new streamlog::logbuffer( std::cout.rdbuf() ,  &my_cout ) ;
-        std::cout.rdbuf(  lb ) ;
+        // streamlog::logbuffer* lb = new streamlog::logbuffer( std::cout.rdbuf() ,  &my_cout ) ;
+        // std::cout.rdbuf(  lb ) ;
 
         //     for_each( _list.begin() , _list.end() , std::mem_fun( &Processor::baseInit ) ) ;
 
+      auto &logger = streamlog::logstream::global() ;
+      
         for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
-	  
-	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	  scope.setLevel( (*it)->logLevelName() ) ;
-	  
-	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-	  
-	  (*it)->baseInit() ;
+
+	  {
+	    logscope scope( logger, (*it)->logLevelName(), (*it)->name() ) ;  
+	    (*it)->baseInit() ;
+	  }
 	  
 	  tMap[ *it ] = std::make_pair( 0 , 0 )  ;
 	  
@@ -349,30 +373,19 @@ namespace marlin{
 //#endif
 
         //     for_each( _list.begin() , _list.end() ,  std::bind2nd(  std::mem_fun( &Processor::processRunHeader ) , run ) ) ;
+	auto &logger = streamlog::logstream::global() ;
         for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
-	  
-	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	  scope.setLevel( (*it)->logLevelName() ) ;
-	  
-	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-	  
+	  logscope scope( logger, (*it)->logLevelName(), (*it)->name() ) ;	  
 	  (*it)->processRunHeader( run ) ;
         }
     }   
   
   
     void ProcessorMgr::modifyRunHeader( LCRunHeader* rhd ){ 
-    
+      auto &logger = streamlog::logstream::global() ;    
       for( ProcessorList::iterator it = _eventModifierList.begin();  it !=  _eventModifierList.end()  ; ++ it) {
-      
-        streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-      
-	scope.setLevel( (*it)->logLevelName() ) ;
-	//        (*it)->logLevelName()   ;
-      
-        streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-      
-        (  dynamic_cast<EventModifier*>( *it )  )->modifyRunHeader( rhd ) ;
+	logscope scope( logger, (*it)->logLevelName(), (*it)->name() ) ;	        
+	(  dynamic_cast<EventModifier*>( *it )  )->modifyRunHeader( rhd ) ;
       }
     
     }
@@ -383,19 +396,13 @@ namespace marlin{
       
       // refresh the seeds for this event
       Global::EVENTSEEDER->refreshSeeds( evt ) ;
-
+      auto &logger = streamlog::logstream::global() ;    
       for( ProcessorList::iterator it = _eventModifierList.begin();  it !=  _eventModifierList.end()  ; ++ it) {
 
         if( not( _conditions.conditionIsTrue( (*it)->name() ) )) {
           continue;
         }
-
-        streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	
-	scope.setLevel( (*it)->logLevelName() ) ;
-	//        (*it)->logLevelName()   ;
-      
-        streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+	logscope scope( logger, (*it)->logLevelName(), (*it)->name() ) ;	        
 
         start_t = clock(); // start timer
 
@@ -426,13 +433,8 @@ namespace marlin{
 	  for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 	    
 	    if( _conditions.conditionIsTrue( (*it)->name() ) ) {
-	      
-	      streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	      //if( (*it)->logLevelName().size() > 0  )
-	      scope.setLevel( (*it)->logLevelName() ) ;
-	      
-	      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-	      
+	      logscope scope( logger, (*it)->logLevelName(), (*it)->name() ) ;	        	      
+	      	      
 	      start_t =  clock () ;  // start timer
 	      
 	      (*it)->processEvent( evt ) ; 
@@ -476,18 +478,13 @@ namespace marlin{
 
 	// refresh the seeds for this event
 	Global::EVENTSEEDER->refreshSeeds( evt ) ;
- 
+	auto &logger = streamlog::logstream::global() ;     
         try{ 
 
             for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
 
                 if( _conditions.conditionIsTrue( (*it)->name() ) ) {
-
-                    streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-		    //if( (*it)->logLevelName().size() > 0  )
-		    scope.setLevel( (*it)->logLevelName() ) ;
-		    
-                    streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+		    logscope scope( logger, (*it)->logLevelName(), (*it)->name() ) ;
 
                     start_t =  clock () ;  // start timer
 
@@ -532,13 +529,9 @@ namespace marlin{
 
         //    for_each( _list.rbegin() , _list.rend() ,  std::mem_fun( &Processor::end ) ) ;
 
+      auto &logger = streamlog::logstream::global() ;           
         for( ProcessorList::reverse_iterator it = _list.rbegin() ; it != _list.rend() ; ++it ) {
-
-            streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	    scope.setLevel( (*it)->logLevelName() ) ;
-
-            streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-
+	  logscope scope( logger, (*it)->logLevelName(), (*it)->name() ) ;
             (*it)->end() ;
         }
         //     if( _skipMap.size() > 0 ) {

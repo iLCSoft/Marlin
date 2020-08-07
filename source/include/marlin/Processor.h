@@ -155,31 +155,35 @@ namespace marlin{
     template <class T>
     void printParameters() {
     
-      
-      if( streamlog::out.template write<T>() ) {
+      // Can't use the streamlog macros
+      // as the compiler can't replace
+      // the template parameter in the streamlog macros.
+      // Use the global logger here
+      auto &logger = streamlog::logstream::global() ;
+      //if( streamlog::out.template write<T>() ) {
 
 	
 	typedef ProcParamMap::iterator PMI ;
 
-	streamlog::out()  << std::endl  
+	logger.log<T>()  << std::endl  
 			<< "---- " << name()  <<" -  parameters: " << std::endl ;
 	
 	
 	for( PMI i = _map.begin() ; i != _map.end() ; i ++ ) {
 	  
 	  if( ! i->second->isOptional() || i->second->valueSet() ){
-	    streamlog::out.template write<T>() ;
-	    streamlog::out() << "\t"   << i->second->name()   
+	    //streamlog::out.template write<T>() ;
+	    logger.log<T>() << "\t"   << i->second->name()   
 			     << ":  "  << i->second->value() 
 			     << std::endl ;
 	  }
 	}
 	
-	streamlog::out.template write<T>() ;
-	streamlog::out() << "-------------------------------------------------" 
+	//streamlog::out.template write<T>() ;
+	logger.log<T>() << "-------------------------------------------------" 
 			 << std::endl ;
 	
-      }
+	//}
     }
 
     /** Print the parameters and their values with verbosity level MESSAGE.
@@ -364,8 +368,8 @@ namespace marlin{
     void message(  const std::string& m ) const {
       
 
-      if( streamlog::out.template write<T>() ) 
-	streamlog::out() << m << std::endl ;
+      //if( streamlog::out.template write<T>() ) 
+      streamlog::logstream::global().log<T>() << m << std::endl ;
       
     }
     
@@ -385,25 +389,25 @@ namespace marlin{
      * @see std::stringstream& log()
      */
 
-    template <class T>
-    inline void message( const std::basic_ostream<char, std::char_traits<char> >& m) const {
+    /* template <class T> */
+    /* inline void message( const std::basic_ostream<char, std::char_traits<char> >& m) const { */
 
-     if( T::active ){  // allow the compiler to optimize this away ...
+    /*  if( T::active ){  // allow the compiler to optimize this away ... */
 
-       try{
-	 const std::stringstream& mess = dynamic_cast<const std::stringstream&>( m ) ; 
+    /*    try{ */
+    /* 	 const std::stringstream& mess = dynamic_cast<const std::stringstream&>( m ) ;  */
 
-	 this->template message<T>( mess.str() ) ;
+    /* 	 this->template message<T>( mess.str() ) ; */
 
-       }
-       catch( std::bad_cast ) {}
-     }
-    }
+    /*    } */
+    /*    catch( std::bad_cast ) {} */
+    /*  } */
+    /* } */
 
     /** Returns an empty stringstream that is used by the message method.
      * @deprecated
      */
-    std::stringstream& log() const ;
+    /* std::stringstream& log() const ; */
 
 
   private: // called by ProcessorMgr
@@ -462,7 +466,6 @@ namespace marlin{
     std::string _logLevelName{};
     
   private:
-    mutable std::stringstream* _str=NULL;
 
     Processor() ; 
   
