@@ -12,8 +12,9 @@
 #include "marlin/EventModifier.h"
 #include "marlin/ProcessorEventSeeder.h"
 #include "streamlog/streamlog.h"
+#ifndef STREAMLOG_NEW_TS_IMPL
 #include "streamlog/logbuffer.h"
-
+#endif
 #include <time.h>
 
 namespace marlin{
@@ -42,8 +43,8 @@ namespace marlin{
 
 
 
-    // create a dummy streamlog stream for std::cout 
-    streamlog::logstream my_cout ;
+    // // create a dummy streamlog stream for std::cout 
+    // streamlog::logstream my_cout ;
 
   ProcessorMgr::ProcessorMgr(){
     if( Global::EVENTSEEDER == NULL ) {
@@ -266,10 +267,8 @@ namespace marlin{
 
 
     void ProcessorMgr::init(){ 
-
-        streamlog::logbuffer* lb = new streamlog::logbuffer( std::cout.rdbuf() ,  &my_cout ) ;
-        std::cout.rdbuf(  lb ) ;
-
+//       streamlog::logbuffer* lb = new streamlog::logbuffer( std::cout.rdbuf() ,  &my_cout ) ;
+//       std::cout.rdbuf(  lb ) ;
         //     for_each( _list.begin() , _list.end() , std::mem_fun( &Processor::baseInit ) ) ;
 
         for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
@@ -277,12 +276,11 @@ namespace marlin{
 	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
 	  scope.setLevel( (*it)->logLevelName() ) ;
 	  
-	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+	  // streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 	  
 	  (*it)->baseInit() ;
 	  
 	  tMap[ *it ] = std::make_pair( 0 , 0 )  ;
-	  
 	  
 	  EventModifier* em = dynamic_cast<EventModifier*>( *it ) ; 
 	  
@@ -295,33 +293,21 @@ namespace marlin{
 				      << (*it)->name()  << " !! " <<  std::endl
 				      << " ------------  "   << std::endl ; 
 	  }
-
-	}
+  }
     }
 
     void ProcessorMgr::processRunHeader( LCRunHeader* run){ 
+      // check if gear file is consistent with detector model in lcio run header 
+      std::string lcioDetName = run->getDetectorName() ;
+      std::string gearDetName("unknwon_gear_detector") ;
+      bool doConsistencyCheck = true ;
 
-
-//#ifdef USE_GEAR
-        // check if gear file is consistent with detector model in lcio run header 
-        std::string lcioDetName = run->getDetectorName() ;
-
-
-        std::string gearDetName("unknwon_gear_detector") ;
-
-        bool doConsistencyCheck = true ;
-
-        try{
-
-            gearDetName = Global::GEAR->getDetectorName()  ; 
-
-        }
-        catch( gear::UnknownParameterException ){ 
-
-            doConsistencyCheck = false ;
-        }
-
-
+      try {
+        gearDetName = Global::GEAR->getDetectorName()  ; 
+      }
+      catch( gear::UnknownParameterException ) {
+        doConsistencyCheck = false ;
+      }
 
         if( doConsistencyCheck  && lcioDetName != gearDetName ) {
 
@@ -344,18 +330,10 @@ namespace marlin{
             streamlog_out(WARNING) << " ============================================================= " << std::endl ;
         }
 
-
-
-//#endif
-
-        //     for_each( _list.begin() , _list.end() ,  std::bind2nd(  std::mem_fun( &Processor::processRunHeader ) , run ) ) ;
         for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
-	  
 	  streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
 	  scope.setLevel( (*it)->logLevelName() ) ;
-	  
-	  streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-	  
+	  // streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 	  (*it)->processRunHeader( run ) ;
         }
     }   
@@ -366,11 +344,8 @@ namespace marlin{
       for( ProcessorList::iterator it = _eventModifierList.begin();  it !=  _eventModifierList.end()  ; ++ it) {
       
         streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-      
-	scope.setLevel( (*it)->logLevelName() ) ;
-	//        (*it)->logLevelName()   ;
-      
-        streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+  scope.setLevel( (*it)->logLevelName() ) ;      
+        // streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
       
         (  dynamic_cast<EventModifier*>( *it )  )->modifyRunHeader( rhd ) ;
       }
@@ -391,11 +366,10 @@ namespace marlin{
         }
 
         streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	
+  
 	scope.setLevel( (*it)->logLevelName() ) ;
-	//        (*it)->logLevelName()   ;
       
-        streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+        // streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
         start_t = clock(); // start timer
 
@@ -428,10 +402,8 @@ namespace marlin{
 	    if( _conditions.conditionIsTrue( (*it)->name() ) ) {
 	      
 	      streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	      //if( (*it)->logLevelName().size() > 0  )
 	      scope.setLevel( (*it)->logLevelName() ) ;
-	      
-	      streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+	      // streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 	      
 	      start_t =  clock () ;  // start timer
 	      
@@ -470,12 +442,12 @@ namespace marlin{
 
         bool modify = ( Global::parameters->getStringVal("AllowToModifyEvent") == "true" ) ;
 
-	if( modify ) 
-	  return ;   // processorEventMethods already called in modifyEvent() ...
+  if( modify ) 
+    return ;   // processorEventMethods already called in modifyEvent() ...
 
 
-	// refresh the seeds for this event
-	Global::EVENTSEEDER->refreshSeeds( evt ) ;
+  // refresh the seeds for this event
+  Global::EVENTSEEDER->refreshSeeds( evt ) ;
  
         try{ 
 
@@ -484,14 +456,13 @@ namespace marlin{
                 if( _conditions.conditionIsTrue( (*it)->name() ) ) {
 
                     streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-		    //if( (*it)->logLevelName().size() > 0  )
-		    scope.setLevel( (*it)->logLevelName() ) ;
-		    
-                    streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
+        scope.setLevel( (*it)->logLevelName() ) ;
+
+            // streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
 
                     start_t =  clock () ;  // start timer
 
-		    (*it)->processEvent( evt ) ; 
+        (*it)->processEvent( evt ) ; 
 
                     if( check )  (*it)->check( evt ) ;
 
@@ -502,13 +473,10 @@ namespace marlin{
 
                     itT->second.first += double( end_t - start_t  ) ; 
                     itT->second.second ++ ;
-
-
-                    (*it)->setFirstEvent( false ) ;
+                  (*it)->setFirstEvent( false ) ;
                 }       
             }    
         } catch( SkipEventException& e){
-
             ++ _skipMap[ e.what() ] ;
         }  
     }
@@ -535,10 +503,9 @@ namespace marlin{
         for( ProcessorList::reverse_iterator it = _list.rbegin() ; it != _list.rend() ; ++it ) {
 
             streamlog::logscope scope( streamlog::out ) ; scope.setName(  (*it)->name()  ) ;
-	    scope.setLevel( (*it)->logLevelName() ) ;
+      scope.setLevel( (*it)->logLevelName() ) ;
 
-            streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
-
+        // streamlog::logscope scope1(  my_cout ) ; scope1.setName(  (*it)->name()  ) ;
             (*it)->end() ;
         }
         //     if( _skipMap.size() > 0 ) {
@@ -563,13 +530,6 @@ namespace marlin{
         streamlog_out(MESSAGE)  << " --------------------------------------------------------- " << std::endl
             << "      Time used by processors ( in processEvent() ) :      " << std::endl 
                                                                                 << std::endl ;
-
-
-
-
-
-        //    for( ProcessorList::iterator it = _list.begin() ; it != _list.end() ; ++it ) {
-        //      TimeMap::iterator itT = tMap.find( *it ) ;
 
         // sort procs wrt processing time :
         typedef std::list< TimeMap::value_type > TMList  ;
@@ -652,4 +612,4 @@ namespace marlin{
 
   
 
-    } // namespace marlin
+} // namespace marlin
