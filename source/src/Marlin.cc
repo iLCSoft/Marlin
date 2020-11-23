@@ -251,7 +251,9 @@ int main(int argc, char** argv ){
     //###### init streamlog ######
     std::string binname = argv[0]  ;
     binname = binname.substr( binname.find_last_of("/") + 1 , binname.size() ) ;
+#ifndef STREAMLOG_NEW_TS_IMPL
     streamlog::out.init( std::cout , binname ) ;
+#endif
 
 
 
@@ -297,6 +299,7 @@ int main(int argc, char** argv ){
       return(0) ;
     }
 
+#ifndef STREAMLOG_NEW_TS_IMPL
     // //-----  register log level names with the logstream ---------
     streamlog::out.addLevelName<DEBUG>() ;
     streamlog::out.addLevelName<DEBUG0>() ;
@@ -343,13 +346,16 @@ int main(int argc, char** argv ){
     streamlog::out.addLevelName<ERROR8>() ;
     streamlog::out.addLevelName<ERROR9>() ;
     streamlog::out.addLevelName<SILENT>() ;
-
+#endif
 
     //-------- init logging level ------------
     std::string verbosity = Global::parameters->getStringVal("Verbosity" ) ;
+#ifndef STREAMLOG_NEW_TS_IMPL
     streamlog::logscope scope( streamlog::out ) ;
-
     scope.setLevel( verbosity ) ;
+#else    
+    streamlog::logstream::global_init( &std::cout, binname, verbosity ) ;
+#endif
 
     createProcessors( *parser ) ;
 
