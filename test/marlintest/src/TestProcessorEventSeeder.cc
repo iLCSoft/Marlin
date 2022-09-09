@@ -60,7 +60,7 @@ void TestProcessorEventSeeder::processEvent( LCEvent * evt ) {
   try{
     Global::EVENTSEEDER->registerProcessor(this);
   }
-  catch( lcio::Exception ) {
+  catch( lcio::Exception& ) {
   
   }
 
@@ -122,4 +122,3 @@ void TestProcessorEventSeeder::end(){
 			  << std::endl ;
   
 }
-

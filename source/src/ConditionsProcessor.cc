@@ -35,7 +35,7 @@ namespace marlin{
       lccd::LCConditionsMgr::instance()->registerChangeListener( cl , name ) ;
       return true ;
     }
-    catch(Exception){}
+    catch(Exception&){}
     
     return false ;
   }

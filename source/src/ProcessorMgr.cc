@@ -316,7 +316,7 @@ namespace marlin{
             gearDetName = Global::GEAR->getDetectorName()  ; 
 
         }
-        catch( gear::UnknownParameterException ){ 
+        catch( gear::UnknownParameterException& ){ 
 
             doConsistencyCheck = false ;
         }
