@@ -314,10 +314,11 @@ namespace marlin{
 
     const char* XMLParser::getAttribute( TiXmlNode* node , const std::string& name ){
 
+        if( node->Type() == TiXmlNode::COMMENT)
+            throw ParseException("XMLParser::getAttribute skipping XMLComment" ) ;
         TiXmlElement* el = node->ToElement() ;
         if( el == 0 ) 
             throw ParseException("XMLParser::getAttribute not an XMLElement " ) ;
-
         const char* at = el->Attribute( name.c_str() )  ;
 
         if( at == 0 ){
@@ -380,18 +381,16 @@ namespace marlin{
 
             std::string inputLine("") ;
 
-
-            try{  inputLine = getAttribute( par , "value" )  ; 
+            try{
+                inputLine = getAttribute( par , "value" );
             }      
-            catch( ParseException ) {
-
-                if( par->FirstChild() )
-                    inputLine =  par->FirstChild()->Value() ;
+            catch( ParseException ){
+                for( TiXmlNode* child = par->FirstChild(); child; child = child->NextSibling() ){
+                    if( child->Type() == TiXmlNode::COMMENT) continue;
+                    if ( !inputLine.empty() ) inputLine.append(" ");
+                    inputLine.append( child->Value() );
+                }
             }
-            
-
-            
-
             
             //       if( par->ToElement()->Attribute("value") != 0 ) {
             // 	inputLine = par->ToElement()->Attribute("value") ;
@@ -963,5 +962,3 @@ namespace marlin{
     }  
 
 }  // namespace marlin
-
-
