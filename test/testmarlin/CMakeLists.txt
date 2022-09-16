@@ -63,3 +63,16 @@ SET_TESTS_PROPERTIES( t_includeandconstants PROPERTIES PASS_REGULAR_EXPRESSION "
 
 
 #---------------------------------------------------------------------------------------
+
+SET( MARLIN_STEERING_FILE parse_steering_comments.xml )
+SET( MARLIN_INPUT_FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/${MARLIN_STEERING_FILE}
+  ${CMAKE_CURRENT_SOURCE_DIR}/gear_simjob.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/simjob.slcio
+)
+CONFIGURE_FILE( runmarlin.cmake.in parse_steering_comments.cmake @ONLY )
+ADD_TEST( t_parse_steering_comments "${CMAKE_COMMAND}" -P parse_steering_comments.cmake )
+
+# The numbers are determined from simply counting the elements in the
+# parse_steering_comments.xml steering file
+SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "GREPPABLE OUTPUT 7, 2, 11, 9, 0")

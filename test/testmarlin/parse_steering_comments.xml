@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
+
+ <execute>
+   <processor name="MyTestCommentParsingProcessor"/>
+  <!--/if-->
+ </execute>
+
+ <global>
+  <parameter name="LCIOInputFiles"> simjob.slcio </parameter>
+  <parameter name="MaxRecordNumber" value="4" />
+  <parameter name="GearXMLFile">gear_simjob.xml</parameter>
+  <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> DEBUG  </parameter>
+ </global>
+
+  <!-- Here we feed this processor with a fixed input and make CTest check that
+       the output of running this is as expected, i.e. we have the expected
+       number of elements in each of the parameters -->
+  <processor name="MyTestCommentParsingProcessor" type="TestCommentParsingProcessor">
+  <parameter name="leadingComment" type="StringVec">
+    <!-- Here we have a leading comment -->
+    <!-- and even a second one -->
+    But we also have a real input
+  </parameter>
+  <!--A parameter where we test mixed comments-->
+  <parameter name="mixedComment" type="StringVec">
+    We start off
+    <!-- then we add a comment -->
+    But we continue
+    <!-- before we put in some more comments -->
+    and finally end with content
+  </parameter>
+  <!--A parameter where we test no comments-->
+  <parameter name="noComment" type="StringVec">
+    Obviously things work if we put in no comment
+  </parameter>
+  <!--A parameter where we test only comments-->
+  <parameter name="onlyComment" type="StringVec">
+    <!-- Having only comments should work as well -->
+    <!-- Even if there are multiple of them -->
+    <!-- And as we all know, three's a crowd -->
+  </parameter>
+  <!--A parameter where we test trailing comments-->
+  <parameter name="trailingComment" type="StringVec">
+    Content first
+    <!-- Apologize later -->
+  </parameter>
+</processor>
+
+</marlin>
