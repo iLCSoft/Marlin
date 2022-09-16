@@ -46,11 +46,17 @@ std::ostream &operator<<(std::ostream &os, std::vector<std::string> stringVec) {
 
 void TestCommentParsingProcessor::init() {
   streamlog_out(MESSAGE) << "Got the following number of elements (leading | "
-                            "trailing | mixed | no): "
+                            "trailing | mixed | no | only): "
                          << m_leadingComment.size() << " | "
                          << m_trailingComment.size() << " | "
                          << m_mixedComment.size() << " | " << m_noComment.size()
-                         << std::endl;
+                         << " | " << m_onlyComment.size() << std::endl;
+
+  // This output makes for an easier to grep output from CTest
+  streamlog_out(MESSAGE) << "GREPPABLE OUTPUT " << m_leadingComment.size()
+                         << ", " << m_trailingComment.size() << ", "
+                         << m_mixedComment.size() << ", " << m_noComment.size()
+                         << ", " << m_onlyComment.size() << std::endl;
 
   streamlog_out(DEBUG) << "The leading comment parameter contents are: "
                        << m_leadingComment << std::endl;
