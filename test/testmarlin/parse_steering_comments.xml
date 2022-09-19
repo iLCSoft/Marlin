@@ -46,6 +46,8 @@
     Content first
     <!-- Apologize later -->
   </parameter>
+  <!-- A parameter that we pass in via an explicit value -->
+  <parameter name="explicitValue" type="StringVec" value="Hello It Is Me"/>
 </processor>
 
 </marlin>

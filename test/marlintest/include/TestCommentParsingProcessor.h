@@ -27,6 +27,7 @@ private:
   std::vector<std::string> m_mixedComment{};
   std::vector<std::string> m_noComment{};
   std::vector<std::string> m_onlyComment{};
+  std::vector<std::string> m_explicitValue{};
 };
 
 #endif
