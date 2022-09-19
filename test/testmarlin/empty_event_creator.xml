@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
+
+  <execute>
+    <processor name="EmptyEventCreator"/>
+    <processor name="MyTestEmptyEventCreator"/>
+  </execute>
+
+  <global>
+    <parameter name="MaxRecordNumber" value="10"/>
+  </global>
+
+  <processor name="EmptyEventCreator" type="EmptyEventCreator"/>
+
+  <processor name="MyTestEmptyEventCreator" type="TestEmptyEventCreator">
+    <!--Processor to test whether the EmptyEventCreator data source works as expected-->
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
+  </processor>
+
+</marlin>
