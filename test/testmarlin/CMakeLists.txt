@@ -75,4 +75,9 @@ ADD_TEST( t_parse_steering_comments "${CMAKE_COMMAND}" -P parse_steering_comment
 
 # The numbers are determined from simply counting the elements in the
 # parse_steering_comments.xml steering file
-SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "GREPPABLE OUTPUT 7, 2, 11, 9, 0")
+SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "LEADING {But, we, also, have, real, input}")
+SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "MIXED {We, start, off, But, we, continue, and, finally, end, with, content}")
+SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "NO {Obviously, things, work, if, we, put, in, no, comment}")
+SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "ONLY {}")
+SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "TRAILING {Content, first}")
+SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "EXPLICIT {Hello, It, Is, Me}")

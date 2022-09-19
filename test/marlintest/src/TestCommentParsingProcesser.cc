@@ -27,13 +27,18 @@ TestCommentParsingProcessor::TestCommentParsingProcessor()
                              "A parameter where we test no comments",
                              m_noComment, defaultEmpty);
 
+  std::vector<std::string> defaultFilled = {"Non", "empty", "string", "vec"};
   registerProcessorParameter("onlyComment",
                              "A parameter where we test only comments",
-                             m_onlyComment, defaultEmpty);
+                             m_onlyComment, defaultFilled);
+
+  registerProcessorParameter(
+      "explicitValue", "A parameter that we pass in via an explicit value",
+      m_explicitValue, defaultEmpty);
 }
 
 std::ostream &operator<<(std::ostream &os, std::vector<std::string> stringVec) {
-  os << "(";
+  os << "{";
   if (!stringVec.empty()) {
     os << stringVec[0];
   }
@@ -41,35 +46,16 @@ std::ostream &operator<<(std::ostream &os, std::vector<std::string> stringVec) {
     os << ", " << stringVec[i];
   }
 
-  return os << ")";
+  return os << "}";
 }
 
 void TestCommentParsingProcessor::init() {
-  streamlog_out(MESSAGE) << "Got the following number of elements (leading | "
-                            "trailing | mixed | no | only): "
-                         << m_leadingComment.size() << " | "
-                         << m_trailingComment.size() << " | "
-                         << m_mixedComment.size() << " | " << m_noComment.size()
-                         << " | " << m_onlyComment.size() << std::endl;
-
-  // This output makes for an easier to grep output from CTest
-  streamlog_out(MESSAGE) << "GREPPABLE OUTPUT " << m_leadingComment.size()
-                         << ", " << m_trailingComment.size() << ", "
-                         << m_mixedComment.size() << ", " << m_noComment.size()
-                         << ", " << m_onlyComment.size() << std::endl;
-
-  streamlog_out(DEBUG) << "The leading comment parameter contents are: "
-                       << m_leadingComment << std::endl;
-
-  streamlog_out(DEBUG) << "The trailing comment parameter contents are: "
-                       << m_trailingComment << std::endl;
-
-  streamlog_out(DEBUG) << "The mixed comment parameter contents are: "
-                       << m_mixedComment << std::endl;
-
-  streamlog_out(DEBUG) << "The no comment parameter contents are: "
-                       << m_noComment << std::endl;
-
-  streamlog_out(DEBUG) << "The only comment parameter contents are: "
-                       << m_onlyComment << std::endl;
+  // Dump all values to the screen in a way that can be easily tested via
+  // CMake/CTest RegEx
+  streamlog_out(MESSAGE) << "LEADING " << m_leadingComment << std::endl;
+  streamlog_out(MESSAGE) << "MIXED " << m_mixedComment << std::endl;
+  streamlog_out(MESSAGE) << "TRAILING " << m_trailingComment << std::endl;
+  streamlog_out(MESSAGE) << "NO " << m_noComment << std::endl;
+  streamlog_out(MESSAGE) << "ONLY " << m_onlyComment << std::endl;
+  streamlog_out(MESSAGE) << "EXPLICIT " << m_explicitValue << std::endl;
 }
