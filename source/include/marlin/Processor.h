@@ -30,10 +30,24 @@
 //#define m_endl std::endl 
 //----------------------------------------
 
+class MarlinProcessorWrapper;
+
 using namespace lcio ;
 
 
 namespace marlin{
+/** Helper class that gives an external processor manager access to private
+ * methods where necessary. Essentially only provides a constructor from a
+ * MarlinProcessorWrapper, to at least avoid the most obvious misuses of this.
+ */
+struct ExternalProcessorMgrAccessor {
+  explicit ExternalProcessorMgrAccessor(MarlinProcessorWrapper*){};
+  ExternalProcessorMgrAccessor() = delete;
+  ExternalProcessorMgrAccessor(const ExternalProcessorMgrAccessor&) = delete;
+  ExternalProcessorMgrAccessor& operator=(const ExternalProcessorMgrAccessor&) = delete;
+  ExternalProcessorMgrAccessor(ExternalProcessorMgrAccessor&&) = delete;
+  ExternalProcessorMgrAccessor& operator=(ExternalProcessorMgrAccessor&&) = delete;
+};
 
   class ProcessorMgr ;
   //  class ProcessorParameter ;
@@ -115,6 +129,12 @@ namespace marlin{
      */
     virtual void check( LCEvent* ) { }
 
+    /**
+     * Public overload of setFirstEvent for use in external processor managers
+     */
+    virtual void setFirstEvent(bool firstEvent, ExternalProcessorMgrAccessor) {
+      setFirstEvent(firstEvent);
+    }
 
     /** Called after data processing for clean up in the inverse order of the init()
      *  method so that resources allocated in the first processor also will be available
