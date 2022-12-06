@@ -1,3 +1,17 @@
+# v01-18
+
+* 2022-11-23 Thomas Madlener ([PR#47](https://github.com/ilcsoft/Marlin/pull/47))
+  - Add a `MarlinWrapperPrivateAccessor` class that allows the `MarlinProcessorWrapper` to access private methods by constructing such a class on the fly, when necessary.
+
+* 2022-11-16 Thomas Madlener ([PR#48](https://github.com/ilcsoft/Marlin/pull/48))
+  - Remove no longer working gcc8 based CI workflow and update github actions to latest available versions
+
+* 2022-09-19 Bohdan Dudar ([PR#45](https://github.com/ilcsoft/Marlin/pull/45))
+  - Fix #43, a bug where xml comment fields were processed as a legitimate values and shadowed any data that comes after the comment.
+
+* 2022-09-15 Thomas Madlener ([PR#46](https://github.com/ilcsoft/Marlin/pull/46))
+  - Migrate to github actions CI workflows and remove travis CI configuration
+
 # v01-17-01
 
 * 2020-07-15 Remi Ete ([PR#39](https://github.com/iLCSoft/Marlin/pull/39))
