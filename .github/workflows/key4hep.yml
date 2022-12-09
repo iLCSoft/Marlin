@@ -1,0 +1,31 @@
+name: keyh4ep
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cvmfs-contrib/github-action-cvmfs@v3
+    - uses: aidasoft/run-lcg-view@v4
+      with:
+        container: centos7
+        view-path: /cvmfs/sw-nightlies.hsf.org/key4hep
+        run: |
+          mkdir build
+          cd build
+          echo "::group::Run CMake"
+          cmake -GNinja \
+            -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " \
+            -DCMAKE_CXX_STANDARD=17 \
+            -DCMAKE_INSTALL_PREFIX=../install \
+            ..
+          echo "::endgroup::" && echo "::group::Build"
+          ninja -k0
+          echo "::endgroup::" && echo "::group::Run Tests"
+          ctest --output-on-failure
+          echo "::endgroup::" && echo "::group::Install"
+          ninja install
