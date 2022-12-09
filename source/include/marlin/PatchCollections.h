@@ -18,6 +18,9 @@ namespace UTIL{
 /** Patch events with empty collections that are not present in all events.
  *  This could be useful, e.g. in context of conversion to EDM4hep, where every
  *  collection needs to be in every event in a given file.
+ *  If @PatchCollections is not specified, all inputfiles of the current job are checked for
+ *  missing collections and these are then added to all events.
+ *
  *
  *  NB:  run this processor before any other processor that is processing events.
  * 
