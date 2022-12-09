@@ -20,7 +20,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -GNinja -C ${ILCSOFT}/ILCSoft.cmake -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always " ..
+          cmake -GNinja -C ${ILCSOFT}/ILCSoft.cmake -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always -Werror " ..
           ninja -k0
           ctest --output-on-failure
           ninja install

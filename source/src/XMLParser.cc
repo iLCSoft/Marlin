@@ -624,8 +624,6 @@ namespace marlin{
     
     void XMLParser::processIncludeElement( TiXmlElement* element , const std::map<std::string, std::string>& constants , TiXmlDocument &document) {
       
-        std::pair<TiXmlElement*, TiXmlElement*> firstAndLastElements(nullptr, nullptr) ;
-        
         if( ! element->Attribute("ref") ) {
           
             std::stringstream str ;
