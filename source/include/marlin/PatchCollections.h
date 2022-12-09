@@ -5,7 +5,7 @@
 #include "marlin/EventModifier.h"
 #include "lcio.h"
 #include <string>
-#include <set>
+#include <vector>
 #include <map>  // pair
 
 using namespace lcio ;
@@ -33,7 +33,7 @@ namespace marlin {
 
   class PatchCollections : public Processor {
 
-    typedef std::set< std::pair< std::string, std::string > > SET ;
+    typedef std::vector< std::pair< std::string, std::string > > Vector;
 
   public:
 
@@ -68,11 +68,11 @@ namespace marlin {
   protected:
 
     std::vector<std::string> _colList{};
-    SET _patchCols{};
+    Vector _patchCols{};
 
     int _nRun=-1;
     int _nEvt=-1;
-    UTIL::CheckCollections* _colCheck ;
+    UTIL::CheckCollections* _colCheck = nullptr ;
 
 
   } ;

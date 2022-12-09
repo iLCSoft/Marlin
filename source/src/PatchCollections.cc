@@ -58,7 +58,7 @@ void PatchCollections::init() {
   if( nCols > 0 ) { 
     
     for( unsigned i=0 ; i < nCols ; i+=2 ) {
-      _patchCols.insert( std::make_pair( _colList[i] , _colList[ i+1 ] ) ) ;
+      _patchCols.push_back( { _colList[i] , _colList[ i+1 ] } ) ;
     }
 
   } else {
@@ -78,7 +78,8 @@ void PatchCollections::init() {
 
     _colCheck->checkFiles( inFiles ) ;
 
-    _patchCols.merge( _colCheck->getMissingCollections() ) ;
+    auto mcols =  _colCheck->getMissingCollections() ;
+    std::copy( mcols.begin() , mcols.end() , std::back_inserter( _patchCols ) ) ;
     
     streamlog_out( MESSAGE ) << "   ... done " << std::endl  ;
   } 
