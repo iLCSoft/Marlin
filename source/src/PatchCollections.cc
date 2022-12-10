@@ -20,14 +20,21 @@ PatchCollections aPatchCollections ;
 PatchCollections::PatchCollections() : Processor("PatchCollections") {
   
   // modify processor description
-  _description = "PatchCollections adds missing collections in 'PatchCollections' to the event - or all missing in inut files (if PatchCollections not given)" ;
+  _description = "add missing collections to the event - either parsed from inputfiles or as given in PatchCollections" ;
   
+
+  registerProcessorParameter( "ParseFiles" ,
+			      "if true, all inputfiles are parsed for missing collections on init",
+			      _parseFiles,
+			      false ) ;
+
+
   std::vector<std::string> colsExample ;
-  // colsExample.push_back( "BcalCollection" );
-  // colsExample.push_back( "SimCalorimeterHit" );
+  colsExample.push_back( "BcalCollection" );
+  colsExample.push_back( "SimCalorimeterHit" );
   
   
-  registerProcessorParameter( "PatchCollections" , 
+  registerProcessorParameter( "PatchCollections" ,
 			      "list of collections to patch  - pairs of CollectionName CollectionType"  ,
 			      _colList ,
 			      colsExample ) ;
@@ -46,25 +53,22 @@ void PatchCollections::init() {
   
   _colCheck = new CheckCollections() ;
 
-  
-  unsigned nCols = _colList.size() ;
-  
-  
-  if( nCols % 2 ){
-    throw Exception("Parameter PatchCollections needs to have pairs of 'name type'") ;
-  }
 
+  if( ! _parseFiles ) { // ------ patch only user defined collections
 
-  if( nCols > 0 ) { 
-    
+    unsigned nCols = _colList.size() ;
+
+    if( nCols % 2 ){
+      throw Exception("Parameter PatchCollections needs to have pairs of 'name type'") ;
+    }
     for( unsigned i=0 ; i < nCols ; i+=2 ) {
       _patchCols.push_back( { _colList[i] , _colList[ i+1 ] } ) ;
     }
 
-  } else {
+  } else { // ---------------- parse all input files to get set of missing collections
 
-    streamlog_out( MESSAGE ) << " no patch collections defined in steering - "
-			     << " will check all inputfiles for missing collections : "
+    streamlog_out( MESSAGE ) << " ------ " << std::endl
+			     << "    will check all inputfiles for missing collections : "
 			     << std::endl ;
 
     StringVec inFiles ;
@@ -74,14 +78,14 @@ void PatchCollections::init() {
       streamlog_out( MESSAGE ) << "  " << fn << std::endl ;
     }
 
-    streamlog_out( MESSAGE ) << "   ... reading .. "  ;
+    streamlog_out( MESSAGE ) << "   parsing files ... "  ;
 
     _colCheck->checkFiles( inFiles ) ;
 
     auto mcols =  _colCheck->getMissingCollections() ;
     std::copy( mcols.begin() , mcols.end() , std::back_inserter( _patchCols ) ) ;
     
-    streamlog_out( MESSAGE ) << "   ... done " << std::endl  ;
+    streamlog_out( MESSAGE ) << "   ... done !" << std::endl  ;
   } 
 
   

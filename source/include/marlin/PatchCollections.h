@@ -18,12 +18,19 @@ namespace UTIL{
 /** Patch events with empty collections that are not present in all events.
  *  This could be useful, e.g. in context of conversion to EDM4hep, where every
  *  collection needs to be in every event in a given file.
- *  If @PatchCollections is not specified, all inputfiles of the current job are checked for
- *  missing collections and these are then added to all events.
+ *  There are two modes of how this can be used:
  *
+ *  If @ParseInputFiles is true  all inputfiles are parsed for missing collections on init() and
+ *                      then these are patched as needed in the processing - might cause some delay in program start
+ *                      Collections in  @PatchCollections are ignored in this case
+ *
+ *  If @ParseInputFiles is false, all users specified collections in @PatchCollections are patched as empty
+ *                      collections if needed - this will be faster, but requires the user to know which collections
+ *                      to patch (e.g. from the LCIO tool `check_missing_collections`)
  *
  *  NB:  run this processor before any other processor that is processing events.
  * 
+ * @param  ParseInputFiles:   if true, all inputfiles are parsed for missing collections on init
  * @param  PatchCollections:   pairs of: CollectionName  CollectionType
  * 
  * @author F. Gaede, DESY
@@ -67,13 +74,13 @@ namespace marlin {
 
   protected:
 
-    std::vector<std::string> _colList{};
+    StringVec _colList{};
     Vector _patchCols{};
+    bool _parseFiles = false ;
 
     int _nRun=-1;
     int _nEvt=-1;
     UTIL::CheckCollections* _colCheck = nullptr ;
-
 
   } ;
 
