@@ -51,7 +51,7 @@ void PatchCollections::init() {
   _nRun = 0 ;
   _nEvt = 0 ;
   
-  _colCheck = new CheckCollections() ;
+  _colCheck = std::make_unique<CheckCollections>() ;
 
 
   if( ! _parseFiles ) { // ------ patch only user defined collections
