@@ -6,7 +6,8 @@
 #include "lcio.h"
 #include <string>
 #include <vector>
-#include <map>  // pair
+#include <utility>  // pair
+#include <memory>
 
 using namespace lcio ;
 using namespace marlin ;
