@@ -135,7 +135,6 @@ void PatchCollections::check( LCEvent *  ) {
 
 void PatchCollections::end(){ 
 
-  delete _colCheck ;  
 //   std::cout << "PatchCollections::end()  " << name() 
 // 	    << " processed " << _nEvt << " events in " << _nRun << " runs "
 // 	    << std::endl ;
