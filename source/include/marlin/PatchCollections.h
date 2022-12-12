@@ -80,7 +80,7 @@ namespace marlin {
 
     int _nRun=-1;
     int _nEvt=-1;
-    UTIL::CheckCollections* _colCheck = nullptr ;
+    std::unique_ptr<UTIL::CheckCollections> _colCheck{nullptr};
 
   } ;
 
