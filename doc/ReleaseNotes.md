@@ -1,3 +1,12 @@
+# v01-19
+
+* 2022-12-12 Frank Gaede ([PR#49](https://github.com/iLCSoft/Marlin/pull/49))
+  - Add a simple processor `PatchCollections` that can patch missing collections in LCIO events by adding empty collections to these events
+  -  needs https://github.com/iLCSoft/LCIO/pull/158
+
+* 2022-12-09 Thomas Madlener ([PR#50](https://github.com/iLCSoft/Marlin/pull/50))
+  - Add a CI workflow that runs on the latest key4hep nightly builds.
+
 # v01-18
 
 * 2022-11-23 Thomas Madlener ([PR#47](https://github.com/ilcsoft/Marlin/pull/47))
