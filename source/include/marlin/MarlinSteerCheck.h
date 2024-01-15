@@ -101,7 +101,7 @@ namespace marlin {
     ColVec& getLCIOCols() const;
     
     /** Returns the names of the LCIO files found in the global section*/
-    StringVec& getLCIOFiles(){ return _lcioFiles; }
+    EVENT::StringVec& getLCIOFiles(){ return _lcioFiles; }
 
     /** Returns a list of all available Collections for a given type, name and processor (to use in a ComboBox) */
     sSet& getColsSet( const std::string& type, const std::string& name, CCProcessor* proc );
@@ -227,7 +227,7 @@ namespace marlin {
     ProcVec _aProc{};			//active processors
     ProcVec _iProc{};			//inactive processors
     sColVecMap _lcioCols{};		//LCIO collections
-    StringVec _lcioFiles{};		//LCIO filenames
+    EVENT::StringVec _lcioFiles{};		//LCIO filenames
     
     sSet _colValues{};			//all available collection values for a given type (use in ComboBox)
 

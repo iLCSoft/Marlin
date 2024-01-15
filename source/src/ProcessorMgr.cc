@@ -16,6 +16,8 @@
 
 #include <time.h>
 
+using namespace lcio ;
+
 namespace marlin{
 
     ProcessorMgr* ProcessorMgr::_me = 0 ;

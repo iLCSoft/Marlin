@@ -10,6 +10,7 @@
 
 // #include "CLHEP/Vector/ThreeVector.h"
 
+using namespace CLHEP ;
 
 namespace marlin{
 

@@ -21,8 +21,6 @@
 typedef std::map< std::string ,  std::vector< std::string > >  ParametersMap ;
 
 
-using namespace lcio ;
-
 namespace marlin{
 
 /** Simple parameters class for Marlin.
@@ -51,11 +49,11 @@ public:
   float getFloatVal( const std::string& key ) ;
   const std::string& getStringVal( const std::string& key ) ;
 
-  IntVec& getIntVals( const std::string& key ,  IntVec& intVec ) ;
-  FloatVec& getFloatVals( const std::string& key ,  FloatVec& floatVec ) ;
-  StringVec & getStringVals( const std::string& key  , StringVec & stringVec ) ;
+  EVENT::IntVec& getIntVals( const std::string& key ,    EVENT::IntVec& intVec ) ;
+  EVENT::FloatVec& getFloatVals( const std::string& key ,    EVENT::FloatVec& floatVec ) ;
+  EVENT::StringVec & getStringVals( const std::string& key  ,   EVENT::StringVec & stringVec ) ;
 
-  StringVec& getStringKeys( StringVec& stringVec );
+  EVENT::StringVec& getStringKeys(   EVENT::StringVec& stringVec );
   
   virtual ~StringParameters() ; 
   

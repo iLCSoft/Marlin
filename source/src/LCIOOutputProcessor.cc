@@ -16,6 +16,8 @@
 #include <algorithm>
 #include <bitset>
 
+using namespace lcio ;
+
 namespace marlin{
   
   LCIOOutputProcessor anLCIOOutputProcessor ;

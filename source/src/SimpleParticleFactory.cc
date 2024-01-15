@@ -27,6 +27,7 @@
 #include "UTIL/LCFourVector.h"
 
 using namespace lcio ;
+using namespace CLHEP ;
 
 
 namespace marlin{

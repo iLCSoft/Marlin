@@ -8,6 +8,8 @@
 #include <limits>
 #include <algorithm>
 
+using namespace lcio ;
+
 namespace marlin{
 
 

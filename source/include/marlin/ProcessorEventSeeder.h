@@ -6,8 +6,6 @@
 #include <vector>
 #include <map>
 
-using namespace lcio ;
-
 namespace marlin{
 
   class ProcessorMgr;  
@@ -79,7 +77,7 @@ namespace marlin{
     /** Create new set of seeds for registered Processors for the given event.
      *  This method should only be called from ProcessorMgr::processEvent
      */
-    void refreshSeeds( LCEvent * evt ) ;
+    void refreshSeeds( EVENT::LCEvent * evt ) ;
     
     ProcessorEventSeeder(const ProcessorEventSeeder&);	// prevent copying
     ProcessorEventSeeder& operator=(const ProcessorEventSeeder&); // prevent assignment

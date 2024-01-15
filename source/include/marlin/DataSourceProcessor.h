@@ -3,8 +3,6 @@
 
 #include "marlin/Processor.h"
 
-using namespace lcio ;
-
 
 namespace marlin{
   

@@ -35,6 +35,7 @@
 #include <cmath>
 
 using namespace lcio ;
+using namespace CLHEP ;
 
 
 namespace marlin{
@@ -196,7 +197,9 @@ namespace marlin{
 
 
   void SimpleFastMCProcessor::check( LCEvent * evt ) { 
-    
+
+    // silence possible warning about unused parameter without AIDA
+    (void)evt ;
     
 #ifdef MARLIN_AIDA
     

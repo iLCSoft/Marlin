@@ -68,7 +68,7 @@ namespace marlin{
 	bool isInstalled( const std::string& type );
 
 	//utility function to tokenize strings
-	void tokenize( const std::string str, StringVec& tokens, const std::string& delimiters = " " );
+        void tokenize( const std::string str, EVENT::StringVec& tokens, const std::string& delimiters = " " );
 
     private:
 	// Constructor

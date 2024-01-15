@@ -4,6 +4,7 @@
 #include "marlin/ProcessorMgr.h"
 
 using namespace std;
+using namespace lcio;
 
 namespace marlin{
 

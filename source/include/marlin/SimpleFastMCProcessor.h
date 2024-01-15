@@ -9,8 +9,6 @@
 
 
 
-using namespace lcio ;
-
 namespace marlin{
  
 
@@ -85,15 +83,15 @@ namespace marlin{
     
     /** Called for every run.
      */
-    virtual void processRunHeader( LCRunHeader* run ) ;
+    virtual void processRunHeader( EVENT::LCRunHeader* run ) ;
     
     /** Updates all registered conditions handlers and adds the data to the event.
      */
-    virtual void processEvent( LCEvent * evt ) ; 
+    virtual void processEvent( EVENT::LCEvent * evt ) ; 
     
     /** Creates some checkplots.
      */
-    virtual void check( LCEvent * evt ) ; 
+    virtual void check( EVENT::LCEvent * evt ) ; 
     
     /** Called after data processing for clean up.
      */
@@ -113,13 +111,13 @@ namespace marlin{
     float _momentumCut=0.0;
 
     /** Resolutions of charged particles */
-    FloatVec _initChargedRes{};
+    EVENT::FloatVec _initChargedRes{};
 
     /** Resolutions of photons */
-    FloatVec _initPhotonRes{};
+    EVENT::FloatVec _initPhotonRes{};
 
     /** Resolutions of photons */
-    FloatVec _initNeutralHadronRes{};
+    EVENT::FloatVec _initNeutralHadronRes{};
 
     /** The particle factory */
     IRecoParticleFactory* _factory=NULL;

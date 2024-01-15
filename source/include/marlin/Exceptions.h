@@ -18,7 +18,7 @@ namespace marlin{
   protected:
     ParseException() {  /*no_op*/ ; } 
   public: 
-    virtual ~ParseException() throw() { /*no_op*/; } 
+    virtual ~ParseException() noexcept { /*no_op*/; } 
 
     ParseException( std::string text ){
       message = "marlin::ParseException: " + text ;
@@ -40,7 +40,7 @@ namespace marlin{
     SkipEventException(const Processor* proc){
       message = proc->name()  ;
     }
-    virtual ~SkipEventException() throw() { /*no_op*/; } 
+    virtual ~SkipEventException() noexcept { /*no_op*/; } 
 
   }; 
 
@@ -58,7 +58,7 @@ namespace marlin{
     StopProcessingException(const Processor* proc){
       message = proc->name()  ;
     }
-    virtual ~StopProcessingException() throw() { /*no_op*/; } 
+    virtual ~StopProcessingException() noexcept { /*no_op*/; } 
 
   }; 
 
@@ -76,7 +76,7 @@ namespace marlin{
     RewindDataFilesException(const Processor* proc){
       message = proc->name()  ;
     }
-    virtual ~RewindDataFilesException() throw() { /*no_op*/; } 
+    virtual ~RewindDataFilesException() noexcept { /*no_op*/; } 
 
   }; 
 
