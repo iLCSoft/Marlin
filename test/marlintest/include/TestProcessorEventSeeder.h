@@ -10,9 +10,6 @@
 #include <map>
 #include <vector>
 
-using namespace lcio ;
-using namespace marlin ;
-
 
 /**  test processor for testing the uniquie event seeding functionality of the ProcessorEventSeeder service in Marlin.
  * 
@@ -20,7 +17,7 @@ using namespace marlin ;
  * @author S. J. Aplin, DESY
  */
 
-class TestProcessorEventSeeder : public Processor {
+class TestProcessorEventSeeder : public marlin::Processor {
   
  public:
   
@@ -42,14 +39,14 @@ class TestProcessorEventSeeder : public Processor {
   
   /** Called for every run.
    */
-  virtual void processRunHeader( LCRunHeader* run ) ;
+  virtual void processRunHeader( EVENT::LCRunHeader* run ) ;
   
   /** Called for every event - the working horse.
    */
-  virtual void processEvent( LCEvent * evt ) ; 
+  virtual void processEvent( EVENT::LCEvent * evt ) ; 
   
   
-  virtual void check( LCEvent * evt ) ; 
+  virtual void check( EVENT::LCEvent * evt ) ; 
   
   
   /** Called after data processing for clean up.

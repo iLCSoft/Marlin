@@ -8,10 +8,6 @@
 #include <string>
 
 
-using namespace lcio ;
-using namespace marlin ;
-
-
 /**  Example processor for marlin.
  * 
  *  If compiled with MARLIN_USE_AIDA 
@@ -29,7 +25,7 @@ using namespace marlin ;
  * @version $Id: TestEventModifier.h,v 1.4 2005-10-11 12:57:39 gaede Exp $ 
  */
 
-class TestEventModifier : public Processor, public EventModifier {
+class TestEventModifier : public marlin::Processor, public marlin::EventModifier {
   
  public:
   
@@ -56,14 +52,14 @@ class TestEventModifier : public Processor, public EventModifier {
   
   /** Called for every run.
    */
-  virtual void processRunHeader( LCRunHeader* run ) ;
+  virtual void processRunHeader( EVENT::LCRunHeader* run ) ;
   
   /** Called for every event - the working horse.
    */
-  virtual void processEvent( LCEvent * evt ) ; 
+  virtual void processEvent( EVENT::LCEvent * evt ) ; 
   
   
-  virtual void check( LCEvent * evt ) ; 
+  virtual void check( EVENT::LCEvent * evt ) ; 
   
   
   /** Called after data processing for clean up.
