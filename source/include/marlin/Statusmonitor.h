@@ -5,8 +5,6 @@
 #include "lcio.h"
 #include <string>
 
-using namespace marlin ;
-
   /** Simple processor for writing out a status message every n-th event.
    *
    *  <h4>Input - Prerequisites</h4>
@@ -18,7 +16,7 @@ using namespace marlin ;
    * @author A.Sailer CERN
    * @version $Id:$
    */
-class Statusmonitor : public Processor {
+class Statusmonitor : public marlin::Processor {
   
  public:
   

@@ -19,6 +19,7 @@ namespace marlin{
     ParseException() {  /*no_op*/ ; } 
   public: 
     virtual ~ParseException() noexcept { /*no_op*/; } 
+    ParseException( const ParseException& e ) = default ;
 
     ParseException( std::string text ){
       message = "marlin::ParseException: " + text ;

@@ -3,8 +3,6 @@
 
 #include "marlin/DataSourceProcessor.h"
 
-using namespace lcio ;
-
 
 namespace marlin{
   
