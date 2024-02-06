@@ -1,3 +1,9 @@
+# v01-19-01
+
+* 2024-01-15 tmadlener ([PR#54](https://github.com/iLCSoft/Marlin/pull/54))
+  - Switch to latest clicdp nightlies for CI
+  - Update Key4hep CI workflows to run on releases and nightlies (including c++20)
+
 # v01-19
 
 * 2022-12-12 Frank Gaede ([PR#49](https://github.com/iLCSoft/Marlin/pull/49))
