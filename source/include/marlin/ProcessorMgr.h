@@ -16,8 +16,6 @@
 #include <set>
 #include <list>
 
-using namespace lcio ;
-
 namespace marlin{
 
   class ProcessorEventSeeder;
@@ -33,7 +31,7 @@ typedef std::map< const std::string , int > SkippedEventMap ;
  *  @author F. Gaede, DESY
  *  @version $Id: ProcessorMgr.h,v 1.16 2007-08-13 10:38:39 gaede Exp $ 
  */
-class ProcessorMgr : public LCRunListener, public LCEventListener {
+  class ProcessorMgr : public IO::LCRunListener, public IO::LCEventListener {
 
 friend class  Processor ;   
 friend class  CMProcessor ;   
@@ -85,13 +83,13 @@ public:
   void dumpRegisteredProcessorsXML() ;
   
   virtual void init() ;
-  virtual void processRunHeader( LCRunHeader* ) ;   
-  virtual void processEvent( LCEvent* ) ;
+  virtual void processRunHeader( EVENT::LCRunHeader* ) ;   
+  virtual void processEvent( EVENT::LCEvent* ) ;
   virtual void end() ;
   
   
-  virtual void modifyRunHeader( LCRunHeader*) ; 
-  virtual void modifyEvent( LCEvent *) ; 
+  virtual void modifyRunHeader( EVENT::LCRunHeader*) ; 
+  virtual void modifyEvent( EVENT::LCEvent *) ; 
 
   /** Calls readDataSource() for all Processors of type DataSourceProcessor.
    */

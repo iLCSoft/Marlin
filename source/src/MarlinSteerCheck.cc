@@ -25,6 +25,7 @@
 #include <algorithm>
 
 using namespace std;
+using namespace lcio;
 
 namespace marlin{
 

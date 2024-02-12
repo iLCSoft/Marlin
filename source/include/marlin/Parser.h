@@ -113,9 +113,6 @@ class LCTokenizer{
 
   } 
 
-  ~LCTokenizer(){
-  }
-  
   std::vector<std::string> & result()  { 
     
     return _tokens ; 
