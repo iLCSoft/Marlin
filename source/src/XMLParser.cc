@@ -873,16 +873,14 @@ namespace marlin{
             }
             
             const std::string key( value.substr( pos+2 , pos2-pos-2 )) ;
-            auto findConstant = constants.find( key ) ;
-            const std::string replacementValue( findConstant != constants.end() ? findConstant->second : "" ) ;
-            
-            if( replacementValue.empty() ) {
-              
+            const auto findConstant = constants.find( key ) ;
+            if (findConstant == constants.end()) {
                 std::stringstream str ;
                 str << "XMLParser::performConstantReplacement : constant \"" << key << "\" not found in available constants !" ;
                 throw ParseException( str.str() ) ;
             }
-            
+            const auto& replacementValue = findConstant->second;
+
             value.replace( pos , (pos2+1-pos) , replacementValue ) ;
             pos2 = pos + replacementValue.size() ; // new end position after replace
             
