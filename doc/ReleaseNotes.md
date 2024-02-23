@@ -1,3 +1,8 @@
+# v01-19-02
+
+* 2024-02-16 tmadlener ([PR#55](https://github.com/iLCSoft/Marlin/pull/55))
+  - Allow to have empty constant values in steering files and only throw if there really is no constant specified.
+
 # v01-19-01
 
 * 2024-01-15 tmadlener ([PR#54](https://github.com/iLCSoft/Marlin/pull/54))
