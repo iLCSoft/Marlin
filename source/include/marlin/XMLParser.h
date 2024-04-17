@@ -137,9 +137,6 @@ namespace marlin{
 
       } 
 
-      ~LCTokenizer(){
-      }
-  
       std::vector<std::string> & result()  { 
     
 	return _tokens ; 

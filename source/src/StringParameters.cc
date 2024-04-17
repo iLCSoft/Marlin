@@ -5,6 +5,8 @@
 #include <exception>
 #include <iomanip>
 
+using namespace lcio ;
+
 namespace marlin{
 
 StringParameters::StringParameters(){

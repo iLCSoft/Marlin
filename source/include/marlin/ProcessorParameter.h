@@ -13,8 +13,6 @@
 // typedef std::map< std::string ,  std::vector< std::string > >  ParametersMap ;
 
 
-using namespace lcio ;
-
 namespace marlin{
   
   /** Class that holds a steering variable for a marlin processor - automatically created by
@@ -148,9 +146,9 @@ namespace marlin{
       // return typeid( _parameter ).name() ; } 
 
       // make this human readable
-      if     ( typeid( _parameter ) == typeid( IntVec    )) return "IntVec" ;
-      else if( typeid( _parameter ) == typeid( FloatVec  )) return "FloatVec" ;
-      else if( typeid( _parameter ) == typeid( StringVec )) return "StringVec" ;
+      if     ( typeid( _parameter ) == typeid( EVENT::IntVec    )) return "IntVec" ;
+      else if( typeid( _parameter ) == typeid( EVENT::FloatVec  )) return "FloatVec" ;
+      else if( typeid( _parameter ) == typeid( EVENT::StringVec )) return "StringVec" ;
       else if( typeid( _parameter ) == typeid( int   )) return "int" ;
       else if( typeid( _parameter ) == typeid( float )) return "float" ;
       else if( typeid( _parameter ) == typeid( double )) return "double" ;

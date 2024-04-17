@@ -195,8 +195,8 @@ namespace marlin{
         // count processors with collection type information in order to generate warning
         // about old files or missing type info
         std::pair<unsigned,unsigned> typeCount ;
-        unsigned procCount(0) ; 
-        unsigned typedProcCount(0) ;
+        // unsigned procCount(0) ;
+        // unsigned typedProcCount(0) ;
 
         // use this variable to check for duplicate processor definitions
         procList.clear();
@@ -233,13 +233,13 @@ namespace marlin{
             parametersFromNode( section , constants, &typeCount ) ;
 
             if( typeCount.first > currentCount.first || typeCount.second > currentCount.second ){
-                ++typedProcCount ; // at least one type info attribute found in processor
+                // ++typedProcCount ; // at least one type info attribute found in processor
             }
             //       else { 
             // 	std::cout << " -- processor w/o type info : " << name << std::endl ;
             //       }
 
-            ++procCount ;
+            // ++procCount ;
         }
 
         globalParameters->add( availableProcs )  ;

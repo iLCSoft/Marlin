@@ -61,7 +61,7 @@ namespace marlin{
      *  polar angle of the cluster. Returns a vector with all elements 0. if
      *  no resolution is defined.
      */ 
-    virtual HepLorentzVector smearedFourVector( const HepLorentzVector& v, int pdgCode ) ;
+    virtual CLHEP::HepLorentzVector smearedFourVector( const CLHEP::HepLorentzVector& v, int pdgCode ) ;
     
   protected:
 

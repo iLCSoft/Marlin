@@ -15,8 +15,6 @@ namespace lccd{
     class IConditionsChangeListener;
 }
 
-using namespace lcio ;
-
 namespace marlin{
 
 
@@ -73,7 +71,7 @@ class ConditionsProcessor : public Processor {
   
   /** Updates all registered conditions handlers and adds the data to the event.
    */
-  virtual void processEvent( LCEvent * evt ) ; 
+  virtual void processEvent( EVENT::LCEvent * evt ) ; 
   
   
 //   virtual void check( LCEvent * evt ) ; 
@@ -88,19 +86,19 @@ class ConditionsProcessor : public Processor {
   std::string _dbInit="";
 
   /** initialization of SimpleFileHandlers */
-  StringVec _simpleHandlerInit{};
+  EVENT::StringVec _simpleHandlerInit{};
 
   /** initialization of DBCondHandlers */
-  StringVec _dbcondHandlerInit{};
+  EVENT::StringVec _dbcondHandlerInit{};
 
   /** initialization of DBFileHandlers */
-  StringVec _dbfileHandlerInit{};
+  EVENT::StringVec _dbfileHandlerInit{};
 
   /** initialization of DataFileHandlers */
-  StringVec _datafileHandlerInit{};
+  EVENT::StringVec _datafileHandlerInit{};
 
   /** the names of all handlers */
-  StringVec _condHandlerNames{};
+  EVENT::StringVec _condHandlerNames{};
 
   int _nRun=-1;
   int _nEvt=-1;

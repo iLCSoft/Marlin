@@ -8,7 +8,6 @@
 #include "CLHEP/Vector/LorentzVector.h"
 
 namespace CLHEP{}    // declare namespace CLHEP for backward compatibility
-using namespace CLHEP ;
 
 
 namespace marlin{
@@ -29,7 +28,7 @@ namespace marlin{
     
     /** Smears the given four vector 
      */ 
-    virtual HepLorentzVector smearedFourVector( const HepLorentzVector& v, int pdgCode ) = 0 ;
+    virtual CLHEP::HepLorentzVector smearedFourVector( const CLHEP::HepLorentzVector& v, int pdgCode ) = 0 ;
     
   } ;
   

@@ -169,8 +169,8 @@ namespace marlin {
     std::shared_ptr<StringParameters> _param;	    // parameters from processor
     Processor* _proc;		    // associated Marlin processor
  
-    const StringVec _error_desc{ "Processor has no Parameters", "Processor not available!", "Some Collections have Errors"}; // error descriptions for all processors
-    StringVec _errors{};	    // list of errors found in a processor
+    const EVENT::StringVec _error_desc{ "Processor has no Parameters", "Processor not available!", "Some Collections have Errors"}; // error descriptions for all processors
+    EVENT::StringVec _errors{};	    // list of errors found in a processor
 
     sSet _conditions;		    // processor's conditions
   

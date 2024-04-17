@@ -127,9 +127,6 @@ namespace marlin{
       _last = c ;
     }
 
-    ~Tokenizer(){
-    }
-    
     std::vector<Expression> & result()  { 
       
       return _tokens ; 

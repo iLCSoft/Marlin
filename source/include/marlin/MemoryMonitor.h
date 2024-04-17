@@ -8,9 +8,6 @@
 #include "stdio.h"
 #include "string.h"
 
-using namespace lcio ;
-using namespace marlin ;
-
 
 /** MemoryMonitor is a memory monitoring application for Marlin
  *  <h4>Input - Prerequisites</h4>
@@ -24,7 +21,7 @@ using namespace marlin ;
  * @author N. Nikiforou, CERN,
  */
 
-class MemoryMonitor : public Processor {
+class MemoryMonitor : public marlin::Processor {
 		
 public:
 	
@@ -36,13 +33,13 @@ public:
 	virtual void init() ;
 	
 	// Called at the beginning of every run
-	virtual void processRunHeader( LCRunHeader* run ) ;
+       virtual void processRunHeader( EVENT::LCRunHeader* run ) ;
 	
 	// Run over each event - the main algorithm
-	virtual void processEvent( LCEvent * evt ) ;
+        virtual void processEvent( EVENT::LCEvent * evt ) ;
 	
   // Run at the end of each event
-	virtual void check( LCEvent * evt ) ;
+        virtual void check( EVENT::LCEvent * evt ) ;
 	
 	// Called at the very end for cleanup, histogram saving, etc.
 	virtual void end() ;

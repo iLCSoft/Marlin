@@ -1,6 +1,8 @@
 #include "marlin/ProcessorParameter.h"
 #include <algorithm>
 
+using namespace lcio ;
+
 namespace marlin {
 
 //   const std::string ProcessorParameter::type() { 

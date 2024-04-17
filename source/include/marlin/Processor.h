@@ -32,8 +32,6 @@
 
 class MarlinProcessorWrapper;
 
-using namespace lcio ;
-
 
 namespace marlin{
 /** Helper class that gives an external processor manager access to private
@@ -117,17 +115,17 @@ struct ExternalProcessorMgrAccessor {
     /** Called for every run, e.g. overwrite to initialize run dependent 
      *  histograms.
      */
-    virtual void processRunHeader( LCRunHeader* ) { } 
+    virtual void processRunHeader( EVENT::LCRunHeader* ) { } 
 
     /** Called for every event - the working horse. 
      */
-    virtual void processEvent( LCEvent * ) { }
+    virtual void processEvent( EVENT::LCEvent * ) { }
 
     /** Called for every event - right after processEvent()
      *  has been called for  this processor.
      *  Use to check processing and/or produce check plots.
      */
-    virtual void check( LCEvent* ) { }
+    virtual void check( EVENT::LCEvent* ) { }
 
     /**
      * Public overload of setFirstEvent for use in external processor managers
@@ -316,8 +314,8 @@ struct ExternalProcessorMgrAccessor {
     void registerInputCollections(const std::string& collectionType,
 				  const std::string& parameterName, 
 				  const std::string& parameterDescription,
-				  StringVec& parameter,
-				  const StringVec& defaultVal,
+				  EVENT::StringVec& parameter,
+				  const EVENT::StringVec& defaultVal,
 				  int setSize=0 ) {
       
       setLCIOInType( parameterName , collectionType ) ;
