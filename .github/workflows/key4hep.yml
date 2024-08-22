@@ -1,37 +1,27 @@
-name: keyh4ep
-on: [push, pull_request]
+name: Key4hep build
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  build:
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - release: "sw.hsf.org/key4hep"
-            CXX_STANDARD: 17
-          - release: "sw-nightlies.hsf.org/key4hep"
-            CXX_STANDARD: 20
-
+        build_type: ["release", "nightly"]
+        image: ["alma9", "ubuntu22"]
+      fail-fast: false
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: cvmfs-contrib/github-action-cvmfs@v3
-    - uses: aidasoft/run-lcg-view@v4
+    - uses: actions/checkout@v4
+    - uses: key4hep/key4hep-actions/key4hep-build@main
       with:
-        container: centos7
-        view-path: /cvmfs/${{ matrix.release }}
-        run: |
-          mkdir build
-          cd build
-          echo "::group::Run CMake"
-          cmake -GNinja \
-            -DCMAKE_CXX_FLAGS=" -fdiagnostics-color=always -Werror " \
-            -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }} \
-            -DCMAKE_INSTALL_PREFIX=../install \
-            ..
-          echo "::endgroup::" && echo "::group::Build"
-          ninja -k0
-          echo "::endgroup::" && echo "::group::Run Tests"
-          ctest --output-on-failure
-          echo "::endgroup::" && echo "::group::Install"
-          ninja install
+        build_type: ${{ matrix.build_type }}
+        image: ${{ matrix.image }}
