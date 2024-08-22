@@ -1,8 +1,12 @@
 #ifndef EventModifier_h
 #define EventModifier_h 1
 
+#include <string>
 
-namespace EVENT{ class LCEvent ; }
+namespace EVENT {
+    class LCEvent ;
+    class LCRunHeader ;
+}
 
 namespace marlin{
 
