@@ -26,6 +26,15 @@ INCLUDE( ilcsoft_default_settings )
 
 # required packages
 FIND_PACKAGE( LCIO REQUIRED )
+# Shim for older LCIO versions
+if(NOT TARGET LCIO::lcio)
+  add_library(LCIO::lcio INTERFACE IMPORTED GLOBAL)
+  set_target_properties(LCIO::lcio
+      PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${LCIO_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${LCIO_LIBRARIES}"
+  )
+endif()
 FIND_PACKAGE( GEAR REQUIRED )
 
 # export Marlin_DEPENDS_INCLUDE_DIRS to MarlinConfig.cmake
