@@ -53,6 +53,19 @@ CHECK_PACKAGE_LIBS( Marlin Marlin MarlinXML )
 
 
 # ---------- dependencies -----------------------------------------------------
+include(CMakeFindDependencyMacro)
+find_dependency(LCIO)
+if(NOT TARGET LCIO::lcio)
+  message(STATUS "LCIO found without targets, bootstrapping them")
+  add_library(LCIO::lcio INTERFACE IMPORTED GLOBAL)
+  set_target_properties(LCIO::lcio
+    PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LCIO_INCLUDE_DIRS}"
+    INTERFACE_LINK_LIBRARIES "${LCIO_LIBRARIES}"
+  )
+endif()
+
+
 INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroExportPackageDeps.cmake" )
 # exports following package dependencies (if set)
 # first argument of macro should be the package name
