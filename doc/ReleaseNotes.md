@@ -1,3 +1,16 @@
+# v01-19-03
+
+* 2024-08-22 tmadlener ([PR#59](https://github.com/iLCSoft/Marlin/pull/59))
+  - Make sure the `LCIO::lcio` target is also defined in packages consuming Marlin (necessary after #56)
+
+* 2024-08-22 tmadlener ([PR#58](https://github.com/iLCSoft/Marlin/pull/58))
+  - Make sure that all names that are used by `EventModifier` are forward declared
+  - Add missing include to make `EventModifier` usable without having to re-order includes
+  - Update the key4hep based github action workflows to use supported OSs
+
+* 2024-08-22 jmcarcell ([PR#56](https://github.com/iLCSoft/Marlin/pull/56))
+  - Change LCIO_LIBRARIES to LCIO::lcio
+
 # v01-19-02
 
 * 2024-02-16 tmadlener ([PR#55](https://github.com/iLCSoft/Marlin/pull/55))
