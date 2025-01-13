@@ -1,3 +1,8 @@
+# v01-19-04
+
+* 2025-01-13 jmcarcell ([PR#62](https://github.com/iLCSoft/Marlin/pull/62))
+  - Include GNUInstallDirs to set CMAKE_INSTALL_LIBDIR so that the default rpath is correct in MacOS and can be used in downstream projects, like in `k4MarlinWrapper`
+
 # v01-19-03
 
 * 2024-08-22 tmadlener ([PR#59](https://github.com/iLCSoft/Marlin/pull/59))
