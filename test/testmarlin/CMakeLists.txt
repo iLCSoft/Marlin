@@ -8,7 +8,7 @@ SET_TESTS_PROPERTIES(t_marlinminusx PROPERTIES PASS_REGULAR_EXPRESSION "Example 
 SET_TESTS_PROPERTIES( t_marlinminusx PROPERTIES PASS_REGULAR_EXPRESSION "<parameter name=\"RandomSeed\" value=\"1234567890\" />" )
 
 #find the marlintest library and set the MARLIN_DLL to it
-GET_TARGET_PROPERTY( MARLIN_DLL marlintest LOCATION )
+set( MARLIN_DLL ${CMAKE_BINARY_DIR}/lib/libmarlintest.so )
 MESSAGE( STATUS "using the following MARLIN_DLL for tests: ${MARLIN_DLL}"  )
 
 
