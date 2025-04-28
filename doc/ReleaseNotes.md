@@ -1,3 +1,15 @@
+# v01-19-05
+
+* 2025-04-25 Thomas Madlener ([PR#65](https://github.com/iLCSoft/Marlin/pull/65))
+  - Make sure to install libraries to `CMAKE_INSTALL_LIBDIR` to ensure the `RPATH` embedded in executables and binaries points to the correct place
+
+* 2025-03-31 jmcarcell ([PR#64](https://github.com/iLCSoft/Marlin/pull/64))
+  - Add LANGUAGES CXX to the top level CMakeLists.txt to disable checks for a C compiler
+
+* 2025-03-31 jmcarcell ([PR#63](https://github.com/iLCSoft/Marlin/pull/63))
+  - Bump the minimum version of CMake to 3.5, to be able to compile with CMake 4.0
+  - Change a `get_property...LOCATION` (doesn't work with CMake 4.0) and hardcode a set with the location of the library, only used for testing.
+
 # v01-19-04
 
 * 2025-01-13 jmcarcell ([PR#62](https://github.com/iLCSoft/Marlin/pull/62))
