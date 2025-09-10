@@ -195,8 +195,6 @@ namespace marlin{
         // count processors with collection type information in order to generate warning
         // about old files or missing type info
         std::pair<unsigned,unsigned> typeCount ;
-        unsigned procCount(0) ; 
-        unsigned typedProcCount(0) ;
 
         // use this variable to check for duplicate processor definitions
         procList.clear();
@@ -227,19 +225,8 @@ namespace marlin{
             _current->add( procType ) ;
 
 
-
-            std::pair<unsigned,unsigned> currentCount( typeCount ) ;
-
             parametersFromNode( section , constants, &typeCount ) ;
 
-            if( typeCount.first > currentCount.first || typeCount.second > currentCount.second ){
-                ++typedProcCount ; // at least one type info attribute found in processor
-            }
-            //       else { 
-            // 	std::cout << " -- processor w/o type info : " << name << std::endl ;
-            //       }
-
-            ++procCount ;
         }
 
         globalParameters->add( availableProcs )  ;
@@ -259,21 +246,6 @@ namespace marlin{
                 << "  or add the appropriate information to your existing steering files " << std::endl 
                 << "---------------------------------------------------------------------" << std::endl ;
         } 
-
-        // fg --- this is not really a warning as there are a number of processors w/o any input or output collections
-        //
-        //     else if( procCount > typedProcCount ){
-        //       std::cout  << "---------------------------------------------------------------------" << std::endl
-        // 		 << "  WARNING XMLParser : some of the available processors don't have    " << std::endl
-        // 		 << "  input or output collection information assigned. This is           " << std::endl 
-        // 		 << "  needed to check the steering file for consistency with 'Marlin -c'." << std::endl 
-        // 		 << "  Please use Processor::registerInputCollection() and                " << std::endl 
-        // 		 << "  Processor::registerOutputCollection()  in you Marlin processors    " << std::endl 
-        // 		 << "  and create a new steering file with 'Marlin -x > newsteer.xml'     " << std::endl 
-        // 		 << "  or add the appropriate information to your existing steering files " << std::endl 
-        // 		 << "---------------------------------------------------------------------" << std::endl ;
-        //     }
-
 
 	// ======    check if we have unused cmd line parameter overwrites
 	if( _cmdlineparams.size() > 0 ) { 
