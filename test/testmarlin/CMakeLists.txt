@@ -81,3 +81,17 @@ SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSI
 SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "ONLY {}")
 SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "TRAILING {Content, first}")
 SET_TESTS_PROPERTIES( t_parse_steering_comments PROPERTIES PASS_REGULAR_EXPRESSION "EXPLICIT {Hello, It, Is, Me}")
+
+#---------------------------------------------------------------------------------------
+SET( MARLIN_STEERING_FILE empty_event_creator.xml )
+SET( MARLIN_INPUT_FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/${MARLIN_STEERING_FILE}
+  ${CMAKE_CURRENT_SOURCE_DIR}/gear_simjob.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/simjob.slcio
+)
+
+CONFIGURE_FILE( runmarlin.cmake.in empty_event_creator.cmake @ONLY )
+ADD_TEST( t_empty_event_creator "${CMAKE_COMMAND}" -P empty_event_creator.cmake )
+
+SET_TESTS_PROPERTIES( t_empty_event_creator PROPERTIES FAIL_REGULAR_EXPRESSION "Marlin will have to be terminated, sorry." )
+#---------------------------------------------------------------------------------------
