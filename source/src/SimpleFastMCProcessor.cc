@@ -195,7 +195,7 @@ namespace marlin{
   
 
 
-  void SimpleFastMCProcessor::check( LCEvent * evt ) { 
+  void SimpleFastMCProcessor::check( LCEvent * ) {
     
     
 #ifdef MARLIN_AIDA
