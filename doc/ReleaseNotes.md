@@ -1,3 +1,12 @@
+# v01-19-06
+
+* 2025-09-10 Thomas Madlener ([PR#67](https://github.com/iLCSoft/Marlin/pull/67))
+  - Switch to existing Key4hep releases and nightlies for CI
+
+* 2025-09-10 Juan Miguel Carceller ([PR#66](https://github.com/iLCSoft/Marlin/pull/66))
+  - Fix a few warnings related to unused variables
+  - Remove a comment that doesn't make sense anymore without the removed variables
+
 # v01-19-05
 
 * 2025-04-25 Thomas Madlener ([PR#65](https://github.com/iLCSoft/Marlin/pull/65))
