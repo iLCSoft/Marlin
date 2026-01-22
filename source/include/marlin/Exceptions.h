@@ -16,9 +16,9 @@ namespace marlin{
   class ParseException : public lcio::Exception{
     
   protected:
-    ParseException() {  /*no_op*/ ; } 
+    ParseException() = default;
   public: 
-    virtual ~ParseException() throw() { /*no_op*/; } 
+    virtual ~ParseException() noexcept override = default;
 
     ParseException( std::string text ){
       message = "marlin::ParseException: " + text ;
@@ -34,13 +34,13 @@ namespace marlin{
   class SkipEventException : public lcio::Exception{
 
   protected:
-    SkipEventException() {  /*no_op*/ ; } 
+    SkipEventException() = default;
 
   public: 
     SkipEventException(const Processor* proc){
       message = proc->name()  ;
     }
-    virtual ~SkipEventException() throw() { /*no_op*/; } 
+    virtual ~SkipEventException() noexcept override = default;
 
   }; 
 
@@ -58,7 +58,7 @@ namespace marlin{
     StopProcessingException(const Processor* proc){
       message = proc->name()  ;
     }
-    virtual ~StopProcessingException() throw() { /*no_op*/; } 
+    virtual ~StopProcessingException() noexcept override = default;
 
   }; 
 
@@ -70,13 +70,13 @@ namespace marlin{
   class RewindDataFilesException : public lcio::Exception{
 
   protected:
-    RewindDataFilesException() {  /*no_op*/ ; } 
+    RewindDataFilesException() = default;
 
   public: 
     RewindDataFilesException(const Processor* proc){
       message = proc->name()  ;
     }
-    virtual ~RewindDataFilesException() throw() { /*no_op*/; } 
+    virtual ~RewindDataFilesException() noexcept override = default;
 
   }; 
 
