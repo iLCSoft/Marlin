@@ -105,8 +105,8 @@ struct TiXmlCursor
 	TiXmlCursor()		{ Clear(); }
 	void Clear()		{ row = col = -1; }
 
-	int row;	// 0 based.
-	int col;	// 0 based.
+	int row = -1;	// 0 based.
+	int col = -1;	// 0 based.
 };
 
 
@@ -201,7 +201,7 @@ class TiXmlBase
 	friend class TiXmlDocument;
 
 public:
-	TiXmlBase()	:	userData(0)		{}
+	TiXmlBase()	:	location(),userData(0)		{}
 	virtual ~TiXmlBase()			{}
 
 	/**	All TinyXml classes can print themselves to a filestream
@@ -782,30 +782,23 @@ class TiXmlAttribute : public TiXmlBase
 
 public:
 	/// Construct an empty attribute.
-	TiXmlAttribute() : TiXmlBase()
+        TiXmlAttribute() : TiXmlBase(), name(), value()
 	{
-		document = 0;
-		prev = next = 0;
 	}
 
 	#ifdef TIXML_USE_STL
 	/// std::string constructor.
 	TiXmlAttribute( const std::string& _name, const std::string& _value )
+          : name(_name), value(_value)
 	{
-		name = _name;
 		value = _value;
-		document = 0;
-		prev = next = 0;
 	}
 	#endif
 
 	/// Construct an attribute with a name and value.
 	TiXmlAttribute( const char * _name, const char * _value )
+          : name(_name), value(_value)
 	{
-		name = _name;
-		value = _value;
-		document = 0;
-		prev = next = 0;
 	}
 
 	const char*		Name()  const		{ return name.c_str(); }		///< Return the name of this attribute.
@@ -880,11 +873,11 @@ private:
 	TiXmlAttribute( const TiXmlAttribute& );				// not implemented.
 	void operator=( const TiXmlAttribute& base );	// not allowed.
 
-	TiXmlDocument*	document;	// A pointer back to a document, for error reporting.
+	TiXmlDocument*	document = nullptr;	// A pointer back to a document, for error reporting.
 	TIXML_STRING name;
 	TIXML_STRING value;
-	TiXmlAttribute*	prev;
-	TiXmlAttribute*	next;
+	TiXmlAttribute*	prev = nullptr;
+	TiXmlAttribute*	next = nullptr;
 };
 
 
@@ -1190,24 +1183,30 @@ public:
 		normal, encoded text. If you want it be output as a CDATA text
 		element, set the parameter _cdata to 'true'
 	*/
-	TiXmlText (const char * initValue ) : TiXmlNode (TiXmlNode::TEXT)
+	TiXmlText (const char * initValue )
+          : TiXmlNode (TiXmlNode::TEXT), cdata(false)
 	{
 		SetValue( initValue );
-		cdata = false;
 	}
 	virtual ~TiXmlText() {}
 
 	#ifdef TIXML_USE_STL
 	/// Constructor.
-	TiXmlText( const std::string& initValue ) : TiXmlNode (TiXmlNode::TEXT)
+	TiXmlText( const std::string& initValue )
+          : TiXmlNode (TiXmlNode::TEXT), cdata(false)
 	{
 		SetValue( initValue );
-		cdata = false;
 	}
 	#endif
 
-	TiXmlText( const TiXmlText& copy ) : TiXmlNode( TiXmlNode::TEXT )	{ copy.CopyTo( this ); }
-	void operator=( const TiXmlText& base )							 	{ base.CopyTo( this ); }
+	TiXmlText( const TiXmlText& copy )
+          : TiXmlNode( TiXmlNode::TEXT ), cdata(false)
+        { copy.CopyTo( this ); }
+	TiXmlText& operator=( const TiXmlText& base )
+        {
+          if (this != &base) base.CopyTo( this );
+          return *this;
+        }
 
 	// Write this text object to a FILE stream.
 	virtual void Print( FILE* cfile, int depth ) const;
@@ -1259,7 +1258,8 @@ class TiXmlDeclaration : public TiXmlNode
 {
 public:
 	/// Construct an empty declaration.
-	TiXmlDeclaration()   : TiXmlNode( TiXmlNode::DECLARATION ) {}
+        TiXmlDeclaration()
+          : TiXmlNode( TiXmlNode::DECLARATION ), version(), encoding(),standalone() {}
 
 #ifdef TIXML_USE_STL
 	/// Constructor.
@@ -1331,7 +1331,11 @@ public:
 	virtual ~TiXmlUnknown() {}
 
 	TiXmlUnknown( const TiXmlUnknown& copy ) : TiXmlNode( TiXmlNode::UNKNOWN )		{ copy.CopyTo( this ); }
-	void operator=( const TiXmlUnknown& copy )										{ copy.CopyTo( this ); }
+	TiXmlUnknown& operator=( const TiXmlUnknown& copy )
+        {
+          if (this != &copy) copy.CopyTo( this );
+          return *this;
+        }
 
 	/// Creates a copy of this Unknown and returns it.
 	virtual TiXmlNode* Clone() const;
@@ -1616,10 +1620,12 @@ class TiXmlHandle
 {
 public:
 	/// Create a handle from any node (at any depth of the tree.) This can be a null pointer.
-	TiXmlHandle( TiXmlNode* _node )					{ this->node = _node; }
+	TiXmlHandle( TiXmlNode* _node )
+          : node (_node) { }
 	/// Copy constructor
-	TiXmlHandle( const TiXmlHandle& ref )			{ this->node = ref.node; }
-	TiXmlHandle operator=( const TiXmlHandle& ref ) { this->node = ref.node; return *this; }
+        TiXmlHandle( const TiXmlHandle& ref )
+          : node (ref.node) { }
+	TiXmlHandle& operator=( const TiXmlHandle& ref ) { this->node = ref.node; return *this; }
 
 	/// Return a handle to the first child node.
 	TiXmlHandle FirstChild() const;
