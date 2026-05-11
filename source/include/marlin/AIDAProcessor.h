@@ -114,6 +114,7 @@ protected:
   std::string _fileType;
   std::string _fileName;
   int _compress;
+  bool _discardOutput;
 
 private:
   static AIDAProcessor *_me;

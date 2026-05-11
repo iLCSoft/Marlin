@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <iostream>
 #include <time.h>
+#include <string.h>
 
 #include <AIDA/IAnalysisFactory.h>
 #include <AIDA/IDataPointSetFactory.h>
@@ -24,7 +25,8 @@ AIDAProcessor aAIDAProcessor;
 AIDAProcessor::AIDAProcessor()
     : Processor("AIDAProcessor"), _analysisFactory(NULL), _treeFactory(NULL),
       _tree(NULL), _histoFactory(NULL), _tupleFactory(NULL),
-      _dataPointSetFactory(NULL), _fileType(""), _fileName(""), _compress(1) {
+      _dataPointSetFactory(NULL), _fileType(""), _fileName(""), _compress(1),
+      _discardOutput(false) {
 
   _description =
       "Processor that handles AIDA files. Creates on directory per processor. "
@@ -41,6 +43,9 @@ AIDAProcessor::AIDAProcessor()
   registerProcessorParameter(
       "Compress", " compression of output file 0: false >0: true (default) ",
       _compress, 1);
+  registerProcessorParameter("DiscardOutput",
+                             "Flag to discard output file (default: false)",
+                             _discardOutput, false);
 }
 
 AIDAProcessor *AIDAProcessor::_me;
@@ -89,6 +94,14 @@ void AIDAProcessor::init() {
 
     _fileName += ".aida";
   }
+
+  if (_discardOutput) {
+    _fileName = "/dev/null";
+  }
+
+  std::cout << std::string(30, '*') << std::endl;
+  std::cout << _fileName << std::endl;
+  std::cout << std::string(30, '*') << std::endl;
 
   _tree = _treeFactory->create(_fileName, _fileType, false, true, option);
 
