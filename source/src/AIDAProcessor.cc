@@ -7,7 +7,6 @@
 #include <assert.h>
 #include <iostream>
 #include <time.h>
-#include <string.h>
 
 #include <AIDA/IAnalysisFactory.h>
 #include <AIDA/IDataPointSetFactory.h>
@@ -98,10 +97,6 @@ void AIDAProcessor::init() {
   if (_discardOutput) {
     _fileName = "/dev/null";
   }
-
-  std::cout << std::string(30, '*') << std::endl;
-  std::cout << _fileName << std::endl;
-  std::cout << std::string(30, '*') << std::endl;
 
   _tree = _treeFactory->create(_fileName, _fileType, false, true, option);
 
