@@ -1,3 +1,22 @@
+# v01-19-07
+
+* 2026-05-18 Victor Schwan ([PR#72](https://github.com/iLCSoft/Marlin/pull/72))
+  - Introduces `.git-blame-ignore-revs` file with commit hashes of formatting commits
+  - Use `git blame --ignore-revs-file .git-blame-ignore-revs` to exclude formatting diffs
+
+* 2026-05-12 Victor Schwan ([PR#71](https://github.com/iLCSoft/Marlin/pull/71))
+  - Format files which are modified in the PR
+  - Add a flag to the AIDA proc to discard output
+
+* 2026-04-07 sss ([PR#70](https://github.com/iLCSoft/Marlin/pull/70))
+  - Bump minimum cmake version to 3.10 to avoid deprecation warnings.
+
+* 2026-04-07 sss ([PR#69](https://github.com/iLCSoft/Marlin/pull/69))
+  - Clean up a number of -Weffc warnings to fix some of the CI failures.
+
+* 2026-01-22 Juan Miguel Carceller ([PR#68](https://github.com/iLCSoft/Marlin/pull/68))
+  - Fix a few compiler warnings: change throw to noexcept, add override and default
+
 # v01-19-06
 
 * 2025-09-10 Thomas Madlener ([PR#67](https://github.com/iLCSoft/Marlin/pull/67))
